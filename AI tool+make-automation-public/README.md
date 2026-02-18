@@ -1,6 +1,6 @@
-# TIMBEL 마케팅 자동화 (Make) + Content Factory AI Revenue System
+# 마케팅 자동화 (Make) + Content Factory AI Revenue System
 
-> TIMBEL 마케팅팀을 위한 Make(Integromat) 자동화 시나리오 모음
+> 비전공자 혹은 마케터를 위한 Make(Integromat) 자동화 시나리오 모음
 
 ## 📁 폴더 구성
 
