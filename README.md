@@ -195,6 +195,5 @@ timbel-make-automation/
 
 ---
 
-## 📞 문의
-
-이세영 seyoung67@timbel.net
+Maintained by SeYoung Lee  
+LinkedIn: (https://www.linkedin.com/in/seyounglees/)
