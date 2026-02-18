@@ -197,4 +197,4 @@ timbel-make-automation/
 
 ## 📞 문의
 
-TIMBEL 홍보마케팅팀 이세영 팀장
+이세영 seyoung67@timbel.net
