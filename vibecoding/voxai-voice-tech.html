@@ -1,0 +1,3418 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VOXAI | 국내 1위 AI 음성기록 전문기업</title>
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --bg-dark: #030308;
+            --bg-card: #0a0a14;
+            --bg-elevated: #12121f;
+            --text-white: #ffffff;
+            --text-gray: #9ca3af;
+            --text-muted: #4b5563;
+            --accent-primary: #6366f1;
+            --accent-secondary: #22d3ee;
+            --accent-tertiary: #a855f7;
+            --accent-warm: #f472b6;
+            --gradient-main: linear-gradient(135deg, #6366f1 0%, #22d3ee 50%, #a855f7 100%);
+            --gradient-warm: linear-gradient(135deg, #f472b6 0%, #fb923c 100%);
+            --gradient-glow: linear-gradient(180deg, rgba(99, 102, 241, 0.15) 0%, transparent 100%);
+            --font-display: 'Archivo Black', sans-serif;
+            --font-body: 'DM Sans', sans-serif;
+            --font-mono: 'JetBrains Mono', monospace;
+            --border-subtle: rgba(255, 255, 255, 0.06);
+            --border-glow: rgba(99, 102, 241, 0.4);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: var(--font-body);
+            background: var(--bg-dark);
+            color: var(--text-white);
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--bg-dark);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--gradient-main);
+            border-radius: 3px;
+        }
+
+        /* ===== NAVIGATION ===== */
+        .nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 1000;
+            padding: 20px 60px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(3, 3, 8, 0.8);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border-subtle);
+            transition: all 0.3s ease;
+        }
+
+        .nav-logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+        }
+
+        .nav-logo-icon {
+            width: 44px;
+            height: 44px;
+            background: var(--gradient-main);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .nav-logo-icon::before {
+            content: '';
+            position: absolute;
+            width: 60%;
+            height: 60%;
+            background: rgba(255,255,255,0.2);
+            border-radius: 50%;
+            animation: pulse-icon 2s infinite;
+        }
+
+        @keyframes pulse-icon {
+            0%, 100% { transform: scale(1); opacity: 0.5; }
+            50% { transform: scale(1.3); opacity: 0; }
+        }
+
+        .nav-logo-icon svg {
+            width: 24px;
+            height: 24px;
+            fill: white;
+            position: relative;
+            z-index: 2;
+        }
+
+        .nav-logo-text {
+            font-family: var(--font-display);
+            font-size: 24px;
+            letter-spacing: -0.5px;
+            background: var(--gradient-main);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .nav-menu {
+            display: flex;
+            gap: 48px;
+            list-style: none;
+        }
+
+        .nav-menu a {
+            font-size: 15px;
+            font-weight: 500;
+            color: var(--text-gray);
+            text-decoration: none;
+            position: relative;
+            transition: color 0.3s;
+        }
+
+        .nav-menu a::after {
+            content: '';
+            position: absolute;
+            bottom: -6px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--gradient-main);
+            transition: width 0.3s;
+        }
+
+        .nav-menu a:hover {
+            color: var(--text-white);
+        }
+
+        .nav-menu a:hover::after {
+            width: 100%;
+        }
+
+        .nav-actions {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .btn {
+            font-family: var(--font-body);
+            font-size: 14px;
+            font-weight: 600;
+            padding: 12px 24px;
+            border-radius: 10px;
+            border: none;
+            cursor: pointer;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-ghost {
+            background: transparent;
+            color: var(--text-gray);
+        }
+
+        .btn-ghost:hover {
+            color: var(--text-white);
+        }
+
+        .btn-primary {
+            background: var(--gradient-main);
+            color: white;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-primary::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: left 0.5s;
+        }
+
+        .btn-primary:hover::before {
+            left: 100%;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 40px rgba(99, 102, 241, 0.4);
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 1px solid var(--border-subtle);
+            color: var(--text-white);
+        }
+
+        .btn-outline:hover {
+            border-color: var(--accent-primary);
+            background: rgba(99, 102, 241, 0.1);
+        }
+
+        .btn-large {
+            padding: 16px 32px;
+            font-size: 16px;
+            border-radius: 12px;
+        }
+
+        /* ===== HERO SECTION ===== */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            padding: 160px 60px 100px;
+            overflow: hidden;
+        }
+
+        .hero-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+        }
+
+        .hero-orb {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(120px);
+            opacity: 0.6;
+            animation: orb-float 10s ease-in-out infinite;
+        }
+
+        .hero-orb-1 {
+            width: 600px;
+            height: 600px;
+            background: var(--accent-primary);
+            top: -200px;
+            left: -200px;
+        }
+
+        .hero-orb-2 {
+            width: 500px;
+            height: 500px;
+            background: var(--accent-secondary);
+            top: 50%;
+            right: -150px;
+            animation-delay: -3s;
+        }
+
+        .hero-orb-3 {
+            width: 400px;
+            height: 400px;
+            background: var(--accent-tertiary);
+            bottom: -100px;
+            left: 30%;
+            animation-delay: -6s;
+        }
+
+        @keyframes orb-float {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            33% { transform: translate(30px, -30px) scale(1.05); }
+            66% { transform: translate(-20px, 20px) scale(0.95); }
+        }
+
+        .hero-grid {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px);
+            background-size: 60px 60px;
+            mask-image: radial-gradient(ellipse at center, black 0%, transparent 70%);
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            text-align: center;
+            max-width: 1200px;
+        }
+
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 20px;
+            background: rgba(99, 102, 241, 0.15);
+            border: 1px solid rgba(99, 102, 241, 0.3);
+            border-radius: 50px;
+            margin-bottom: 40px;
+            font-family: var(--font-mono);
+            font-size: 13px;
+            color: var(--accent-secondary);
+            animation: fadeInDown 0.8s ease;
+        }
+
+        .hero-badge-dot {
+            width: 8px;
+            height: 8px;
+            background: var(--accent-secondary);
+            border-radius: 50%;
+            animation: blink 2s infinite;
+        }
+
+        @keyframes blink {
+            0%, 50%, 100% { opacity: 1; }
+            25%, 75% { opacity: 0.3; }
+        }
+
+        .hero-title {
+            font-family: var(--font-display);
+            font-size: clamp(48px, 9vw, 120px);
+            line-height: 1;
+            letter-spacing: -4px;
+            margin-bottom: 32px;
+            animation: fadeInUp 0.8s ease 0.2s both;
+        }
+
+        .hero-title-line {
+            display: block;
+        }
+
+        .hero-title .gradient {
+            background: var(--gradient-main);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero-title .outline {
+            color: transparent;
+            -webkit-text-stroke: 2px var(--text-white);
+        }
+
+        .hero-subtitle {
+            font-size: 20px;
+            color: var(--text-gray);
+            max-width: 700px;
+            margin: 0 auto 48px;
+            line-height: 1.7;
+            animation: fadeInUp 0.8s ease 0.4s both;
+        }
+
+        .hero-cta {
+            display: flex;
+            justify-content: center;
+            gap: 16px;
+            margin-bottom: 80px;
+            animation: fadeInUp 0.8s ease 0.6s both;
+        }
+
+        .hero-stats {
+            display: flex;
+            justify-content: center;
+            gap: 80px;
+            animation: fadeInUp 0.8s ease 0.8s both;
+        }
+
+        .hero-stat {
+            text-align: center;
+        }
+
+        .hero-stat-value {
+            font-family: var(--font-display);
+            font-size: 48px;
+            background: var(--gradient-main);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero-stat-label {
+            font-size: 13px;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            margin-top: 10px;
+        }
+
+        /* Sound Wave Visualization */
+        .hero-wave {
+            position: absolute;
+            bottom: 80px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            height: 60px;
+        }
+
+        .wave-bar {
+            width: 4px;
+            background: var(--gradient-main);
+            border-radius: 2px;
+            animation: wave 1.2s ease-in-out infinite;
+        }
+
+        @keyframes wave {
+            0%, 100% { height: 15px; opacity: 0.4; }
+            50% { height: 50px; opacity: 1; }
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes fadeInDown {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* ===== MARQUEE SECTION ===== */
+        .marquee-section {
+            padding: 40px 0;
+            border-top: 1px solid var(--border-subtle);
+            border-bottom: 1px solid var(--border-subtle);
+            overflow: hidden;
+        }
+
+        .marquee {
+            display: flex;
+            animation: marquee 30s linear infinite;
+        }
+
+        .marquee-content {
+            display: flex;
+            align-items: center;
+            gap: 60px;
+            padding-right: 60px;
+        }
+
+        .marquee-item {
+            font-family: var(--font-display);
+            font-size: 32px;
+            white-space: nowrap;
+            color: var(--text-muted);
+            transition: color 0.3s;
+        }
+
+        .marquee-item:hover {
+            color: var(--accent-secondary);
+        }
+
+        .marquee-dot {
+            width: 10px;
+            height: 10px;
+            background: var(--accent-primary);
+            border-radius: 50%;
+            flex-shrink: 0;
+        }
+
+        @keyframes marquee {
+            from { transform: translateX(0); }
+            to { transform: translateX(-50%); }
+        }
+
+        /* ===== SOLUTIONS SECTION ===== */
+        .solutions {
+            padding: 160px 60px;
+            position: relative;
+        }
+
+        .section-header {
+            text-align: center;
+            max-width: 800px;
+            margin: 0 auto 100px;
+        }
+
+        .section-label {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            font-family: var(--font-mono);
+            font-size: 14px;
+            color: var(--accent-primary);
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            margin-bottom: 24px;
+        }
+
+        .section-label::before,
+        .section-label::after {
+            content: '';
+            width: 20px;
+            height: 1px;
+            background: var(--accent-primary);
+        }
+
+        .section-title {
+            font-family: var(--font-display);
+            font-size: clamp(36px, 5vw, 64px);
+            line-height: 1.1;
+            letter-spacing: -2px;
+            margin-bottom: 24px;
+        }
+
+        .section-title .highlight {
+            background: var(--gradient-main);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .section-desc {
+            font-size: 18px;
+            color: var(--text-gray);
+            line-height: 1.7;
+        }
+
+        .solutions-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 24px;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .solution-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-subtle);
+            border-radius: 24px;
+            padding: 48px 36px;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .solution-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: var(--gradient-main);
+            transform: scaleX(0);
+            transform-origin: left;
+            transition: transform 0.4s ease;
+        }
+
+        .solution-card:hover {
+            transform: translateY(-8px);
+            border-color: var(--border-glow);
+            box-shadow: 0 20px 60px rgba(99, 102, 241, 0.15);
+        }
+
+        .solution-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .solution-icon {
+            width: 72px;
+            height: 72px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.2), rgba(34, 211, 238, 0.1));
+            border-radius: 20px;
+            margin-bottom: 28px;
+        }
+
+        .solution-icon svg {
+            width: 36px;
+            height: 36px;
+            fill: url(#iconGradient);
+        }
+
+        .solution-card h3 {
+            font-family: var(--font-display);
+            font-size: 24px;
+            margin-bottom: 16px;
+            letter-spacing: -0.5px;
+        }
+
+        .solution-card p {
+            font-size: 16px;
+            color: var(--text-gray);
+            line-height: 1.7;
+            margin-bottom: 28px;
+        }
+
+        .solution-features {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .solution-tag {
+            padding: 8px 14px;
+            background: rgba(255,255,255,0.05);
+            border-radius: 20px;
+            font-size: 13px;
+            color: var(--text-gray);
+        }
+
+        /* ===== TECHNOLOGY SHOWCASE ===== */
+        .tech-showcase {
+            padding: 160px 60px;
+            background: var(--bg-card);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .tech-showcase::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--gradient-glow);
+            pointer-events: none;
+        }
+
+        .tech-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1fr 1.2fr;
+            gap: 100px;
+            align-items: center;
+            position: relative;
+            z-index: 2;
+        }
+
+        .tech-content h2 {
+            font-family: var(--font-display);
+            font-size: clamp(40px, 5vw, 60px);
+            line-height: 1.1;
+            letter-spacing: -2px;
+            margin-bottom: 32px;
+        }
+
+        .tech-content h2 .gradient {
+            background: var(--gradient-main);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .tech-content p {
+            font-size: 18px;
+            color: var(--text-gray);
+            line-height: 1.8;
+            margin-bottom: 40px;
+        }
+
+        .tech-features {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .tech-feature {
+            display: flex;
+            align-items: flex-start;
+            gap: 20px;
+            padding: 24px;
+            background: var(--bg-elevated);
+            border: 1px solid var(--border-subtle);
+            border-radius: 16px;
+            transition: all 0.3s ease;
+        }
+
+        .tech-feature:hover {
+            border-color: var(--border-glow);
+            transform: translateX(8px);
+        }
+
+        .tech-feature-icon {
+            width: 52px;
+            height: 52px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--gradient-main);
+            border-radius: 14px;
+            flex-shrink: 0;
+        }
+
+        .tech-feature-icon svg {
+            width: 26px;
+            height: 26px;
+            fill: white;
+        }
+
+        .tech-feature-text h4 {
+            font-size: 19px;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .tech-feature-text span {
+            font-size: 15px;
+            color: var(--text-gray);
+            line-height: 1.5;
+        }
+
+        .tech-visual {
+            position: relative;
+            height: 600px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .tech-visual-core {
+            width: 200px;
+            height: 200px;
+            background: radial-gradient(circle, var(--accent-primary) 0%, var(--accent-tertiary) 60%, transparent 70%);
+            border-radius: 50%;
+            position: relative;
+            z-index: 3;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            animation: core-pulse 3s ease-in-out infinite;
+        }
+
+        @keyframes core-pulse {
+            0%, 100% { transform: scale(1); box-shadow: 0 0 60px rgba(99, 102, 241, 0.5); }
+            50% { transform: scale(1.08); box-shadow: 0 0 100px rgba(99, 102, 241, 0.8); }
+        }
+
+        .tech-visual-core svg {
+            width: 60px;
+            height: 60px;
+            fill: var(--bg-dark);
+        }
+
+        .tech-ring {
+            position: absolute;
+            border: 1px solid rgba(99, 102, 241, 0.2);
+            border-radius: 50%;
+            animation: ring-rotate 20s linear infinite;
+        }
+
+        .tech-ring:nth-child(2) {
+            width: 300px;
+            height: 300px;
+            animation-duration: 25s;
+        }
+
+        .tech-ring:nth-child(3) {
+            width: 400px;
+            height: 400px;
+            animation-duration: 30s;
+            animation-direction: reverse;
+        }
+
+        .tech-ring:nth-child(4) {
+            width: 500px;
+            height: 500px;
+            animation-duration: 35s;
+        }
+
+        @keyframes ring-rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        .tech-float-card {
+            position: absolute;
+            background: var(--bg-card);
+            border: 1px solid var(--border-subtle);
+            border-radius: 16px;
+            padding: 16px 20px;
+            backdrop-filter: blur(10px);
+            animation: float 4s ease-in-out infinite;
+            z-index: 4;
+        }
+
+        .tech-float-card:nth-child(5) {
+            top: 60px;
+            right: 40px;
+        }
+
+        .tech-float-card:nth-child(6) {
+            bottom: 100px;
+            left: 30px;
+            animation-delay: 1s;
+        }
+
+        .tech-float-card:nth-child(7) {
+            bottom: 60px;
+            right: 80px;
+            animation-delay: 2s;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-15px); }
+        }
+
+        .tech-float-card .label {
+            font-size: 12px;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 4px;
+        }
+
+        .tech-float-card .value {
+            font-family: var(--font-display);
+            font-size: 28px;
+            background: var(--gradient-main);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        /* ===== FUTURE BUSINESS SECTION ===== */
+        .future-business {
+            padding: 160px 60px;
+            position: relative;
+        }
+
+        .future-watermark {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-family: var(--font-display);
+            font-size: 20vw;
+            color: rgba(255,255,255,0.02);
+            white-space: nowrap;
+            pointer-events: none;
+        }
+
+        .future-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 24px;
+            max-width: 1600px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 2;
+        }
+
+        .future-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-subtle);
+            border-radius: 20px;
+            padding: 40px 32px;
+            text-align: center;
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .future-card::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(180deg, rgba(99, 102, 241, 0.1) 0%, transparent 50%);
+            opacity: 0;
+            transition: opacity 0.4s ease;
+        }
+
+        .future-card:hover {
+            transform: translateY(-8px) scale(1.02);
+            border-color: var(--border-glow);
+        }
+
+        .future-card:hover::before {
+            opacity: 1;
+        }
+
+        .future-card-badge {
+            position: absolute;
+            top: 16px;
+            right: 16px;
+            padding: 6px 12px;
+            background: var(--gradient-warm);
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 700;
+            color: white;
+            letter-spacing: 0.5px;
+        }
+
+        .future-icon {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.15), rgba(168, 85, 247, 0.15));
+            border-radius: 24px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .future-icon svg {
+            width: 40px;
+            height: 40px;
+            fill: url(#iconGradient);
+        }
+
+        .future-card h3 {
+            font-family: var(--font-display);
+            font-size: 22px;
+            margin-bottom: 14px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .future-card p {
+            font-size: 15px;
+            color: var(--text-gray);
+            line-height: 1.7;
+            position: relative;
+            z-index: 2;
+        }
+
+        /* ===== INDUSTRIES SECTION ===== */
+        .industries {
+            padding: 160px 60px;
+            background: var(--bg-card);
+        }
+
+        .industries-grid {
+            display: grid;
+            grid-template-columns: repeat(6, 1fr);
+            gap: 20px;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .industry-card {
+            aspect-ratio: 1;
+            background: var(--bg-elevated);
+            border: 1px solid var(--border-subtle);
+            border-radius: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 16px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .industry-card:hover {
+            border-color: var(--border-glow);
+            transform: scale(1.05);
+        }
+
+        .industry-icon {
+            width: 48px;
+            height: 48px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .industry-icon svg {
+            width: 40px;
+            height: 40px;
+            fill: var(--accent-secondary);
+            opacity: 0.8;
+            transition: all 0.3s ease;
+        }
+
+        .industry-card:hover .industry-icon svg {
+            opacity: 1;
+            fill: var(--accent-primary);
+        }
+
+        .industry-card span {
+            font-size: 15px;
+            font-weight: 500;
+            color: var(--text-gray);
+        }
+
+        .industry-card:hover span {
+            color: var(--text-white);
+        }
+
+        /* ===== DEMO SECTION ===== */
+        .demo-section {
+            padding: 160px 60px;
+            position: relative;
+        }
+
+        .demo-container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .demo-box {
+            background: var(--bg-card);
+            border: 1px solid var(--border-subtle);
+            border-radius: 32px;
+            padding: 80px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .demo-box::before {
+            content: '';
+            position: absolute;
+            top: -100%;
+            left: -100%;
+            width: 300%;
+            height: 300%;
+            background: conic-gradient(from 0deg, transparent, var(--accent-primary), transparent, var(--accent-secondary), transparent);
+            animation: rotate-border 6s linear infinite;
+            opacity: 0.3;
+        }
+
+        @keyframes rotate-border {
+            to { transform: rotate(360deg); }
+        }
+
+        .demo-inner {
+            position: relative;
+            z-index: 2;
+            background: var(--bg-card);
+            border-radius: 24px;
+            padding: 60px;
+        }
+
+        .demo-inner h2 {
+            font-family: var(--font-display);
+            font-size: 40px;
+            margin-bottom: 16px;
+            letter-spacing: -1px;
+        }
+
+        .demo-inner p {
+            font-size: 18px;
+            color: var(--text-gray);
+            margin-bottom: 48px;
+        }
+
+        .demo-input-wrapper {
+            display: flex;
+            max-width: 600px;
+            margin: 0 auto 32px;
+            background: var(--bg-elevated);
+            border: 1px solid var(--border-subtle);
+            border-radius: 16px;
+            overflow: hidden;
+            transition: border-color 0.3s;
+        }
+
+        .demo-input-wrapper:focus-within {
+            border-color: var(--accent-primary);
+        }
+
+        .demo-input {
+            flex: 1;
+            padding: 20px 24px;
+            background: transparent;
+            border: none;
+            font-family: var(--font-body);
+            font-size: 16px;
+            color: var(--text-white);
+            outline: none;
+        }
+
+        .demo-input::placeholder {
+            color: var(--text-muted);
+        }
+
+        .demo-btn {
+            padding: 20px 32px;
+            background: var(--gradient-main);
+            border: none;
+            font-family: var(--font-body);
+            font-size: 14px;
+            font-weight: 600;
+            color: white;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: opacity 0.3s;
+        }
+
+        .demo-btn:hover {
+            opacity: 0.9;
+        }
+
+        .demo-mic {
+            width: 18px;
+            height: 18px;
+            background: white;
+            border-radius: 50%;
+            position: relative;
+        }
+
+        .demo-mic::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 30px;
+            height: 30px;
+            border: 2px solid white;
+            border-radius: 50%;
+            animation: mic-pulse 1.5s infinite;
+        }
+
+        @keyframes mic-pulse {
+            0% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+            100% { transform: translate(-50%, -50%) scale(1.5); opacity: 0; }
+        }
+
+        .demo-languages {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .demo-lang {
+            padding: 10px 18px;
+            background: rgba(255,255,255,0.05);
+            border: 1px solid var(--border-subtle);
+            border-radius: 24px;
+            font-size: 14px;
+            color: var(--text-gray);
+            transition: all 0.3s;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .demo-lang svg {
+            width: 20px;
+            height: 14px;
+        }
+
+        .demo-lang:hover {
+            border-color: var(--accent-primary);
+            color: var(--text-white);
+        }
+
+        /* ===== PRICING SECTION ===== */
+        .pricing {
+            padding: 160px 60px;
+            background: var(--bg-card);
+        }
+
+        .pricing-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 24px;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .pricing-card {
+            background: var(--bg-elevated);
+            border: 1px solid var(--border-subtle);
+            border-radius: 24px;
+            padding: 40px;
+            position: relative;
+            transition: all 0.4s ease;
+        }
+
+        .pricing-card.featured {
+            background: linear-gradient(180deg, rgba(99, 102, 241, 0.1) 0%, var(--bg-elevated) 100%);
+            border-color: var(--accent-primary);
+            transform: scale(1.02);
+        }
+
+        .pricing-card:hover {
+            transform: translateY(-8px);
+        }
+
+        .pricing-card.featured:hover {
+            transform: scale(1.02) translateY(-8px);
+        }
+
+        .pricing-badge {
+            position: absolute;
+            top: -12px;
+            left: 50%;
+            transform: translateX(-50%);
+            padding: 8px 18px;
+            background: var(--gradient-main);
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 700;
+            color: white;
+            letter-spacing: 0.5px;
+        }
+
+        .pricing-tier {
+            font-family: var(--font-mono);
+            font-size: 13px;
+            color: var(--accent-primary);
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            margin-bottom: 12px;
+        }
+
+        .pricing-price {
+            margin-bottom: 20px;
+        }
+
+        .pricing-price .amount {
+            font-family: var(--font-display);
+            font-size: 40px;
+        }
+
+        .pricing-price .period {
+            font-size: 14px;
+            color: var(--text-muted);
+        }
+
+        .pricing-desc {
+            font-size: 15px;
+            color: var(--text-gray);
+            margin-bottom: 32px;
+            line-height: 1.7;
+        }
+
+        .pricing-features {
+            list-style: none;
+            margin-bottom: 32px;
+        }
+
+        .pricing-features li {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 0;
+            font-size: 15px;
+            color: var(--text-gray);
+            border-bottom: 1px solid var(--border-subtle);
+        }
+
+        .pricing-features li::before {
+            content: '';
+            width: 18px;
+            height: 18px;
+            background: var(--accent-secondary);
+            mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z'/%3E%3C/svg%3E");
+            mask-size: contain;
+            flex-shrink: 0;
+        }
+
+        .pricing-btn {
+            width: 100%;
+            padding: 16px;
+            border-radius: 12px;
+            font-family: var(--font-body);
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        /* ===== CLIENTS SECTION ===== */
+        .clients {
+            padding: 100px 60px;
+            border-top: 1px solid var(--border-subtle);
+        }
+
+        .clients-header {
+            text-align: center;
+            margin-bottom: 60px;
+        }
+
+        .clients-header p {
+            font-size: 15px;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 3px;
+        }
+
+        .clients-logos {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 80px;
+            flex-wrap: wrap;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .client-logo {
+            font-family: var(--font-display);
+            font-size: 24px;
+            color: var(--text-muted);
+            opacity: 0.5;
+            transition: all 0.3s;
+        }
+
+        .client-logo:hover {
+            opacity: 1;
+            color: var(--text-white);
+        }
+
+        /* ===== CTA SECTION ===== */
+        .cta {
+            padding: 160px 60px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cta-bg {
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(ellipse at center, rgba(99, 102, 241, 0.2) 0%, transparent 60%);
+        }
+
+        .cta-container {
+            max-width: 900px;
+            margin: 0 auto;
+            text-align: center;
+            position: relative;
+            z-index: 2;
+        }
+
+        .cta h2 {
+            font-family: var(--font-display);
+            font-size: clamp(40px, 6vw, 72px);
+            line-height: 1.1;
+            letter-spacing: -2px;
+            margin-bottom: 24px;
+        }
+
+        .cta h2 .gradient {
+            background: var(--gradient-main);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .cta p {
+            font-size: 20px;
+            color: var(--text-gray);
+            margin-bottom: 48px;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .cta-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 16px;
+        }
+
+        /* ===== FOOTER ===== */
+        .footer {
+            padding: 80px 60px 40px;
+            background: var(--bg-card);
+            border-top: 1px solid var(--border-subtle);
+        }
+
+        .footer-container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .footer-top {
+            display: grid;
+            grid-template-columns: 2fr repeat(4, 1fr);
+            gap: 60px;
+            padding-bottom: 60px;
+            border-bottom: 1px solid var(--border-subtle);
+        }
+
+        .footer-brand {
+            max-width: 300px;
+        }
+
+        .footer-logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .footer-logo-icon {
+            width: 40px;
+            height: 40px;
+            background: var(--gradient-main);
+            border-radius: 10px;
+        }
+
+        .footer-logo-text {
+            font-family: var(--font-display);
+            font-size: 24px;
+            background: var(--gradient-main);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .footer-brand p {
+            font-size: 15px;
+            color: var(--text-gray);
+            line-height: 1.8;
+        }
+
+        .footer-column h4 {
+            font-size: 15px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 24px;
+        }
+
+        .footer-column ul {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .footer-column a {
+            font-size: 15px;
+            color: var(--text-gray);
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .footer-column a:hover {
+            color: var(--accent-secondary);
+        }
+
+        .footer-bottom {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: 40px;
+        }
+
+        .footer-copyright {
+            font-size: 14px;
+            color: var(--text-muted);
+        }
+
+        .footer-social {
+            display: flex;
+            gap: 16px;
+        }
+
+        .footer-social a {
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--bg-elevated);
+            border: 1px solid var(--border-subtle);
+            border-radius: 10px;
+            color: var(--text-gray);
+            text-decoration: none;
+            transition: all 0.3s;
+        }
+
+        .footer-social a:hover {
+            border-color: var(--accent-primary);
+            color: var(--accent-primary);
+            transform: translateY(-3px);
+        }
+
+        /* ===== SCROLL ANIMATIONS ===== */
+        .reveal {
+            opacity: 0;
+            transform: translateY(40px);
+            transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* ===== MODAL SYSTEM ===== */
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(3, 3, 8, 0.95);
+            z-index: 9999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.4s ease;
+            backdrop-filter: blur(20px);
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .modal {
+            background: var(--bg-card);
+            border: 1px solid var(--border-subtle);
+            border-radius: 32px;
+            width: 90%;
+            max-width: 900px;
+            max-height: 90vh;
+            overflow-y: auto;
+            position: relative;
+            transform: scale(0.9) translateY(20px);
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .modal-overlay.active .modal {
+            transform: scale(1) translateY(0);
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 24px;
+            right: 24px;
+            width: 48px;
+            height: 48px;
+            background: var(--bg-elevated);
+            border: 1px solid var(--border-subtle);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            z-index: 10;
+        }
+
+        .modal-close:hover {
+            border-color: var(--accent-primary);
+            transform: rotate(90deg);
+        }
+
+        .modal-close svg {
+            width: 20px;
+            height: 20px;
+            fill: var(--text-gray);
+        }
+
+        .modal-header {
+            padding: 60px 60px 40px;
+            text-align: center;
+            border-bottom: 1px solid var(--border-subtle);
+        }
+
+        .modal-icon {
+            width: 100px;
+            height: 100px;
+            margin: 0 auto 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.2), rgba(34, 211, 238, 0.1));
+            border-radius: 28px;
+        }
+
+        .modal-icon svg {
+            width: 50px;
+            height: 50px;
+            fill: url(#iconGradient);
+        }
+
+        .modal-header h2 {
+            font-family: var(--font-display);
+            font-size: 36px;
+            margin-bottom: 12px;
+            letter-spacing: -1px;
+        }
+
+        .modal-header p {
+            font-size: 17px;
+            color: var(--text-gray);
+        }
+
+        .modal-body {
+            padding: 40px 60px 60px;
+        }
+
+        .modal-features {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+
+        .modal-feature {
+            display: flex;
+            align-items: flex-start;
+            gap: 16px;
+            padding: 20px;
+            background: var(--bg-elevated);
+            border-radius: 16px;
+        }
+
+        .modal-feature-icon {
+            width: 44px;
+            height: 44px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--gradient-main);
+            border-radius: 12px;
+            flex-shrink: 0;
+        }
+
+        .modal-feature-icon svg {
+            width: 22px;
+            height: 22px;
+            fill: white;
+        }
+
+        .modal-feature-text h4 {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .modal-feature-text p {
+            font-size: 14px;
+            color: var(--text-gray);
+            line-height: 1.5;
+        }
+
+        .modal-stats {
+            display: flex;
+            justify-content: center;
+            gap: 60px;
+            margin-bottom: 40px;
+            padding: 30px;
+            background: var(--bg-elevated);
+            border-radius: 20px;
+        }
+
+        .modal-stat {
+            text-align: center;
+        }
+
+        .modal-stat-value {
+            font-family: var(--font-display);
+            font-size: 36px;
+            background: var(--gradient-main);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .modal-stat-label {
+            font-size: 13px;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .modal-cta {
+            display: flex;
+            justify-content: center;
+            gap: 16px;
+        }
+
+        /* Login Modal */
+        .login-modal .modal {
+            max-width: 480px;
+        }
+
+        .login-form {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .form-group label {
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--text-gray);
+        }
+
+        .form-group input {
+            padding: 16px 20px;
+            background: var(--bg-elevated);
+            border: 1px solid var(--border-subtle);
+            border-radius: 12px;
+            font-family: var(--font-body);
+            font-size: 16px;
+            color: var(--text-white);
+            outline: none;
+            transition: border-color 0.3s;
+        }
+
+        .form-group input:focus {
+            border-color: var(--accent-primary);
+        }
+
+        .form-divider {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin: 10px 0;
+        }
+
+        .form-divider::before,
+        .form-divider::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: var(--border-subtle);
+        }
+
+        .form-divider span {
+            font-size: 13px;
+            color: var(--text-muted);
+        }
+
+        .social-login {
+            display: flex;
+            gap: 12px;
+        }
+
+        .social-btn {
+            flex: 1;
+            padding: 14px;
+            background: var(--bg-elevated);
+            border: 1px solid var(--border-subtle);
+            border-radius: 12px;
+            font-size: 14px;
+            color: var(--text-white);
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .social-btn:hover {
+            border-color: var(--accent-primary);
+        }
+
+        /* Signup Modal */
+        .signup-modal .modal {
+            max-width: 560px;
+        }
+
+        .plan-selector {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 24px;
+        }
+
+        .plan-option {
+            flex: 1;
+            padding: 16px;
+            background: var(--bg-elevated);
+            border: 2px solid var(--border-subtle);
+            border-radius: 12px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .plan-option.active {
+            border-color: var(--accent-primary);
+            background: rgba(99, 102, 241, 0.1);
+        }
+
+        .plan-option h4 {
+            font-size: 16px;
+            margin-bottom: 4px;
+        }
+
+        .plan-option span {
+            font-size: 13px;
+            color: var(--text-muted);
+        }
+
+        /* Industry Detail Modal */
+        .industry-detail .modal-body {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+        }
+
+        .industry-use-cases h4 {
+            font-size: 18px;
+            margin-bottom: 20px;
+        }
+
+        .use-case-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .use-case-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 16px;
+            background: var(--bg-elevated);
+            border-radius: 12px;
+            font-size: 15px;
+        }
+
+        .use-case-item::before {
+            content: '';
+            width: 8px;
+            height: 8px;
+            background: var(--accent-secondary);
+            border-radius: 50%;
+        }
+
+        /* Clickable cards */
+        .solution-card,
+        .future-card,
+        .industry-card {
+            cursor: pointer;
+        }
+
+        @media (max-width: 768px) {
+            .modal {
+                width: 95%;
+                border-radius: 24px;
+            }
+
+            .modal-header,
+            .modal-body {
+                padding: 40px 24px;
+            }
+
+            .modal-features {
+                grid-template-columns: 1fr;
+            }
+
+            .modal-stats {
+                flex-direction: column;
+                gap: 24px;
+            }
+
+            .industry-detail .modal-body {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 1200px) {
+            .solutions-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .future-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .pricing-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .industries-grid {
+                grid-template-columns: repeat(4, 1fr);
+            }
+        }
+
+        @media (max-width: 992px) {
+            .nav {
+                padding: 16px 24px;
+            }
+            
+            .nav-menu {
+                display: none;
+            }
+            
+            .hero {
+                padding: 140px 24px 80px;
+            }
+            
+            .hero-stats {
+                gap: 40px;
+            }
+            
+            .tech-container {
+                grid-template-columns: 1fr;
+                gap: 60px;
+            }
+            
+            .tech-visual {
+                order: -1;
+                height: 400px;
+            }
+            
+            .footer-top {
+                grid-template-columns: 1fr 1fr;
+                gap: 40px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .hero-stats {
+                flex-direction: column;
+                gap: 24px;
+            }
+            
+            .solutions-grid,
+            .future-grid,
+            .pricing-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .industries-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+            
+            .demo-box {
+                padding: 40px 20px;
+            }
+            
+            .demo-inner {
+                padding: 40px 20px;
+            }
+            
+            .demo-input-wrapper {
+                flex-direction: column;
+            }
+            
+            .cta-buttons {
+                flex-direction: column;
+            }
+            
+            .footer-top {
+                grid-template-columns: 1fr;
+            }
+            
+            .footer-bottom {
+                flex-direction: column;
+                gap: 20px;
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- SVG Gradient Definitions -->
+    <svg width="0" height="0" style="position: absolute;">
+        <defs>
+            <linearGradient id="iconGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" style="stop-color:#6366f1"/>
+                <stop offset="50%" style="stop-color:#22d3ee"/>
+                <stop offset="100%" style="stop-color:#a855f7"/>
+            </linearGradient>
+        </defs>
+    </svg>
+
+    <!-- Navigation -->
+    <nav class="nav">
+        <a href="#" class="nav-logo">
+            <div class="nav-logo-icon">
+                <svg viewBox="0 0 24 24">
+                    <path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3z"/>
+                    <path d="M17 11c0 2.76-2.24 5-5 5s-5-2.24-5-5H5c0 3.53 2.61 6.43 6 6.92V21h2v-3.08c3.39-.49 6-3.39 6-6.92h-2z"/>
+                </svg>
+            </div>
+            <span class="nav-logo-text">VOXAI</span>
+        </a>
+        
+        <ul class="nav-menu">
+            <li><a href="#solutions">솔루션</a></li>
+            <li><a href="#technology">기술</a></li>
+            <li><a href="#future">미래사업</a></li>
+            <li><a href="#industries">산업분야</a></li>
+            <li><a href="#pricing">요금제</a></li>
+        </ul>
+        
+        <div class="nav-actions">
+            <a href="#" class="btn btn-ghost">로그인</a>
+            <a href="#" class="btn btn-primary">무료 체험</a>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-bg">
+            <div class="hero-orb hero-orb-1"></div>
+            <div class="hero-orb hero-orb-2"></div>
+            <div class="hero-orb hero-orb-3"></div>
+            <div class="hero-grid"></div>
+        </div>
+        
+        <div class="hero-content">
+            <div class="hero-badge">
+                <span class="hero-badge-dot"></span>
+                2026 — 국내 음성AI 시장점유율 1위
+            </div>
+            
+            <h1 class="hero-title">
+                <span class="hero-title-line">목소리를</span>
+                <span class="hero-title-line"><span class="gradient">완벽하게</span></span>
+                <span class="hero-title-line">기록하다</span>
+            </h1>
+            
+            <p class="hero-subtitle">
+                VOXAI는 국내 최고의 AI 음성기록 전문기업입니다.<br>
+                하이브리드 STT 엔진과 자체 LLM으로 99.5% 정확도의 실시간 음성기록을 제공합니다.
+            </p>
+            
+            <div class="hero-cta">
+                <a href="#" class="btn btn-primary btn-large">무료로 시작하기</a>
+                <a href="#demo" class="btn btn-outline btn-large">라이브 데모</a>
+            </div>
+            
+            <div class="hero-stats">
+                <div class="hero-stat">
+                    <div class="hero-stat-value">99.5%</div>
+                    <div class="hero-stat-label">인식 정확도</div>
+                </div>
+                <div class="hero-stat">
+                    <div class="hero-stat-value">150+</div>
+                    <div class="hero-stat-label">지원 언어</div>
+                </div>
+                <div class="hero-stat">
+                    <div class="hero-stat-value">30ms</div>
+                    <div class="hero-stat-label">응답 속도</div>
+                </div>
+                <div class="hero-stat">
+                    <div class="hero-stat-value">500+</div>
+                    <div class="hero-stat-label">기업 고객</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="hero-wave">
+            <div class="wave-bar" style="animation-delay: 0s;"></div>
+            <div class="wave-bar" style="animation-delay: 0.1s;"></div>
+            <div class="wave-bar" style="animation-delay: 0.2s;"></div>
+            <div class="wave-bar" style="animation-delay: 0.3s;"></div>
+            <div class="wave-bar" style="animation-delay: 0.4s;"></div>
+            <div class="wave-bar" style="animation-delay: 0.5s;"></div>
+            <div class="wave-bar" style="animation-delay: 0.6s;"></div>
+            <div class="wave-bar" style="animation-delay: 0.7s;"></div>
+            <div class="wave-bar" style="animation-delay: 0.4s;"></div>
+            <div class="wave-bar" style="animation-delay: 0.3s;"></div>
+            <div class="wave-bar" style="animation-delay: 0.2s;"></div>
+            <div class="wave-bar" style="animation-delay: 0.1s;"></div>
+            <div class="wave-bar" style="animation-delay: 0s;"></div>
+        </div>
+    </section>
+
+    <!-- Marquee Section -->
+    <section class="marquee-section">
+        <div class="marquee">
+            <div class="marquee-content">
+                <span class="marquee-item">실시간 STT</span>
+                <span class="marquee-dot"></span>
+                <span class="marquee-item">화자 분리</span>
+                <span class="marquee-dot"></span>
+                <span class="marquee-item">AI 회의록</span>
+                <span class="marquee-dot"></span>
+                <span class="marquee-item">감정 분석</span>
+                <span class="marquee-dot"></span>
+                <span class="marquee-item">다국어 번역</span>
+                <span class="marquee-dot"></span>
+                <span class="marquee-item">음성 합성</span>
+                <span class="marquee-dot"></span>
+            </div>
+            <div class="marquee-content">
+                <span class="marquee-item">실시간 STT</span>
+                <span class="marquee-dot"></span>
+                <span class="marquee-item">화자 분리</span>
+                <span class="marquee-dot"></span>
+                <span class="marquee-item">AI 회의록</span>
+                <span class="marquee-dot"></span>
+                <span class="marquee-item">감정 분석</span>
+                <span class="marquee-dot"></span>
+                <span class="marquee-item">다국어 번역</span>
+                <span class="marquee-dot"></span>
+                <span class="marquee-item">음성 합성</span>
+                <span class="marquee-dot"></span>
+            </div>
+        </div>
+    </section>
+
+    <!-- Core Solutions Section -->
+    <section class="solutions" id="solutions">
+        <div class="section-header reveal">
+            <div class="section-label">Core Solutions</div>
+            <h2 class="section-title">
+                비즈니스를 위한<br>
+                <span class="highlight">핵심 솔루션</span>
+            </h2>
+            <p class="section-desc">
+                VOXAI의 검증된 음성AI 솔루션으로 업무 효율성을 혁신하세요.
+                모든 산업에 최적화된 맞춤형 서비스를 제공합니다.
+            </p>
+        </div>
+        
+        <div class="solutions-grid">
+            <div class="solution-card reveal">
+                <div class="solution-icon">
+                    <svg viewBox="0 0 24 24" fill="url(#iconGradient)"><path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3zm5.91-3c-.49 0-.9.36-.98.85C16.52 14.2 14.47 16 12 16s-4.52-1.8-4.93-4.15c-.08-.49-.49-.85-.98-.85-.61 0-1.09.54-1 1.14.49 3 2.89 5.35 5.91 5.78V21h2v-3.08c3.02-.43 5.42-2.78 5.91-5.78.1-.6-.39-1.14-1-1.14z"/></svg>
+                </div>
+                <h3>실시간 STT</h3>
+                <p>30ms 초저지연 음성인식 엔진으로 실시간 자막, 라이브 스트리밍, 화상회의에서 완벽한 음성-텍스트 변환을 제공합니다.</p>
+                <div class="solution-features">
+                    <span class="solution-tag">30ms 지연</span>
+                    <span class="solution-tag">노이즈 제거</span>
+                    <span class="solution-tag">스트리밍 API</span>
+                </div>
+            </div>
+            
+            <div class="solution-card reveal" style="animation-delay: 0.1s;">
+                <div class="solution-icon">
+                    <svg viewBox="0 0 24 24" fill="url(#iconGradient)"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg>
+                </div>
+                <h3>화자 분리</h3>
+                <p>AI가 여러 참석자의 목소리를 자동으로 구분하고 각 발언자별로 정확하게 기록합니다. 최대 20명까지 동시 분리 가능.</p>
+                <div class="solution-features">
+                    <span class="solution-tag">다화자 인식</span>
+                    <span class="solution-tag">화자 ID 부여</span>
+                    <span class="solution-tag">99% 정확도</span>
+                </div>
+            </div>
+            
+            <div class="solution-card reveal" style="animation-delay: 0.2s;">
+                <div class="solution-icon">
+                    <svg viewBox="0 0 24 24" fill="url(#iconGradient)"><path d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"/></svg>
+                </div>
+                <h3>AI 회의록</h3>
+                <p>회의 내용을 자동으로 요약하고 핵심 안건, 결정사항, 할일(To-Do)을 추출하여 완벽한 회의록을 생성합니다.</p>
+                <div class="solution-features">
+                    <span class="solution-tag">자동 요약</span>
+                    <span class="solution-tag">안건 추출</span>
+                    <span class="solution-tag">액션아이템</span>
+                </div>
+            </div>
+            
+            <div class="solution-card reveal" style="animation-delay: 0.3s;">
+                <div class="solution-icon">
+                    <svg viewBox="0 0 24 24" fill="url(#iconGradient)"><path d="M12.87 15.07l-2.54-2.51.03-.03c1.74-1.94 2.98-4.17 3.71-6.53H17V4h-7V2H8v2H1v1.99h11.17C11.5 7.92 10.44 9.75 9 11.35 8.07 10.32 7.3 9.19 6.69 8h-2c.73 1.63 1.73 3.17 2.98 4.56l-5.09 5.02L4 19l5-5 3.11 3.11.76-2.04zM18.5 10h-2L12 22h2l1.12-3h4.75L21 22h2l-4.5-12zm-2.62 7l1.62-4.33L19.12 17h-3.24z"/></svg>
+                </div>
+                <h3>실시간 번역</h3>
+                <p>150개 이상의 언어를 실시간으로 번역합니다. 국제 회의, 다국적 기업 커뮤니케이션에 최적화된 솔루션입니다.</p>
+                <div class="solution-features">
+                    <span class="solution-tag">150+ 언어</span>
+                    <span class="solution-tag">동시 통역</span>
+                    <span class="solution-tag">컨텍스트 이해</span>
+                </div>
+            </div>
+            
+            <div class="solution-card reveal" style="animation-delay: 0.4s;">
+                <div class="solution-icon">
+                    <svg viewBox="0 0 24 24" fill="url(#iconGradient)"><path d="M9 21c0 .55.45 1 1 1h4c.55 0 1-.45 1-1v-1H9v1zm3-19C8.14 2 5 5.14 5 9c0 2.38 1.19 4.47 3 5.74V17c0 .55.45 1 1 1h6c.55 0 1-.45 1-1v-2.26c1.81-1.27 3-3.36 3-5.74 0-3.86-3.14-7-7-7zm2.85 11.1l-.85.6V16h-4v-2.3l-.85-.6C7.8 12.16 7 10.63 7 9c0-2.76 2.24-5 5-5s5 2.24 5 5c0 1.63-.8 3.16-2.15 4.1z"/></svg>
+                </div>
+                <h3>감정/의도 분석</h3>
+                <p>음성의 톤, 속도, 억양을 분석하여 화자의 감정 상태와 의도를 파악합니다. 고객 서비스 품질 향상에 필수적입니다.</p>
+                <div class="solution-features">
+                    <span class="solution-tag">감정 인식</span>
+                    <span class="solution-tag">의도 파악</span>
+                    <span class="solution-tag">품질 분석</span>
+                </div>
+            </div>
+            
+            <div class="solution-card reveal" style="animation-delay: 0.5s;">
+                <div class="solution-icon">
+                    <svg viewBox="0 0 24 24" fill="url(#iconGradient)"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/></svg>
+                </div>
+                <h3>음성 합성 (TTS)</h3>
+                <p>자연스러운 AI 음성을 생성합니다. 100개 이상의 목소리 스타일과 감정 표현으로 콘텐츠에 생명을 불어넣습니다.</p>
+                <div class="solution-features">
+                    <span class="solution-tag">100+ 음성</span>
+                    <span class="solution-tag">감정 표현</span>
+                    <span class="solution-tag">SSML 지원</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Technology Showcase -->
+    <section class="tech-showcase" id="technology">
+        <div class="tech-container">
+            <div class="tech-content reveal">
+                <div class="section-label">Core Technology</div>
+                <h2>
+                    <span class="gradient">하이브리드</span> AI 엔진으로<br>
+                    업계 최고 정확도
+                </h2>
+                <p>
+                    VOXAI의 독자적인 하이브리드 STT 엔진은 전통적인 음향 모델과 최신 LLM을 결합하여
+                    잡음 환경, 다양한 억양, 전문 용어까지 완벽하게 처리합니다.
+                </p>
+                
+                <div class="tech-features">
+                    <div class="tech-feature">
+                        <div class="tech-feature-icon">
+                            <svg viewBox="0 0 24 24"><path d="M13 3c-4.97 0-9 4.03-9 9H1l3.89 3.89.07.14L9 12H6c0-3.87 3.13-7 7-7s7 3.13 7 7-3.13 7-7 7c-1.93 0-3.68-.79-4.94-2.06l-1.42 1.42C8.27 19.99 10.51 21 13 21c4.97 0 9-4.03 9-9s-4.03-9-9-9zm-1 5v5l4.28 2.54.72-1.21-3.5-2.08V8H12z"/></svg>
+                        </div>
+                        <div class="tech-feature-text">
+                            <h4>자체 개발 VOX-LLM</h4>
+                            <span>음성 특화 대규모 언어모델로 문맥을 완벽히 이해</span>
+                        </div>
+                    </div>
+                    <div class="tech-feature">
+                        <div class="tech-feature-icon">
+                            <svg viewBox="0 0 24 24"><path d="M11 21h-1l1-7H7.5c-.58 0-.57-.32-.38-.66.19-.34.05-.08.07-.12C8.48 10.94 10.42 7.54 13 3h1l-1 7h3.5c.49 0 .56.33.47.51l-.07.15C12.96 17.55 11 21 11 21z"/></svg>
+                        </div>
+                        <div class="tech-feature-text">
+                            <h4>엣지 AI 최적화</h4>
+                            <span>온디바이스 처리로 개인정보 보호 및 초저지연 구현</span>
+                        </div>
+                    </div>
+                    <div class="tech-feature">
+                        <div class="tech-feature-icon">
+                            <svg viewBox="0 0 24 24"><path d="M19.8 18.4L14 10.67V6.5l1.35-1.69c.26-.33.03-.81-.39-.81H9.04c-.42 0-.65.48-.39.81L10 6.5v4.17L4.2 18.4c-.49.66-.02 1.6.8 1.6h14c.82 0 1.29-.94.8-1.6z"/></svg>
+                        </div>
+                        <div class="tech-feature-text">
+                            <h4>도메인 특화 학습</h4>
+                            <span>의료, 법률, 금융 등 전문 분야별 커스텀 모델 제공</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="tech-visual reveal">
+                <div class="tech-visual-core">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3z"/>
+                        <path d="M17 11c0 2.76-2.24 5-5 5s-5-2.24-5-5H5c0 3.53 2.61 6.43 6 6.92V21h2v-3.08c3.39-.49 6-3.39 6-6.92h-2z"/>
+                    </svg>
+                </div>
+                <div class="tech-ring"></div>
+                <div class="tech-ring"></div>
+                <div class="tech-ring"></div>
+                
+                <div class="tech-float-card">
+                    <div class="label">인식 정확도</div>
+                    <div class="value">99.5%</div>
+                </div>
+                <div class="tech-float-card">
+                    <div class="label">응답 속도</div>
+                    <div class="value">30ms</div>
+                </div>
+                <div class="tech-float-card">
+                    <div class="label">화자 분리</div>
+                    <div class="value">20명+</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Future Business Section -->
+    <section class="future-business" id="future">
+        <div class="future-watermark">2026+</div>
+        
+        <div class="section-header reveal">
+            <div class="section-label">Future Business</div>
+            <h2 class="section-title">
+                2026년 이후<br>
+                <span class="highlight">미래 사업 영역</span>
+            </h2>
+            <p class="section-desc">
+                음성 AI 기술의 진화를 선도하며, 새로운 비즈니스 기회를 창출합니다.
+                VOXAI가 준비하는 차세대 혁신 서비스를 만나보세요.
+            </p>
+        </div>
+        
+        <div class="future-grid">
+            <div class="future-card reveal">
+                <span class="future-card-badge">2026 Q1</span>
+                <div class="future-icon">
+                    <svg viewBox="0 0 24 24" fill="url(#iconGradient)"><path d="M20 9V7c0-1.1-.9-2-2-2h-3c0-1.66-1.34-3-3-3S9 3.34 9 5H6c-1.1 0-2 .9-2 2v2c-1.66 0-3 1.34-3 3s1.34 3 3 3v4c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2v-4c1.66 0 3-1.34 3-3s-1.34-3-3-3zM7.5 11.5c0-.83.67-1.5 1.5-1.5s1.5.67 1.5 1.5S9.83 13 9 13s-1.5-.67-1.5-1.5zM16 17H8v-2h8v2zm-1-4c-.83 0-1.5-.67-1.5-1.5S14.17 10 15 10s1.5.67 1.5 1.5S15.83 13 15 13z"/></svg>
+                </div>
+                <h3>AI 에이전트 어시스턴트</h3>
+                <p>회의에 참여하여 실시간 기록, 정보 검색, 후속 조치까지 자동으로 수행하는 AI 비서</p>
+            </div>
+            
+            <div class="future-card reveal" style="animation-delay: 0.1s;">
+                <span class="future-card-badge">2026 Q2</span>
+                <div class="future-icon">
+                    <svg viewBox="0 0 24 24" fill="url(#iconGradient)"><path d="M18 4l2 4h-3l-2-4h-2l2 4h-3l-2-4H8l2 4H7L5 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V4h-4z"/></svg>
+                </div>
+                <h3>멀티모달 AI 분석</h3>
+                <p>음성, 영상, 텍스트를 통합 분석하여 더 정확한 인사이트를 도출하는 차세대 분석 플랫폼</p>
+            </div>
+            
+            <div class="future-card reveal" style="animation-delay: 0.2s;">
+                <span class="future-card-badge">2026 Q2</span>
+                <div class="future-icon">
+                    <svg viewBox="0 0 24 24" fill="url(#iconGradient)"><path d="M19 3H5c-1.1 0-1.99.9-1.99 2L3 19c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-1 11h-4v4h-4v-4H6v-4h4V6h4v4h4v4z"/></svg>
+                </div>
+                <h3>의료 전문 기록</h3>
+                <p>진료 상담을 자동 기록하고 EMR 연동, 처방 보조까지 지원하는 의료 특화 솔루션</p>
+            </div>
+            
+            <div class="future-card reveal" style="animation-delay: 0.3s;">
+                <span class="future-card-badge">2026 Q3</span>
+                <div class="future-icon">
+                    <svg viewBox="0 0 24 24" fill="url(#iconGradient)"><path d="M4 9h4v11H4zm12 4h4v7h-4zm-6-9h4v16h-4z"/></svg>
+                </div>
+                <h3>법률 음성기록</h3>
+                <p>법정 녹취, 변호사 상담을 정확히 기록하고 법률 용어를 완벽히 이해하는 특화 서비스</p>
+            </div>
+            
+            <div class="future-card reveal" style="animation-delay: 0.4s;">
+                <span class="future-card-badge">2026 Q3</span>
+                <div class="future-icon">
+                    <svg viewBox="0 0 24 24" fill="url(#iconGradient)"><path d="M20.5 6c-2.61.7-5.67 1-8.5 1s-5.89-.3-8.5-1L3 8c1.86.5 4 .83 6 1v13h2v-6h2v6h2V9c2-.17 4.14-.5 6-1l-.5-2zM12 6c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2z"/></svg>
+                </div>
+                <h3>XR/메타버스 음성</h3>
+                <p>VR/AR/MR 환경에서 자연스러운 음성 인터페이스를 제공하는 공간 컴퓨팅 솔루션</p>
+            </div>
+            
+            <div class="future-card reveal" style="animation-delay: 0.5s;">
+                <span class="future-card-badge">2026 Q4</span>
+                <div class="future-icon">
+                    <svg viewBox="0 0 24 24" fill="url(#iconGradient)"><path d="M12 3c-4.97 0-9 4.03-9 9v7c0 1.1.9 2 2 2h4v-8H5v-1c0-3.87 3.13-7 7-7s7 3.13 7 7v1h-4v8h4c1.1 0 2-.9 2-2v-7c0-4.97-4.03-9-9-9z"/></svg>
+                </div>
+                <h3>음성 복제 & 클로닝</h3>
+                <p>몇 초의 샘플만으로 개인 음성을 복제하여 다국어 더빙, 콘텐츠 제작에 활용</p>
+            </div>
+            
+            <div class="future-card reveal" style="animation-delay: 0.6s;">
+                <span class="future-card-badge">2027</span>
+                <div class="future-icon">
+                    <svg viewBox="0 0 24 24" fill="url(#iconGradient)"><path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z"/></svg>
+                </div>
+                <h3>음성 생체인증</h3>
+                <p>성문(Voiceprint) 분석을 통한 차세대 보안 인증 및 사칭 방지 기술</p>
+            </div>
+            
+            <div class="future-card reveal" style="animation-delay: 0.7s;">
+                <span class="future-card-badge">2027</span>
+                <div class="future-icon">
+                    <svg viewBox="0 0 24 24" fill="url(#iconGradient)"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg>
+                </div>
+                <h3>실시간 통역 플랫폼</h3>
+                <p>글로벌 회의에서 참석자 각자의 언어로 실시간 통역되는 바벨피쉬 서비스</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Industries Section -->
+    <section class="industries" id="industries">
+        <div class="section-header reveal">
+            <div class="section-label">Industries</div>
+            <h2 class="section-title">
+                모든 <span class="highlight">산업</span>에<br>
+                적용 가능합니다
+            </h2>
+        </div>
+        
+        <div class="industries-grid">
+            <div class="industry-card reveal">
+                <span class="industry-icon"><svg viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-1.99.9-1.99 2L3 19c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-1 11h-4v4h-4v-4H6v-4h4V6h4v4h4v4z"/></svg></span>
+                <span>헬스케어</span>
+            </div>
+            <div class="industry-card reveal" style="animation-delay: 0.05s;">
+                <span class="industry-icon"><svg viewBox="0 0 24 24"><path d="M4 9h4v11H4zm12 4h4v7h-4zm-6-9h4v16h-4z"/></svg></span>
+                <span>법률</span>
+            </div>
+            <div class="industry-card reveal" style="animation-delay: 0.1s;">
+                <span class="industry-icon"><svg viewBox="0 0 24 24"><path d="M4 10v7h3v-7H4zm6 0v7h3v-7h-3zM2 22h19v-3H2v3zm14-12v7h3v-7h-3zm-4.5-9L2 6v2h19V6l-9.5-5z"/></svg></span>
+                <span>금융</span>
+            </div>
+            <div class="industry-card reveal" style="animation-delay: 0.15s;">
+                <span class="industry-icon"><svg viewBox="0 0 24 24"><path d="M20 15.5c-1.25 0-2.45-.2-3.57-.57-.35-.11-.74-.03-1.02.24l-2.2 2.2c-2.83-1.44-5.15-3.75-6.59-6.59l2.2-2.21c.28-.26.36-.65.25-1C8.7 6.45 8.5 5.25 8.5 4c0-.55-.45-1-1-1H4c-.55 0-1 .45-1 1 0 9.39 7.61 17 17 17 .55 0 1-.45 1-1v-3.5c0-.55-.45-1-1-1zM19 12h2c0-4.97-4.03-9-9-9v2c3.87 0 7 3.13 7 7zm-4 0h2c0-2.76-2.24-5-5-5v2c1.66 0 3 1.34 3 3z"/></svg></span>
+                <span>콜센터</span>
+            </div>
+            <div class="industry-card reveal" style="animation-delay: 0.2s;">
+                <span class="industry-icon"><svg viewBox="0 0 24 24"><path d="M5 13.18v4L12 21l7-3.82v-4L12 17l-7-3.82zM12 3L1 9l11 6 9-4.91V17h2V9L12 3z"/></svg></span>
+                <span>교육</span>
+            </div>
+            <div class="industry-card reveal" style="animation-delay: 0.25s;">
+                <span class="industry-icon"><svg viewBox="0 0 24 24"><path d="M21 3H3c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h5v2h8v-2h5c1.1 0 1.99-.9 1.99-2L23 5c0-1.1-.9-2-2-2zm0 14H3V5h18v12z"/></svg></span>
+                <span>미디어</span>
+            </div>
+            <div class="industry-card reveal" style="animation-delay: 0.3s;">
+                <span class="industry-icon"><svg viewBox="0 0 24 24"><path d="M18.92 6.01C18.72 5.42 18.16 5 17.5 5h-11c-.66 0-1.21.42-1.42 1.01L3 12v8c0 .55.45 1 1 1h1c.55 0 1-.45 1-1v-1h12v1c0 .55.45 1 1 1h1c.55 0 1-.45 1-1v-8l-2.08-5.99zM6.5 16c-.83 0-1.5-.67-1.5-1.5S5.67 13 6.5 13s1.5.67 1.5 1.5S7.33 16 6.5 16zm11 0c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zM5 11l1.5-4.5h11L19 11H5z"/></svg></span>
+                <span>자동차</span>
+            </div>
+            <div class="industry-card reveal" style="animation-delay: 0.35s;">
+                <span class="industry-icon"><svg viewBox="0 0 24 24"><path d="M22 11V3h-7v3H9V3H2v8h7V8h2v10h4v3h7v-8h-7v3h-2V8h2v3h7zM7 9H4V5h3v4zm10 6h3v4h-3v-4zm0-10h3v4h-3V5z"/></svg></span>
+                <span>제조</span>
+            </div>
+            <div class="industry-card reveal" style="animation-delay: 0.4s;">
+                <span class="industry-icon"><svg viewBox="0 0 24 24"><path d="M12 7V3H2v18h20V7H12zM6 19H4v-2h2v2zm0-4H4v-2h2v2zm0-4H4V9h2v2zm0-4H4V5h2v2zm4 12H8v-2h2v2zm0-4H8v-2h2v2zm0-4H8V9h2v2zm0-4H8V5h2v2zm10 12h-8v-2h2v-2h-2v-2h2v-2h-2V9h8v10zm-2-8h-2v2h2v-2zm0 4h-2v2h2v-2z"/></svg></span>
+                <span>공공기관</span>
+            </div>
+            <div class="industry-card reveal" style="animation-delay: 0.45s;">
+                <span class="industry-icon"><svg viewBox="0 0 24 24"><path d="M7 18c-1.1 0-1.99.9-1.99 2S5.9 22 7 22s2-.9 2-2-.9-2-2-2zM1 2v2h2l3.6 7.59-1.35 2.45c-.16.28-.25.61-.25.96 0 1.1.9 2 2 2h12v-2H7.42c-.14 0-.25-.11-.25-.25l.03-.12.9-1.63h7.45c.75 0 1.41-.41 1.75-1.03l3.58-6.49c.08-.14.12-.31.12-.48 0-.55-.45-1-1-1H5.21l-.94-2H1zm16 16c-1.1 0-1.99.9-1.99 2s.89 2 1.99 2 2-.9 2-2-.9-2-2-2z"/></svg></span>
+                <span>이커머스</span>
+            </div>
+            <div class="industry-card reveal" style="animation-delay: 0.5s;">
+                <span class="industry-icon"><svg viewBox="0 0 24 24"><path d="M21 16v-2l-8-5V3.5c0-.83-.67-1.5-1.5-1.5S10 2.67 10 3.5V9l-8 5v2l8-2.5V19l-2 1.5V22l3.5-1 3.5 1v-1.5L13 19v-5.5l8 2.5z"/></svg></span>
+                <span>항공</span>
+            </div>
+            <div class="industry-card reveal" style="animation-delay: 0.55s;">
+                <span class="industry-icon"><svg viewBox="0 0 24 24"><path d="M21 6H3c-1.1 0-2 .9-2 2v8c0 1.1.9 2 2 2h18c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2zm-10 7H8v3H6v-3H3v-2h3V8h2v3h3v2zm4.5 2c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zm4-3c-.83 0-1.5-.67-1.5-1.5S18.67 9 19.5 9s1.5.67 1.5 1.5-.67 1.5-1.5 1.5z"/></svg></span>
+                <span>게임</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- Demo Section -->
+    <section class="demo-section" id="demo">
+        <div class="demo-container reveal">
+            <div class="demo-box">
+                <div class="demo-inner">
+                    <h2>직접 체험해보세요</h2>
+                    <p>마이크 버튼을 누르고 말씀하세요. 실시간으로 음성이 텍스트로 변환됩니다.</p>
+                    
+                    <div class="demo-input-wrapper">
+                        <input type="text" class="demo-input" placeholder="음성 인식 결과가 여기에 표시됩니다..." readonly>
+                        <button class="demo-btn">
+                            <span class="demo-mic"></span>
+                            녹음 시작
+                        </button>
+                    </div>
+                    
+                    <div class="demo-languages">
+                        <span class="demo-lang"><svg viewBox="0 0 36 24"><rect width="36" height="24" fill="#fff"/><circle cx="18" cy="12" r="6" fill="#C60C30"/></svg> 한국어</span>
+                        <span class="demo-lang"><svg viewBox="0 0 36 24"><rect width="36" height="24" fill="#B22234"/><path d="M0 3h36v2H0zm0 4h36v2H0zm0 4h36v2H0zm0 4h36v2H0zm0 4h36v2H0z" fill="#fff"/><rect width="16" height="13" fill="#3C3B6E"/></svg> English</span>
+                        <span class="demo-lang"><svg viewBox="0 0 36 24"><rect width="36" height="24" fill="#fff"/><circle cx="18" cy="12" r="6" fill="#BC002D"/></svg> 日本語</span>
+                        <span class="demo-lang"><svg viewBox="0 0 36 24"><rect width="36" height="24" fill="#DE2910"/><path d="M6 4l1.5 4.5L3 6h6L4.5 8.5z" fill="#FFDE00"/></svg> 中文</span>
+                        <span class="demo-lang"><svg viewBox="0 0 36 24"><rect width="36" height="8" fill="#000"/><rect y="8" width="36" height="8" fill="#DD0000"/><rect y="16" width="36" height="8" fill="#FFCC00"/></svg> Deutsch</span>
+                        <span class="demo-lang"><svg viewBox="0 0 36 24"><rect width="12" height="24" fill="#002395"/><rect x="12" width="12" height="24" fill="#fff"/><rect x="24" width="12" height="24" fill="#ED2939"/></svg> Français</span>
+                        <span class="demo-lang"><svg viewBox="0 0 36 24"><rect width="36" height="8" fill="#AA151B"/><rect y="8" width="36" height="8" fill="#F1BF00"/><rect y="16" width="36" height="8" fill="#AA151B"/></svg> Español</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Pricing Section -->
+    <section class="pricing" id="pricing">
+        <div class="section-header reveal">
+            <div class="section-label">Pricing</div>
+            <h2 class="section-title">
+                투명하고 <span class="highlight">합리적인</span><br>
+                요금제
+            </h2>
+            <p class="section-desc">
+                비즈니스 규모에 맞는 최적의 플랜을 선택하세요.<br>
+                모든 플랜에 14일 무료 체험이 포함됩니다.
+            </p>
+        </div>
+        
+        <div class="pricing-grid">
+            <div class="pricing-card reveal">
+                <div class="pricing-tier">Starter</div>
+                <div class="pricing-price">
+                    <span class="amount">무료</span>
+                </div>
+                <p class="pricing-desc">개인 사용자와 소규모 프로젝트를 위한 무료 플랜</p>
+                <ul class="pricing-features">
+                    <li>월 60분 무료</li>
+                    <li>기본 STT 기능</li>
+                    <li>10개 언어 지원</li>
+                    <li>웹 대시보드</li>
+                    <li>커뮤니티 지원</li>
+                </ul>
+                <button class="btn btn-outline pricing-btn">무료로 시작</button>
+            </div>
+            
+            <div class="pricing-card reveal" style="animation-delay: 0.1s;">
+                <div class="pricing-tier">Professional</div>
+                <div class="pricing-price">
+                    <span class="amount">₩89,000</span>
+                    <span class="period">/월</span>
+                </div>
+                <p class="pricing-desc">성장하는 팀과 스타트업을 위한 프로 플랜</p>
+                <ul class="pricing-features">
+                    <li>월 1,000분</li>
+                    <li>화자 분리 (5명)</li>
+                    <li>50개 언어 지원</li>
+                    <li>AI 회의록 요약</li>
+                    <li>API 접근</li>
+                    <li>이메일 지원</li>
+                </ul>
+                <button class="btn btn-outline pricing-btn">14일 무료 체험</button>
+            </div>
+            
+            <div class="pricing-card featured reveal" style="animation-delay: 0.2s;">
+                <span class="pricing-badge">MOST POPULAR</span>
+                <div class="pricing-tier">Business</div>
+                <div class="pricing-price">
+                    <span class="amount">₩290,000</span>
+                    <span class="period">/월</span>
+                </div>
+                <p class="pricing-desc">중견기업과 대규모 팀을 위한 비즈니스 플랜</p>
+                <ul class="pricing-features">
+                    <li>월 5,000분</li>
+                    <li>화자 분리 (20명)</li>
+                    <li>150개 전체 언어</li>
+                    <li>실시간 번역</li>
+                    <li>감정 분석</li>
+                    <li>전용 API</li>
+                    <li>우선 지원</li>
+                </ul>
+                <button class="btn btn-primary pricing-btn">14일 무료 체험</button>
+            </div>
+            
+            <div class="pricing-card reveal" style="animation-delay: 0.3s;">
+                <div class="pricing-tier">Enterprise</div>
+                <div class="pricing-price">
+                    <span class="amount">맞춤 견적</span>
+                </div>
+                <p class="pricing-desc">대기업과 특수 요구사항을 위한 엔터프라이즈</p>
+                <ul class="pricing-features">
+                    <li>무제한 사용</li>
+                    <li>온프레미스 배포</li>
+                    <li>커스텀 모델 학습</li>
+                    <li>SLA 99.99%</li>
+                    <li>전담 매니저</li>
+                    <li>24/7 프리미엄 지원</li>
+                </ul>
+                <button class="btn btn-outline pricing-btn">상담 요청</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Clients Section -->
+    <section class="clients">
+        <div class="clients-header reveal">
+            <p>500+ 기업이 VOXAI를 신뢰합니다</p>
+        </div>
+        <div class="clients-logos reveal">
+            <span class="client-logo">Samsung</span>
+            <span class="client-logo">LG</span>
+            <span class="client-logo">SK telecom</span>
+            <span class="client-logo">NAVER</span>
+            <span class="client-logo">kakao</span>
+            <span class="client-logo">현대자동차</span>
+            <span class="client-logo">KT</span>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="cta">
+        <div class="cta-bg"></div>
+        <div class="cta-container reveal">
+            <h2>
+                음성 AI의 미래,<br>
+                <span class="gradient">지금 시작하세요</span>
+            </h2>
+            <p>
+                14일 무료 체험으로 VOXAI의 강력한 음성기록 솔루션을 직접 경험해보세요.
+                신용카드 없이 바로 시작할 수 있습니다.
+            </p>
+            <div class="cta-buttons">
+                <a href="#" class="btn btn-primary btn-large">무료 체험 시작하기</a>
+                <a href="#" class="btn btn-outline btn-large">영업팀 문의</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Login Modal -->
+    <div class="modal-overlay login-modal" id="loginModal">
+        <div class="modal">
+            <button class="modal-close" onclick="closeModal('loginModal')">
+                <svg viewBox="0 0 24 24"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+            </button>
+            <div class="modal-header">
+                <div class="modal-icon">
+                    <svg viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+                </div>
+                <h2>로그인</h2>
+                <p>VOXAI 계정으로 로그인하세요</p>
+            </div>
+            <div class="modal-body">
+                <form class="login-form">
+                    <div class="form-group">
+                        <label>이메일</label>
+                        <input type="email" placeholder="name@company.com">
+                    </div>
+                    <div class="form-group">
+                        <label>비밀번호</label>
+                        <input type="password" placeholder="••••••••">
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-large" style="width: 100%; justify-content: center;">로그인</button>
+                </form>
+                <div class="form-divider"><span>또는</span></div>
+                <div class="social-login">
+                    <button class="social-btn">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
+                        Google
+                    </button>
+                    <button class="social-btn">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.477 2 2 6.477 2 12c0 4.42 2.865 8.166 6.839 9.489.5.092.682-.217.682-.482 0-.237-.008-.866-.013-1.7-2.782.604-3.369-1.341-3.369-1.341-.454-1.155-1.11-1.462-1.11-1.462-.908-.62.069-.608.069-.608 1.003.07 1.531 1.03 1.531 1.03.892 1.529 2.341 1.087 2.91.831.092-.646.35-1.086.636-1.336-2.22-.253-4.555-1.11-4.555-4.943 0-1.091.39-1.984 1.029-2.683-.103-.253-.446-1.27.098-2.647 0 0 .84-.269 2.75 1.025A9.578 9.578 0 0112 6.836c.85.004 1.705.115 2.504.337 1.909-1.294 2.747-1.025 2.747-1.025.546 1.377.203 2.394.1 2.647.64.699 1.028 1.592 1.028 2.683 0 3.842-2.339 4.687-4.566 4.935.359.309.678.919.678 1.852 0 1.336-.012 2.415-.012 2.743 0 .267.18.578.688.48C19.138 20.163 22 16.418 22 12c0-5.523-4.477-10-10-10z"/></svg>
+                        GitHub
+                    </button>
+                </div>
+                <p style="text-align: center; margin-top: 24px; font-size: 14px; color: var(--text-muted);">
+                    계정이 없으신가요? <a href="#" onclick="switchModal('loginModal', 'signupModal')" style="color: var(--accent-secondary);">무료로 시작하기</a>
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Signup Modal -->
+    <div class="modal-overlay signup-modal" id="signupModal">
+        <div class="modal">
+            <button class="modal-close" onclick="closeModal('signupModal')">
+                <svg viewBox="0 0 24 24"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+            </button>
+            <div class="modal-header">
+                <div class="modal-icon">
+                    <svg viewBox="0 0 24 24"><path d="M11 21h-1l1-7H7.5c-.58 0-.57-.32-.38-.66.19-.34.05-.08.07-.12C8.48 10.94 10.42 7.54 13 3h1l-1 7h3.5c.49 0 .56.33.47.51l-.07.15C12.96 17.55 11 21 11 21z"/></svg>
+                </div>
+                <h2>무료로 시작하기</h2>
+                <p>14일 무료 체험으로 VOXAI를 경험하세요</p>
+            </div>
+            <div class="modal-body">
+                <div class="plan-selector">
+                    <div class="plan-option active" onclick="selectPlan(this)">
+                        <h4>Starter</h4>
+                        <span>무료 • 월 60분</span>
+                    </div>
+                    <div class="plan-option" onclick="selectPlan(this)">
+                        <h4>Professional</h4>
+                        <span>₩89,000/월</span>
+                    </div>
+                    <div class="plan-option" onclick="selectPlan(this)">
+                        <h4>Business</h4>
+                        <span>₩290,000/월</span>
+                    </div>
+                </div>
+                <form class="login-form">
+                    <div class="form-group">
+                        <label>회사명</label>
+                        <input type="text" placeholder="회사명을 입력하세요">
+                    </div>
+                    <div class="form-group">
+                        <label>이메일</label>
+                        <input type="email" placeholder="name@company.com">
+                    </div>
+                    <div class="form-group">
+                        <label>비밀번호</label>
+                        <input type="password" placeholder="8자 이상 입력">
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-large" style="width: 100%; justify-content: center;">무료 체험 시작</button>
+                </form>
+                <p style="text-align: center; margin-top: 24px; font-size: 14px; color: var(--text-muted);">
+                    이미 계정이 있으신가요? <a href="#" onclick="switchModal('signupModal', 'loginModal')" style="color: var(--accent-secondary);">로그인</a>
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Solution Detail Modal -->
+    <div class="modal-overlay" id="solutionModal">
+        <div class="modal">
+            <button class="modal-close" onclick="closeModal('solutionModal')">
+                <svg viewBox="0 0 24 24"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+            </button>
+            <div class="modal-header">
+                <div class="modal-icon" id="solutionModalIcon"></div>
+                <h2 id="solutionModalTitle">솔루션</h2>
+                <p id="solutionModalDesc">솔루션 설명</p>
+            </div>
+            <div class="modal-body">
+                <div class="modal-stats" id="solutionModalStats">
+                    <div class="modal-stat">
+                        <div class="modal-stat-value">99.5%</div>
+                        <div class="modal-stat-label">정확도</div>
+                    </div>
+                    <div class="modal-stat">
+                        <div class="modal-stat-value">30ms</div>
+                        <div class="modal-stat-label">응답속도</div>
+                    </div>
+                    <div class="modal-stat">
+                        <div class="modal-stat-value">150+</div>
+                        <div class="modal-stat-label">지원언어</div>
+                    </div>
+                </div>
+                <div class="modal-features" id="solutionModalFeatures"></div>
+                <div class="modal-cta">
+                    <button class="btn btn-primary btn-large" onclick="switchModal('solutionModal', 'signupModal')">무료로 시작하기</button>
+                    <button class="btn btn-outline btn-large" onclick="closeModal('solutionModal')">자세히 보기</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Industry Detail Modal -->
+    <div class="modal-overlay industry-detail" id="industryModal">
+        <div class="modal">
+            <button class="modal-close" onclick="closeModal('industryModal')">
+                <svg viewBox="0 0 24 24"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+            </button>
+            <div class="modal-header">
+                <div class="modal-icon" id="industryModalIcon"></div>
+                <h2 id="industryModalTitle">산업분야</h2>
+                <p id="industryModalDesc">VOXAI가 제공하는 맞춤 솔루션</p>
+            </div>
+            <div class="modal-body">
+                <div class="industry-use-cases">
+                    <h4>주요 활용 사례</h4>
+                    <div class="use-case-list" id="industryUseCases"></div>
+                </div>
+                <div class="industry-use-cases">
+                    <h4>도입 효과</h4>
+                    <div class="modal-stats" style="margin-top: 20px;">
+                        <div class="modal-stat">
+                            <div class="modal-stat-value">40%</div>
+                            <div class="modal-stat-label">업무시간 절감</div>
+                        </div>
+                        <div class="modal-stat">
+                            <div class="modal-stat-value">95%</div>
+                            <div class="modal-stat-label">고객 만족도</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-cta" style="margin-top: 40px;">
+                    <button class="btn btn-primary btn-large" onclick="switchModal('industryModal', 'signupModal')">도입 문의하기</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Pricing Detail Modal -->
+    <div class="modal-overlay" id="pricingModal">
+        <div class="modal">
+            <button class="modal-close" onclick="closeModal('pricingModal')">
+                <svg viewBox="0 0 24 24"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+            </button>
+            <div class="modal-header">
+                <div class="modal-icon">
+                    <svg viewBox="0 0 24 24"><path d="M11.8 10.9c-2.27-.59-3-1.2-3-2.15 0-1.09 1.01-1.85 2.7-1.85 1.78 0 2.44.85 2.5 2.1h2.21c-.07-1.72-1.12-3.3-3.21-3.81V3h-3v2.16c-1.94.42-3.5 1.68-3.5 3.61 0 2.31 1.91 3.46 4.7 4.13 2.5.6 3 1.48 3 2.41 0 .69-.49 1.79-2.7 1.79-2.06 0-2.87-.92-2.98-2.1h-2.2c.12 2.19 1.76 3.42 3.68 3.83V21h3v-2.15c1.95-.37 3.5-1.5 3.5-3.55 0-2.84-2.43-3.81-4.7-4.4z"/></svg>
+                </div>
+                <h2 id="pricingModalTitle">요금제</h2>
+                <p id="pricingModalDesc">플랜 상세 정보</p>
+            </div>
+            <div class="modal-body">
+                <div class="modal-features" id="pricingModalFeatures"></div>
+                <div class="modal-cta">
+                    <button class="btn btn-primary btn-large" onclick="switchModal('pricingModal', 'signupModal')">이 플랜으로 시작</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Contact/Enterprise Modal -->
+    <div class="modal-overlay" id="contactModal">
+        <div class="modal" style="max-width: 600px;">
+            <button class="modal-close" onclick="closeModal('contactModal')">
+                <svg viewBox="0 0 24 24"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+            </button>
+            <div class="modal-header">
+                <div class="modal-icon">
+                    <svg viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
+                </div>
+                <h2>영업팀 문의</h2>
+                <p>Enterprise 솔루션에 대해 상담받으세요</p>
+            </div>
+            <div class="modal-body">
+                <form class="login-form">
+                    <div class="form-group">
+                        <label>회사명</label>
+                        <input type="text" placeholder="회사명을 입력하세요">
+                    </div>
+                    <div class="form-group">
+                        <label>담당자명</label>
+                        <input type="text" placeholder="성함을 입력하세요">
+                    </div>
+                    <div class="form-group">
+                        <label>이메일</label>
+                        <input type="email" placeholder="name@company.com">
+                    </div>
+                    <div class="form-group">
+                        <label>연락처</label>
+                        <input type="tel" placeholder="010-0000-0000">
+                    </div>
+                    <div class="form-group">
+                        <label>문의 내용</label>
+                        <textarea style="padding: 16px 20px; background: var(--bg-elevated); border: 1px solid var(--border-subtle); border-radius: 12px; font-family: var(--font-body); font-size: 16px; color: var(--text-white); outline: none; resize: vertical; min-height: 100px;" placeholder="도입 목적, 예상 사용량 등을 알려주세요"></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-large" style="width: 100%; justify-content: center;">상담 요청하기</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-container">
+            <div class="footer-top">
+                <div class="footer-brand">
+                    <div class="footer-logo">
+                        <div class="footer-logo-icon"></div>
+                        <span class="footer-logo-text">VOXAI</span>
+                    </div>
+                    <p>VOXAI는 국내 1위 AI 음성기록 전문기업으로, 기업의 모든 음성 데이터를 가치있는 정보로 변환합니다. 세계 최고 수준의 기술력으로 비즈니스 혁신을 이끌어갑니다.</p>
+                </div>
+                
+                <div class="footer-column">
+                    <h4>Products</h4>
+                    <ul>
+                        <li><a href="#">실시간 STT</a></li>
+                        <li><a href="#">화자 분리</a></li>
+                        <li><a href="#">AI 회의록</a></li>
+                        <li><a href="#">실시간 번역</a></li>
+                        <li><a href="#">음성 합성</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-column">
+                    <h4>Solutions</h4>
+                    <ul>
+                        <li><a href="#">콜센터</a></li>
+                        <li><a href="#">헬스케어</a></li>
+                        <li><a href="#">법률</a></li>
+                        <li><a href="#">미디어</a></li>
+                        <li><a href="#">교육</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-column">
+                    <h4>Developers</h4>
+                    <ul>
+                        <li><a href="#">API 문서</a></li>
+                        <li><a href="#">SDK</a></li>
+                        <li><a href="#">개발자 포럼</a></li>
+                        <li><a href="#">GitHub</a></li>
+                        <li><a href="#">Status</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-column">
+                    <h4>Company</h4>
+                    <ul>
+                        <li><a href="#">회사 소개</a></li>
+                        <li><a href="#">채용</a></li>
+                        <li><a href="#">뉴스룸</a></li>
+                        <li><a href="#">파트너</a></li>
+                        <li><a href="#">문의</a></li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <p class="footer-copyright">© 2026 VOXAI Inc. All rights reserved.</p>
+                <div class="footer-social">
+                    <a href="#">𝕏</a>
+                    <a href="#">in</a>
+                    <a href="#">▶</a>
+                    <a href="#">◉</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // ===== MODAL SYSTEM =====
+        function openModal(modalId) {
+            document.getElementById(modalId).classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).classList.remove('active');
+            document.body.style.overflow = '';
+        }
+
+        function switchModal(fromModal, toModal) {
+            closeModal(fromModal);
+            setTimeout(() => openModal(toModal), 300);
+        }
+
+        // Close modal on overlay click
+        document.querySelectorAll('.modal-overlay').forEach(overlay => {
+            overlay.addEventListener('click', (e) => {
+                if (e.target === overlay) {
+                    overlay.classList.remove('active');
+                    document.body.style.overflow = '';
+                }
+            });
+        });
+
+        // Close modal on Escape key
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                document.querySelectorAll('.modal-overlay.active').forEach(modal => {
+                    modal.classList.remove('active');
+                    document.body.style.overflow = '';
+                });
+            }
+        });
+
+        // ===== SOLUTION DATA =====
+        const solutionData = {
+            'stt': {
+                title: '실시간 STT',
+                desc: '30ms 초저지연 음성인식 엔진으로 실시간 자막과 음성-텍스트 변환을 제공합니다',
+                icon: '<svg viewBox="0 0 24 24" fill="url(#iconGradient)"><path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3zm5.91-3c-.49 0-.9.36-.98.85C16.52 14.2 14.47 16 12 16s-4.52-1.8-4.93-4.15c-.08-.49-.49-.85-.98-.85-.61 0-1.09.54-1 1.14.49 3 2.89 5.35 5.91 5.78V21h2v-3.08c3.02-.43 5.42-2.78 5.91-5.78.1-.6-.39-1.14-1-1.14z"/></svg>',
+                stats: [{v: '30ms', l: '응답속도'}, {v: '99.5%', l: '정확도'}, {v: '150+', l: '지원언어'}],
+                features: [
+                    {title: '실시간 스트리밍', desc: 'WebSocket 기반 실시간 처리'},
+                    {title: '노이즈 캔슬링', desc: 'AI 기반 배경 소음 제거'},
+                    {title: '다국어 동시인식', desc: '언어 자동 감지 및 전환'},
+                    {title: '커스텀 어휘', desc: '도메인 특화 용어 사전 지원'}
+                ]
+            },
+            'speaker': {
+                title: '화자 분리',
+                desc: 'AI가 여러 참석자의 목소리를 자동으로 구분하고 정확하게 기록합니다',
+                icon: '<svg viewBox="0 0 24 24" fill="url(#iconGradient)"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg>',
+                stats: [{v: '20명+', l: '동시분리'}, {v: '99%', l: '정확도'}, {v: '실시간', l: '처리속도'}],
+                features: [
+                    {title: '다화자 인식', desc: '최대 20명까지 동시 분리'},
+                    {title: '화자 ID 부여', desc: '개별 화자 태그 자동 할당'},
+                    {title: '음성 프로파일', desc: '등록된 화자 자동 인식'},
+                    {title: '타임라인 뷰', desc: '화자별 발언 시각화'}
+                ]
+            },
+            'minutes': {
+                title: 'AI 회의록',
+                desc: '회의 내용을 자동 요약하고 핵심 안건과 액션아이템을 추출합니다',
+                icon: '<svg viewBox="0 0 24 24" fill="url(#iconGradient)"><path d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"/></svg>',
+                stats: [{v: '5분', l: '요약시간'}, {v: '자동', l: '안건추출'}, {v: '연동', l: '캘린더'}],
+                features: [
+                    {title: '자동 요약', desc: 'AI가 핵심 내용만 추출'},
+                    {title: '안건 분류', desc: '토픽별 자동 카테고리화'},
+                    {title: '액션아이템', desc: 'To-Do 및 담당자 추출'},
+                    {title: '공유 & 내보내기', desc: '다양한 형식으로 출력'}
+                ]
+            },
+            'translate': {
+                title: '실시간 번역',
+                desc: '150개 이상의 언어를 실시간으로 번역하는 글로벌 솔루션입니다',
+                icon: '<svg viewBox="0 0 24 24" fill="url(#iconGradient)"><path d="M12.87 15.07l-2.54-2.51.03-.03c1.74-1.94 2.98-4.17 3.71-6.53H17V4h-7V2H8v2H1v1.99h11.17C11.5 7.92 10.44 9.75 9 11.35 8.07 10.32 7.3 9.19 6.69 8h-2c.73 1.63 1.73 3.17 2.98 4.56l-5.09 5.02L4 19l5-5 3.11 3.11.76-2.04zM18.5 10h-2L12 22h2l1.12-3h4.75L21 22h2l-4.5-12zm-2.62 7l1.62-4.33L19.12 17h-3.24z"/></svg>',
+                stats: [{v: '150+', l: '지원언어'}, {v: '실시간', l: '번역속도'}, {v: '95%', l: '정확도'}],
+                features: [
+                    {title: '동시 통역', desc: '실시간 음성 번역 제공'},
+                    {title: '문맥 이해', desc: 'AI가 맥락을 파악하여 번역'},
+                    {title: '전문 용어', desc: '도메인별 용어집 지원'},
+                    {title: '자막 출력', desc: '다국어 자막 동시 생성'}
+                ]
+            },
+            'emotion': {
+                title: '감정/의도 분석',
+                desc: '음성의 톤과 억양을 분석하여 화자의 감정과 의도를 파악합니다',
+                icon: '<svg viewBox="0 0 24 24" fill="url(#iconGradient)"><path d="M9 21c0 .55.45 1 1 1h4c.55 0 1-.45 1-1v-1H9v1zm3-19C8.14 2 5 5.14 5 9c0 2.38 1.19 4.47 3 5.74V17c0 .55.45 1 1 1h6c.55 0 1-.45 1-1v-2.26c1.81-1.27 3-3.36 3-5.74 0-3.86-3.14-7-7-7z"/></svg>',
+                stats: [{v: '7가지', l: '감정분류'}, {v: '실시간', l: '분석속도'}, {v: '92%', l: '정확도'}],
+                features: [
+                    {title: '감정 인식', desc: '기쁨, 슬픔, 분노 등 7가지 감정'},
+                    {title: '의도 파악', desc: '질문, 요청, 불만 등 분류'},
+                    {title: '대시보드', desc: '실시간 감정 트렌드 시각화'},
+                    {title: '알림 설정', desc: '부정 감정 감지 시 즉시 알림'}
+                ]
+            },
+            'tts': {
+                title: '음성 합성 (TTS)',
+                desc: '자연스러운 AI 음성으로 텍스트를 음성으로 변환합니다',
+                icon: '<svg viewBox="0 0 24 24" fill="url(#iconGradient)"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/></svg>',
+                stats: [{v: '100+', l: '음성스타일'}, {v: '자연스러운', l: '발음품질'}, {v: 'SSML', l: '지원'}],
+                features: [
+                    {title: '다양한 음성', desc: '성별, 연령, 억양별 선택'},
+                    {title: '감정 표현', desc: '기쁨, 슬픔 등 감정 연기'},
+                    {title: 'SSML 지원', desc: '세밀한 음성 제어 가능'},
+                    {title: '빠른 생성', desc: '실시간 스트리밍 지원'}
+                ]
+            }
+        };
+
+        // ===== INDUSTRY DATA =====
+        const industryData = {
+            '헬스케어': ['진료 기록 자동 작성', 'EMR/EHR 시스템 연동', '의료진 간 커뮤니케이션 기록', '원격진료 자막 및 기록', '의학 용어 특화 인식'],
+            '법률': ['법정 녹취록 작성', '변호사-의뢰인 상담 기록', '계약서 검토 음성 메모', '법률 용어 특화 인식', '증거 음성 분석'],
+            '금융': ['고객 상담 기록 및 분석', '컴플라이언스 모니터링', '보이스 뱅킹 서비스', '사기 탐지 음성 분석', '트레이딩 룸 녹취'],
+            '콜센터': ['실시간 상담 자막', '감정 분석 및 에스컬레이션', '상담 품질 자동 평가', 'VOC 분석 리포트', '상담원 코칭 지원'],
+            '교육': ['강의 자막 자동 생성', '학습자 발음 평가', '다국어 교육 콘텐츠', '토론 내용 기록', '온라인 시험 부정행위 탐지'],
+            '미디어': ['방송 실시간 자막', '팟캐스트 전사', '영상 메타데이터 생성', '다국어 더빙 지원', '콘텐츠 검색 최적화'],
+            '자동차': ['차량 내 음성 비서', '운전자 졸음 감지', '핸즈프리 내비게이션', '차량 진단 음성 리포트', '긴급 상황 자동 신고'],
+            '제조': ['작업 지시 음성 입력', '품질 검사 음성 기록', '안전 경고 음성 알림', '설비 점검 리포트', '핸즈프리 매뉴얼 조회'],
+            '공공기관': ['민원 상담 기록', '회의록 자동 작성', '공청회 기록', '다국어 민원 서비스', '음성 기반 접근성 지원'],
+            '이커머스': ['음성 쇼핑 지원', '고객 리뷰 음성 분석', '상담 챗봇 음성 지원', '배송 상태 음성 알림', '음성 검색 최적화'],
+            '항공': ['승객 안내 방송 자막', '조종실 통신 기록', '승무원 브리핑 기록', '다국어 고객 서비스', '안전 교육 콘텐츠'],
+            '게임': 'NPC 음성 합성, 실시간 음성 채팅 번역, 게임 스트리밍 자막, 음성 명령 인터페이스, 캐릭터 보이스 생성'.split(', ')
+        };
+
+        // ===== OPEN SOLUTION MODAL =====
+        function openSolutionModal(type) {
+            const data = solutionData[type];
+            if (!data) return;
+            
+            document.getElementById('solutionModalIcon').innerHTML = data.icon;
+            document.getElementById('solutionModalTitle').textContent = data.title;
+            document.getElementById('solutionModalDesc').textContent = data.desc;
+            
+            // Stats
+            const statsHtml = data.stats.map(s => `
+                <div class="modal-stat">
+                    <div class="modal-stat-value">${s.v}</div>
+                    <div class="modal-stat-label">${s.l}</div>
+                </div>
+            `).join('');
+            document.getElementById('solutionModalStats').innerHTML = statsHtml;
+            
+            // Features
+            const featuresHtml = data.features.map(f => `
+                <div class="modal-feature">
+                    <div class="modal-feature-icon">
+                        <svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z"/></svg>
+                    </div>
+                    <div class="modal-feature-text">
+                        <h4>${f.title}</h4>
+                        <p>${f.desc}</p>
+                    </div>
+                </div>
+            `).join('');
+            document.getElementById('solutionModalFeatures').innerHTML = featuresHtml;
+            
+            openModal('solutionModal');
+        }
+
+        // ===== OPEN INDUSTRY MODAL =====
+        function openIndustryModal(industryName, iconSvg) {
+            const useCases = industryData[industryName];
+            if (!useCases) return;
+            
+            document.getElementById('industryModalIcon').innerHTML = iconSvg;
+            document.getElementById('industryModalTitle').textContent = industryName + ' 솔루션';
+            document.getElementById('industryModalDesc').textContent = `${industryName} 분야를 위한 VOXAI 맞춤 솔루션`;
+            
+            const useCaseArray = Array.isArray(useCases) ? useCases : useCases.split(', ');
+            const useCasesHtml = useCaseArray.map(uc => `
+                <div class="use-case-item">${uc}</div>
+            `).join('');
+            document.getElementById('industryUseCases').innerHTML = useCasesHtml;
+            
+            openModal('industryModal');
+        }
+
+        // ===== PLAN SELECTOR =====
+        function selectPlan(element) {
+            document.querySelectorAll('.plan-option').forEach(el => el.classList.remove('active'));
+            element.classList.add('active');
+        }
+
+        // ===== SOLUTION CARD CLICK EVENTS =====
+        const solutionTypes = ['stt', 'speaker', 'minutes', 'translate', 'emotion', 'tts'];
+        document.querySelectorAll('.solution-card').forEach((card, index) => {
+            card.addEventListener('click', () => {
+                openSolutionModal(solutionTypes[index]);
+            });
+        });
+
+        // ===== INDUSTRY CARD CLICK EVENTS =====
+        document.querySelectorAll('.industry-card').forEach((card) => {
+            card.addEventListener('click', () => {
+                const industryName = card.querySelector('span:last-child').textContent;
+                const iconSvg = card.querySelector('.industry-icon').innerHTML;
+                openIndustryModal(industryName, iconSvg);
+            });
+        });
+
+        // ===== BUTTON CLICK EVENTS =====
+        // Login button
+        document.querySelectorAll('.btn-ghost').forEach(btn => {
+            if (btn.textContent.includes('로그인')) {
+                btn.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    openModal('loginModal');
+                });
+            }
+        });
+
+        // Signup/Free trial buttons
+        document.querySelectorAll('.btn-primary').forEach(btn => {
+            const text = btn.textContent;
+            if (text.includes('무료') || text.includes('체험') || text.includes('시작')) {
+                btn.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    openModal('signupModal');
+                });
+            }
+        });
+
+        // Contact/Enterprise buttons
+        document.querySelectorAll('.btn-outline').forEach(btn => {
+            const text = btn.textContent;
+            if (text.includes('영업팀') || text.includes('상담')) {
+                btn.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    openModal('contactModal');
+                });
+            }
+        });
+
+        // Pricing buttons
+        document.querySelectorAll('.pricing-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                e.preventDefault();
+                const text = btn.textContent;
+                if (text.includes('상담')) {
+                    openModal('contactModal');
+                } else {
+                    openModal('signupModal');
+                }
+            });
+        });
+
+        // ===== SCROLL REVEAL ANIMATION =====
+        const revealElements = document.querySelectorAll('.reveal');
+        
+        const revealOnScroll = () => {
+            revealElements.forEach(el => {
+                const elementTop = el.getBoundingClientRect().top;
+                const windowHeight = window.innerHeight;
+                
+                if (elementTop < windowHeight - 100) {
+                    el.classList.add('active');
+                }
+            });
+        };
+        
+        window.addEventListener('scroll', revealOnScroll);
+        revealOnScroll();
+
+        // Sound Wave Randomization
+        const waveBars = document.querySelectorAll('.wave-bar');
+        waveBars.forEach((bar, i) => {
+            const randomDuration = 0.8 + Math.random() * 0.8;
+            bar.style.animationDuration = `${randomDuration}s`;
+        });
+
+        // Nav Scroll Effect
+        const nav = document.querySelector('.nav');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 50) {
+                nav.style.background = 'rgba(3, 3, 8, 0.95)';
+            } else {
+                nav.style.background = 'rgba(3, 3, 8, 0.8)';
+            }
+        });
+
+        // Demo Recording Simulation
+        const demoBtn = document.querySelector('.demo-btn');
+        const demoInput = document.querySelector('.demo-input');
+        let isRecording = false;
+
+        demoBtn.addEventListener('click', () => {
+            isRecording = !isRecording;
+            
+            if (isRecording) {
+                demoBtn.innerHTML = '<span class="demo-mic" style="background: #ef4444;"></span> 녹음 중...';
+                demoBtn.style.background = 'linear-gradient(135deg, #ef4444, #f97316)';
+                demoInput.placeholder = '듣고 있습니다...';
+                
+                const texts = [
+                    '안녕하세요, ',
+                    '안녕하세요, VOXAI입니다. ',
+                    '안녕하세요, VOXAI입니다. 음성을 ',
+                    '안녕하세요, VOXAI입니다. 음성을 완벽하게 ',
+                    '안녕하세요, VOXAI입니다. 음성을 완벽하게 기록합니다.'
+                ];
+                
+                let index = 0;
+                const typeInterval = setInterval(() => {
+                    if (index < texts.length && isRecording) {
+                        demoInput.value = texts[index];
+                        index++;
+                    } else {
+                        clearInterval(typeInterval);
+                    }
+                }, 400);
+            } else {
+                demoBtn.innerHTML = '<span class="demo-mic"></span> 녹음 시작';
+                demoBtn.style.background = 'var(--gradient-main)';
+            }
+        });
+
+        // Smooth Scroll
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Parallax effect for orbs
+        document.addEventListener('mousemove', (e) => {
+            const orbs = document.querySelectorAll('.hero-orb');
+            const x = (e.clientX / window.innerWidth - 0.5) * 2;
+            const y = (e.clientY / window.innerHeight - 0.5) * 2;
+            
+            orbs.forEach((orb, i) => {
+                const speed = (i + 1) * 15;
+                orb.style.transform = `translate(${x * speed}px, ${y * speed}px)`;
+            });
+        });
+
+        // Prevent form submission (demo only)
+        document.querySelectorAll('form').forEach(form => {
+            form.addEventListener('submit', (e) => {
+                e.preventDefault();
+                alert('데모 페이지입니다. 실제 서비스에서는 회원가입/로그인이 처리됩니다.');
+            });
+        });
+
+        // ===== FUTURE BUSINESS DATA =====
+        const futureData = [
+            {
+                title: 'AI 에이전트 어시스턴트',
+                desc: '회의에 참여하여 실시간 기록, 정보 검색, 후속 조치까지 자동으로 수행하는 AI 비서입니다.',
+                badge: '2026 Q1',
+                features: [
+                    '회의 실시간 참여 및 기록',
+                    '관련 문서 자동 검색',
+                    '액션아이템 자동 할당',
+                    '후속 이메일 자동 작성',
+                    '캘린더 일정 자동 등록'
+                ]
+            },
+            {
+                title: '멀티모달 AI 분석',
+                desc: '음성, 영상, 텍스트를 통합 분석하여 더 정확한 인사이트를 도출하는 차세대 분석 플랫폼입니다.',
+                badge: '2026 Q2',
+                features: [
+                    '음성+영상 동시 분석',
+                    '비언어적 커뮤니케이션 해석',
+                    '프레젠테이션 자료 자동 연결',
+                    '참석자 집중도 분석',
+                    '종합 인사이트 리포트'
+                ]
+            },
+            {
+                title: '의료 전문 기록',
+                desc: '진료 상담을 자동 기록하고 EMR 연동, 처방 보조까지 지원하는 의료 특화 솔루션입니다.',
+                badge: '2026 Q2',
+                features: [
+                    '의학 용어 99.9% 인식',
+                    '주요 EMR 시스템 연동',
+                    '진단 코드 자동 추천',
+                    '처방 중복 경고',
+                    'HIPAA 규정 준수'
+                ]
+            },
+            {
+                title: '법률 음성기록',
+                desc: '법정 녹취, 변호사 상담을 정확히 기록하고 법률 용어를 완벽히 이해하는 특화 서비스입니다.',
+                badge: '2026 Q3',
+                features: [
+                    '법정 녹취 공식 인증',
+                    '판례 자동 연결',
+                    '법률 용어 사전 내장',
+                    '증거 타임스탬프 기록',
+                    '보안 암호화 저장'
+                ]
+            },
+            {
+                title: 'XR/메타버스 음성',
+                desc: 'VR/AR/MR 환경에서 자연스러운 음성 인터페이스를 제공하는 공간 컴퓨팅 솔루션입니다.',
+                badge: '2026 Q3',
+                features: [
+                    '3D 공간 음성 인식',
+                    '아바타 실시간 립싱크',
+                    '가상 회의실 자막',
+                    '공간 오디오 처리',
+                    '제스처-음성 통합'
+                ]
+            },
+            {
+                title: '음성 복제 & 클로닝',
+                desc: '몇 초의 샘플만으로 개인 음성을 복제하여 다국어 더빙, 콘텐츠 제작에 활용합니다.',
+                badge: '2026 Q4',
+                features: [
+                    '10초 샘플로 복제',
+                    '다국어 음성 변환',
+                    '감정 표현 유지',
+                    '실시간 목소리 변환',
+                    '윤리적 사용 보장'
+                ]
+            },
+            {
+                title: '음성 생체인증',
+                desc: '성문(Voiceprint) 분석을 통한 차세대 보안 인증 및 사칭 방지 기술입니다.',
+                badge: '2027',
+                features: [
+                    '성문 기반 본인 확인',
+                    '딥페이크 음성 탐지',
+                    '실시간 인증',
+                    '다중 인증 통합',
+                    '금융급 보안'
+                ]
+            },
+            {
+                title: '실시간 통역 플랫폼',
+                desc: '글로벌 회의에서 참석자 각자의 언어로 실시간 통역되는 바벨피쉬 서비스입니다.',
+                badge: '2027',
+                features: [
+                    '50+ 언어 동시 통역',
+                    '참석자별 언어 설정',
+                    '문화적 뉘앙스 반영',
+                    '전문 분야별 통역',
+                    '지연 100ms 이하'
+                ]
+            }
+        ];
+
+        // Future card click events
+        document.querySelectorAll('.future-card').forEach((card, index) => {
+            card.addEventListener('click', () => {
+                const data = futureData[index];
+                if (!data) return;
+                
+                // Use solution modal for future items
+                document.getElementById('solutionModalIcon').innerHTML = card.querySelector('.future-icon').innerHTML;
+                document.getElementById('solutionModalTitle').textContent = data.title;
+                document.getElementById('solutionModalDesc').textContent = data.desc;
+                
+                // Stats
+                document.getElementById('solutionModalStats').innerHTML = `
+                    <div class="modal-stat">
+                        <div class="modal-stat-value">${data.badge}</div>
+                        <div class="modal-stat-label">출시 예정</div>
+                    </div>
+                    <div class="modal-stat">
+                        <div class="modal-stat-value">사전예약</div>
+                        <div class="modal-stat-label">가능</div>
+                    </div>
+                `;
+                
+                // Features
+                const featuresHtml = data.features.map(f => `
+                    <div class="modal-feature">
+                        <div class="modal-feature-icon">
+                            <svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z"/></svg>
+                        </div>
+                        <div class="modal-feature-text">
+                            <h4>${f}</h4>
+                            <p>출시 예정 기능</p>
+                        </div>
+                    </div>
+                `).join('');
+                document.getElementById('solutionModalFeatures').innerHTML = featuresHtml;
+                
+                openModal('solutionModal');
+            });
+        });
+
+        // Live Demo button - scroll to demo section
+        document.querySelectorAll('.btn-outline').forEach(btn => {
+            if (btn.textContent.includes('데모')) {
+                btn.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const demoSection = document.getElementById('demo');
+                    if (demoSection) {
+                        demoSection.scrollIntoView({
+                            behavior: 'smooth',
+                            block: 'start'
+                        });
+                    }
+                });
+            }
+        });
+    </script>
+</body>
+</html>
+

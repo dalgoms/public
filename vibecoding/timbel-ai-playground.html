@@ -1,0 +1,2862 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Timbel AI — Intelligent Code Assistant</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-primary: #09090b;
+            --bg-secondary: #0f0f12;
+            --bg-tertiary: #18181b;
+            --bg-card: #1c1c20;
+            --border-color: #27272a;
+            --border-light: #3f3f46;
+            --text-primary: #fafafa;
+            --text-secondary: #a1a1aa;
+            --text-muted: #71717a;
+            --accent-blue: #3b82f6;
+            --accent-blue-light: #60a5fa;
+            --accent-blue-dark: #2563eb;
+            --accent-cyan: #22d3ee;
+            --accent-indigo: #818cf8;
+            --accent-green: #22c55e;
+            --accent-red: #ef4444;
+            --accent-yellow: #eab308;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html, body {
+            height: 100%;
+            overflow: hidden;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+        }
+
+        /* Fixed Viewport Container */
+        .app-container {
+            width: 100%;
+            height: 100vh;
+            max-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        /* Top Header Bar */
+        .top-bar {
+            height: 48px;
+            min-height: 48px;
+            background: var(--bg-secondary);
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 16px;
+            z-index: 100;
+        }
+
+        .logo-section {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .logo-icon {
+            width: 28px;
+            height: 28px;
+            border-radius: 6px;
+            background: linear-gradient(135deg, var(--accent-blue), var(--accent-indigo));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 12px;
+            color: white;
+        }
+
+        .logo-text {
+            font-weight: 700;
+            font-size: 15px;
+            letter-spacing: -0.02em;
+        }
+
+        .logo-text span {
+            color: var(--accent-blue);
+        }
+
+        .logo-badge {
+            padding: 2px 6px;
+            background: var(--accent-blue);
+            border-radius: 4px;
+            font-size: 10px;
+            font-weight: 600;
+            color: white;
+            margin-left: 6px;
+        }
+
+        .nav-tabs {
+            display: flex;
+            gap: 4px;
+        }
+
+        .nav-tab {
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 13px;
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: all 0.15s ease;
+            border: none;
+            background: transparent;
+        }
+
+        .nav-tab:hover {
+            background: var(--bg-tertiary);
+            color: var(--text-primary);
+        }
+
+        .nav-tab.active {
+            background: var(--bg-tertiary);
+            color: var(--accent-blue);
+        }
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .header-btn {
+            padding: 6px 12px;
+            border-radius: 6px;
+            background: transparent;
+            border: 1px solid var(--border-color);
+            color: var(--text-secondary);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 13px;
+            font-family: inherit;
+            transition: all 0.15s ease;
+        }
+
+        .header-btn:hover {
+            background: var(--bg-tertiary);
+            color: var(--text-primary);
+            border-color: var(--border-light);
+        }
+
+        .header-btn.primary {
+            background: var(--accent-blue);
+            border-color: var(--accent-blue);
+            color: white;
+        }
+
+        .header-btn.primary:hover {
+            background: var(--accent-blue-dark);
+        }
+
+        /* Main Layout */
+        .main-layout {
+            flex: 1;
+            display: flex;
+            overflow: hidden;
+            min-height: 0;
+        }
+
+        /* Left Sidebar */
+        .sidebar-left {
+            width: 240px;
+            min-width: 240px;
+            background: var(--bg-secondary);
+            border-right: 1px solid var(--border-color);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .sidebar-section {
+            padding: 12px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .sidebar-title {
+            font-size: 11px;
+            font-weight: 600;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 8px;
+        }
+
+        .model-selector {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 10px;
+            background: var(--bg-tertiary);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.15s ease;
+        }
+
+        .model-selector:hover {
+            background: var(--bg-card);
+        }
+
+        .model-icon {
+            width: 24px;
+            height: 24px;
+            border-radius: 6px;
+            background: linear-gradient(135deg, var(--accent-blue), var(--accent-cyan));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 11px;
+            font-weight: 700;
+        }
+
+        .model-info {
+            flex: 1;
+        }
+
+        .model-name {
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        .model-status {
+            font-size: 11px;
+            color: var(--accent-green);
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .model-status::before {
+            content: '';
+            width: 6px;
+            height: 6px;
+            background: var(--accent-green);
+            border-radius: 50%;
+        }
+
+        .sidebar-list {
+            flex: 1;
+            overflow-y: auto;
+            padding: 8px;
+        }
+
+        .sidebar-list::-webkit-scrollbar {
+            width: 4px;
+        }
+
+        .sidebar-list::-webkit-scrollbar-thumb {
+            background: var(--border-color);
+            border-radius: 2px;
+        }
+
+        .chat-item {
+            padding: 10px 12px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.15s ease;
+            margin-bottom: 4px;
+        }
+
+        .chat-item:hover {
+            background: var(--bg-tertiary);
+        }
+
+        .chat-item.active {
+            background: var(--bg-tertiary);
+            border-left: 2px solid var(--accent-blue);
+        }
+
+        .chat-item-title {
+            font-size: 13px;
+            font-weight: 500;
+            margin-bottom: 4px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .chat-item-preview {
+            font-size: 12px;
+            color: var(--text-muted);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .new-chat-btn {
+            margin: 12px;
+            padding: 10px;
+            background: linear-gradient(135deg, var(--accent-blue), var(--accent-indigo));
+            border: none;
+            border-radius: 8px;
+            color: white;
+            font-family: inherit;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            transition: all 0.15s ease;
+        }
+
+        .new-chat-btn:hover {
+            opacity: 0.9;
+            transform: translateY(-1px);
+        }
+
+        /* Main Chat Area */
+        .chat-main {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            min-width: 0;
+            background: var(--bg-primary);
+        }
+
+        /* Chat Messages */
+        .chat-messages {
+            flex: 1;
+            overflow-y: auto;
+            padding: 0;
+            min-height: 0;
+        }
+
+        .chat-messages::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .chat-messages::-webkit-scrollbar-thumb {
+            background: var(--border-color);
+            border-radius: 4px;
+        }
+
+        .messages-inner {
+            max-width: 820px;
+            margin: 0 auto;
+            padding: 24px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Message Styles */
+        .message {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 20px;
+            animation: messageSlide 0.25s ease;
+            max-width: 80%;
+        }
+
+        .message.ai {
+            align-self: flex-start;
+        }
+
+        .message.user {
+            align-self: flex-end;
+            flex-direction: row-reverse;
+        }
+
+        @keyframes messageSlide {
+            from { opacity: 0; transform: translateY(8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .message-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            flex-shrink: 0;
+            font-weight: 600;
+        }
+
+        .message-avatar.ai {
+            background: linear-gradient(135deg, var(--accent-blue), var(--accent-indigo));
+            color: white;
+        }
+
+        .message-avatar.user {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            color: var(--text-secondary);
+        }
+
+        .message-bubble {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .message-header {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 6px;
+        }
+
+        .message.user .message-header {
+            flex-direction: row-reverse;
+        }
+
+        .message-sender {
+            font-weight: 600;
+            font-size: 13px;
+        }
+
+        .message-sender.ai {
+            color: var(--accent-blue);
+        }
+
+        .message-time {
+            font-size: 11px;
+            color: var(--text-muted);
+        }
+
+        .message-content {
+            padding: 14px 16px;
+            border-radius: 12px;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        .message.ai .message-content {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-top-left-radius: 4px;
+        }
+
+        .message.user .message-content {
+            background: var(--accent-blue);
+            color: white;
+            border-top-right-radius: 4px;
+        }
+
+        .message-text {
+            color: inherit;
+        }
+
+        /* Highlight colors */
+        .hl-blue { color: var(--accent-blue-light); font-weight: 500; }
+        .hl-cyan { color: var(--accent-cyan); font-weight: 500; }
+        .hl-indigo { color: var(--accent-indigo); font-weight: 500; }
+        .hl-green { color: var(--accent-green); font-weight: 500; }
+
+        /* Code Block */
+        .code-block {
+            background: var(--bg-primary);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            margin: 12px 0;
+            overflow: hidden;
+        }
+
+        .code-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 8px 12px;
+            background: var(--bg-tertiary);
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .code-lang {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 11px;
+            color: var(--text-muted);
+        }
+
+        .code-actions {
+            display: flex;
+            gap: 4px;
+        }
+
+        .code-btn {
+            padding: 4px 8px;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            color: var(--text-muted);
+            font-size: 11px;
+            cursor: pointer;
+            transition: all 0.15s ease;
+            font-family: inherit;
+        }
+
+        .code-btn:hover {
+            background: var(--bg-card);
+            color: var(--text-primary);
+        }
+
+        .code-btn.copied {
+            background: var(--accent-green);
+            border-color: var(--accent-green);
+            color: white;
+        }
+
+        .code-content {
+            padding: 12px 14px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 13px;
+            line-height: 1.5;
+            overflow-x: auto;
+            color: var(--text-secondary);
+        }
+
+        .code-content .keyword { color: var(--accent-indigo); }
+        .code-content .string { color: var(--accent-green); }
+        .code-content .function { color: var(--accent-blue-light); }
+        .code-content .comment { color: var(--text-muted); }
+        .code-content .number { color: var(--accent-cyan); }
+
+        /* Command Chip */
+        .cmd-chip {
+            display: inline-flex;
+            align-items: center;
+            padding: 3px 8px;
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 12px;
+            color: var(--accent-blue-light);
+            margin: 0 2px;
+        }
+
+        /* Feature Cards */
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            margin: 14px 0;
+        }
+
+        .feature-card {
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            padding: 14px;
+            cursor: pointer;
+            transition: all 0.15s ease;
+        }
+
+        .feature-card:hover {
+            border-color: var(--accent-blue);
+            transform: translateY(-2px);
+        }
+
+        .card-icon {
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            margin-bottom: 10px;
+            background: rgba(59, 130, 246, 0.15);
+        }
+
+        .card-title {
+            font-weight: 600;
+            font-size: 13px;
+            margin-bottom: 4px;
+        }
+
+        .card-desc {
+            font-size: 12px;
+            color: var(--text-muted);
+            line-height: 1.4;
+        }
+
+        /* Stats Row */
+        .stats-row {
+            display: flex;
+            gap: 10px;
+            margin: 14px 0;
+        }
+
+        .stat-box {
+            flex: 1;
+            padding: 14px;
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--accent-blue);
+            margin-bottom: 4px;
+        }
+
+        .stat-label {
+            font-size: 11px;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.03em;
+        }
+
+        /* Artifact/Preview Panel */
+        .artifact-panel {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            margin: 14px 0;
+            overflow: hidden;
+        }
+
+        .artifact-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px 14px;
+            background: var(--bg-tertiary);
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .artifact-title {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 13px;
+            font-weight: 500;
+        }
+
+        .artifact-icon {
+            color: var(--accent-blue);
+        }
+
+        .artifact-tag {
+            font-size: 11px;
+            color: var(--text-muted);
+            padding: 2px 6px;
+            background: var(--bg-secondary);
+            border-radius: 4px;
+        }
+
+        .artifact-content {
+            padding: 16px;
+        }
+
+        .artifact-preview {
+            background: linear-gradient(135deg, var(--bg-card) 0%, var(--bg-tertiary) 100%);
+            border-radius: 6px;
+            height: 100px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-muted);
+            font-size: 12px;
+        }
+
+        /* Action Buttons in messages */
+        .action-btns {
+            display: flex;
+            gap: 8px;
+            margin-top: 12px;
+            flex-wrap: wrap;
+        }
+
+        .action-btn {
+            padding: 8px 14px;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.15s ease;
+            font-family: inherit;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .action-btn.primary {
+            background: var(--accent-blue);
+            border: none;
+            color: white;
+        }
+
+        .action-btn.primary:hover {
+            background: var(--accent-blue-dark);
+        }
+
+        .action-btn.secondary {
+            background: transparent;
+            border: 1px solid var(--border-color);
+            color: var(--text-secondary);
+        }
+
+        .action-btn.secondary:hover {
+            border-color: var(--accent-blue);
+            color: var(--accent-blue);
+        }
+
+        /* Typing Indicator */
+        .typing-dots {
+            display: flex;
+            gap: 4px;
+            padding: 4px 0;
+        }
+
+        .typing-dot {
+            width: 8px;
+            height: 8px;
+            background: var(--accent-blue);
+            border-radius: 50%;
+            animation: typingBounce 1.4s infinite ease-in-out;
+        }
+
+        .typing-dot:nth-child(2) { animation-delay: 0.2s; }
+        .typing-dot:nth-child(3) { animation-delay: 0.4s; }
+
+        @keyframes typingBounce {
+            0%, 80%, 100% { transform: scale(0.6); opacity: 0.4; }
+            40% { transform: scale(1); opacity: 1; }
+        }
+
+        /* Input Area */
+        .input-area {
+            padding: 16px 24px 20px;
+            background: var(--bg-primary);
+            border-top: 1px solid var(--border-color);
+        }
+
+        .input-container {
+            max-width: 820px;
+            margin: 0 auto;
+        }
+
+        .input-box {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 4px;
+            transition: all 0.15s ease;
+        }
+
+        .input-box:focus-within {
+            border-color: var(--accent-blue);
+        }
+
+        .input-wrapper {
+            display: flex;
+            align-items: flex-end;
+            gap: 8px;
+            padding: 8px 12px;
+        }
+
+        .chat-textarea {
+            flex: 1;
+            background: transparent;
+            border: none;
+            color: var(--text-primary);
+            font-family: inherit;
+            font-size: 14px;
+            line-height: 1.5;
+            resize: none;
+            max-height: 200px;
+            min-height: 60px;
+            padding: 4px 0;
+        }
+
+        .chat-textarea:focus {
+            outline: none;
+        }
+
+        .chat-textarea::placeholder {
+            color: var(--text-muted);
+        }
+
+        .input-actions {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .input-btn {
+            width: 34px;
+            height: 34px;
+            border-radius: 8px;
+            background: transparent;
+            border: none;
+            color: var(--text-muted);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            transition: all 0.15s ease;
+        }
+
+        .input-btn:hover {
+            background: var(--bg-tertiary);
+            color: var(--text-primary);
+        }
+
+        .send-btn {
+            width: 34px;
+            height: 34px;
+            border-radius: 8px;
+            background: var(--accent-blue);
+            border: none;
+            color: white;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            transition: all 0.15s ease;
+        }
+
+        .send-btn:hover {
+            background: var(--accent-blue-dark);
+        }
+
+        .send-btn:disabled {
+            background: var(--bg-tertiary);
+            color: var(--text-muted);
+            cursor: not-allowed;
+        }
+
+        .input-hint {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 16px;
+            margin-top: 10px;
+            font-size: 11px;
+            color: var(--text-muted);
+        }
+
+        .hint-key {
+            padding: 2px 5px;
+            background: var(--bg-tertiary);
+            border-radius: 3px;
+            font-size: 10px;
+            margin-right: 4px;
+        }
+
+        /* Right Sidebar */
+        .sidebar-right {
+            width: 280px;
+            min-width: 280px;
+            background: var(--bg-secondary);
+            border-left: 1px solid var(--border-color);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .sidebar-right-header {
+            padding: 16px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .ai-profile {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .ai-avatar-lg {
+            width: 44px;
+            height: 44px;
+            border-radius: 10px;
+            background: linear-gradient(135deg, var(--accent-blue), var(--accent-indigo));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 14px;
+            color: white;
+            position: relative;
+        }
+
+        .ai-avatar-lg::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            right: -2px;
+            width: 12px;
+            height: 12px;
+            background: var(--accent-green);
+            border-radius: 50%;
+            border: 2px solid var(--bg-secondary);
+        }
+
+        .ai-info h3 {
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .ai-info p {
+            font-size: 12px;
+            color: var(--accent-green);
+        }
+
+        .sidebar-right-content {
+            flex: 1;
+            overflow-y: auto;
+            padding: 16px;
+        }
+
+        .sidebar-right-content::-webkit-scrollbar {
+            width: 4px;
+        }
+
+        .sidebar-right-content::-webkit-scrollbar-thumb {
+            background: var(--border-color);
+            border-radius: 2px;
+        }
+
+        .section-title {
+            font-size: 11px;
+            font-weight: 600;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.03em;
+            margin-bottom: 10px;
+        }
+
+        .quick-actions {
+            margin-bottom: 20px;
+        }
+
+        .quick-btn {
+            width: 100%;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 12px;
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            margin-bottom: 6px;
+            cursor: pointer;
+            transition: all 0.15s ease;
+            font-family: inherit;
+            text-align: left;
+        }
+
+        .quick-btn:hover {
+            border-color: var(--accent-blue);
+            transform: translateX(4px);
+        }
+
+        .quick-btn-icon {
+            font-size: 16px;
+        }
+
+        .quick-btn-text {
+            font-size: 13px;
+            color: var(--text-primary);
+        }
+
+        .capabilities-list {
+            margin-bottom: 20px;
+        }
+
+        .cap-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 8px 0;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .cap-item:last-child {
+            border-bottom: none;
+        }
+
+        .cap-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--accent-blue);
+        }
+
+        .cap-text {
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+
+        .usage-stats {
+            background: var(--bg-tertiary);
+            border-radius: 10px;
+            padding: 14px;
+        }
+
+        .usage-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .usage-title {
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .usage-value {
+            font-size: 11px;
+            color: var(--accent-blue);
+        }
+
+        .usage-bar {
+            height: 6px;
+            background: var(--bg-card);
+            border-radius: 3px;
+            overflow: hidden;
+        }
+
+        .usage-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--accent-blue), var(--accent-cyan));
+            border-radius: 3px;
+            transition: width 0.5s ease;
+        }
+
+        /* Welcome Screen */
+        .welcome-screen {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 60px 40px;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .welcome-icon {
+            width: 64px;
+            height: 64px;
+            border-radius: 16px;
+            background: linear-gradient(135deg, var(--accent-blue), var(--accent-indigo));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            color: white;
+            margin-bottom: 24px;
+        }
+
+        .welcome-title {
+            font-size: 26px;
+            font-weight: 700;
+            margin-bottom: 10px;
+            letter-spacing: -0.02em;
+        }
+
+        .welcome-subtitle {
+            font-size: 14px;
+            color: var(--text-secondary);
+            line-height: 1.6;
+            margin-bottom: 32px;
+        }
+
+        .welcome-prompts {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            width: 100%;
+        }
+
+        .welcome-prompt {
+            padding: 14px;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            text-align: left;
+            cursor: pointer;
+            transition: all 0.15s ease;
+        }
+
+        .welcome-prompt:hover {
+            border-color: var(--accent-blue);
+            transform: translateY(-2px);
+        }
+
+        .welcome-prompt-icon {
+            font-size: 18px;
+            margin-bottom: 8px;
+        }
+
+        .welcome-prompt-text {
+            font-size: 12px;
+            color: var(--text-secondary);
+            line-height: 1.4;
+        }
+
+        /* Toast Notification */
+        .toast {
+            position: fixed;
+            bottom: 80px;
+            left: 50%;
+            transform: translateX(-50%) translateY(20px);
+            padding: 12px 20px;
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            font-size: 13px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            opacity: 0;
+            pointer-events: none;
+            transition: all 0.3s ease;
+            z-index: 1000;
+        }
+
+        .toast.show {
+            opacity: 1;
+            transform: translateX(-50%) translateY(0);
+            pointer-events: auto;
+        }
+
+        .toast.success { border-color: var(--accent-green); }
+        .toast.error { border-color: var(--accent-red); }
+
+        /* Feature Modal */
+        .feature-modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.85);
+            z-index: 1800;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+
+        .feature-modal-overlay.show {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .feature-modal {
+            width: 90%;
+            max-width: 800px;
+            max-height: 80vh;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            overflow: hidden;
+            transform: scale(0.95) translateY(20px);
+            transition: transform 0.3s ease;
+        }
+
+        .feature-modal-overlay.show .feature-modal {
+            transform: scale(1) translateY(0);
+        }
+
+        .feature-modal-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 16px 20px;
+            background: var(--bg-tertiary);
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .feature-modal-title {
+            font-size: 16px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .feature-modal-close {
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            background: transparent;
+            border: 1px solid var(--border-color);
+            color: var(--text-secondary);
+            cursor: pointer;
+            font-size: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.15s ease;
+        }
+
+        .feature-modal-close:hover {
+            background: var(--bg-card);
+            color: var(--text-primary);
+        }
+
+        .feature-modal-body {
+            padding: 24px;
+            overflow-y: auto;
+            max-height: calc(80vh - 120px);
+        }
+
+        .feature-modal-footer {
+            padding: 16px 20px;
+            background: var(--bg-tertiary);
+            border-top: 1px solid var(--border-color);
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+        }
+
+        /* Composer Tab Content */
+        .composer-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            margin-bottom: 20px;
+        }
+
+        .composer-panel {
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            padding: 16px;
+        }
+
+        .composer-panel-title {
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--text-muted);
+            margin-bottom: 12px;
+            text-transform: uppercase;
+        }
+
+        .file-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 8px 10px;
+            background: var(--bg-secondary);
+            border-radius: 6px;
+            margin-bottom: 6px;
+            font-size: 13px;
+            cursor: pointer;
+            transition: all 0.15s ease;
+        }
+
+        .file-item:hover {
+            background: var(--bg-card);
+        }
+
+        .file-item-icon {
+            color: var(--accent-blue);
+        }
+
+        /* Code Editor Mock */
+        .code-editor-mock {
+            background: var(--bg-primary);
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .code-editor-tabs {
+            display: flex;
+            background: var(--bg-tertiary);
+            border-bottom: 1px solid var(--border-color);
+            padding: 0 8px;
+        }
+
+        .code-editor-tab {
+            padding: 10px 16px;
+            font-size: 12px;
+            color: var(--text-muted);
+            border-bottom: 2px solid transparent;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .code-editor-tab.active {
+            color: var(--text-primary);
+            border-bottom-color: var(--accent-blue);
+        }
+
+        .code-editor-content {
+            padding: 16px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 13px;
+            line-height: 1.6;
+            min-height: 200px;
+        }
+
+        .code-line {
+            display: flex;
+            gap: 16px;
+        }
+
+        .line-number {
+            color: var(--text-muted);
+            min-width: 30px;
+            text-align: right;
+            user-select: none;
+        }
+
+        /* Funny Message Overlay */
+        .funny-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            z-index: 2500;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.4s ease;
+        }
+
+        .funny-overlay.show {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .funny-modal {
+            max-width: 450px;
+            padding: 40px;
+            background: var(--bg-secondary);
+            border: 2px solid var(--accent-yellow);
+            border-radius: 20px;
+            text-align: center;
+            animation: funnyBounce 0.5s ease;
+        }
+
+        @keyframes funnyBounce {
+            0% { transform: scale(0.5) rotate(-5deg); }
+            50% { transform: scale(1.1) rotate(3deg); }
+            100% { transform: scale(1) rotate(0); }
+        }
+
+        .funny-emoji {
+            font-size: 72px;
+            margin-bottom: 20px;
+            animation: emojiWiggle 0.5s ease infinite;
+        }
+
+        @keyframes emojiWiggle {
+            0%, 100% { transform: rotate(-5deg); }
+            50% { transform: rotate(5deg); }
+        }
+
+        .funny-title {
+            font-size: 22px;
+            font-weight: 700;
+            color: var(--accent-yellow);
+            margin-bottom: 16px;
+        }
+
+        .funny-message {
+            font-size: 15px;
+            color: var(--text-secondary);
+            line-height: 1.7;
+            margin-bottom: 24px;
+        }
+
+        .funny-btn {
+            padding: 12px 28px;
+            background: var(--accent-yellow);
+            border: none;
+            border-radius: 10px;
+            color: var(--bg-primary);
+            font-family: inherit;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .funny-btn:hover {
+            transform: scale(1.05);
+        }
+
+        /* Settings Panel */
+        .settings-group {
+            margin-bottom: 24px;
+        }
+
+        .settings-group-title {
+            font-size: 13px;
+            font-weight: 600;
+            margin-bottom: 12px;
+            color: var(--text-primary);
+        }
+
+        .setting-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 0;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .setting-label {
+            font-size: 14px;
+        }
+
+        .setting-desc {
+            font-size: 12px;
+            color: var(--text-muted);
+            margin-top: 2px;
+        }
+
+        .toggle-switch {
+            width: 44px;
+            height: 24px;
+            background: var(--bg-tertiary);
+            border-radius: 12px;
+            position: relative;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .toggle-switch.active {
+            background: var(--accent-blue);
+        }
+
+        .toggle-switch::after {
+            content: '';
+            position: absolute;
+            width: 18px;
+            height: 18px;
+            background: white;
+            border-radius: 50%;
+            top: 3px;
+            left: 3px;
+            transition: all 0.2s ease;
+        }
+
+        .toggle-switch.active::after {
+            left: 23px;
+        }
+
+        /* Demo Hell Modal */
+        .demo-hell-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            z-index: 2000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.5s ease;
+        }
+
+        .demo-hell-overlay.show {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .demo-hell-modal {
+            max-width: 500px;
+            padding: 40px;
+            background: var(--bg-secondary);
+            border: 1px solid var(--accent-red);
+            border-radius: 20px;
+            text-align: center;
+            transform: scale(0.9);
+            transition: transform 0.5s ease;
+        }
+
+        .demo-hell-overlay.show .demo-hell-modal {
+            transform: scale(1);
+            animation: demoHellShake 0.6s ease;
+        }
+
+        @keyframes demoHellShake {
+            0%, 100% { transform: scale(1) rotate(0); }
+            20% { transform: scale(1.02) rotate(-2deg); }
+            40% { transform: scale(1.02) rotate(2deg); }
+            60% { transform: scale(1.02) rotate(-1deg); }
+            80% { transform: scale(1.02) rotate(1deg); }
+        }
+
+        .demo-hell-icon {
+            font-size: 64px;
+            margin-bottom: 20px;
+            animation: demoHellBounce 1s infinite;
+        }
+
+        @keyframes demoHellBounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .demo-hell-title {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--accent-red);
+            margin-bottom: 16px;
+        }
+
+        .demo-hell-message {
+            font-size: 16px;
+            color: var(--text-secondary);
+            line-height: 1.6;
+            margin-bottom: 24px;
+        }
+
+        .demo-hell-message strong {
+            color: var(--text-primary);
+        }
+
+        .demo-hell-btn {
+            padding: 12px 32px;
+            background: var(--accent-red);
+            border: none;
+            border-radius: 10px;
+            color: white;
+            font-family: inherit;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .demo-hell-btn:hover {
+            opacity: 0.9;
+            transform: scale(1.05);
+        }
+
+        /* Progress indicator */
+        .progress-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 1500;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+
+        .progress-modal.show {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .progress-content {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 32px 48px;
+            text-align: center;
+        }
+
+        .progress-spinner {
+            width: 48px;
+            height: 48px;
+            border: 3px solid var(--border-color);
+            border-top-color: var(--accent-blue);
+            border-radius: 50%;
+            margin: 0 auto 20px;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .progress-text {
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+
+        .progress-steps {
+            margin-top: 16px;
+            text-align: left;
+        }
+
+        .progress-step {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 8px 0;
+            font-size: 13px;
+            color: var(--text-muted);
+        }
+
+        .progress-step.done {
+            color: var(--accent-green);
+        }
+
+        .progress-step.active {
+            color: var(--accent-blue);
+        }
+
+        /* Boot Animation */
+        .boot-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--bg-primary);
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            transition: opacity 0.5s ease;
+        }
+
+        .boot-overlay.hide {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .boot-logo {
+            width: 72px;
+            height: 72px;
+            border-radius: 18px;
+            background: linear-gradient(135deg, var(--accent-blue), var(--accent-indigo));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 22px;
+            color: white;
+            margin-bottom: 20px;
+            animation: bootPulse 1.5s ease-in-out infinite;
+        }
+
+        @keyframes bootPulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        .boot-text {
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+
+        /* Responsive */
+        @media (max-width: 1200px) {
+            .sidebar-right { display: none; }
+        }
+
+        @media (max-width: 900px) {
+            .sidebar-left { display: none; }
+        }
+    </style>
+</head>
+<body>
+    <!-- Boot Overlay -->
+    <div class="boot-overlay" id="bootOverlay">
+        <div class="boot-logo">T</div>
+        <div class="boot-text">Timbel AI 초기화 중...</div>
+    </div>
+
+    <!-- Toast -->
+    <div class="toast" id="toast"></div>
+
+    <!-- Progress Modal -->
+    <div class="progress-modal" id="progressModal">
+        <div class="progress-content">
+            <div class="progress-spinner"></div>
+            <div class="progress-text" id="progressText">AI 모델 초기화 중...</div>
+            <div class="progress-steps" id="progressSteps"></div>
+        </div>
+    </div>
+
+    <!-- Demo Hell Modal -->
+    <div class="demo-hell-overlay" id="demoHellOverlay">
+        <div class="demo-hell-modal">
+            <div class="demo-hell-icon">🔥</div>
+            <h2 class="demo-hell-title">잠깐만요!</h2>
+            <p class="demo-hell-message">
+                된다고 믿으시나요?<br><br>
+                <strong>그렇다면 당신은 데모 지옥에 빠졌습니다!</strong><br><br>
+                이것은 UI 프로토타입입니다. 실제 AI 기능은 구현되어 있지 않습니다. 🙃
+            </p>
+            <button class="demo-hell-btn" id="demoHellClose">알겠습니다 😅</button>
+        </div>
+    </div>
+
+    <!-- Funny Message Modal -->
+    <div class="funny-overlay" id="funnyOverlay">
+        <div class="funny-modal">
+            <div class="funny-emoji" id="funnyEmoji">🤡</div>
+            <h2 class="funny-title" id="funnyTitle">잠깐!</h2>
+            <p class="funny-message" id="funnyMessage">메시지</p>
+            <button class="funny-btn" id="funnyClose">ㅋㅋ 알겠어요</button>
+        </div>
+    </div>
+
+    <!-- Feature Modal -->
+    <div class="feature-modal-overlay" id="featureModalOverlay">
+        <div class="feature-modal">
+            <div class="feature-modal-header">
+                <div class="feature-modal-title" id="featureModalTitle">
+                    <span>📦</span>
+                    <span>기능</span>
+                </div>
+                <button class="feature-modal-close" id="featureModalClose">✕</button>
+            </div>
+            <div class="feature-modal-body" id="featureModalBody">
+                <!-- Dynamic content -->
+            </div>
+            <div class="feature-modal-footer">
+                <button class="action-btn secondary" id="featureModalCancel">취소</button>
+                <button class="action-btn primary" id="featureModalConfirm">확인</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="app-container">
+        <!-- Top Bar -->
+        <header class="top-bar">
+            <div class="logo-section">
+                <div class="logo-icon">T</div>
+                <div class="logo-text">Timbel<span>AI</span></div>
+                <span class="logo-badge">PRO</span>
+            </div>
+            
+            <div class="nav-tabs">
+                <button class="nav-tab active">Chat</button>
+                <button class="nav-tab">Composer</button>
+                <button class="nav-tab">Code</button>
+                <button class="nav-tab">Docs</button>
+                <button class="nav-tab">History</button>
+            </div>
+
+            <div class="header-actions">
+                <button class="header-btn" id="settingsBtn">⚙️</button>
+                <button class="header-btn" id="clearBtn">🗑️ Clear</button>
+                <button class="header-btn" id="exportBtn">📤 Export</button>
+                <button class="header-btn primary" id="upgradeBtn">⚡ Upgrade</button>
+            </div>
+        </header>
+
+        <!-- Main Layout -->
+        <div class="main-layout">
+            <!-- Left Sidebar -->
+            <aside class="sidebar-left">
+                <div class="sidebar-section">
+                    <div class="sidebar-title">AI Model</div>
+                    <div class="model-selector" id="modelSelector">
+                        <div class="model-icon">T7</div>
+                        <div class="model-info">
+                            <div class="model-name">Timbel-7 Pro</div>
+                            <div class="model-status">Online</div>
+                        </div>
+                        <span style="color: var(--text-muted);">▾</span>
+                    </div>
+                </div>
+
+                <div class="sidebar-list">
+                    <div class="sidebar-title">최근 대화</div>
+                    <div class="chat-item active">
+                        <div class="chat-item-title">코드 리팩토링 도움</div>
+                        <div class="chat-item-preview">React 컴포넌트 최적화...</div>
+                    </div>
+                    <div class="chat-item">
+                        <div class="chat-item-title">API 설계 상담</div>
+                        <div class="chat-item-preview">RESTful API 구조...</div>
+                    </div>
+                    <div class="chat-item">
+                        <div class="chat-item-title">버그 디버깅</div>
+                        <div class="chat-item-preview">메모리 누수 문제...</div>
+                    </div>
+                    <div class="chat-item">
+                        <div class="chat-item-title">테스트 코드 작성</div>
+                        <div class="chat-item-preview">Jest 유닛 테스트...</div>
+                    </div>
+                </div>
+
+                <button class="new-chat-btn" id="newChatBtn">
+                    <span>✨</span>
+                    <span>새 대화 시작</span>
+                </button>
+            </aside>
+
+            <!-- Main Chat Area -->
+            <main class="chat-main">
+                <div class="chat-messages" id="chatMessages">
+                    <div class="messages-inner" id="messagesInner">
+                        <!-- Content here -->
+                    </div>
+                </div>
+
+                <div class="input-area">
+                    <div class="input-container">
+                        <div class="input-box">
+                            <div class="input-wrapper">
+                                <textarea 
+                                    class="chat-textarea" 
+                                    id="chatInput" 
+                                    placeholder="코드에 대해 질문하거나, 기능 구현을 요청하세요..."
+                                    rows="1"
+                                ></textarea>
+                                <div class="input-actions">
+                                    <button class="input-btn" title="파일 첨부" id="attachBtn">📎</button>
+                                    <button class="input-btn" title="코드 삽입" id="codeInsertBtn">{ }</button>
+                                    <button class="send-btn" id="sendBtn" disabled>➤</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="input-hint">
+                            <span><span class="hint-key">Enter</span>전송</span>
+                            <span><span class="hint-key">Shift+Enter</span>줄바꿈</span>
+                            <span><span class="hint-key">/</span>명령어</span>
+                        </div>
+                    </div>
+                </div>
+            </main>
+
+            <!-- Right Sidebar -->
+            <aside class="sidebar-right">
+                <div class="sidebar-right-header">
+                    <div class="ai-profile">
+                        <div class="ai-avatar-lg">T</div>
+                        <div class="ai-info">
+                            <h3>Timbel AI</h3>
+                            <p>● Ready</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="sidebar-right-content">
+                    <div class="quick-actions">
+                        <div class="section-title">빠른 작업</div>
+                        <button class="quick-btn" data-action="explain">
+                            <span class="quick-btn-icon">💡</span>
+                            <span class="quick-btn-text">코드 설명하기</span>
+                        </button>
+                        <button class="quick-btn" data-action="refactor">
+                            <span class="quick-btn-icon">🔧</span>
+                            <span class="quick-btn-text">리팩토링 제안</span>
+                        </button>
+                        <button class="quick-btn" data-action="test">
+                            <span class="quick-btn-icon">🧪</span>
+                            <span class="quick-btn-text">테스트 코드 생성</span>
+                        </button>
+                        <button class="quick-btn" data-action="docs">
+                            <span class="quick-btn-icon">📝</span>
+                            <span class="quick-btn-text">문서화 생성</span>
+                        </button>
+                        <button class="quick-btn" data-action="deploy">
+                            <span class="quick-btn-icon">🚀</span>
+                            <span class="quick-btn-text">배포 자동화</span>
+                        </button>
+                        <button class="quick-btn" data-action="review">
+                            <span class="quick-btn-icon">🔍</span>
+                            <span class="quick-btn-text">코드 리뷰</span>
+                        </button>
+                        <button class="quick-btn" data-action="optimize">
+                            <span class="quick-btn-icon">⚡</span>
+                            <span class="quick-btn-text">성능 최적화</span>
+                        </button>
+                        <button class="quick-btn" data-action="debug">
+                            <span class="quick-btn-icon">🐛</span>
+                            <span class="quick-btn-text">버그 디버깅</span>
+                        </button>
+                    </div>
+
+                    <div class="capabilities-list">
+                        <div class="section-title">AI 기능</div>
+                        <div class="cap-item">
+                            <span class="cap-dot"></span>
+                            <span class="cap-text">코드 자동 완성</span>
+                        </div>
+                        <div class="cap-item">
+                            <span class="cap-dot" style="background: var(--accent-cyan)"></span>
+                            <span class="cap-text">버그 감지 및 수정</span>
+                        </div>
+                        <div class="cap-item">
+                            <span class="cap-dot" style="background: var(--accent-indigo)"></span>
+                            <span class="cap-text">코드 리뷰 및 분석</span>
+                        </div>
+                        <div class="cap-item">
+                            <span class="cap-dot" style="background: var(--accent-green)"></span>
+                            <span class="cap-text">다국어 지원</span>
+                        </div>
+                    </div>
+
+                    <div class="usage-stats">
+                        <div class="usage-header">
+                            <span class="usage-title">이번 달 사용량</span>
+                            <span class="usage-value">2,847 / 5,000</span>
+                        </div>
+                        <div class="usage-bar">
+                            <div class="usage-fill" style="width: 57%"></div>
+                        </div>
+                    </div>
+                </div>
+            </aside>
+        </div>
+    </div>
+
+    <script>
+        // ============ IFRAME 감지 ============
+        const isInIframe = window.self !== window.top;
+
+        // ============ BOOT SEQUENCE ============
+        document.addEventListener('DOMContentLoaded', () => {
+            const bootOverlay = document.getElementById('bootOverlay');
+            
+            // iframe 내부에서 로드될 경우 부팅 애니메이션 건너뛰기
+            if (isInIframe) {
+                bootOverlay.style.display = 'none';
+                showWelcomeScreen();
+            } else {
+                setTimeout(() => {
+                    bootOverlay.classList.add('hide');
+                    showWelcomeScreen();
+                }, 1200);
+            }
+        });
+
+        // ============ ELEMENTS ============
+        const chatMessages = document.getElementById('chatMessages');
+        const messagesInner = document.getElementById('messagesInner');
+        const chatInput = document.getElementById('chatInput');
+        const sendBtn = document.getElementById('sendBtn');
+        const toast = document.getElementById('toast');
+
+        // ============ TOAST FUNCTION ============
+        function showToast(message, type = 'success') {
+            toast.textContent = message;
+            toast.className = `toast ${type} show`;
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 3000);
+        }
+
+        // ============ DEMO HELL COUNTER ============
+        let interactionCount = 0;
+        const DEMO_HELL_THRESHOLD = 8;
+        let demoHellTriggered = false;
+
+        function checkDemoHell() {
+            // iframe 내부에서는 데모 팝업 비활성화
+            if (isInIframe) return;
+            
+            interactionCount++;
+            if (interactionCount >= DEMO_HELL_THRESHOLD && !demoHellTriggered) {
+                demoHellTriggered = true;
+                setTimeout(() => {
+                    document.getElementById('demoHellOverlay').classList.add('show');
+                }, 1500);
+            }
+        }
+
+        document.getElementById('demoHellClose').addEventListener('click', () => {
+            document.getElementById('demoHellOverlay').classList.remove('show');
+        });
+
+        // ============ PROGRESS MODAL ============
+        const progressModal = document.getElementById('progressModal');
+        const progressText = document.getElementById('progressText');
+        const progressSteps = document.getElementById('progressSteps');
+
+        async function showProgressModal(title, steps) {
+            // iframe 내부에서는 프로그레스 모달 비활성화
+            if (isInIframe) return;
+            
+            progressText.textContent = title;
+            progressSteps.innerHTML = steps.map((s, i) => 
+                `<div class="progress-step" id="step${i}">⏳ ${s}</div>`
+            ).join('');
+            progressModal.classList.add('show');
+            
+            for (let i = 0; i < steps.length; i++) {
+                await sleep(600 + Math.random() * 400);
+                document.getElementById(`step${i}`).className = 'progress-step done';
+                document.getElementById(`step${i}`).innerHTML = `✅ ${steps[i]}`;
+                if (i < steps.length - 1) {
+                    document.getElementById(`step${i+1}`).className = 'progress-step active';
+                }
+            }
+            
+            await sleep(500);
+            progressModal.classList.remove('show');
+        }
+
+        // ============ AI RESPONSES ============
+        const aiResponses = {
+            help: {
+                text: `안녕하세요! <span class="hl-blue">Timbel AI</span>입니다. 🚀
+
+AI 기반 코드 어시스턴트로서 다음과 같은 도움을 드릴 수 있습니다:`,
+                commands: [
+                    { cmd: '/explain', desc: '코드 설명 및 분석' },
+                    { cmd: '/refactor', desc: '코드 리팩토링 제안' },
+                    { cmd: '/test', desc: '테스트 코드 생성' },
+                    { cmd: '/docs', desc: '문서화 생성' },
+                    { cmd: '/debug', desc: '버그 분석 및 수정' },
+                    { cmd: '/deploy', desc: '배포 자동화' },
+                    { cmd: '/review', desc: '코드 리뷰' },
+                    { cmd: '/optimize', desc: '성능 최적화' }
+                ]
+            },
+            about: {
+                text: `<span class="hl-blue">Timbel AI</span>는 개발자를 위한 차세대 <span class="hl-cyan">AI 코드 어시스턴트</span>입니다.
+
+VS Code 기반의 강력한 AI 에디터로, 코드 작성부터 디버깅, 리팩토링까지 전 과정을 AI가 지원합니다.`,
+                stats: [
+                    { value: '10M+', label: '개발자' },
+                    { value: '99.2%', label: '정확도' },
+                    { value: '50+', label: '언어 지원' }
+                ]
+            },
+            features: {
+                text: `<span class="hl-blue">Timbel AI</span>의 핵심 기능입니다:`,
+                cards: [
+                    { icon: '⚡', title: 'AI 자동완성', desc: '컨텍스트 인식 코드 자동 완성', color: 'blue' },
+                    { icon: '💬', title: 'AI Chat', desc: '코드베이스 전체를 이해하는 대화', color: 'cyan' },
+                    { icon: '✏️', title: 'Inline Edit', desc: '선택 영역 즉시 수정', color: 'indigo' },
+                    { icon: '🎯', title: 'Composer', desc: '멀티파일 AI 코드 생성', color: 'green' }
+                ]
+            },
+            pricing: {
+                text: `<span class="hl-blue">Timbel AI</span> 요금제 안내입니다:
+
+<span class="hl-green">● Hobby (무료)</span>
+2,000 completions/월, 기본 기능
+
+<span class="hl-blue">● Pro ($20/월)</span>
+무제한 completions, 고급 모델 접근
+
+<span class="hl-indigo">● Business ($40/월)</span>
+팀 협업, 관리자 대시보드, 우선 지원`
+            },
+            explain: {
+                text: `코드 설명 기능을 사용하시려면 분석하고 싶은 코드를 공유해주세요.
+
+예시 코드를 보여드릴까요?`,
+                hasActions: true,
+                actions: [
+                    { label: '📝 예시 보기', action: 'showExample' },
+                    { label: '📎 코드 붙여넣기', action: 'pasteCode' }
+                ]
+            },
+            refactor: {
+                text: `리팩토링 제안 기능이 활성화되었습니다! ✨
+
+개선하고 싶은 코드를 공유해주시면:
+• 성능 최적화 방안
+• 클린 코드 패턴 적용
+• 중복 코드 제거
+• 가독성 향상
+
+을 제안해드립니다.`
+            },
+            test: {
+                text: `테스트 코드 생성 기능입니다! 🧪
+
+대상 코드를 공유해주시면 다음을 생성해드립니다:
+• 유닛 테스트 (Jest/Mocha)
+• 통합 테스트
+• E2E 테스트 시나리오
+• 엣지 케이스 커버리지`
+            },
+            docs: {
+                text: `문서화 생성 기능이 준비되었습니다! 📝
+
+코드를 공유해주시면:
+• JSDoc/TSDoc 주석 생성
+• README.md 템플릿
+• API 문서 자동 생성
+• 사용 예시 코드
+
+를 작성해드립니다.`
+            },
+            example: {
+                text: `다음은 React Hook 예시와 그 설명입니다:`,
+                code: {
+                    lang: 'typescript',
+                    content: `<span class="keyword">import</span> { <span class="function">useState</span>, <span class="function">useEffect</span> } <span class="keyword">from</span> <span class="string">'react'</span>;
+
+<span class="keyword">function</span> <span class="function">useDebounce</span>&lt;T&gt;(value: T, delay: <span class="number">number</span>): T {
+  <span class="keyword">const</span> [debouncedValue, setDebouncedValue] = <span class="function">useState</span>(value);
+
+  <span class="function">useEffect</span>(() => {
+    <span class="keyword">const</span> timer = <span class="function">setTimeout</span>(() => {
+      <span class="function">setDebouncedValue</span>(value);
+    }, delay);
+
+    <span class="keyword">return</span> () => <span class="function">clearTimeout</span>(timer);
+  }, [value, delay]);
+
+  <span class="keyword">return</span> debouncedValue;
+}`
+                },
+                explanation: `<span class="hl-blue">useDebounce</span> 훅 분석:
+
+• <span class="hl-cyan">목적</span>: 값 변경을 지연시켜 불필요한 업데이트 방지
+• <span class="hl-green">사용 사례</span>: 검색 입력, API 호출 최적화
+• <span class="hl-indigo">원리</span>: setTimeout으로 지연 후 상태 업데이트`
+            },
+            deploy: {
+                text: `🚀 <span class="hl-blue">배포 자동화</span> 기능입니다!
+
+프로젝트를 분석하여 다음을 자동으로 설정해드립니다:`,
+                hasActions: true,
+                actions: [
+                    { label: '🐳 Docker 배포', action: 'deployDocker' },
+                    { label: '☁️ AWS 배포', action: 'deployAWS' },
+                    { label: '▲ Vercel 배포', action: 'deployVercel' },
+                    { label: '🔷 Azure 배포', action: 'deployAzure' }
+                ]
+            },
+            review: {
+                text: `🔍 <span class="hl-blue">코드 리뷰</span> 에이전트가 활성화되었습니다!
+
+AI가 다음 항목을 검토합니다:
+• 코드 품질 및 스타일
+• 잠재적 버그 탐지
+• 보안 취약점 분석
+• 성능 이슈 확인
+• Best Practice 준수 여부`,
+                hasActions: true,
+                actions: [
+                    { label: '🔍 리뷰 시작', action: 'startReview' },
+                    { label: '📊 품질 리포트', action: 'qualityReport' }
+                ]
+            },
+            optimize: {
+                text: `⚡ <span class="hl-blue">성능 최적화</span> 에이전트입니다!
+
+코드와 시스템 성능을 분석하여 최적화합니다:
+• 번들 사이즈 최적화
+• 렌더링 성능 개선
+• 메모리 사용량 최적화
+• 네트워크 요청 최적화
+• 캐싱 전략 제안`,
+                hasActions: true,
+                actions: [
+                    { label: '🔬 분석 시작', action: 'analyzePerf' },
+                    { label: '🚀 자동 최적화', action: 'autoOptimize' }
+                ]
+            },
+            debug: {
+                text: `🔧 <span class="hl-blue">디버그</span> 에이전트가 준비되었습니다!
+
+버그를 분석하고 해결책을 제시합니다:
+• 에러 스택 트레이스 분석
+• 변수 상태 추적
+• 로직 오류 탐지
+• 런타임 에러 분석`,
+                hasActions: true,
+                actions: [
+                    { label: '🐛 버그 리포트', action: 'bugReport' },
+                    { label: '🔍 에러 분석', action: 'errorAnalysis' },
+                    { label: '🩹 자동 수정', action: 'autoFix' }
+                ]
+            },
+            default: {
+                text: `질문을 이해했습니다! 🤔
+
+더 정확한 도움을 드리기 위해 다음 중 원하시는 것을 선택해주세요:`,
+                hasActions: true,
+                actions: [
+                    { label: '💡 코드 설명', action: 'explain' },
+                    { label: '🔧 리팩토링', action: 'refactor' },
+                    { label: '🧪 테스트 생성', action: 'test' },
+                    { label: '📝 문서화', action: 'docs' },
+                    { label: '🚀 배포', action: 'deploy' },
+                    { label: '🔍 리뷰', action: 'review' }
+                ]
+            }
+        };
+
+        // ============ FUNCTIONS ============
+        function showWelcomeScreen() {
+            messagesInner.innerHTML = `
+                <div class="welcome-screen">
+                    <div class="welcome-icon">✨</div>
+                    <h1 class="welcome-title">Timbel AI에 오신 것을 환영합니다</h1>
+                    <p class="welcome-subtitle">
+                        AI 기반 코드 어시스턴트로 더 빠르고 스마트하게 개발하세요.
+                        코드 작성, 디버깅, 리팩토링을 AI가 도와드립니다.
+                    </p>
+                    <div class="welcome-prompts">
+                        <div class="welcome-prompt" data-prompt="Timbel AI 기능이 뭐야?">
+                            <div class="welcome-prompt-icon">🚀</div>
+                            <div class="welcome-prompt-text">어떤 기능을 제공하나요?</div>
+                        </div>
+                        <div class="welcome-prompt" data-prompt="코드 설명해줘">
+                            <div class="welcome-prompt-icon">💡</div>
+                            <div class="welcome-prompt-text">코드 설명 요청하기</div>
+                        </div>
+                        <div class="welcome-prompt" data-prompt="요금제 알려줘">
+                            <div class="welcome-prompt-icon">💰</div>
+                            <div class="welcome-prompt-text">요금제 확인하기</div>
+                        </div>
+                        <div class="welcome-prompt" data-prompt="예시 코드 보여줘">
+                            <div class="welcome-prompt-icon">{ }</div>
+                            <div class="welcome-prompt-text">예시 코드 보기</div>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            document.querySelectorAll('.welcome-prompt').forEach(prompt => {
+                prompt.addEventListener('click', () => {
+                    processInput(prompt.dataset.prompt);
+                });
+            });
+        }
+
+        function getTimeStr() {
+            return new Date().toLocaleTimeString('ko-KR', { hour: '2-digit', minute: '2-digit' });
+        }
+
+        function addMessage(content, isUser = false, extras = null) {
+            const welcomeScreen = messagesInner.querySelector('.welcome-screen');
+            if (welcomeScreen) welcomeScreen.remove();
+
+            const message = document.createElement('div');
+            message.className = `message ${isUser ? 'user' : 'ai'}`;
+
+            let html = `
+                <div class="message-avatar ${isUser ? 'user' : 'ai'}">${isUser ? '👤' : 'T'}</div>
+                <div class="message-bubble">
+                    <div class="message-header">
+                        <span class="message-sender ${isUser ? '' : 'ai'}">${isUser ? 'You' : 'Timbel AI'}</span>
+                        <span class="message-time">${getTimeStr()}</span>
+                    </div>
+                    <div class="message-content">
+                        <div class="message-text">${content}`;
+
+            // Commands
+            if (extras?.commands) {
+                html += `<div class="code-block">
+                    <div class="code-header">
+                        <span class="code-lang">Available Commands</span>
+                    </div>
+                    <div class="code-content">`;
+                extras.commands.forEach(c => {
+                    html += `<div style="margin-bottom: 6px;"><span class="keyword">${c.cmd}</span> <span class="comment">— ${c.desc}</span></div>`;
+                });
+                html += `</div></div>`;
+            }
+
+            // Stats
+            if (extras?.stats) {
+                html += `<div class="stats-row">`;
+                extras.stats.forEach(s => {
+                    html += `<div class="stat-box"><div class="stat-value">${s.value}</div><div class="stat-label">${s.label}</div></div>`;
+                });
+                html += `</div>`;
+            }
+
+            // Cards
+            if (extras?.cards) {
+                html += `<div class="cards-grid">`;
+                extras.cards.forEach(c => {
+                    html += `<div class="feature-card" data-feature="${c.title}"><div class="card-icon">${c.icon}</div><div class="card-title">${c.title}</div><div class="card-desc">${c.desc}</div></div>`;
+                });
+                html += `</div>`;
+            }
+
+            // Code
+            if (extras?.code) {
+                html += `<div class="code-block">
+                    <div class="code-header">
+                        <span class="code-lang">${extras.code.lang}</span>
+                        <div class="code-actions">
+                            <button class="code-btn copy-btn">Copy</button>
+                            <button class="code-btn">Run</button>
+                        </div>
+                    </div>
+                    <div class="code-content">${extras.code.content}</div>
+                </div>`;
+                if (extras.explanation) {
+                    html += `<p style="margin-top: 12px;">${extras.explanation}</p>`;
+                }
+            }
+
+            // Actions
+            if (extras?.hasActions && extras?.actions) {
+                html += `<div class="action-btns">`;
+                extras.actions.forEach((a, i) => {
+                    html += `<button class="action-btn ${i === 0 ? 'primary' : 'secondary'}" data-action="${a.action}">${a.label}</button>`;
+                });
+                html += `</div>`;
+            }
+
+            html += `</div></div></div>`;
+            message.innerHTML = html;
+            messagesInner.appendChild(message);
+
+            // Add event listeners
+            message.querySelectorAll('.copy-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    btn.textContent = 'Copied!';
+                    btn.classList.add('copied');
+                    showToast('📋 클립보드에 복사되었습니다!');
+                    setTimeout(() => {
+                        btn.textContent = 'Copy';
+                        btn.classList.remove('copied');
+                    }, 2000);
+                });
+            });
+
+            message.querySelectorAll('.action-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const action = btn.dataset.action;
+                    const advancedActions = ['deployDocker', 'deployAWS', 'deployVercel', 'deployAzure', 
+                                            'startReview', 'qualityReport', 'analyzePerf', 'autoOptimize',
+                                            'bugReport', 'errorAnalysis', 'autoFix'];
+                    
+                    if (advancedActions.includes(action)) {
+                        handleAdvancedAction(action);
+                    } else if (action === 'showExample') {
+                        processInput('예시 코드 보여줘');
+                    } else if (action === 'pasteCode') {
+                        chatInput.focus();
+                        chatInput.placeholder = '코드를 붙여넣으세요...';
+                    } else {
+                        processInput(`/${action}`);
+                    }
+                });
+            });
+
+            message.querySelectorAll('.feature-card').forEach(card => {
+                card.addEventListener('click', () => {
+                    const feature = card.dataset.feature;
+                    showToast(`✨ ${feature} 기능이 선택되었습니다!`);
+                });
+            });
+
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+            return message;
+        }
+
+        function showTypingIndicator() {
+            const typing = document.createElement('div');
+            typing.id = 'typingIndicator';
+            typing.className = 'message ai';
+            typing.innerHTML = `
+                <div class="message-avatar ai">T</div>
+                <div class="message-bubble">
+                    <div class="message-header">
+                        <span class="message-sender ai">Timbel AI</span>
+                    </div>
+                    <div class="message-content" style="padding: 12px 16px;">
+                        <div class="typing-dots">
+                            <span class="typing-dot"></span>
+                            <span class="typing-dot"></span>
+                            <span class="typing-dot"></span>
+                        </div>
+                    </div>
+                </div>
+            `;
+            messagesInner.appendChild(typing);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+
+        function hideTypingIndicator() {
+            const typing = document.getElementById('typingIndicator');
+            if (typing) typing.remove();
+        }
+
+        function sleep(ms) {
+            return new Promise(resolve => setTimeout(resolve, ms));
+        }
+
+        async function processInput(input) {
+            const text = input.trim().toLowerCase();
+            
+            addMessage(input, true);
+            checkDemoHell(); // 데모 지옥 체크
+            
+            showTypingIndicator();
+            await sleep(500 + Math.random() * 700);
+            hideTypingIndicator();
+
+            let response;
+            
+            if (text.startsWith('/')) {
+                const cmd = text.slice(1);
+                response = aiResponses[cmd] || aiResponses.default;
+            } else if (text.includes('기능') || text.includes('feature') || text.includes('뭐해')) {
+                response = aiResponses.features;
+            } else if (text.includes('요금') || text.includes('가격') || text.includes('pricing')) {
+                response = aiResponses.pricing;
+            } else if (text.includes('소개') || text.includes('about') || text.includes('timbel')) {
+                response = aiResponses.about;
+            } else if (text.includes('설명') || text.includes('explain')) {
+                response = aiResponses.explain;
+            } else if (text.includes('리팩') || text.includes('refactor')) {
+                response = aiResponses.refactor;
+            } else if (text.includes('테스트') || text.includes('test')) {
+                response = aiResponses.test;
+            } else if (text.includes('문서') || text.includes('doc')) {
+                response = aiResponses.docs;
+            } else if (text.includes('배포') || text.includes('deploy')) {
+                response = aiResponses.deploy;
+            } else if (text.includes('리뷰') || text.includes('review')) {
+                response = aiResponses.review;
+            } else if (text.includes('최적화') || text.includes('optimize') || text.includes('성능')) {
+                response = aiResponses.optimize;
+            } else if (text.includes('버그') || text.includes('debug') || text.includes('에러')) {
+                response = aiResponses.debug;
+            } else if (text.includes('예시') || text.includes('example') || text.includes('코드')) {
+                response = aiResponses.example;
+            } else if (text.includes('안녕') || text.includes('hello') || text.includes('hi')) {
+                response = {
+                    text: `안녕하세요! 반갑습니다! 👋
+
+<span class="hl-blue">Timbel AI</span>입니다. 코드 관련 질문이나 도움이 필요하시면 말씀해주세요!
+
+<span class="cmd-chip">/help</span>를 입력하시면 사용 가능한 명령어를 확인할 수 있어요.`
+                };
+            } else {
+                response = aiResponses.default;
+            }
+
+            addMessage(response.text, false, response);
+        }
+        
+        // ============ ACTION HANDLERS WITH PROGRESS ============
+        async function handleAdvancedAction(action) {
+            checkDemoHell();
+            
+            const actionConfigs = {
+                deployDocker: {
+                    title: 'Docker 배포 준비 중...',
+                    steps: ['Dockerfile 분석', 'docker-compose.yml 생성', '이미지 빌드 설정', '컨테이너 구성 완료']
+                },
+                deployAWS: {
+                    title: 'AWS 배포 설정 중...',
+                    steps: ['AWS 자격 증명 확인', 'EC2 인스턴스 구성', 'S3 버킷 설정', 'CloudFront 연결', '배포 파이프라인 생성']
+                },
+                deployVercel: {
+                    title: 'Vercel 배포 중...',
+                    steps: ['프로젝트 분석', 'vercel.json 생성', '빌드 설정 최적화', '도메인 연결']
+                },
+                deployAzure: {
+                    title: 'Azure 배포 설정 중...',
+                    steps: ['Azure 리소스 그룹 확인', 'App Service 설정', 'CI/CD 파이프라인 구성', '환경 변수 설정']
+                },
+                startReview: {
+                    title: '코드 리뷰 진행 중...',
+                    steps: ['코드베이스 스캔', '스타일 가이드 검사', '보안 취약점 분석', '성능 이슈 탐지', '리뷰 리포트 생성']
+                },
+                qualityReport: {
+                    title: '품질 리포트 생성 중...',
+                    steps: ['코드 복잡도 분석', '테스트 커버리지 확인', '기술 부채 계산', '리포트 생성']
+                },
+                analyzePerf: {
+                    title: '성능 분석 중...',
+                    steps: ['번들 사이즈 분석', '렌더링 성능 측정', '메모리 사용량 분석', '네트워크 요청 추적', '병목 지점 탐지']
+                },
+                autoOptimize: {
+                    title: '자동 최적화 적용 중...',
+                    steps: ['코드 스플리팅 적용', '레이지 로딩 설정', '이미지 최적화', '캐싱 전략 적용', '최적화 완료']
+                },
+                bugReport: {
+                    title: '버그 리포트 생성 중...',
+                    steps: ['에러 로그 수집', '스택 트레이스 분석', '재현 단계 정리', '리포트 생성']
+                },
+                errorAnalysis: {
+                    title: '에러 분석 중...',
+                    steps: ['에러 유형 분류', '원인 추적', '관련 코드 탐색', '해결책 도출']
+                },
+                autoFix: {
+                    title: '자동 수정 적용 중...',
+                    steps: ['수정 가능 항목 탐색', '패치 생성', '테스트 실행', '수정 적용']
+                }
+            };
+            
+            const config = actionConfigs[action];
+            if (config) {
+                await showProgressModal(config.title, config.steps);
+                
+                const resultMessages = {
+                    deployDocker: '🐳 Docker 배포 설정이 완료되었습니다! Dockerfile과 docker-compose.yml이 생성되었습니다.',
+                    deployAWS: '☁️ AWS 배포 파이프라인이 구성되었습니다! CloudFormation 템플릿을 확인해주세요.',
+                    deployVercel: '▲ Vercel 배포가 준비되었습니다! 프로덕션 URL이 생성됩니다.',
+                    deployAzure: '🔷 Azure 배포가 설정되었습니다! Azure Portal에서 확인해주세요.',
+                    startReview: '🔍 코드 리뷰가 완료되었습니다! 23개의 개선 사항이 발견되었습니다.',
+                    qualityReport: '📊 품질 리포트: A+ 등급, 코드 커버리지 87%, 기술 부채 낮음',
+                    analyzePerf: '⚡ 성능 분석 완료! 3개의 병목 지점과 5개의 최적화 기회를 발견했습니다.',
+                    autoOptimize: '🚀 최적화 완료! 번들 사이즈 32% 감소, 로딩 시간 45% 개선',
+                    bugReport: '🐛 버그 리포트가 생성되었습니다. 3개의 크리티컬, 7개의 마이너 이슈 발견.',
+                    errorAnalysis: '🔬 에러 분석 완료! 루트 원인: 비동기 처리 누락. 해결책이 준비되었습니다.',
+                    autoFix: '🩹 자동 수정이 완료되었습니다! 5개 파일에서 12개 이슈가 수정되었습니다.'
+                };
+                
+                addMessage(resultMessages[action] || '✅ 작업이 완료되었습니다!', false);
+            }
+        }
+
+        // ============ EVENT LISTENERS ============
+        chatInput.addEventListener('input', () => {
+            chatInput.style.height = 'auto';
+            chatInput.style.height = Math.min(chatInput.scrollHeight, 140) + 'px';
+            sendBtn.disabled = !chatInput.value.trim();
+        });
+
+        chatInput.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                if (chatInput.value.trim()) {
+                    processInput(chatInput.value);
+                    chatInput.value = '';
+                    chatInput.style.height = 'auto';
+                    sendBtn.disabled = true;
+                }
+            }
+        });
+
+        sendBtn.addEventListener('click', () => {
+            if (chatInput.value.trim()) {
+                processInput(chatInput.value);
+                chatInput.value = '';
+                chatInput.style.height = 'auto';
+                sendBtn.disabled = true;
+            }
+        });
+
+        // Quick action buttons
+        document.querySelectorAll('.quick-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const action = btn.dataset.action;
+                processInput(`/${action}`);
+            });
+        });
+
+        // Header buttons
+        document.getElementById('clearBtn').addEventListener('click', () => {
+            messagesInner.innerHTML = '';
+            showWelcomeScreen();
+            showToast('🗑️ 대화가 초기화되었습니다.');
+        });
+
+        document.getElementById('newChatBtn').addEventListener('click', () => {
+            messagesInner.innerHTML = '';
+            showWelcomeScreen();
+            showToast('✨ 새 대화가 시작되었습니다!');
+        });
+
+        document.getElementById('settingsBtn').addEventListener('click', () => {
+            showFeatureModal('settings', 'Settings', '⚙️');
+        });
+
+        document.getElementById('codeInsertBtn').addEventListener('click', () => {
+            chatInput.value += '```\n\n```';
+            chatInput.focus();
+            chatInput.setSelectionRange(chatInput.value.length - 4, chatInput.value.length - 4);
+            showToast('{ } 코드 블록이 삽입되었습니다.');
+        });
+
+        // ============ FUNNY MESSAGES ============
+        const funnyMessages = {
+            upgrade: {
+                emoji: '💸',
+                title: '돈이 없잖아요!',
+                message: '결제 시스템? 그런 거 없어요.<br><br>신용카드를 모니터에 대봐도 결제 안 됩니다.<br>정신 차리세요! 이건 데모예요! 🤪'
+            },
+            export: {
+                emoji: '📤',
+                title: '어디로 보내게요?',
+                message: '대화 내용을 우주로 보내드릴까요? 🚀<br><br>농담이에요. Export 버튼 진짜인 줄 알았어요?<br>Ctrl+C, Ctrl+V 하세요. 그게 Export예요.'
+            },
+            attach: {
+                emoji: '📎',
+                title: '클립 좋아하세요?',
+                message: '파일 첨부요? ㅋㅋㅋ<br><br>여기에 파일 올려봤자 우리 서버는 없어요.<br>그냥 코드 복붙하세요. 21세기잖아요.'
+            },
+            composer: {
+                emoji: '🎼',
+                title: '작곡가가 되고 싶으신가요?',
+                message: 'Composer 모드요?<br><br>멀티파일 AI 편집이 되는 줄 알았죠?<br>여기서 작곡되는 건 당신의 좌절뿐입니다. 🎵'
+            },
+            code: {
+                emoji: '💻',
+                title: '코딩하러 오셨어요?',
+                message: 'Code 탭을 눌렀군요!<br><br>진짜 에디터인 줄 알았어요?<br>VS Code 켜세요. 거기가 진짜 에디터예요.'
+            },
+            docs: {
+                emoji: '📚',
+                title: '공부 열심히 하시네요!',
+                message: 'Docs 탭이요?<br><br>문서는 구글에 있어요. 여기 아니에요.<br>"Read the docs" 들어보셨죠? 진짜로 읽으세요.'
+            },
+            settings: {
+                emoji: '⚙️',
+                title: '설정 덕후시군요!',
+                message: '설정을 바꾸면 뭐가 바뀔 것 같죠?<br><br>스포일러: 아무것도 안 바뀝니다.<br>다크모드밖에 없는데 이미 다크모드예요. 😎'
+            },
+            model: {
+                emoji: '🤖',
+                title: 'AI 모델 고르기!',
+                message: 'Timbel-7 Pro, Timbel-Ultra, Timbel-Mega...<br><br>다 똑같아요. 전부 가짜거든요.<br>OpenAI API 키부터 가져오세요.'
+            },
+            run: {
+                emoji: '▶️',
+                title: '실행하고 싶으시죠?',
+                message: 'Run 버튼 눌렀네요!<br><br>이 코드가 실행되려면...<br>당신이 직접 터미널에서 실행해야 해요. 여긴 운동장이 아닙니다.'
+            },
+            history: {
+                emoji: '📜',
+                title: '역사는 반복된다!',
+                message: '대화 기록이요?<br><br>새로고침하면 다 사라져요.<br>LocalStorage? 그런 거 구현 안 했어요. ㅎㅎ'
+            }
+        };
+
+        function showFunnyMessage(type) {
+            // iframe 내부에서는 팝업 비활성화
+            if (isInIframe) return;
+            
+            const msg = funnyMessages[type];
+            if (!msg) return;
+            
+            document.getElementById('funnyEmoji').textContent = msg.emoji;
+            document.getElementById('funnyTitle').textContent = msg.title;
+            document.getElementById('funnyMessage').innerHTML = msg.message;
+            document.getElementById('funnyOverlay').classList.add('show');
+            checkDemoHell();
+        }
+
+        document.getElementById('funnyClose').addEventListener('click', () => {
+            document.getElementById('funnyOverlay').classList.remove('show');
+        });
+
+        // ============ FEATURE MODALS ============
+        const featureContents = {
+            composer: `
+                <div class="composer-grid">
+                    <div class="composer-panel">
+                        <div class="composer-panel-title">📁 프로젝트 파일</div>
+                        <div class="file-item"><span class="file-item-icon">📄</span> index.tsx</div>
+                        <div class="file-item"><span class="file-item-icon">📄</span> App.tsx</div>
+                        <div class="file-item"><span class="file-item-icon">📄</span> components/Header.tsx</div>
+                        <div class="file-item"><span class="file-item-icon">📄</span> utils/api.ts</div>
+                        <div class="file-item"><span class="file-item-icon">🎨</span> styles.css</div>
+                    </div>
+                    <div class="composer-panel">
+                        <div class="composer-panel-title">✨ AI 제안</div>
+                        <div class="file-item" style="background: rgba(59,130,246,0.1); border: 1px solid var(--accent-blue);">
+                            <span>🔧</span> Header.tsx 리팩토링 제안
+                        </div>
+                        <div class="file-item" style="background: rgba(34,197,94,0.1); border: 1px solid var(--accent-green);">
+                            <span>✅</span> api.ts 타입 안전성 개선
+                        </div>
+                        <div class="file-item" style="background: rgba(234,179,8,0.1); border: 1px solid var(--accent-yellow);">
+                            <span>⚠️</span> 성능 최적화 필요
+                        </div>
+                    </div>
+                </div>
+                <div class="code-editor-mock">
+                    <div class="code-editor-tabs">
+                        <div class="code-editor-tab active"><span>📄</span> App.tsx</div>
+                        <div class="code-editor-tab"><span>📄</span> Header.tsx</div>
+                    </div>
+                    <div class="code-editor-content">
+                        <div class="code-line"><span class="line-number">1</span><span class="keyword">import</span> React <span class="keyword">from</span> <span class="string">'react'</span>;</div>
+                        <div class="code-line"><span class="line-number">2</span><span class="keyword">import</span> { Header } <span class="keyword">from</span> <span class="string">'./components'</span>;</div>
+                        <div class="code-line"><span class="line-number">3</span></div>
+                        <div class="code-line"><span class="line-number">4</span><span class="keyword">export default function</span> <span class="function">App</span>() {</div>
+                        <div class="code-line"><span class="line-number">5</span>  <span class="keyword">return</span> (</div>
+                        <div class="code-line"><span class="line-number">6</span>    <span class="comment">// AI가 여기를 수정할 거예요... 농담이에요 ㅋㅋ</span></div>
+                        <div class="code-line"><span class="line-number">7</span>  );</div>
+                        <div class="code-line"><span class="line-number">8</span>}</div>
+                    </div>
+                </div>
+            `,
+            code: `
+                <div class="code-editor-mock" style="min-height: 350px;">
+                    <div class="code-editor-tabs">
+                        <div class="code-editor-tab active"><span>📄</span> playground.ts</div>
+                        <div class="code-editor-tab"><span>➕</span> 새 파일</div>
+                    </div>
+                    <div class="code-editor-content" style="min-height: 280px;">
+                        <div class="code-line"><span class="line-number">1</span><span class="comment">// 여기에 코드를 작성하세요</span></div>
+                        <div class="code-line"><span class="line-number">2</span><span class="comment">// (실행은 안 됩니다 ㅎㅎ)</span></div>
+                        <div class="code-line"><span class="line-number">3</span></div>
+                        <div class="code-line"><span class="line-number">4</span><span class="keyword">function</span> <span class="function">믿음</span>() {</div>
+                        <div class="code-line"><span class="line-number">5</span>  <span class="keyword">if</span> (이게_진짜라고_믿으면) {</div>
+                        <div class="code-line"><span class="line-number">6</span>    <span class="keyword">throw new</span> <span class="function">Error</span>(<span class="string">"데모 지옥에 오신 것을 환영합니다"</span>);</div>
+                        <div class="code-line"><span class="line-number">7</span>  }</div>
+                        <div class="code-line"><span class="line-number">8</span>}</div>
+                        <div class="code-line"><span class="line-number">9</span></div>
+                        <div class="code-line"><span class="line-number">10</span><span class="function">console</span>.<span class="function">log</span>(<span class="string">"정신 차리세요!"</span>);</div>
+                    </div>
+                </div>
+            `,
+            docs: `
+                <div style="display: grid; gap: 16px;">
+                    <div class="composer-panel">
+                        <div class="composer-panel-title">📖 문서 카테고리</div>
+                        <div class="file-item"><span>🚀</span> 시작하기</div>
+                        <div class="file-item"><span>📦</span> 설치 가이드</div>
+                        <div class="file-item"><span>⚙️</span> API 레퍼런스</div>
+                        <div class="file-item"><span>💡</span> 튜토리얼</div>
+                        <div class="file-item"><span>❓</span> FAQ</div>
+                    </div>
+                    <div class="composer-panel" style="text-align: center; padding: 40px;">
+                        <div style="font-size: 48px; margin-bottom: 16px;">📚</div>
+                        <div style="font-size: 16px; font-weight: 600; margin-bottom: 8px;">문서를 불러오는 중...</div>
+                        <div style="color: var(--text-muted); font-size: 14px;">
+                            사실 문서가 없어요.<br>
+                            진짜 문서는 공식 홈페이지에 있습니다.
+                        </div>
+                    </div>
+                </div>
+            `,
+            settings: `
+                <div class="settings-group">
+                    <div class="settings-group-title">🎨 외관</div>
+                    <div class="setting-item">
+                        <div>
+                            <div class="setting-label">다크 모드</div>
+                            <div class="setting-desc">눈이 편안한 어두운 테마</div>
+                        </div>
+                        <div class="toggle-switch active" onclick="this.classList.toggle('active'); showToast('바뀌는 거 없어요 ㅋㅋ')"></div>
+                    </div>
+                    <div class="setting-item">
+                        <div>
+                            <div class="setting-label">컴팩트 모드</div>
+                            <div class="setting-desc">더 많은 내용을 한 화면에</div>
+                        </div>
+                        <div class="toggle-switch" onclick="this.classList.toggle('active'); showToast('이것도 안 바뀌어요 ㅎㅎ')"></div>
+                    </div>
+                </div>
+                <div class="settings-group">
+                    <div class="settings-group-title">🤖 AI 설정</div>
+                    <div class="setting-item">
+                        <div>
+                            <div class="setting-label">자동 완성</div>
+                            <div class="setting-desc">타이핑하면 AI가 코드 제안</div>
+                        </div>
+                        <div class="toggle-switch active" onclick="this.classList.toggle('active'); showToast('Toggle은 되는데 기능은 없어요')"></div>
+                    </div>
+                    <div class="setting-item">
+                        <div>
+                            <div class="setting-label">인라인 제안</div>
+                            <div class="setting-desc">코드 옆에 AI 제안 표시</div>
+                        </div>
+                        <div class="toggle-switch active" onclick="this.classList.toggle('active'); showToast('열심히 토글하시네요 ㅋㅋ')"></div>
+                    </div>
+                </div>
+                <div class="settings-group">
+                    <div class="settings-group-title">⚠️ 위험 구역</div>
+                    <div class="setting-item" style="border-color: var(--accent-red);">
+                        <div>
+                            <div class="setting-label" style="color: var(--accent-red);">모든 데이터 삭제</div>
+                            <div class="setting-desc">대화 기록, 설정 모두 초기화</div>
+                        </div>
+                        <button class="action-btn secondary" style="border-color: var(--accent-red); color: var(--accent-red);" onclick="showFunnyMessage('history')">삭제</button>
+                    </div>
+                </div>
+            `
+        };
+
+        function showFeatureModal(type, title, icon) {
+            // iframe 내부에서는 모달 비활성화
+            if (isInIframe) return;
+            
+            document.getElementById('featureModalTitle').innerHTML = `<span>${icon}</span><span>${title}</span>`;
+            document.getElementById('featureModalBody').innerHTML = featureContents[type] || '<p>콘텐츠 준비 중...</p>';
+            document.getElementById('featureModalOverlay').classList.add('show');
+        }
+
+        document.getElementById('featureModalClose').addEventListener('click', () => {
+            document.getElementById('featureModalOverlay').classList.remove('show');
+        });
+
+        document.getElementById('featureModalCancel').addEventListener('click', () => {
+            document.getElementById('featureModalOverlay').classList.remove('show');
+        });
+
+        document.getElementById('featureModalConfirm').addEventListener('click', () => {
+            document.getElementById('featureModalOverlay').classList.remove('show');
+            showFunnyMessage('run');
+        });
+
+        // Header buttons with funny messages
+        document.getElementById('upgradeBtn').addEventListener('click', () => {
+            showFunnyMessage('upgrade');
+        });
+
+        document.getElementById('exportBtn').addEventListener('click', () => {
+            showFunnyMessage('export');
+        });
+
+        document.getElementById('attachBtn').addEventListener('click', () => {
+            showFunnyMessage('attach');
+        });
+
+        document.getElementById('modelSelector').addEventListener('click', () => {
+            showFunnyMessage('model');
+        });
+
+        // Nav tabs with modals (override previous)
+        document.querySelectorAll('.nav-tab').forEach(tab => {
+            tab.onclick = () => {
+                document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
+                
+                const tabName = tab.textContent.toLowerCase();
+                if (tabName === 'composer') {
+                    showFeatureModal('composer', 'AI Composer', '🎼');
+                } else if (tabName === 'code') {
+                    showFeatureModal('code', 'Code Editor', '💻');
+                } else if (tabName === 'docs') {
+                    showFeatureModal('docs', 'Documentation', '📚');
+                } else if (tabName === 'history') {
+                    showFunnyMessage('history');
+                } else {
+                    showToast(`📑 ${tab.textContent} 탭으로 전환되었습니다.`);
+                }
+            };
+        });
+    </script>
+</body>
+</html>
+

@@ -1,0 +1,2656 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Timbel Coffee Kiosk</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #1E3A5F;
+            --primary-light: #2C5282;
+            --primary-dark: #152A45;
+            --bg-light: #F0F2F5;
+            --bg-white: #FFFFFF;
+            --text-dark: #1A1A2E;
+            --text-gray: #6B7280;
+            --border: transparent;
+            --shadow-sm: 0 2px 8px rgba(30, 58, 95, 0.08);
+            --shadow-md: 0 4px 16px rgba(30, 58, 95, 0.12);
+            --shadow-lg: 0 8px 32px rgba(30, 58, 95, 0.16);
+            --shadow-xl: 0 12px 48px rgba(30, 58, 95, 0.2);
+        }
+
+        body {
+            font-family: 'Noto Sans KR', sans-serif;
+            background: var(--bg-light);
+            min-height: 100vh;
+            color: var(--text-dark);
+        }
+
+        .kiosk-container {
+            display: grid;
+            grid-template-columns: 1fr 380px;
+            min-height: 100vh;
+            background: var(--bg-white);
+        }
+
+        /* Header */
+        .header {
+            background: linear-gradient(135deg, #1a1a1a 0%, #000000 100%);
+            padding: 20px 32px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            color: white;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+            position: relative;
+            z-index: 10;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .logo-container {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .logo-icon {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .logo-img {
+            height: 36px;
+            width: auto;
+            object-fit: contain;
+        }
+
+        .logo-text-wrap {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+
+        .logo-text {
+            font-size: 26px;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+            line-height: 1.1;
+        }
+
+        .logo-subtext {
+            font-size: 11px;
+            font-weight: 500;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            opacity: 0.7;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .header-btn {
+            width: 44px;
+            height: 44px;
+            background: #333333;
+            border: 1px solid #444444;
+            border-radius: 12px;
+            color: white;
+            font-size: 18px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+        }
+
+        .header-btn:hover {
+            background: #444444;
+            border-color: #555555;
+            transform: translateY(-2px);
+        }
+
+        .order-type-badge {
+            padding: 8px 16px;
+            background: #e5e5e5;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 600;
+            color: #1a1a1a;
+            letter-spacing: 0.5px;
+        }
+
+        /* Main Content */
+        .main-content {
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Category Tabs */
+        .category-tabs {
+            display: flex;
+            background: var(--bg-white);
+            padding: 12px 16px;
+            gap: 8px;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .category-tab {
+            flex: 1;
+            padding: 18px 20px;
+            border: none;
+            background: transparent;
+            font-size: 20px;
+            font-weight: 500;
+            color: var(--text-gray);
+            cursor: pointer;
+            transition: all 0.3s;
+            position: relative;
+            border-radius: 14px;
+        }
+
+        .category-tab:hover {
+            color: var(--primary);
+            background: rgba(30, 58, 95, 0.05);
+        }
+
+        .category-tab.active {
+            color: white;
+            font-weight: 600;
+            background: #1a1a1a;
+            box-shadow: var(--shadow-md);
+        }
+
+        .category-tab.active::after {
+            display: none;
+        }
+
+        /* Menu Grid */
+        .menu-panel {
+            flex: 1;
+            padding: 24px;
+            padding-right: 12px;
+            overflow-y: auto;
+            background: var(--bg-white);
+        }
+
+        .menu-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 24px;
+        }
+
+        .menu-item {
+            background: var(--bg-white);
+            border: none;
+            border-radius: 20px;
+            overflow: hidden;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            text-align: center;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .menu-item:hover {
+            transform: translateY(-8px);
+            box-shadow: var(--shadow-xl);
+        }
+
+        .menu-item.selected {
+            box-shadow: 0 0 0 4px var(--primary), var(--shadow-lg);
+        }
+
+        .menu-item-image {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            background: linear-gradient(135deg, #f8fafc, #e2e8f0);
+        }
+
+        .menu-item-info {
+            padding: 22px 18px;
+        }
+
+        .menu-item-name {
+            font-weight: 600;
+            font-size: 20px;
+            margin-bottom: 12px;
+            color: var(--text-dark);
+        }
+
+        .menu-item-price {
+            font-weight: 800;
+            font-size: 24px;
+            color: var(--primary);
+        }
+
+        .menu-item-price span {
+            font-size: 20px;
+            font-weight: 600;
+        }
+
+        /* Menu Badges */
+        .menu-item-badges {
+            position: absolute;
+            top: 12px;
+            left: 12px;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .menu-badge {
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 0.3px;
+        }
+
+        .menu-badge.popular {
+            background: #E53935;
+            color: white;
+        }
+
+        .menu-badge.signature {
+            background: #E53935;
+            color: white;
+        }
+
+        .menu-badge.sale {
+            background: #E53935;
+            color: white;
+        }
+
+        .menu-item {
+            position: relative;
+        }
+
+        .menu-item-price-wrap {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .original-price {
+            font-size: 14px;
+            color: #999;
+            text-decoration: line-through;
+        }
+
+        .sale-price {
+            color: #ff4444;
+        }
+
+        /* Right Panel */
+        .right-panel {
+            background: var(--bg-white);
+            display: flex;
+            flex-direction: column;
+            padding: 20px;
+            padding-top: 0;
+        }
+
+        /* Selected Items Display */
+        .selected-preview {
+            flex: 1;
+            padding: 20px;
+            background: var(--bg-light);
+            margin-top: 20px;
+            border-radius: 20px;
+            border: none;
+            overflow-y: auto;
+        }
+
+        .preview-item {
+            display: grid;
+            grid-template-columns: 50px 1fr auto;
+            align-items: center;
+            gap: 12px;
+            padding: 12px;
+            background: var(--bg-white);
+            border-radius: 12px;
+            margin-bottom: 8px;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .preview-item-img {
+            width: 50px;
+            height: 50px;
+            border-radius: 10px;
+            object-fit: cover;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .preview-item-info {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            overflow: hidden;
+        }
+
+        .preview-item-name {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-dark);
+            line-height: 1.4;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .preview-item-price {
+            font-size: 15px;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .preview-item-controls {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .qty-btn {
+            width: 30px;
+            height: 30px;
+            border: none;
+            background: var(--bg-light);
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 18px;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+            color: var(--text-dark);
+        }
+
+        .qty-btn:hover {
+            background: var(--primary);
+            color: white;
+        }
+
+        .qty-value {
+            font-weight: 700;
+            font-size: 16px;
+            min-width: 24px;
+            text-align: center;
+            color: var(--text-dark);
+        }
+
+        .remove-btn {
+            width: 30px;
+            height: 30px;
+            border: none;
+            background: #ff5252;
+            color: white;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            margin-left: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+        }
+
+        .remove-btn:hover {
+            background: #ff1744;
+        }
+
+        /* Timer & Controls */
+        .controls-section {
+            padding: 16px 0;
+        }
+
+        .timer-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 0;
+            padding: 16px 20px;
+            background: var(--bg-light);
+            border-radius: 14px;
+        }
+
+        .timer {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .timer-label {
+            font-size: 16px;
+            color: var(--text-gray);
+        }
+
+        .timer-value {
+            font-size: 38px;
+            font-weight: 700;
+            color: #E53935;
+        }
+
+        .timer-value span {
+            font-size: 22px;
+            font-weight: 500;
+        }
+
+        .clear-btn {
+            padding: 14px 24px;
+            background: var(--bg-white);
+            border: none;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .clear-btn:hover {
+            background: #f0f0f0;
+            box-shadow: var(--shadow-md);
+            transform: translateY(-2px);
+        }
+
+        /* Cart Section */
+        .cart-section {
+            background: transparent;
+            padding: 20px 0 0 0;
+        }
+
+        .cart-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+            padding: 16px 20px;
+            background: var(--bg-light);
+            border-radius: 14px;
+        }
+
+        .cart-title {
+            font-size: 20px;
+            font-weight: 600;
+        }
+
+        .cart-count {
+            font-size: 18px;
+            color: var(--text-gray);
+        }
+
+        .cart-summary {
+            margin-bottom: 0;
+        }
+
+        .summary-row.total {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 22px;
+            font-weight: 700;
+            padding: 16px 20px;
+            background: var(--bg-light);
+            border-radius: 14px;
+            margin-top: 10px;
+        }
+
+        .summary-row.total .amount {
+            color: #E53935;
+            font-size: 26px;
+        }
+
+        .checkout-btn {
+            width: 100%;
+            padding: 22px;
+            background: #666666;
+            border: none;
+            color: white;
+            font-size: 22px;
+            font-weight: 700;
+            border-radius: 16px;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+            margin-top: 16px;
+        }
+
+        .checkout-btn.active {
+            background: #1a1a1a;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+        }
+
+        .checkout-btn.active:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 32px rgba(0, 0, 0, 0.5);
+        }
+
+        .checkout-btn:disabled {
+            cursor: not-allowed;
+        }
+
+        /* Checkout Wrapper & Event Tooltip */
+        .checkout-wrapper {
+            position: relative;
+            margin-top: 16px;
+        }
+
+        .checkout-wrapper .checkout-btn {
+            margin-top: 0;
+        }
+
+        .event-tooltip {
+            position: absolute;
+            top: -42px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #7c4dff;
+            color: white;
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 600;
+            white-space: nowrap;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            animation: tooltipPulse 2s ease infinite;
+            z-index: 100;
+        }
+
+        @keyframes tooltipPulse {
+            0%, 100% { 
+                transform: translateX(-50%) scale(1);
+            }
+            50% { 
+                transform: translateX(-50%) scale(1.03);
+            }
+        }
+
+        .tooltip-icon {
+            font-size: 12px;
+            animation: iconShake 1.5s ease infinite;
+        }
+
+        @keyframes iconShake {
+            0%, 100% { transform: rotate(0deg); }
+            25% { transform: rotate(-10deg); }
+            75% { transform: rotate(10deg); }
+        }
+
+        .tooltip-text {
+            letter-spacing: -0.3px;
+        }
+
+        .tooltip-arrow {
+            position: absolute;
+            bottom: -6px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0;
+            height: 0;
+            border-left: 6px solid transparent;
+            border-right: 6px solid transparent;
+            border-top: 6px solid #7c4dff;
+        }
+
+        .event-tooltip.hidden {
+            display: none;
+        }
+
+        /* Option Modal */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .modal {
+            background: white;
+            border-radius: 28px;
+            width: 90%;
+            max-width: 450px;
+            max-height: 85vh;
+            overflow-y: auto;
+            transform: scale(0.9);
+            transition: transform 0.3s ease;
+            box-shadow: var(--shadow-xl);
+        }
+
+        .modal-overlay.active .modal {
+            transform: scale(1);
+        }
+
+        .modal-header {
+            padding: 28px;
+            text-align: center;
+            background: linear-gradient(180deg, #f8fafc, #ffffff);
+        }
+
+        .modal-header img {
+            width: 130px;
+            height: 130px;
+            object-fit: cover;
+            border-radius: 20px;
+            margin-bottom: 18px;
+            box-shadow: var(--shadow-lg);
+        }
+
+        .modal-header h3 {
+            font-size: 20px;
+            margin-bottom: 8px;
+        }
+
+        .modal-header .price {
+            font-size: 22px;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .modal-body {
+            padding: 24px;
+        }
+
+        .option-group {
+            margin-bottom: 24px;
+        }
+
+        .option-group-title {
+            font-weight: 600;
+            font-size: 15px;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .required-badge {
+            font-size: 11px;
+            padding: 3px 8px;
+            background: var(--primary);
+            border-radius: 10px;
+            color: white;
+        }
+
+        .options {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .option-btn {
+            padding: 14px 20px;
+            border: none;
+            background: var(--bg-light);
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-size: 15px;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .option-btn:hover {
+            background: #e2e8f0;
+            transform: translateY(-2px);
+        }
+
+        .option-btn.selected {
+            background: #1a1a1a;
+            color: white;
+            box-shadow: var(--shadow-md);
+        }
+
+        .option-btn .extra-price {
+            font-size: 12px;
+            opacity: 0.8;
+            margin-left: 4px;
+        }
+
+        .modal-footer {
+            padding: 24px;
+            display: flex;
+            gap: 12px;
+            background: #f8fafc;
+        }
+
+        .modal-cancel-btn {
+            flex: 1;
+            padding: 18px;
+            border: none;
+            background: white;
+            font-size: 17px;
+            font-weight: 600;
+            border-radius: 14px;
+            cursor: pointer;
+            box-shadow: var(--shadow-sm);
+            transition: all 0.2s;
+        }
+
+        .modal-cancel-btn:hover {
+            box-shadow: var(--shadow-md);
+            transform: translateY(-2px);
+        }
+
+        .modal-add-btn {
+            flex: 2;
+            padding: 18px;
+            background: #1a1a1a;
+            border: none;
+            color: white;
+            font-size: 17px;
+            font-weight: 700;
+            border-radius: 14px;
+            cursor: pointer;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
+            transition: all 0.2s;
+        }
+
+        .modal-add-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 28px rgba(0, 0, 0, 0.35);
+        }
+
+        /* Success Overlay */
+        .success-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(255, 255, 255, 0.95);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .success-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .success-icon {
+            font-size: 80px;
+            margin-bottom: 24px;
+        }
+
+        .success-text {
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 12px;
+            color: var(--text-dark);
+        }
+
+        .success-subtext {
+            font-size: 16px;
+            color: var(--text-gray);
+        }
+
+        .success-joke {
+            margin-top: 32px;
+            padding: 20px 32px;
+            background: linear-gradient(135deg, var(--primary), var(--primary-light));
+            border-radius: 16px;
+            color: white;
+            font-size: 15px;
+            line-height: 1.6;
+            max-width: 400px;
+            text-align: center;
+            animation: fadeInUp 0.5s ease 0.3s both;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.3; }
+        }
+
+        /* Payment Modal */
+        .payment-modal {
+            background: white;
+            border-radius: 20px;
+            width: 90%;
+            max-width: 400px;
+            overflow: hidden;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        }
+
+        .payment-header {
+            background: linear-gradient(135deg, #1a1a1a, #333);
+            color: white;
+            padding: 16px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .payment-logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .inicis-logo {
+            font-weight: 700;
+            font-size: 18px;
+        }
+
+        .payment-secure {
+            font-size: 12px;
+            opacity: 0.8;
+        }
+
+        .payment-close {
+            background: rgba(255,255,255,0.1);
+            border: none;
+            color: white;
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        .payment-body {
+            padding: 24px;
+        }
+
+        .payment-info {
+            text-align: center;
+            padding-bottom: 20px;
+            border-bottom: 1px dashed #ddd;
+            margin-bottom: 20px;
+        }
+
+        .payment-merchant {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 8px;
+        }
+
+        .payment-amount-label {
+            font-size: 13px;
+            color: #999;
+        }
+
+        .payment-amount {
+            font-size: 32px;
+            font-weight: 800;
+            color: #1a1a1a;
+        }
+
+        .payment-method-title {
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 12px;
+            color: #333;
+        }
+
+        .payment-method-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+        }
+
+        .payment-method {
+            padding: 16px;
+            border: 2px solid #eee;
+            background: white;
+            border-radius: 12px;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.2s;
+        }
+
+        .payment-method:hover {
+            border-color: #ccc;
+        }
+
+        .payment-method.active {
+            border-color: #1a1a1a;
+            background: #f8f8f8;
+        }
+
+        .method-icon {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 32px;
+        }
+
+        .method-icon svg {
+            display: block;
+        }
+
+        .method-name {
+            font-size: 13px;
+            font-weight: 500;
+        }
+
+        .payment-processing {
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            padding: 40px 0;
+            gap: 16px;
+        }
+
+        .payment-processing.active {
+            display: flex;
+        }
+
+        .processing-spinner {
+            width: 40px;
+            height: 40px;
+            border: 4px solid #eee;
+            border-top-color: #1a1a1a;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .processing-text {
+            font-size: 14px;
+            color: #666;
+        }
+
+        .payment-footer {
+            padding: 16px 24px;
+            background: #f5f5f5;
+            display: flex;
+            gap: 12px;
+        }
+
+        .payment-cancel-btn {
+            flex: 1;
+            padding: 14px;
+            border: none;
+            background: white;
+            border-radius: 10px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .payment-confirm-btn {
+            flex: 2;
+            padding: 14px;
+            border: none;
+            background: #1a1a1a;
+            color: white;
+            border-radius: 10px;
+            font-size: 15px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .payment-confirm-btn:hover {
+            background: #333;
+        }
+
+        /* Event Overlay */
+        .event-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: #ffffff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 3000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+            overflow: hidden;
+        }
+
+        .event-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        /* Confetti */
+        .confetti-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            overflow: hidden;
+        }
+
+        .confetti {
+            position: absolute;
+            top: -30px;
+        }
+
+        .event-content {
+            text-align: center;
+            color: #333;
+            animation: popIn 0.5s ease;
+            position: relative;
+            z-index: 10;
+        }
+
+        @keyframes popIn {
+            0% { transform: scale(0.5); opacity: 0; }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        .event-confetti {
+            font-size: 60px;
+            margin-bottom: 16px;
+            animation: bounce 0.6s ease infinite alternate;
+        }
+
+        @keyframes bounce {
+            to { transform: translateY(-10px); }
+        }
+
+        .event-badge {
+            display: inline-block;
+            background: #E53935;
+            padding: 10px 28px;
+            border-radius: 30px;
+            font-size: 16px;
+            font-weight: 800;
+            letter-spacing: 4px;
+            margin-bottom: 20px;
+            color: white;
+        }
+
+        .event-title {
+            font-size: 48px;
+            font-weight: 800;
+            margin-bottom: 24px;
+            color: #E53935;
+        }
+
+        .event-price-box {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+            margin-bottom: 28px;
+            background: #f5f5f5;
+            padding: 24px 40px;
+            border-radius: 20px;
+        }
+
+        .event-original-price {
+            font-size: 28px;
+            text-decoration: line-through;
+            color: #999;
+        }
+
+        .event-arrow {
+            font-size: 28px;
+            color: #E53935;
+        }
+
+        .event-free {
+            font-size: 52px;
+            font-weight: 800;
+            color: #E53935;
+        }
+
+        .event-message {
+            font-size: 18px;
+            margin-bottom: 16px;
+            background: #fff3f3;
+            padding: 14px 28px;
+            border-radius: 30px;
+            display: inline-block;
+            color: #E53935;
+            font-weight: 600;
+        }
+
+        .event-subtext {
+            font-size: 22px;
+            margin-bottom: 24px;
+            color: #666;
+        }
+
+        .event-order-num {
+            font-size: 14px;
+            color: #999;
+            background: #f0f0f0;
+            padding: 10px 20px;
+            border-radius: 20px;
+            display: inline-block;
+        }
+
+        .success-joke .joke-title {
+            font-size: 13px;
+            opacity: 0.8;
+            margin-bottom: 8px;
+        }
+
+        .success-joke .joke-content {
+            font-weight: 600;
+            font-size: 17px;
+        }
+
+        /* Empty State */
+        .empty-state {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            color: var(--text-gray);
+        }
+
+        .empty-state-icon {
+            font-size: 48px;
+            margin-bottom: 12px;
+            opacity: 0.5;
+        }
+
+        .empty-state-text {
+            font-size: 14px;
+        }
+
+        /* Responsive */
+        @media (max-width: 1600px) {
+            .menu-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+
+        @media (max-width: 1200px) {
+            .menu-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 900px) {
+            .kiosk-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .right-panel {
+                position: fixed;
+                bottom: 0;
+                left: 0;
+                right: 0;
+                max-height: 50vh;
+                border-left: none;
+                border-top: 1px solid var(--border);
+                border-radius: 20px 20px 0 0;
+                box-shadow: 0 -4px 20px rgba(0,0,0,0.15);
+                padding: 16px;
+            }
+
+            .selected-preview {
+                padding: 12px;
+                margin-top: 12px;
+            }
+
+            .preview-item {
+                grid-template-columns: 44px 1fr auto;
+                gap: 10px;
+                padding: 10px;
+            }
+
+            .preview-item-img {
+                width: 44px;
+                height: 44px;
+            }
+
+            .preview-item-name {
+                font-size: 13px;
+            }
+
+            .preview-item-price {
+                font-size: 14px;
+            }
+
+            .qty-btn, .remove-btn {
+                width: 28px;
+                height: 28px;
+                font-size: 15px;
+            }
+
+            .qty-value {
+                font-size: 14px;
+                min-width: 22px;
+            }
+
+            .timer-row {
+                padding: 12px 16px;
+            }
+
+            .timer-value {
+                font-size: 28px;
+            }
+
+            .cart-header {
+                padding: 12px 16px;
+                margin-bottom: 12px;
+            }
+
+            .cart-title {
+                font-size: 16px;
+            }
+
+            .summary-row.total {
+                padding: 12px 16px;
+                font-size: 18px;
+            }
+
+            .checkout-btn {
+                padding: 16px;
+                font-size: 18px;
+                margin-top: 12px;
+            }
+
+            .checkout-wrapper {
+                margin-top: 12px;
+            }
+
+            .event-tooltip {
+                top: -36px;
+                padding: 5px 12px;
+                font-size: 10px;
+            }
+
+            .tooltip-icon {
+                font-size: 11px;
+            }
+
+            .tooltip-arrow {
+                bottom: -5px;
+                border-left-width: 5px;
+                border-right-width: 5px;
+                border-top-width: 5px;
+            }
+
+            .controls-section {
+                padding: 12px 0;
+            }
+
+            .menu-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 12px;
+            }
+
+            .menu-panel {
+                padding: 16px;
+                padding-bottom: 280px;
+            }
+
+            .menu-item-info {
+                padding: 14px 12px;
+            }
+
+            .menu-item-name {
+                font-size: 16px;
+                margin-bottom: 8px;
+            }
+
+            .menu-item-price {
+                font-size: 18px;
+            }
+
+            .menu-item-image {
+                height: 140px;
+            }
+
+            .menu-item-badges {
+                top: 8px;
+                left: 8px;
+            }
+
+            .menu-badge {
+                padding: 4px 10px;
+                font-size: 10px;
+                border-radius: 16px;
+            }
+
+            .original-price {
+                font-size: 12px;
+            }
+
+            .category-tabs {
+                padding: 8px 12px;
+                gap: 6px;
+                overflow-x: auto;
+            }
+
+            .category-tab {
+                padding: 12px 14px;
+                font-size: 14px;
+                white-space: nowrap;
+                flex: none;
+            }
+
+            .header {
+                padding: 14px 16px;
+            }
+
+            .logo-img {
+                height: 28px;
+            }
+
+            .logo-text {
+                font-size: 20px;
+            }
+
+            .logo-subtext {
+                font-size: 9px;
+            }
+
+            .header-btn {
+                width: 36px;
+                height: 36px;
+                font-size: 14px;
+            }
+
+            .order-type-badge {
+                padding: 6px 12px;
+                font-size: 11px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .menu-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 8px;
+            }
+
+            .menu-item-image {
+                height: 110px;
+            }
+
+            .menu-item-info {
+                padding: 10px 8px;
+            }
+
+            .menu-item-name {
+                font-size: 13px;
+                margin-bottom: 4px;
+            }
+
+            .menu-item-price {
+                font-size: 15px;
+            }
+
+            .menu-item-price span {
+                font-size: 13px;
+            }
+
+            .menu-item-badges {
+                top: 6px;
+                left: 6px;
+                gap: 4px;
+            }
+
+            .menu-badge {
+                padding: 3px 8px;
+                font-size: 9px;
+                border-radius: 12px;
+            }
+
+            .original-price {
+                font-size: 11px;
+            }
+
+            .category-tab {
+                padding: 10px 12px;
+                font-size: 13px;
+            }
+
+            .right-panel {
+                padding: 12px;
+                max-height: 45vh;
+            }
+
+            .preview-item {
+                grid-template-columns: 40px 1fr auto;
+                gap: 8px;
+                padding: 10px;
+            }
+
+            .preview-item-img {
+                width: 40px;
+                height: 40px;
+                border-radius: 8px;
+            }
+
+            .preview-item-name {
+                font-size: 13px;
+            }
+
+            .preview-item-price {
+                font-size: 14px;
+            }
+
+            .qty-btn, .remove-btn {
+                width: 26px;
+                height: 26px;
+                font-size: 14px;
+            }
+
+            .preview-item-controls {
+                gap: 4px;
+            }
+
+            .remove-btn {
+                margin-left: 4px;
+            }
+
+            .timer-value {
+                font-size: 24px;
+            }
+
+            .timer-label {
+                font-size: 13px;
+            }
+
+            .clear-btn {
+                padding: 10px 16px;
+                font-size: 13px;
+            }
+
+            .checkout-btn {
+                padding: 14px;
+                font-size: 16px;
+            }
+
+            .event-tooltip {
+                top: -32px;
+                padding: 4px 10px;
+                font-size: 9px;
+                gap: 3px;
+            }
+
+            .tooltip-icon {
+                font-size: 10px;
+            }
+
+            .tooltip-arrow {
+                bottom: -4px;
+                border-left-width: 4px;
+                border-right-width: 4px;
+                border-top-width: 4px;
+            }
+
+            .menu-panel {
+                padding: 12px;
+                padding-bottom: 260px;
+            }
+
+            .header {
+                padding: 12px 14px;
+            }
+
+            .logo-img {
+                height: 24px;
+            }
+
+            .logo-text {
+                font-size: 16px;
+            }
+
+            .logo-subtext {
+                font-size: 8px;
+                letter-spacing: 2px;
+            }
+
+            .logo-container {
+                gap: 10px;
+            }
+
+            .header-btn {
+                width: 32px;
+                height: 32px;
+                font-size: 14px;
+                border-radius: 8px;
+            }
+
+            .header-right {
+                gap: 8px;
+            }
+
+            .order-type-badge {
+                padding: 5px 10px;
+                font-size: 10px;
+            }
+
+            .category-tabs {
+                padding: 6px 10px;
+                gap: 4px;
+            }
+
+            .category-tab {
+                padding: 8px 10px;
+                font-size: 12px;
+                border-radius: 10px;
+            }
+        }
+
+        @media (max-width: 360px) {
+            .logo-text {
+                font-size: 16px;
+            }
+
+            .logo-subtext {
+                display: none;
+            }
+
+            .menu-grid {
+                gap: 6px;
+            }
+
+            .menu-item-image {
+                height: 90px;
+            }
+
+            .menu-item-info {
+                padding: 8px 6px;
+            }
+
+            .menu-item-name {
+                font-size: 12px;
+            }
+
+            .menu-item-price {
+                font-size: 14px;
+            }
+
+            .event-tooltip {
+                top: -30px;
+                padding: 4px 8px;
+                font-size: 8px;
+                gap: 2px;
+            }
+
+            .tooltip-icon {
+                font-size: 9px;
+            }
+
+            .tooltip-text {
+                letter-spacing: -0.5px;
+            }
+
+            .logo-img {
+                height: 20px;
+            }
+
+            .logo-text {
+                font-size: 14px;
+            }
+        }
+
+        /* Welcome Screen - Toss Style Bold */
+        .welcome-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: #ffffff;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 5000;
+            transition: all 0.4s ease;
+        }
+
+        .welcome-screen.hidden {
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+        }
+
+        .welcome-content {
+            text-align: center;
+            color: #191f28;
+            animation: welcomeFadeIn 0.6s ease;
+            padding: 40px;
+        }
+
+        @keyframes welcomeFadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .welcome-logo {
+            margin-bottom: 24px;
+        }
+
+        .welcome-logo img {
+            height: 72px;
+            width: auto;
+        }
+
+        .welcome-title {
+            font-size: 52px;
+            font-weight: 800;
+            margin-bottom: 8px;
+            letter-spacing: -1px;
+            color: #191f28;
+        }
+
+        .welcome-subtitle {
+            font-size: 16px;
+            color: #8b95a1;
+            font-weight: 500;
+            margin-bottom: 80px;
+        }
+
+        .welcome-message {
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 48px;
+            color: #333d4b;
+        }
+
+        .order-type-options {
+            display: flex;
+            gap: 24px;
+            margin-bottom: 80px;
+        }
+
+        .order-type-btn {
+            width: 220px;
+            padding: 48px 32px;
+            background: #f9fafb;
+            border: none;
+            border-radius: 24px;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 16px;
+            transition: all 0.2s ease;
+            color: #191f28;
+        }
+
+        .order-type-btn:hover {
+            background: #f2f4f6;
+            transform: translateY(-6px);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.08);
+        }
+
+        .order-type-btn:active {
+            transform: translateY(-3px) scale(0.98);
+            background: #e5e8eb;
+        }
+
+        .order-type-label {
+            font-size: 32px;
+            font-weight: 800;
+            color: #191f28;
+        }
+
+        .order-type-desc {
+            font-size: 16px;
+            color: #8b95a1;
+            font-weight: 500;
+        }
+
+        .welcome-footer {
+            font-size: 14px;
+            color: #b0b8c1;
+        }
+
+        .welcome-touch-hint {
+            position: absolute;
+            bottom: 60px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 15px;
+            color: #8b95a1;
+            animation: pulse 2s ease infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 0.6; }
+            50% { opacity: 1; }
+        }
+
+        /* Responsive Welcome Screen */
+        @media (max-width: 600px) {
+            .welcome-content {
+                padding: 24px;
+            }
+
+            .welcome-logo img {
+                height: 56px;
+            }
+
+            .welcome-title {
+                font-size: 36px;
+            }
+
+            .welcome-subtitle {
+                font-size: 13px;
+                margin-bottom: 50px;
+            }
+
+            .welcome-message {
+                font-size: 20px;
+                margin-bottom: 32px;
+            }
+
+            .order-type-options {
+                gap: 16px;
+                margin-bottom: 50px;
+            }
+
+            .order-type-btn {
+                width: 160px;
+                padding: 36px 24px;
+                border-radius: 20px;
+            }
+
+            .order-type-label {
+                font-size: 24px;
+            }
+
+            .order-type-desc {
+                font-size: 13px;
+            }
+
+            .welcome-touch-hint {
+                bottom: 40px;
+                font-size: 13px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Welcome Screen -->
+    <div class="welcome-screen" id="welcomeScreen">
+        <div class="welcome-content">
+            <div class="welcome-logo">
+                <img src="img/timbel logo.png" alt="Timbel" onerror="this.style.display='none'">
+            </div>
+            <h1 class="welcome-title">Cafeteria</h1>
+            <p class="welcome-subtitle">Premium Coffee Kiosk</p>
+            
+            <div class="welcome-message">어서오세요, 팀벨 임직원 여러분<br>주문 방식을 선택해주세요!</div>
+            
+            <div class="order-type-options">
+                <button class="order-type-btn" onclick="selectOrderType('store')">
+                    <div class="order-type-label">매장</div>
+                    <div class="order-type-desc">매장이용</div>
+                </button>
+                <button class="order-type-btn" onclick="selectOrderType('takeout')">
+                    <div class="order-type-label">포장</div>
+                    <div class="order-type-desc">가져가기</div>
+                </button>
+            </div>
+            
+            <div class="welcome-footer">Powered by Timbel</div>
+        </div>
+        <div class="welcome-touch-hint">
+            터치하여 주문을 시작하세요
+        </div>
+    </div>
+
+    <div class="kiosk-container">
+        <!-- Main Content -->
+        <div class="main-content">
+            <header class="header">
+                <div class="header-left">
+                    <div class="logo-container">
+                        <img src="img/timbel logo.png" alt="TIMBEL" style="height: 36px; width: auto;">
+                    </div>
+                </div>
+                <div class="header-right">
+                    <div class="order-type-badge" id="orderTypeBadge">매장</div>
+                </div>
+            </header>
+
+            <!-- Category Tabs -->
+            <div class="category-tabs">
+                <button class="category-tab active" data-category="season">시즌 메뉴</button>
+                <button class="category-tab" data-category="hot">커피(HOT)</button>
+                <button class="category-tab" data-category="ice">커피(ICE)</button>
+                <button class="category-tab" data-category="beverage">음료</button>
+                <button class="category-tab" data-category="dessert">디저트</button>
+            </div>
+
+            <!-- Menu Grid -->
+            <div class="menu-panel">
+                <div class="menu-grid" id="menuGrid">
+                    <!-- Items populated by JS -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Right Panel -->
+        <div class="right-panel">
+            <!-- Selected Items Preview -->
+            <div class="selected-preview" id="selectedPreview">
+                <div class="empty-state">
+                    <div class="empty-state-icon">🛒</div>
+                    <div class="empty-state-text">메뉴를 선택해주세요</div>
+                </div>
+            </div>
+
+            <!-- Timer & Controls -->
+            <div class="controls-section">
+                <div class="timer-row">
+                    <div class="timer">
+                        <span class="timer-label">남은시간</span>
+                        <span class="timer-value" id="timerValue">60<span>초</span></span>
+                    </div>
+                    <button class="clear-btn" onclick="clearCart()">전체삭제</button>
+                </div>
+            </div>
+
+            <!-- Cart Section -->
+            <div class="cart-section">
+                <div class="cart-header">
+                    <span class="cart-title">선택한 상품</span>
+                    <span class="cart-count" id="cartCount">0개</span>
+                </div>
+                <div class="cart-summary">
+                    <div class="summary-row total">
+                        <span>총 결제금액</span>
+                        <span class="amount" id="totalAmount">0원</span>
+                    </div>
+                </div>
+                <div class="checkout-wrapper">
+                    <div class="event-tooltip" id="eventTooltip">
+                        <span class="tooltip-icon">🎁</span>
+                        <span class="tooltip-text">메뉴를 담고 결제하기를 눌러보세요!</span>
+                        <span class="tooltip-arrow"></span>
+                    </div>
+                    <button class="checkout-btn" id="checkoutBtn" disabled onclick="checkout()">
+                        결제하기
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Product Modal -->
+    <div class="modal-overlay" id="productModal">
+        <div class="modal">
+            <div class="modal-header">
+                <img id="modalImage" src="" alt="">
+                <h3 id="modalName">상품명</h3>
+                <div class="price" id="modalPrice">0원</div>
+            </div>
+            <div class="modal-body">
+                <div class="option-group" id="sizeGroup">
+                    <div class="option-group-title">
+                        사이즈 <span class="required-badge">필수</span>
+                    </div>
+                    <div class="options" id="sizeOptions">
+                        <button class="option-btn selected" data-size="regular" data-extra="0">Regular</button>
+                        <button class="option-btn" data-size="large" data-extra="500">Large <span class="extra-price">+500원</span></button>
+                    </div>
+                </div>
+                <div class="option-group" id="tempGroup">
+                    <div class="option-group-title">
+                        온도 <span class="required-badge">필수</span>
+                    </div>
+                    <div class="options" id="tempOptions">
+                        <button class="option-btn selected" data-temp="hot">HOT</button>
+                        <button class="option-btn" data-temp="ice">ICE</button>
+                    </div>
+                </div>
+                <div class="option-group" id="extraGroup">
+                    <div class="option-group-title">
+                        추가 옵션
+                    </div>
+                    <div class="options" id="extraOptions">
+                        <button class="option-btn" data-extra-option="shot" data-extra="500">샷 추가 <span class="extra-price">+500원</span></button>
+                        <button class="option-btn" data-extra-option="syrup" data-extra="300">시럽 추가 <span class="extra-price">+300원</span></button>
+                        <button class="option-btn" data-extra-option="whip" data-extra="500">휘핑크림 <span class="extra-price">+500원</span></button>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="modal-cancel-btn" onclick="closeModal()">취소</button>
+                <button class="modal-add-btn" onclick="addToCart()">담기</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Payment Modal (Inicis Style) -->
+    <div class="modal-overlay" id="paymentModal">
+        <div class="payment-modal">
+            <div class="payment-header">
+                <div class="payment-logo">
+                    <span class="inicis-logo">KG이니시스</span>
+                    <span class="payment-secure">
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: middle; margin-right: 4px;">
+                            <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                            <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                        </svg>
+                        안전결제
+                    </span>
+                </div>
+                <button class="payment-close" onclick="closePaymentModal()">✕</button>
+            </div>
+            <div class="payment-body">
+                <div class="payment-info">
+                    <div class="payment-merchant">Timbel Coffee</div>
+                    <div class="payment-amount-label">결제 금액</div>
+                    <div class="payment-amount" id="paymentAmount">0원</div>
+                </div>
+                <div class="payment-methods">
+                    <div class="payment-method-title">결제 수단 선택</div>
+                    <div class="payment-method-grid">
+                        <button class="payment-method active" data-method="card">
+                            <span class="method-icon">
+                                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#1a1a1a" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                                    <rect x="1" y="4" width="22" height="16" rx="2" ry="2"></rect>
+                                    <line x1="1" y1="10" x2="23" y2="10"></line>
+                                </svg>
+                            </span>
+                            <span class="method-name">신용카드</span>
+                        </button>
+                        <button class="payment-method" data-method="kakao">
+                            <span class="method-icon kakao-icon">
+                                <svg width="28" height="28" viewBox="0 0 24 24" fill="#3C1E1E">
+                                    <path d="M12 3C6.48 3 2 6.58 2 11c0 2.8 1.8 5.27 4.5 6.7-.2.76-.72 2.74-.83 3.17-.13.54.2.53.42.39.17-.11 2.74-1.86 3.86-2.62.68.1 1.38.16 2.05.16 5.52 0 10-3.58 10-8s-4.48-8-10-8z"/>
+                                </svg>
+                            </span>
+                            <span class="method-name">카카오페이</span>
+                        </button>
+                        <button class="payment-method" data-method="naver">
+                            <span class="method-icon naver-icon">
+                                <svg width="28" height="28" viewBox="0 0 24 24" fill="#03C75A">
+                                    <path d="M16.27 12.55l-5.76-8.55H6v16h5.73v-8.55l5.76 8.55H22V4h-5.73v8.55z"/>
+                                </svg>
+                            </span>
+                            <span class="method-name">네이버페이</span>
+                        </button>
+                        <button class="payment-method" data-method="phone">
+                            <span class="method-icon">
+                                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#1a1a1a" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                                    <rect x="5" y="2" width="14" height="20" rx="2" ry="2"></rect>
+                                    <line x1="12" y1="18" x2="12.01" y2="18"></line>
+                                </svg>
+                            </span>
+                            <span class="method-name">휴대폰</span>
+                        </button>
+                    </div>
+                </div>
+                <div class="payment-processing" id="paymentProcessing">
+                    <div class="processing-spinner"></div>
+                    <div class="processing-text">결제 처리 중...</div>
+                </div>
+            </div>
+            <div class="payment-footer">
+                <button class="payment-cancel-btn" onclick="closePaymentModal()">취소</button>
+                <button class="payment-confirm-btn" onclick="processPayment()">결제하기</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Success Overlay -->
+    <div class="success-overlay" id="successOverlay">
+        <div class="success-icon" id="successIcon">✅</div>
+        <div class="success-text" id="successText">주문이 완료되었습니다!</div>
+        <div class="success-subtext" id="successSubtext">잠시 후 음료가 준비됩니다</div>
+        <div class="success-joke" id="successJoke"></div>
+    </div>
+
+    <!-- Event FREE Overlay -->
+    <div class="event-overlay" id="eventOverlay">
+        <div class="confetti-container" id="confettiContainer"></div>
+        <div class="event-content">
+            <div class="event-confetti">🎉</div>
+            <div class="event-badge">EVENT</div>
+            <div class="event-title">축하합니다!</div>
+            <div class="event-price-box">
+                <div class="event-original-price" id="eventOriginalPrice">15,000원</div>
+                <div class="event-arrow">→</div>
+                <div class="event-free">FREE!</div>
+            </div>
+            <div class="event-message">
+                이벤트 기간 중 모든 주문 100% 무료!
+            </div>
+            <div class="event-subtext">맛있게 드세요~</div>
+            <div class="event-order-num" id="eventOrderNum">주문번호: #001</div>
+        </div>
+    </div>
+
+    <script>
+        // Menu Data with matching images
+        const menuItems = [
+            // 시즌 메뉴
+            { id: 1, name: '골드망고 스무디', price: 4000, image: 'https://images.unsplash.com/photo-1623065422902-30a2d299bbe4?w=400&h=400&fit=crop&q=80', category: 'season', badge: 'popular' },
+            { id: 2, name: '코코넛 커피 스무디', price: 4800, image: 'https://images.unsplash.com/photo-1572490122747-3968b75cc699?w=400&h=400&fit=crop&q=80', category: 'season', badge: 'signature' },
+            { id: 3, name: '망고 코코넛 주스', price: 3800, image: 'https://images.unsplash.com/photo-1546173159-315724a31696?w=400&h=400&fit=crop&q=80', category: 'season' },
+            { id: 4, name: '망고 히비스 커스티', price: 5800, originalPrice: 6500, image: 'https://images.unsplash.com/photo-1497534446932-c925b458314e?w=400&h=400&fit=crop&q=80', category: 'season', badge: 'sale' },
+            { id: 5, name: '딸기 쿠키 프라페', price: 4900, image: 'https://images.unsplash.com/photo-1553530666-ba11a7da3888?w=400&h=400&fit=crop&q=80', category: 'season', badge: 'popular' },
+            { id: 6, name: '흑당 버블 라떼', price: 4800, image: 'https://images.unsplash.com/photo-1558857563-b371033873b8?w=400&h=400&fit=crop&q=80', category: 'season', badge: 'signature' },
+            { id: 7, name: '흑당 라떼', price: 5000, image: 'https://images.unsplash.com/photo-1534687941688-651ccaafbff8?w=400&h=400&fit=crop&q=80', category: 'season' },
+
+            // 커피 HOT
+            { id: 10, name: '아메리카노', price: 4000, image: 'https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?w=400&h=400&fit=crop&q=80', category: 'hot', badge: 'popular' },
+            { id: 11, name: '카페라떼', price: 4500, image: 'https://images.unsplash.com/photo-1541167760496-1628856ab772?w=400&h=400&fit=crop&q=80', category: 'hot', badge: 'signature' },
+            { id: 12, name: '바닐라 라떼', price: 5000, image: 'https://images.unsplash.com/photo-1572442388796-11668a67e53d?w=400&h=400&fit=crop&q=80', category: 'hot' },
+            { id: 13, name: '카라멜 마키아토', price: 5200, originalPrice: 5800, image: 'https://images.unsplash.com/photo-1485808191679-5f86510681a2?w=400&h=400&fit=crop&q=80', category: 'hot', badge: 'sale' },
+            { id: 14, name: '카푸치노', price: 4500, image: 'https://images.unsplash.com/photo-1534778101976-62847782c213?w=400&h=400&fit=crop&q=80', category: 'hot' },
+            { id: 15, name: '에스프레소', price: 3000, image: 'https://images.unsplash.com/photo-1510707577719-ae7c14805e3a?w=400&h=400&fit=crop&q=80', category: 'hot' },
+            { id: 16, name: '카페모카', price: 5000, image: 'https://images.unsplash.com/photo-1578314675249-a6910f80cc4e?w=400&h=400&fit=crop&q=80', category: 'hot', badge: 'popular' },
+            { id: 17, name: '돌체라떼', price: 5200, image: 'https://images.unsplash.com/photo-1461023058943-07fcbe16d735?w=400&h=400&fit=crop&q=80', category: 'hot', badge: 'signature' },
+
+            // 커피 ICE
+            { id: 20, name: '아이스 아메리카노', price: 4000, image: 'https://images.unsplash.com/photo-1517701550927-30cf4ba1dba5?w=400&h=400&fit=crop&q=80', category: 'ice', badge: 'popular' },
+            { id: 21, name: '아이스 카페라떼', price: 4500, image: 'https://images.unsplash.com/photo-1592663527359-cf6642f54cff?w=400&h=400&fit=crop&q=80', category: 'ice' },
+            { id: 22, name: '콜드브루', price: 4800, image: 'https://images.unsplash.com/photo-1461023058943-07fcbe16d735?w=400&h=400&fit=crop&q=80', category: 'ice', badge: 'signature' },
+            { id: 23, name: '콜드브루 라떼', price: 5200, originalPrice: 5800, image: 'https://images.unsplash.com/photo-1517701604599-bb29b565090c?w=400&h=400&fit=crop&q=80', category: 'ice', badge: 'sale' },
+            { id: 24, name: '바닐라 프라푸치노', price: 5500, image: 'https://images.unsplash.com/photo-1572490122747-3968b75cc699?w=400&h=400&fit=crop&q=80', category: 'ice' },
+            { id: 25, name: '카라멜 프라푸치노', price: 5500, image: 'https://images.unsplash.com/photo-1530373239216-42518e6b4063?w=400&h=400&fit=crop&q=80', category: 'ice', badge: 'popular' },
+            { id: 26, name: '자바칩 프라푸치노', price: 5800, image: 'https://images.unsplash.com/photo-1577968897966-3d4325b36b61?w=400&h=400&fit=crop&q=80', category: 'ice', badge: 'signature' },
+
+            // 음료
+            { id: 30, name: '초코라떼', price: 4800, image: 'https://images.unsplash.com/photo-1578314675249-a6910f80cc4e?w=400&h=400&fit=crop&q=80', category: 'beverage', badge: 'popular' },
+            { id: 31, name: '녹차라떼', price: 4800, image: 'https://images.unsplash.com/photo-1515823064-d6e0c04616a7?w=400&h=400&fit=crop&q=80', category: 'beverage', badge: 'signature' },
+            { id: 32, name: '딸기 스무디', price: 5000, originalPrice: 5500, image: 'https://images.unsplash.com/photo-1553530666-ba11a7da3888?w=400&h=400&fit=crop&q=80', category: 'beverage', badge: 'sale' },
+            { id: 33, name: '망고 스무디', price: 5000, image: 'https://images.unsplash.com/photo-1623065422902-30a2d299bbe4?w=400&h=400&fit=crop&q=80', category: 'beverage', badge: 'popular' },
+            { id: 34, name: '레몬에이드', price: 4500, image: 'https://images.unsplash.com/photo-1621263764928-df1444c5e859?w=400&h=400&fit=crop&q=80', category: 'beverage' },
+            { id: 35, name: '자몽에이드', price: 4800, image: 'https://images.unsplash.com/photo-1560508179-b2c9a3f8e92b?w=400&h=400&fit=crop&q=80', category: 'beverage' },
+
+            // 디저트
+            { id: 40, name: '티라미수', price: 5500, image: 'https://images.unsplash.com/photo-1571877227200-a0d98ea607e9?w=400&h=400&fit=crop&q=80', category: 'dessert', isDessert: true, badge: 'signature' },
+            { id: 41, name: '치즈케이크', price: 5000, image: 'https://images.unsplash.com/photo-1533134242443-d4fd215305ad?w=400&h=400&fit=crop&q=80', category: 'dessert', isDessert: true, badge: 'popular' },
+            { id: 42, name: '크루아상', price: 3500, originalPrice: 4000, image: 'https://images.unsplash.com/photo-1555507036-ab1f4038808a?w=400&h=400&fit=crop&q=80', category: 'dessert', isDessert: true, badge: 'sale' },
+            { id: 43, name: '마카롱 세트', price: 6000, image: 'https://images.unsplash.com/photo-1569864358642-9d1684040f43?w=400&h=400&fit=crop&q=80', category: 'dessert', isDessert: true },
+            { id: 44, name: '초코 브라우니', price: 4000, image: 'https://images.unsplash.com/photo-1606313564200-e75d5e30476c?w=400&h=400&fit=crop&q=80', category: 'dessert', isDessert: true, badge: 'popular' },
+        ];
+
+        let cart = [];
+        let currentItem = null;
+        let selectedSize = 'regular';
+        let selectedTemp = 'hot';
+        let selectedExtras = [];
+        let timerSeconds = 60;
+        let timerInterval = null;
+
+        // Render Menu
+        function renderMenu(category = 'season') {
+            const grid = document.getElementById('menuGrid');
+            const filtered = menuItems.filter(item => item.category === category);
+            
+            const badgeLabels = {
+                'popular': '인기',
+                'signature': '시그니처',
+                'sale': '할인'
+            };
+            
+            grid.innerHTML = filtered.map(item => {
+                const badgeHtml = item.badge ? 
+                    `<div class="menu-item-badges">
+                        <span class="menu-badge ${item.badge}">${badgeLabels[item.badge]}</span>
+                    </div>` : '';
+                
+                const priceHtml = item.originalPrice ? 
+                    `<div class="menu-item-price-wrap">
+                        <span class="original-price">${item.originalPrice.toLocaleString()}원</span>
+                        <div class="menu-item-price sale-price">${item.price.toLocaleString()}<span>원</span></div>
+                    </div>` :
+                    `<div class="menu-item-price">${item.price.toLocaleString()}<span>원</span></div>`;
+                
+                return `
+                    <div class="menu-item" onclick="openModal(${item.id})">
+                        ${badgeHtml}
+                        <img class="menu-item-image" src="${item.image}" alt="${item.name}" onerror="this.src='https://via.placeholder.com/300x300/f5f5f5/999999?text=No+Image'">
+                        <div class="menu-item-info">
+                            <div class="menu-item-name">${item.name}</div>
+                            ${priceHtml}
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // Category Tabs
+        document.querySelectorAll('.category-tab').forEach(tab => {
+            tab.addEventListener('click', function() {
+                document.querySelectorAll('.category-tab').forEach(t => t.classList.remove('active'));
+                this.classList.add('active');
+                renderMenu(this.dataset.category);
+            });
+        });
+
+        // Timer
+        function startTimer() {
+            if (timerInterval) clearInterval(timerInterval);
+            timerSeconds = 60;
+            updateTimerDisplay();
+            
+            timerInterval = setInterval(() => {
+                timerSeconds--;
+                updateTimerDisplay();
+                
+                if (timerSeconds <= 0) {
+                    clearInterval(timerInterval);
+                    timerInterval = null;
+                    showTimeoutMessage();
+                }
+            }, 1000);
+        }
+
+        function updateTimerDisplay() {
+            const timerEl = document.getElementById('timerValue');
+            timerEl.innerHTML = `${timerSeconds}<span>초</span>`;
+            
+            // 10초 이하일 때 깜빡임 효과
+            if (timerSeconds <= 10 && timerSeconds > 0) {
+                timerEl.style.animation = 'blink 0.5s infinite';
+            } else {
+                timerEl.style.animation = 'none';
+            }
+        }
+
+        // 타임아웃 재미난 문구들
+        const timeoutMessages = [
+            { icon: "😴", title: "잠깐 졸았나요?", text: "커피 한 잔 어떠세요? 정신이 번쩍!" },
+            { icon: "🤔", title: "결정장애인가요?", text: "일단 아메리카노부터 담아보세요!" },
+            { icon: "⏰", title: "시간이 금이래요!", text: "빨리 주문하고 커피 마시러 가요~" },
+            { icon: "🦥", title: "느긋하시네요~", text: "천천히 골라도 되지만... 커피는 빨리!" },
+            { icon: "👀", title: "뭘 보고 계신가요?", text: "맛있는 메뉴가 기다리고 있어요!" },
+            { icon: "🎯", title: "목표를 정하세요!", text: "오늘의 커피는 뭘로 하시겠어요?" },
+            { icon: "💭", title: "생각이 많으시군요", text: "복잡할 땐 달달한 라떼 추천!" },
+            { icon: "🚀", title: "빠르게 주문하세요!", text: "커피가 당신을 기다려요~" },
+            { icon: "😋", title: "배고프신가요?", text: "디저트도 맛있어요! 같이 드셔보세요~" },
+            { icon: "☕", title: "커피 생각나시죠?", text: "저희도요! 빨리 주문해주세요~" },
+        ];
+
+        function showTimeoutMessage() {
+            const message = timeoutMessages[Math.floor(Math.random() * timeoutMessages.length)];
+            
+            const successOverlay = document.getElementById('successOverlay');
+            const iconEl = document.getElementById('successIcon');
+            const textEl = document.getElementById('successText');
+            const subtextEl = document.getElementById('successSubtext');
+            const jokeEl = document.getElementById('successJoke');
+            
+            iconEl.textContent = message.icon;
+            textEl.textContent = message.title;
+            subtextEl.textContent = message.text;
+            jokeEl.innerHTML = `<div class="joke-content">다시 주문해주세요! 🙏</div>`;
+            
+            successOverlay.classList.add('active');
+            
+            setTimeout(() => {
+                successOverlay.classList.remove('active');
+                // 장바구니 비우고 타이머 리셋
+                cart = [];
+                updateCart();
+                timerSeconds = 60;
+                updateTimerDisplay();
+                // 환영 화면으로 돌아가기
+                returnToWelcome();
+            }, 3000);
+        }
+
+        // Modal Functions
+        function openModal(itemId) {
+            currentItem = menuItems.find(item => item.id === itemId);
+            if (!currentItem) return;
+
+            document.getElementById('modalImage').src = currentItem.image;
+            document.getElementById('modalName').textContent = currentItem.name;
+            document.getElementById('modalPrice').textContent = `${currentItem.price.toLocaleString()}원`;
+
+            // Reset selections
+            selectedSize = 'regular';
+            selectedTemp = 'hot';
+            selectedExtras = [];
+
+            // Update UI
+            document.querySelectorAll('#sizeOptions .option-btn').forEach(btn => {
+                btn.classList.toggle('selected', btn.dataset.size === 'regular');
+            });
+            document.querySelectorAll('#tempOptions .option-btn').forEach(btn => {
+                btn.classList.toggle('selected', btn.dataset.temp === 'hot');
+            });
+            document.querySelectorAll('#extraOptions .option-btn').forEach(btn => {
+                btn.classList.remove('selected');
+            });
+
+            // Hide options for desserts
+            const sizeGroup = document.getElementById('sizeGroup');
+            const tempGroup = document.getElementById('tempGroup');
+            const extraGroup = document.getElementById('extraGroup');
+            if (currentItem.isDessert) {
+                sizeGroup.style.display = 'none';
+                tempGroup.style.display = 'none';
+                extraGroup.style.display = 'none';
+            } else {
+                sizeGroup.style.display = 'block';
+                tempGroup.style.display = 'block';
+                extraGroup.style.display = 'block';
+            }
+
+            document.getElementById('productModal').classList.add('active');
+        }
+
+        function closeModal() {
+            document.getElementById('productModal').classList.remove('active');
+            currentItem = null;
+        }
+
+        // Size Options
+        document.querySelectorAll('#sizeOptions .option-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                document.querySelectorAll('#sizeOptions .option-btn').forEach(b => b.classList.remove('selected'));
+                this.classList.add('selected');
+                selectedSize = this.dataset.size;
+            });
+        });
+
+        // Temperature Options
+        document.querySelectorAll('#tempOptions .option-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                document.querySelectorAll('#tempOptions .option-btn').forEach(b => b.classList.remove('selected'));
+                this.classList.add('selected');
+                selectedTemp = this.dataset.temp;
+            });
+        });
+
+        // Extra Options
+        document.querySelectorAll('#extraOptions .option-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                this.classList.toggle('selected');
+                const option = this.dataset.extraOption;
+                if (selectedExtras.includes(option)) {
+                    selectedExtras = selectedExtras.filter(e => e !== option);
+                } else {
+                    selectedExtras.push(option);
+                }
+            });
+        });
+
+        // Add to Cart
+        function addToCart() {
+            if (!currentItem) return;
+
+            const sizeBtn = document.querySelector(`#sizeOptions .option-btn[data-size="${selectedSize}"]`);
+            const sizeExtra = currentItem.isDessert ? 0 : parseInt(sizeBtn?.dataset.extra || 0);
+
+            let extrasTotal = 0;
+            selectedExtras.forEach(extra => {
+                const btn = document.querySelector(`#extraOptions .option-btn[data-extra-option="${extra}"]`);
+                extrasTotal += parseInt(btn?.dataset.extra || 0);
+            });
+
+            const totalPrice = currentItem.price + sizeExtra + extrasTotal;
+
+            const cartItem = {
+                id: Date.now(),
+                itemId: currentItem.id,
+                name: currentItem.name,
+                image: currentItem.image,
+                size: currentItem.isDessert ? '' : selectedSize,
+                temp: currentItem.isDessert ? '' : selectedTemp,
+                extras: [...selectedExtras],
+                basePrice: currentItem.price,
+                totalPrice: totalPrice,
+                quantity: 1
+            };
+
+            cart.push(cartItem);
+            updateCart();
+            closeModal();
+            
+            // 타이머가 없으면 시작 (리셋하지 않음)
+            if (!timerInterval) {
+                startTimer();
+            }
+        }
+
+        // Update Cart UI
+        function updateCart() {
+            const previewEl = document.getElementById('selectedPreview');
+            const cartCountEl = document.getElementById('cartCount');
+            const totalAmountEl = document.getElementById('totalAmount');
+            const checkoutBtn = document.getElementById('checkoutBtn');
+
+            if (cart.length === 0) {
+                previewEl.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-state-icon">🛒</div>
+                        <div class="empty-state-text">메뉴를 선택해주세요</div>
+                    </div>
+                `;
+                cartCountEl.textContent = '0개';
+                totalAmountEl.textContent = '0원';
+                checkoutBtn.disabled = true;
+                checkoutBtn.classList.remove('active');
+                return;
+            }
+
+            const totalQty = cart.reduce((sum, item) => sum + item.quantity, 0);
+            const total = cart.reduce((sum, item) => sum + (item.totalPrice * item.quantity), 0);
+
+            previewEl.innerHTML = cart.map(item => {
+                const options = [];
+                if (item.size) options.push(item.size === 'large' ? 'Large' : 'Regular');
+                if (item.temp) options.push(item.temp === 'hot' ? 'HOT' : 'ICE');
+
+                return `
+                    <div class="preview-item">
+                        <img class="preview-item-img" src="${item.image}" alt="${item.name}">
+                        <div class="preview-item-info">
+                            <div class="preview-item-name">${item.name}${options.length ? ` (${options.join('/')})` : ''}</div>
+                            <div class="preview-item-price">${(item.totalPrice * item.quantity).toLocaleString()}원</div>
+                        </div>
+                        <div class="preview-item-controls">
+                            <button class="qty-btn" onclick="updateQuantity(${item.id}, -1)">−</button>
+                            <span class="qty-value">${item.quantity}</span>
+                            <button class="qty-btn" onclick="updateQuantity(${item.id}, 1)">+</button>
+                            <button class="remove-btn" onclick="removeFromCart(${item.id})">✕</button>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+
+            cartCountEl.textContent = `${totalQty}개`;
+            totalAmountEl.textContent = `${total.toLocaleString()}원`;
+            checkoutBtn.disabled = false;
+            checkoutBtn.classList.add('active');
+        }
+
+        function updateQuantity(id, delta) {
+            const item = cart.find(i => i.id === id);
+            if (!item) return;
+
+            item.quantity += delta;
+            if (item.quantity <= 0) {
+                removeFromCart(id);
+            } else {
+                updateCart();
+            }
+        }
+
+        function removeFromCart(id) {
+            cart = cart.filter(i => i.id !== id);
+            updateCart();
+        }
+
+        function clearCart() {
+            cart = [];
+            updateCart();
+            if (timerInterval) {
+                clearInterval(timerInterval);
+                timerInterval = null;
+            }
+            timerSeconds = 60;
+            updateTimerDisplay();
+            
+            // 툴팁 다시 표시
+            document.getElementById('eventTooltip').classList.remove('hidden');
+        }
+
+        // 직장인 공감 문구들 (더 웃긴 버전)
+        const officeJokes = [
+            { icon: "💀", title: "현타 주의", text: "지금 마시는 커피값이면 주식 샀어야 했는데..." },
+            { icon: "🤡", title: "자아성찰", text: "커피 없으면 일 못 해요 (원래 못 함)" },
+            { icon: "😇", title: "천사의 속삭임", text: "퇴사각이지만 일단 커피부터..." },
+            { icon: "🪦", title: "R.I.P", text: "내 열정 여기 잠들다. 커피만 남았다." },
+            { icon: "🎰", title: "도박", text: "오늘 야근 확률 99%... 커피나 걸자" },
+            { icon: "🧟", title: "좀비 모드", text: "뇌: 오프라인 / 커피: 부팅 중..." },
+            { icon: "💸", title: "가계부 분석", text: "월급의 30%가 커피... 나머지는 세금" },
+            { icon: "🤖", title: "AI 대체 불가", text: "ChatGPT도 대신 못 마시는 커피" },
+            { icon: "🔮", title: "점집 예언", text: "오늘의 운세: 커피 = 생존 / 안 마시면 = 퇴사" },
+            { icon: "🏆", title: "자랑스러운 기록", text: "올해 마신 커피로 한강 채울 수 있음" },
+            { icon: "😵", title: "TMI", text: "혈관에 피 대신 아메리카노 흐르는 중" },
+            { icon: "🎭", title: "연기대상", text: "커피 마시며 일하는 척 완벽 연기 중" },
+            { icon: "🚀", title: "스타트업 감성", text: "야근은 열정이 아니라 커피가 시킨 거임" },
+            { icon: "👻", title: "소름 주의", text: "팀장님 커피 사줄 때 = 야근 99% 확정" },
+            { icon: "🐶", title: "강아지 눈빛", text: "사장님 저 연봉 올려주세요 (커피 홀짝)" },
+            { icon: "🎪", title: "서커스단", text: "회의 중 졸다 걸려서 커피 원샷함" },
+            { icon: "🌋", title: "폭발 직전", text: "커피 마시기 전에 말 걸면 책임 못 짐" },
+            { icon: "🦴", title: "뼈 때리는", text: "열심히 일해도 커피값 버는 중..." },
+            { icon: "🎬", title: "드라마 촬영", text: "퇴사 상상하며 커피 마시는 장면 촬영 중" },
+            { icon: "🧮", title: "수학의 정석", text: "연봉 ÷ 365 ÷ 8 = 커피 한 잔 못 사먹음" },
+            { icon: "🎵", title: "오늘의 BGM", text: "♪ 월급은 통장을 스쳐 지나가고~ ♪" },
+            { icon: "🌈", title: "긍정 회로", text: "그래도 회사 다녀서 커피 마실 돈은 있잖아 (눈물)" },
+            { icon: "🦥", title: "나무늘보 모드", text: "움직이기 싫어서 커피 시킴 (1m 거리)" },
+            { icon: "📱", title: "카톡 알림", text: "'지금 뭐해?' '커피 마시며 퇴사 검색 중'" },
+            { icon: "🎁", title: "크리스마스 소원", text: "올해 소원: 야근 없는 삶 + 무한 커피" },
+        ];
+
+        // Checkout
+        let orderNumber = 1;
+
+        function checkout() {
+            if (cart.length === 0) return;
+
+            // 툴팁 숨기기
+            document.getElementById('eventTooltip').classList.add('hidden');
+
+            // 결제 모달 열기
+            const total = cart.reduce((sum, item) => sum + (item.totalPrice * item.quantity), 0);
+            document.getElementById('paymentAmount').textContent = `${total.toLocaleString()}원`;
+            document.getElementById('paymentModal').classList.add('active');
+            document.getElementById('paymentProcessing').classList.remove('active');
+            document.querySelector('.payment-methods').style.display = 'block';
+            document.querySelector('.payment-footer').style.display = 'flex';
+        }
+
+        function closePaymentModal() {
+            document.getElementById('paymentModal').classList.remove('active');
+        }
+
+        // 결제 수단 선택
+        document.querySelectorAll('.payment-method').forEach(btn => {
+            btn.addEventListener('click', function() {
+                document.querySelectorAll('.payment-method').forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+            });
+        });
+
+        function processPayment() {
+            // 결제 처리 중 표시
+            document.querySelector('.payment-methods').style.display = 'none';
+            document.querySelector('.payment-footer').style.display = 'none';
+            document.getElementById('paymentProcessing').classList.add('active');
+
+            // 1.5초 후 결제 완료 (이벤트 무료!)
+            setTimeout(() => {
+                closePaymentModal();
+                showEventFree();
+            }, 1500);
+        }
+
+        function showEventFree() {
+            const total = cart.reduce((sum, item) => sum + (item.totalPrice * item.quantity), 0);
+            
+            document.getElementById('eventOriginalPrice').textContent = `${total.toLocaleString()}원`;
+            document.getElementById('eventOrderNum').textContent = `주문번호: #${String(orderNumber).padStart(3, '0')}`;
+            orderNumber++;
+
+            const eventOverlay = document.getElementById('eventOverlay');
+            eventOverlay.classList.add('active');
+            
+            // 색종이 효과 시작
+            startConfetti();
+
+            setTimeout(() => {
+                eventOverlay.classList.remove('active');
+                stopConfetti();
+                clearCart();
+                // 환영 화면으로 돌아가기
+                returnToWelcome();
+            }, 5000);
+        }
+
+        let confettiInterval = null;
+
+        function startConfetti() {
+            const container = document.getElementById('confettiContainer');
+            container.innerHTML = '';
+            
+            const colors = ['#E53935', '#FF6B6B', '#FFB74D', '#4FC3F7', '#81C784', '#BA68C8', '#FFD54F', '#F06292'];
+            
+            function createConfetti() {
+                const confetti = document.createElement('div');
+                confetti.className = 'confetti';
+                
+                const color = colors[Math.floor(Math.random() * colors.length)];
+                const left = Math.random() * 100;
+                const size = 8 + Math.random() * 8;
+                const duration = 2500 + Math.random() * 2000;
+                
+                confetti.style.left = left + '%';
+                confetti.style.width = size + 'px';
+                confetti.style.height = size * (1.5 + Math.random()) + 'px';
+                confetti.style.background = color;
+                confetti.style.borderRadius = Math.random() > 0.5 ? '50%' : '2px';
+                confetti.style.opacity = '0.9';
+                
+                container.appendChild(confetti);
+                
+                // 떨어지는 애니메이션
+                const swayAmount = 100 + Math.random() * 100;
+                const rotateAmount = 360 + Math.random() * 720;
+                
+                confetti.animate([
+                    { 
+                        transform: 'translateY(0) translateX(0) rotate(0deg)', 
+                        opacity: 1 
+                    },
+                    { 
+                        transform: `translateY(${window.innerHeight + 50}px) translateX(${swayAmount * (Math.random() > 0.5 ? 1 : -1)}px) rotate(${rotateAmount}deg)`, 
+                        opacity: 0.7 
+                    }
+                ], {
+                    duration: duration,
+                    easing: 'cubic-bezier(0.25, 0.46, 0.45, 0.94)',
+                    fill: 'forwards'
+                });
+                
+                setTimeout(() => {
+                    confetti.remove();
+                }, duration);
+            }
+            
+            // 초기 색종이 폭발
+            for (let i = 0; i < 80; i++) {
+                setTimeout(() => createConfetti(), i * 30);
+            }
+            
+            // 주기적으로 색종이 생성
+            confettiInterval = setInterval(() => {
+                for (let i = 0; i < 8; i++) {
+                    createConfetti();
+                }
+            }, 200);
+        }
+
+        function stopConfetti() {
+            if (confettiInterval) {
+                clearInterval(confettiInterval);
+                confettiInterval = null;
+            }
+            setTimeout(() => {
+                const container = document.getElementById('confettiContainer');
+                container.innerHTML = '';
+            }, 3000);
+        }
+
+        // Close modal on overlay click
+        document.getElementById('productModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeModal();
+            }
+        });
+
+        // Order Type Selection
+        let orderType = null;
+
+        function selectOrderType(type) {
+            orderType = type;
+            document.getElementById('welcomeScreen').classList.add('hidden');
+            
+            // 주문 타입 배지 업데이트
+            const typeLabel = type === 'store' ? '매장' : '포장';
+            document.getElementById('orderTypeBadge').textContent = typeLabel;
+        }
+
+        function returnToWelcome() {
+            document.getElementById('welcomeScreen').classList.remove('hidden');
+            orderType = null;
+        }
+
+        // Initialize
+        renderMenu('season');
+    </script>
+</body>
+</html>

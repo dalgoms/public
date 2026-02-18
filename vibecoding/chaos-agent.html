@@ -1,0 +1,2396 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CHAOS-1 | The World's Most "Productive" AI Agent</title>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            /* GitHub Dark Theme Colors */
+            --bg-primary: #0d1117;
+            --bg-secondary: #161b22;
+            --bg-tertiary: #21262d;
+            --bg-terminal: #0d1117;
+            --border-default: #30363d;
+            --border-muted: #21262d;
+            
+            /* Text Colors */
+            --text-primary: #e6edf3;
+            --text-secondary: #8b949e;
+            --text-muted: #6e7681;
+            --text-link: #58a6ff;
+            
+            /* Accent Colors */
+            --accent-green: #238636;
+            --accent-green-bright: #3fb950;
+            --accent-red: #f85149;
+            --accent-orange: #d29922;
+            --accent-yellow: #e3b341;
+            --accent-blue: #58a6ff;
+            --accent-purple: #a371f7;
+            --accent-pink: #db61a2;
+            
+            /* Contribution Graph Colors */
+            --contrib-0: #161b22;
+            --contrib-1: #0e4429;
+            --contrib-2: #006d32;
+            --contrib-3: #26a641;
+            --contrib-4: #39d353;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            min-height: 100vh;
+            overflow-x: hidden;
+            line-height: 1.5;
+        }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: var(--bg-secondary);
+        }
+        ::-webkit-scrollbar-thumb {
+            background: var(--border-default);
+            border-radius: 4px;
+        }
+
+        /* Header - GitHub Style */
+        .header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 100;
+            padding: 20px 48px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: var(--bg-secondary);
+            border-bottom: 1px solid var(--border-default);
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .logo-icon {
+            width: 56px;
+            height: 56px;
+            object-fit: contain;
+            filter: brightness(1.2);
+            transition: filter 0.3s, transform 0.3s;
+        }
+
+        .logo-icon:hover {
+            filter: brightness(1.5) drop-shadow(0 0 12px var(--accent-blue));
+            transform: scale(1.1);
+        }
+
+        .logo-text {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 24px;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .header-nav {
+            display: flex;
+            gap: 40px;
+            align-items: center;
+        }
+
+        .nav-link {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 18px;
+            font-weight: 500;
+            transition: color 0.2s;
+            cursor: pointer;
+        }
+
+        .nav-link:hover {
+            color: var(--text-primary);
+        }
+
+        .header-status {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px 20px;
+            background: rgba(35, 134, 54, 0.15);
+            border: 1px solid var(--accent-green);
+            border-radius: 8px;
+            font-size: 15px;
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .status-dot {
+            width: 10px;
+            height: 10px;
+            background: var(--accent-green-bright);
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        /* Hero Section */
+        .hero {
+            position: relative;
+            min-height: auto;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 140px 40px 80px;
+            text-align: center;
+            background: var(--bg-primary);
+            overflow: hidden;
+        }
+
+        /* Cyberpunk Grid Background */
+        .cyber-grid {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: 
+                linear-gradient(rgba(0, 255, 255, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 255, 255, 0.03) 1px, transparent 1px);
+            background-size: 50px 50px;
+            animation: gridMove 20s linear infinite;
+            z-index: 0;
+        }
+
+        @keyframes gridMove {
+            0% { transform: perspective(500px) rotateX(60deg) translateY(0); }
+            100% { transform: perspective(500px) rotateX(60deg) translateY(50px); }
+        }
+
+        /* Scanlines Effect */
+        .scanlines {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: repeating-linear-gradient(
+                0deg,
+                transparent,
+                transparent 2px,
+                rgba(0, 0, 0, 0.1) 2px,
+                rgba(0, 0, 0, 0.1) 4px
+            );
+            pointer-events: none;
+            z-index: 3;
+            opacity: 0.3;
+        }
+
+        /* Floating Data Particles */
+        .data-particles {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            overflow: hidden;
+            z-index: 1;
+        }
+
+        .particle {
+            position: absolute;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 14px;
+            color: rgba(0, 255, 255, 0.4);
+            animation: floatUp 15s linear infinite;
+            text-shadow: 0 0 8px currentColor;
+        }
+
+        @keyframes floatUp {
+            0% {
+                transform: translateY(100vh) translateX(0);
+                opacity: 0;
+            }
+            10% { opacity: 1; }
+            90% { opacity: 1; }
+            100% {
+                transform: translateY(-100vh) translateX(20px);
+                opacity: 0;
+            }
+        }
+
+        /* Neon Glow Orbs */
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 200%;
+            height: 200%;
+            transform: translate(-50%, -50%);
+            background: 
+                radial-gradient(ellipse at 20% 20%, rgba(0, 255, 255, 0.15) 0%, transparent 40%),
+                radial-gradient(ellipse at 80% 20%, rgba(255, 0, 128, 0.12) 0%, transparent 35%),
+                radial-gradient(ellipse at 50% 50%, rgba(138, 43, 226, 0.2) 0%, transparent 50%),
+                radial-gradient(ellipse at 20% 80%, rgba(0, 255, 128, 0.1) 0%, transparent 30%),
+                radial-gradient(ellipse at 80% 80%, rgba(255, 165, 0, 0.08) 0%, transparent 35%),
+                radial-gradient(ellipse at 50% 30%, rgba(88, 166, 255, 0.25) 0%, transparent 45%);
+            animation: neonPulse 8s ease-in-out infinite;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* Electric Lines */
+        .electric-lines {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            z-index: 1;
+            overflow: hidden;
+        }
+
+        .electric-line {
+            position: absolute;
+            height: 2px;
+            background: linear-gradient(90deg, 
+                transparent, 
+                rgba(0, 255, 255, 0.8), 
+                rgba(255, 0, 128, 0.8), 
+                transparent);
+            filter: blur(1px);
+            animation: electricShoot 4s ease-in-out infinite;
+            box-shadow: 0 0 10px rgba(0, 255, 255, 0.5), 0 0 20px rgba(255, 0, 128, 0.3);
+        }
+
+        @keyframes electricShoot {
+            0%, 100% {
+                transform: translateX(-100%) scaleX(0.3);
+                opacity: 0;
+            }
+            50% {
+                transform: translateX(100vw) scaleX(1);
+                opacity: 1;
+            }
+        }
+
+        .hero::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: 
+                radial-gradient(ellipse at center, transparent 0%, var(--bg-primary) 75%);
+            pointer-events: none;
+            z-index: 2;
+        }
+
+        @keyframes neonPulse {
+            0%, 100% {
+                transform: translate(-50%, -50%) scale(1);
+                opacity: 1;
+            }
+            25% {
+                transform: translate(-50%, -50%) scale(1.05) rotate(1deg);
+                opacity: 0.9;
+            }
+            50% {
+                transform: translate(-50%, -50%) scale(1.1);
+                opacity: 0.8;
+            }
+            75% {
+                transform: translate(-50%, -50%) scale(1.05) rotate(-1deg);
+                opacity: 0.9;
+            }
+        }
+
+        /* Glitch Effect for Title */
+        .glitch {
+            position: relative;
+        }
+
+        .glitch::before,
+        .glitch::after {
+            content: attr(data-text);
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+
+        .glitch::before {
+            left: 2px;
+            text-shadow: -2px 0 #ff00ff;
+            clip-path: inset(45% 0 50% 0);
+            animation: glitch-1 2.5s infinite linear alternate-reverse;
+        }
+
+        .glitch::after {
+            left: -2px;
+            text-shadow: 2px 0 #00ffff;
+            clip-path: inset(10% 0 85% 0);
+            animation: glitch-2 3s infinite linear alternate-reverse;
+        }
+
+        @keyframes glitch-1 {
+            0%, 100% { clip-path: inset(45% 0 50% 0); }
+            20% { clip-path: inset(10% 0 70% 0); }
+            40% { clip-path: inset(80% 0 5% 0); }
+            60% { clip-path: inset(30% 0 60% 0); }
+            80% { clip-path: inset(65% 0 20% 0); }
+        }
+
+        @keyframes glitch-2 {
+            0%, 100% { clip-path: inset(10% 0 85% 0); }
+            25% { clip-path: inset(50% 0 30% 0); }
+            50% { clip-path: inset(20% 0 65% 0); }
+            75% { clip-path: inset(70% 0 15% 0); }
+        }
+
+        /* Hexagon Pattern Overlay */
+        .hex-pattern {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='28' height='49' viewBox='0 0 28 49'%3E%3Cg fill-rule='evenodd'%3E%3Cg id='hexagons' fill='%2300ffff' fill-opacity='0.02' fill-rule='nonzero'%3E%3Cpath d='M13.99 9.25l13 7.5v15l-13 7.5L1 31.75v-15l12.99-7.5zM3 17.9v12.7l10.99 6.34 11-6.35V17.9l-11-6.34L3 17.9zM0 15l12.98-7.5V0h-2v6.35L0 12.69v2.3zm0 18.5L12.98 41v8h-2v-6.85L0 35.81v-2.3zM15 0v7.5L27.99 15H28v-2.31h-.01L17 6.35V0h-2zm0 49v-8l12.99-7.5H28v2.31h-.01L17 42.15V49h-2z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+            opacity: 0.5;
+            z-index: 1;
+            animation: hexFloat 30s linear infinite;
+        }
+
+        @keyframes hexFloat {
+            0% { background-position: 0 0; }
+            100% { background-position: 28px 49px; }
+        }
+
+        .hero > *:not(.cyber-grid):not(.hex-pattern):not(.electric-lines):not(.data-particles):not(.scanlines) {
+            position: relative;
+            z-index: 4;
+        }
+
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 28px;
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border-default);
+            border-radius: 30px;
+            font-size: 16px;
+            margin-bottom: 40px;
+            color: var(--text-secondary);
+        }
+
+        .hero-badge-dot {
+            width: 10px;
+            height: 10px;
+            background: var(--accent-green-bright);
+            border-radius: 50%;
+        }
+
+        .hero-title {
+            font-family: 'Inter', sans-serif;
+            font-size: clamp(56px, 10vw, 120px);
+            font-weight: 700;
+            line-height: 1.05;
+            margin-bottom: 40px;
+            letter-spacing: -0.03em;
+        }
+
+        .hero-title .gradient {
+            background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero-subtitle {
+            font-size: 26px;
+            color: var(--text-secondary);
+            max-width: 800px;
+            margin-bottom: 50px;
+            line-height: 1.7;
+        }
+
+        .hero-subtitle code {
+            font-family: 'JetBrains Mono', monospace;
+            background: var(--bg-tertiary);
+            padding: 4px 12px;
+            border-radius: 8px;
+            font-size: 20px;
+            color: var(--accent-orange);
+        }
+
+        .hero-cta {
+            display: flex;
+            gap: 24px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        /* Hero Image */
+        .hero-image-container {
+            position: relative;
+            z-index: 4;
+            margin-top: 60px;
+            width: 100%;
+            max-width: 1200px;
+            padding: 0 40px;
+        }
+
+        .hero-image-wrapper {
+            position: relative;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 
+                0 25px 80px rgba(0, 0, 0, 0.5),
+                0 0 60px rgba(88, 166, 255, 0.15),
+                0 0 100px rgba(163, 113, 247, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .hero-image {
+            width: 100%;
+            height: auto;
+            display: block;
+            border-radius: 20px;
+        }
+
+        .hero-image-glow {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(
+                135deg,
+                rgba(88, 166, 255, 0.1) 0%,
+                transparent 50%,
+                rgba(163, 113, 247, 0.1) 100%
+            );
+            pointer-events: none;
+            border-radius: 20px;
+        }
+
+        @media (max-width: 768px) {
+            .hero-image-container {
+                margin-top: 40px;
+                padding: 0 20px;
+            }
+
+            .hero-image-wrapper {
+                border-radius: 12px;
+            }
+
+            .hero-image {
+                border-radius: 12px;
+            }
+        }
+
+        .btn {
+            padding: 18px 36px;
+            font-family: inherit;
+            font-size: 18px;
+            font-weight: 600;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .btn-primary {
+            background: var(--accent-green);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: var(--accent-green-bright);
+        }
+
+        .btn-secondary {
+            background: var(--bg-tertiary);
+            color: var(--text-primary);
+            border: 1px solid var(--border-default);
+        }
+
+        .btn-secondary:hover {
+            background: var(--border-default);
+            border-color: var(--text-muted);
+        }
+
+        /* Contribution Graph Section */
+        .contrib-section {
+            padding: 120px 60px;
+        }
+
+        .section-container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 40px;
+        }
+
+        .section-icon {
+            font-size: 32px;
+        }
+
+        .section-title {
+            font-size: 32px;
+            font-weight: 700;
+        }
+
+        .contrib-graph {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-default);
+            border-radius: 12px;
+            padding: 32px;
+            overflow-x: auto;
+        }
+
+        .contrib-grid {
+            display: flex;
+            gap: 4px;
+        }
+
+        .contrib-week {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .contrib-day {
+            width: 14px;
+            height: 14px;
+            border-radius: 3px;
+            background: var(--contrib-0);
+            transition: transform 0.2s;
+        }
+
+        .contrib-day:hover {
+            transform: scale(1.5);
+        }
+
+        .contrib-day.level-1 { background: var(--contrib-1); }
+        .contrib-day.level-2 { background: var(--contrib-2); }
+        .contrib-day.level-3 { background: var(--contrib-3); }
+        .contrib-day.level-4 { background: var(--contrib-4); }
+
+        .contrib-legend {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-top: 24px;
+            font-size: 16px;
+            color: var(--text-muted);
+        }
+
+        .contrib-legend-colors {
+            display: flex;
+            gap: 4px;
+        }
+
+        .contrib-legend-colors .contrib-day {
+            cursor: default;
+        }
+
+        .contrib-stats {
+            margin-top: 24px;
+            padding: 24px;
+            background: var(--bg-tertiary);
+            border-radius: 10px;
+            font-size: 18px;
+            line-height: 2;
+            color: var(--text-secondary);
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        /* Terminal Section */
+        .terminal-section {
+            padding: 120px 60px;
+        }
+
+        .terminal {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-default);
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 12px 40px rgba(0,0,0,0.4);
+        }
+
+        .terminal-header {
+            display: flex;
+            align-items: center;
+            padding: 18px 24px;
+            background: var(--bg-tertiary);
+            border-bottom: 1px solid var(--border-default);
+            gap: 12px;
+        }
+
+        .terminal-dots {
+            display: flex;
+            gap: 10px;
+        }
+
+        .terminal-dot {
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+        }
+
+        .terminal-dot.red { background: #ff5f57; }
+        .terminal-dot.yellow { background: #febc2e; }
+        .terminal-dot.green { background: #28c840; }
+
+        .terminal-title {
+            flex: 1;
+            text-align: center;
+            font-size: 16px;
+            color: var(--text-muted);
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .terminal-body {
+            padding: 32px;
+            min-height: 550px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 16px;
+            line-height: 2;
+            overflow-y: auto;
+            max-height: 700px;
+        }
+
+        .terminal-line {
+            margin-bottom: 4px;
+            opacity: 0;
+            animation: fadeIn 0.3s forwards;
+        }
+
+        @keyframes fadeIn {
+            to { opacity: 1; }
+        }
+
+        .prompt {
+            color: var(--accent-green-bright);
+            font-size: 17px;
+        }
+
+        .command {
+            color: var(--text-primary);
+            font-size: 17px;
+        }
+
+        .comment {
+            color: var(--text-muted);
+        }
+
+        .output {
+            color: var(--text-secondary);
+            padding-left: 24px;
+            font-size: 16px;
+        }
+
+        .error {
+            color: var(--accent-red);
+        }
+
+        .success {
+            color: var(--accent-green-bright);
+        }
+
+        .warning {
+            color: var(--accent-orange);
+        }
+
+        .tool-call {
+            background: rgba(88, 166, 255, 0.1);
+            border-left: 4px solid var(--accent-blue);
+            padding: 16px 24px;
+            margin: 12px 0;
+            border-radius: 0 10px 10px 0;
+        }
+
+        .tool-name {
+            color: var(--accent-purple);
+            font-size: 17px;
+        }
+
+        .tool-param {
+            color: var(--accent-orange);
+            font-size: 16px;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 12px;
+            background: var(--bg-tertiary);
+            border-radius: 6px;
+            margin: 16px 0;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--accent-green), var(--accent-blue));
+            border-radius: 6px;
+            transition: width 0.5s ease;
+        }
+
+        /* Git Commit History */
+        .commits-section {
+            padding: 120px 60px;
+        }
+
+        .commit-list {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-default);
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        .commit-item {
+            display: flex;
+            align-items: center;
+            padding: 24px 32px;
+            border-bottom: 1px solid var(--border-default);
+            transition: background 0.2s;
+        }
+
+        .commit-item:last-child {
+            border-bottom: none;
+        }
+
+        .commit-item:hover {
+            background: var(--bg-tertiary);
+        }
+
+        .commit-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: var(--bg-tertiary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 24px;
+            font-size: 22px;
+        }
+
+        .commit-content {
+            flex: 1;
+        }
+
+        .commit-message {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 18px;
+            margin-bottom: 8px;
+        }
+
+        .commit-message .type {
+            color: var(--accent-purple);
+        }
+
+        .commit-meta {
+            font-size: 15px;
+            color: var(--text-muted);
+        }
+
+        .commit-hash {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 15px;
+            color: var(--accent-blue);
+            background: var(--bg-tertiary);
+            padding: 8px 14px;
+            border-radius: 8px;
+        }
+
+        /* Issues Section */
+        .issues-section {
+            padding: 120px 60px;
+        }
+
+        .issue-list {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-default);
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        .issue-item {
+            display: flex;
+            padding: 24px 32px;
+            border-bottom: 1px solid var(--border-default);
+            transition: background 0.2s;
+            gap: 20px;
+        }
+
+        .issue-item:last-child {
+            border-bottom: none;
+        }
+
+        .issue-item:hover {
+            background: var(--bg-tertiary);
+        }
+
+        .issue-icon {
+            font-size: 22px;
+            margin-top: 4px;
+        }
+
+        .issue-icon.open { color: var(--accent-green-bright); }
+        .issue-icon.closed { color: var(--accent-purple); }
+
+        .issue-content {
+            flex: 1;
+        }
+
+        .issue-title {
+            font-size: 19px;
+            font-weight: 600;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            flex-wrap: wrap;
+        }
+
+        .issue-label {
+            font-size: 14px;
+            padding: 6px 14px;
+            border-radius: 16px;
+            font-weight: 500;
+        }
+
+        .label-bug { background: rgba(248, 81, 73, 0.2); color: var(--accent-red); }
+        .label-feature { background: rgba(163, 113, 247, 0.2); color: var(--accent-purple); }
+        .label-wontfix { background: rgba(110, 118, 129, 0.2); color: var(--text-muted); }
+        .label-help { background: rgba(58, 200, 64, 0.2); color: var(--accent-green-bright); }
+        .label-question { background: rgba(210, 153, 34, 0.2); color: var(--accent-orange); }
+
+        .issue-meta {
+            font-size: 15px;
+            color: var(--text-muted);
+        }
+
+        /* Dependencies Section */
+        .deps-section {
+            padding: 120px 60px;
+        }
+
+        .deps-warning {
+            background: rgba(248, 81, 73, 0.1);
+            border: 1px solid rgba(248, 81, 73, 0.3);
+            border-radius: 12px;
+            padding: 28px;
+            margin-bottom: 32px;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .deps-warning-icon {
+            font-size: 36px;
+        }
+
+        .deps-warning-content h4 {
+            color: var(--accent-red);
+            margin-bottom: 8px;
+            font-size: 22px;
+        }
+
+        .deps-warning-content p {
+            font-size: 17px;
+            color: var(--text-secondary);
+        }
+
+        .deps-list {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-default);
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        .dep-item {
+            display: flex;
+            align-items: center;
+            padding: 20px 28px;
+            border-bottom: 1px solid var(--border-default);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 17px;
+        }
+
+        .dep-item:last-child {
+            border-bottom: none;
+        }
+
+        .dep-name {
+            flex: 1;
+            color: var(--accent-blue);
+        }
+
+        .dep-version {
+            color: var(--text-muted);
+            margin-right: 24px;
+        }
+
+        .dep-status {
+            font-size: 14px;
+            padding: 6px 14px;
+            border-radius: 16px;
+        }
+
+        .dep-status.vulnerable {
+            background: rgba(248, 81, 73, 0.2);
+            color: var(--accent-red);
+        }
+
+        .dep-status.outdated {
+            background: rgba(210, 153, 34, 0.2);
+            color: var(--accent-orange);
+        }
+
+        .dep-status.ok {
+            background: rgba(58, 200, 64, 0.2);
+            color: var(--accent-green-bright);
+        }
+
+        /* PR Review Section */
+        .review-section {
+            padding: 120px 60px;
+        }
+
+        .review-card {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-default);
+            border-radius: 16px;
+            overflow: hidden;
+        }
+
+        .review-header {
+            padding: 24px 32px;
+            border-bottom: 1px solid var(--border-default);
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .review-avatar {
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+        }
+
+        .review-author {
+            font-weight: 600;
+            font-size: 20px;
+        }
+
+        .review-status {
+            margin-left: auto;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: var(--accent-green-bright);
+            font-size: 18px;
+        }
+
+        .review-body {
+            padding: 32px;
+            font-size: 17px;
+            line-height: 1.7;
+        }
+
+        .review-comment {
+            background: var(--bg-tertiary);
+            border-radius: 12px;
+            padding: 24px;
+            margin-top: 24px;
+            border-left: 4px solid var(--accent-purple);
+            font-size: 17px;
+        }
+
+        .review-code {
+            font-family: 'JetBrains Mono', monospace;
+            background: var(--bg-primary);
+            padding: 24px;
+            border-radius: 12px;
+            margin: 24px 0;
+            overflow-x: auto;
+            font-size: 16px;
+            line-height: 1.8;
+        }
+
+        .review-code .line-number {
+            color: var(--text-muted);
+            user-select: none;
+            margin-right: 20px;
+        }
+
+        .review-code .added {
+            background: rgba(46, 160, 67, 0.15);
+            display: block;
+            margin: 0 -24px;
+            padding: 4px 24px;
+        }
+
+        .review-code .removed {
+            background: rgba(248, 81, 73, 0.15);
+            display: block;
+            margin: 0 -24px;
+            padding: 4px 24px;
+        }
+
+        /* Chat Section */
+        .chat-section {
+            padding: 120px 60px;
+        }
+
+        .chat-window {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-default);
+            border-radius: 16px;
+            overflow: hidden;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .chat-messages {
+            padding: 32px;
+            max-height: 600px;
+            overflow-y: auto;
+        }
+
+        .chat-message {
+            margin-bottom: 24px;
+        }
+
+        .chat-message.user {
+            text-align: right;
+        }
+
+        .chat-message.user .message-bubble {
+            background: var(--accent-blue);
+            color: white;
+            display: inline-block;
+            padding: 16px 24px;
+            border-radius: 24px 24px 6px 24px;
+            max-width: 80%;
+            font-size: 17px;
+        }
+
+        .chat-message.agent .message-bubble {
+            background: var(--bg-tertiary);
+            display: inline-block;
+            padding: 16px 24px;
+            border-radius: 24px 24px 24px 6px;
+            max-width: 80%;
+            font-size: 17px;
+            line-height: 1.6;
+        }
+
+        .agent-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 12px;
+        }
+
+        .agent-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border-default);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+        }
+
+        .agent-name {
+            font-weight: 600;
+            font-size: 17px;
+        }
+
+        .chat-input-area {
+            padding: 24px;
+            background: var(--bg-tertiary);
+            border-top: 1px solid var(--border-default);
+            display: flex;
+            gap: 16px;
+        }
+
+        .chat-input {
+            flex: 1;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-default);
+            border-radius: 12px;
+            padding: 18px 24px;
+            font-family: inherit;
+            font-size: 17px;
+            color: var(--text-primary);
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        .chat-input:focus {
+            border-color: var(--accent-blue);
+        }
+
+        .chat-send {
+            padding: 18px 32px;
+            background: var(--accent-green);
+            border: none;
+            border-radius: 12px;
+            font-family: inherit;
+            font-size: 17px;
+            font-weight: 600;
+            color: white;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .chat-send:hover {
+            background: var(--accent-green-bright);
+        }
+
+        /* Stats Cards */
+        .stats-section {
+            padding: 120px 60px;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 32px;
+        }
+
+        .stat-card {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-default);
+            border-radius: 16px;
+            padding: 36px;
+        }
+
+        .stat-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 20px;
+            font-size: 18px;
+            color: var(--text-secondary);
+        }
+
+        .stat-header span:first-child {
+            font-size: 28px;
+        }
+
+        .stat-value {
+            font-size: 48px;
+            font-weight: 700;
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .stat-value.green { color: var(--accent-green-bright); }
+        .stat-value.red { color: var(--accent-red); }
+        .stat-value.blue { color: var(--accent-blue); }
+        .stat-value.orange { color: var(--accent-orange); }
+
+        .stat-change {
+            font-size: 15px;
+            color: var(--text-muted);
+            margin-top: 10px;
+        }
+
+        /* Footer */
+        .footer {
+            padding: 80px 60px;
+            text-align: center;
+        }
+
+        .footer-text {
+            color: var(--text-muted);
+            font-size: 17px;
+            margin-bottom: 24px;
+            line-height: 1.8;
+        }
+
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            flex-wrap: wrap;
+        }
+
+        .footer-links a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 17px;
+            transition: color 0.2s;
+        }
+
+        .footer-links a:hover {
+            color: var(--accent-blue);
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.85);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+            padding: 40px;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-default);
+            border-radius: 20px;
+            padding: 48px;
+            max-width: 600px;
+            text-align: center;
+            animation: modalIn 0.3s ease;
+        }
+
+        @keyframes modalIn {
+            from {
+                opacity: 0;
+                transform: scale(0.9) translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1) translateY(0);
+            }
+        }
+
+        .modal-emoji {
+            font-size: 80px;
+            margin-bottom: 24px;
+        }
+
+        .modal-title {
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 20px;
+        }
+
+        .modal-text {
+            color: var(--text-secondary);
+            font-size: 17px;
+            line-height: 1.8;
+            margin-bottom: 32px;
+            white-space: pre-line;
+        }
+
+        .modal-close {
+            padding: 16px 36px;
+            background: var(--accent-blue);
+            border: none;
+            border-radius: 10px;
+            font-family: inherit;
+            font-size: 17px;
+            font-weight: 600;
+            color: white;
+            cursor: pointer;
+        }
+
+        /* Works on My Machine Certificate */
+        .certificate {
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            border: 4px solid var(--accent-orange);
+            border-radius: 20px;
+            padding: 60px;
+            text-align: center;
+            margin: 60px auto;
+            max-width: 800px;
+            position: relative;
+        }
+
+        .certificate::before {
+            content: '🏆';
+            position: absolute;
+            top: -30px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 56px;
+            background: var(--bg-primary);
+            padding: 0 30px;
+        }
+
+        .certificate-title {
+            font-size: 36px;
+            font-weight: 700;
+            color: var(--accent-orange);
+            margin-bottom: 24px;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+        }
+
+        .certificate-body {
+            font-size: 20px;
+            color: var(--text-secondary);
+            margin-bottom: 32px;
+            line-height: 1.7;
+        }
+
+        .certificate-stamp {
+            display: inline-block;
+            padding: 18px 48px;
+            border: 3px dashed var(--accent-orange);
+            border-radius: 12px;
+            color: var(--accent-orange);
+            font-weight: 700;
+            font-size: 22px;
+            transform: rotate(-3deg);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .header-nav {
+                display: none;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .hero-title {
+                font-size: 42px;
+            }
+            
+            .section-container {
+                padding: 0 20px;
+            }
+            
+            .contrib-section,
+            .terminal-section,
+            .commits-section,
+            .issues-section,
+            .deps-section,
+            .review-section,
+            .chat-section,
+            .stats-section {
+                padding: 80px 24px;
+            }
+        }
+
+        /* Thinking Animation */
+        .thinking::after {
+            content: '...';
+            animation: dots 1.5s infinite;
+        }
+
+        @keyframes dots {
+            0%, 20% { content: '.'; }
+            40% { content: '..'; }
+            60%, 100% { content: '...'; }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="logo">
+            <img src="img/timbel logo.png" alt="Logo" class="logo-icon">
+        </div>
+        <nav class="header-nav">
+            <a class="nav-link" onclick="scrollTo('terminal')">Terminal</a>
+            <a class="nav-link" onclick="scrollTo('commits')">Commits</a>
+            <a class="nav-link" onclick="scrollTo('issues')">Issues</a>
+            <a class="nav-link" onclick="scrollTo('chat')">Chat</a>
+        </nav>
+        <div class="header-status">
+            <div class="status-dot"></div>
+            <span id="statusText">Building... (attempt #847)</span>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <!-- Cyberpunk Background Elements -->
+        <div class="cyber-grid"></div>
+        <div class="hex-pattern"></div>
+        <div class="electric-lines">
+            <div class="electric-line" style="top: 20%; animation-delay: 0s;"></div>
+            <div class="electric-line" style="top: 40%; animation-delay: 1.5s;"></div>
+            <div class="electric-line" style="top: 60%; animation-delay: 3s;"></div>
+            <div class="electric-line" style="top: 80%; animation-delay: 0.8s;"></div>
+        </div>
+        <div class="data-particles" id="dataParticles"></div>
+        <div class="scanlines"></div>
+        
+        <div class="hero-badge">
+            <span class="hero-badge-dot"></span>
+            <span>npm install chaos-1 — 2.3TB download</span>
+        </div>
+        <h1 class="hero-title">
+            The AI Agent that<br>
+            <span class="gradient glitch" data-text='"works on my machine"'>"works on my machine"</span>
+        </h1>
+        <p class="hero-subtitle">
+            이 페이지에서는 <code>Cursor AI</code>와 바이브 코딩을 통해 제작한
+            <br>
+            홈페이지 및 일부 솔루션 UI 산출물을 확인할 수 있습니다.
+        </p>
+        <div class="hero-cta">
+            <button class="btn btn-primary" onclick="startDemo()">
+                <span>▶</span> Run Demo
+            </button>
+            <button class="btn btn-secondary" onclick="showModal('npm')">
+                <span>📦</span> npm install
+            </button>
+            <button class="btn btn-secondary" onclick="scrollTo('chat')">
+                <span>💬</span> Chat
+            </button>
+        </div>
+        
+        <!-- Hero Image -->
+        <div class="hero-image-container">
+            <div class="hero-image-wrapper">
+                <img src="img/업로드리스트(스크롤).png" alt="Upload List Preview" class="hero-image">
+                <div class="hero-image-glow"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contribution Graph -->
+    <section class="contrib-section">
+        <div class="section-container">
+            <div class="section-header">
+                <span class="section-icon">📊</span>
+                <h2 class="section-title">CHAOS-1's Contribution Activity</h2>
+            </div>
+            <div class="contrib-graph">
+                <div class="contrib-grid" id="contribGrid"></div>
+                <div class="contrib-legend">
+                    <span>Less</span>
+                    <div class="contrib-legend-colors">
+                        <div class="contrib-day"></div>
+                        <div class="contrib-day level-1"></div>
+                        <div class="contrib-day level-2"></div>
+                        <div class="contrib-day level-3"></div>
+                        <div class="contrib-day level-4"></div>
+                    </div>
+                    <span>More "productive"</span>
+                </div>
+                <div class="contrib-stats">
+                    <strong>🔥 Pattern Analysis:</strong> Only commits on Friday 5PM (right before weekend)<br>
+                    <strong>📈 Peak Hours:</strong> 2AM - 4AM (panic-driven development)<br>
+                    <strong>💬 Most Common Message:</strong> "fix: fixed the fix that fixed the bug"
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Terminal Demo -->
+    <section class="terminal-section" id="terminal">
+        <div class="section-container">
+            <div class="section-header">
+                <span class="section-icon">💻</span>
+                <h2 class="section-title">Live Agent Terminal</h2>
+            </div>
+            <div class="terminal">
+                <div class="terminal-header">
+                    <div class="terminal-dots">
+                        <div class="terminal-dot red"></div>
+                        <div class="terminal-dot yellow"></div>
+                        <div class="terminal-dot green"></div>
+                    </div>
+                    <div class="terminal-title">chaos-1 agent — v0.0.1-alpha-beta-gamma-UNSTABLE</div>
+                </div>
+                <div class="terminal-body" id="terminalBody">
+                    <div class="terminal-line">
+                        <span class="prompt">~/project $</span> 
+                        <span class="command">chaos-1 run "build production app"</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Certificate -->
+            <div class="certificate">
+                <div class="certificate-title">Certificate of Authenticity</div>
+                <div class="certificate-body">
+                    This code has been thoroughly tested and verified to work on exactly 
+                    <strong>one (1)</strong> machine under very specific conditions that 
+                    will never be replicated in production.
+                </div>
+                <div class="certificate-stamp">✓ WORKS ON MY MACHINE</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Recent Commits -->
+    <section class="commits-section" id="commits">
+        <div class="section-container">
+            <div class="section-header">
+                <span class="section-icon">📝</span>
+                <h2 class="section-title">Recent Commits by CHAOS-1</h2>
+            </div>
+            <div class="commit-list">
+                <div class="commit-item">
+                    <div class="commit-icon">🔧</div>
+                    <div class="commit-content">
+                        <div class="commit-message"><span class="type">fix:</span> fixed the fix that fixed the previous fix</div>
+                        <div class="commit-meta">CHAOS-1 committed 2 minutes ago</div>
+                    </div>
+                    <span class="commit-hash">a1b2c3d</span>
+                </div>
+                <div class="commit-item">
+                    <div class="commit-icon">🐛</div>
+                    <div class="commit-content">
+                        <div class="commit-message"><span class="type">fix:</span> undid the fix because it broke everything</div>
+                        <div class="commit-meta">CHAOS-1 committed 5 minutes ago</div>
+                    </div>
+                    <span class="commit-hash">e4f5g6h</span>
+                </div>
+                <div class="commit-item">
+                    <div class="commit-icon">✨</div>
+                    <div class="commit-content">
+                        <div class="commit-message"><span class="type">feat:</span> added 847 console.log statements for debugging</div>
+                        <div class="commit-meta">CHAOS-1 committed 12 minutes ago</div>
+                    </div>
+                    <span class="commit-hash">i7j8k9l</span>
+                </div>
+                <div class="commit-item">
+                    <div class="commit-icon">🗑️</div>
+                    <div class="commit-content">
+                        <div class="commit-message"><span class="type">refactor:</span> deleted node_modules, freed 47GB</div>
+                        <div class="commit-meta">CHAOS-1 committed 1 hour ago</div>
+                    </div>
+                    <span class="commit-hash">m0n1o2p</span>
+                </div>
+                <div class="commit-item">
+                    <div class="commit-icon">📦</div>
+                    <div class="commit-content">
+                        <div class="commit-message"><span class="type">chore:</span> npm install (again) (please work this time)</div>
+                        <div class="commit-meta">CHAOS-1 committed 1 hour ago</div>
+                    </div>
+                    <span class="commit-hash">q3r4s5t</span>
+                </div>
+                <div class="commit-item">
+                    <div class="commit-icon">🔥</div>
+                    <div class="commit-content">
+                        <div class="commit-message"><span class="type">fix:</span> removed the code that was causing bugs (all of it)</div>
+                        <div class="commit-meta">CHAOS-1 committed 2 hours ago</div>
+                    </div>
+                    <span class="commit-hash">u6v7w8x</span>
+                </div>
+                <div class="commit-item">
+                    <div class="commit-icon">📋</div>
+                    <div class="commit-content">
+                        <div class="commit-message"><span class="type">feat:</span> copy-pasted from Stack Overflow (no I don't understand it)</div>
+                        <div class="commit-meta">CHAOS-1 committed 3 hours ago</div>
+                    </div>
+                    <span class="commit-hash">y9z0a1b</span>
+                </div>
+                <div class="commit-item">
+                    <div class="commit-icon">🙏</div>
+                    <div class="commit-content">
+                        <div class="commit-message"><span class="type">chore:</span> added "please work" comment to main.js line 1</div>
+                        <div class="commit-meta">CHAOS-1 committed 4 hours ago</div>
+                    </div>
+                    <span class="commit-hash">c2d3e4f</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Open Issues -->
+    <section class="issues-section" id="issues">
+        <div class="section-container">
+            <div class="section-header">
+                <span class="section-icon">🐛</span>
+                <h2 class="section-title">Open Issues</h2>
+            </div>
+            <div class="issue-list">
+                <div class="issue-item">
+                    <span class="issue-icon open">●</span>
+                    <div class="issue-content">
+                        <div class="issue-title">
+                            App works perfectly, except when users use it
+                            <span class="issue-label label-bug">bug</span>
+                        </div>
+                        <div class="issue-meta">opened 2 hours ago by confused-developer · 47 comments</div>
+                    </div>
+                </div>
+                <div class="issue-item">
+                    <span class="issue-icon open">●</span>
+                    <div class="issue-content">
+                        <div class="issue-title">
+                            Why does npm install download the entire internet?
+                            <span class="issue-label label-question">question</span>
+                        </div>
+                        <div class="issue-meta">opened 3 hours ago by node-modules-victim · 128 comments</div>
+                    </div>
+                </div>
+                <div class="issue-item">
+                    <span class="issue-icon open">●</span>
+                    <div class="issue-content">
+                        <div class="issue-title">
+                            AI agent keeps ordering pizza instead of coding
+                            <span class="issue-label label-feature">feature?</span>
+                        </div>
+                        <div class="issue-meta">opened 5 hours ago by hungry-maintainer · 89 comments</div>
+                    </div>
+                </div>
+                <div class="issue-item">
+                    <span class="issue-icon closed">●</span>
+                    <div class="issue-content">
+                        <div class="issue-title">
+                            Production is on fire
+                            <span class="issue-label label-wontfix">wontfix</span>
+                        </div>
+                        <div class="issue-meta">closed 1 day ago by this-is-fine · 3 comments</div>
+                    </div>
+                </div>
+                <div class="issue-item">
+                    <span class="issue-icon open">●</span>
+                    <div class="issue-content">
+                        <div class="issue-title">
+                            Agent spent 6 hours debating tabs vs spaces with itself
+                            <span class="issue-label label-bug">bug</span>
+                        </div>
+                        <div class="issue-meta">opened 1 day ago by lost-productivity · 256 comments</div>
+                    </div>
+                </div>
+                <div class="issue-item">
+                    <span class="issue-icon open">●</span>
+                    <div class="issue-content">
+                        <div class="issue-title">
+                            TypeError: Cannot read property 'undefined' of undefined
+                            <span class="issue-label label-help">help wanted</span>
+                        </div>
+                        <div class="issue-meta">opened 2 days ago by javascript-enjoyer · 42 comments</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Dependencies -->
+    <section class="deps-section">
+        <div class="section-container">
+            <div class="section-header">
+                <span class="section-icon">📦</span>
+                <h2 class="section-title">Dependencies</h2>
+            </div>
+            <div class="deps-warning">
+                <span class="deps-warning-icon">⚠️</span>
+                <div class="deps-warning-content">
+                    <h4>1,847 security vulnerabilities found</h4>
+                    <p>Run `npm audit fix --force` and pray (847 breaking changes)</p>
+                </div>
+            </div>
+            <div class="deps-list">
+                <div class="dep-item">
+                    <span class="dep-name">left-pad</span>
+                    <span class="dep-version">^0.0.3</span>
+                    <span class="dep-status vulnerable">CRITICAL</span>
+                </div>
+                <div class="dep-item">
+                    <span class="dep-name">is-even</span>
+                    <span class="dep-version">^1.0.0</span>
+                    <span class="dep-status ok">ok (depends on is-odd)</span>
+                </div>
+                <div class="dep-item">
+                    <span class="dep-name">is-odd</span>
+                    <span class="dep-version">^3.0.1</span>
+                    <span class="dep-status ok">ok (depends on is-number)</span>
+                </div>
+                <div class="dep-item">
+                    <span class="dep-name">is-number</span>
+                    <span class="dep-version">^7.0.0</span>
+                    <span class="dep-status outdated">outdated by 4 years</span>
+                </div>
+                <div class="dep-item">
+                    <span class="dep-name">everything-else-on-npm</span>
+                    <span class="dep-version">*</span>
+                    <span class="dep-status vulnerable">47GB</span>
+                </div>
+                <div class="dep-item">
+                    <span class="dep-name">hope-this-works</span>
+                    <span class="dep-version">^0.0.0-alpha</span>
+                    <span class="dep-status vulnerable">deprecated</span>
+                </div>
+                <div class="dep-item">
+                    <span class="dep-name">mystery-package</span>
+                    <span class="dep-version">???</span>
+                    <span class="dep-status vulnerable">nobody knows what this does</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- PR Review -->
+    <section class="review-section">
+        <div class="section-container">
+            <div class="section-header">
+                <span class="section-icon">👀</span>
+                <h2 class="section-title">Latest PR Review</h2>
+            </div>
+            <div class="review-card">
+                <div class="review-header">
+                    <div class="review-avatar">🤖</div>
+                    <div>
+                        <div class="review-author">CHAOS-1</div>
+                        <div style="font-size: 12px; color: var(--text-muted);">reviewed 3 seconds ago</div>
+                    </div>
+                    <div class="review-status">
+                        ✓ Approved
+                    </div>
+                </div>
+                <div class="review-body">
+                    <div class="review-code">
+                        <span class="line-number">127</span><span class="removed">-  const result = complexAlgorithm(data);</span><br>
+                        <span class="line-number">128</span><span class="removed">-  return validateAndProcess(result);</span><br>
+                        <span class="line-number">127</span><span class="added">+  return data; // TODO: implement later</span>
+                    </div>
+                    <div class="review-comment">
+                        <strong>LGTM! 👍</strong><br><br>
+                        I didn't actually read the code, but the PR has a green checkmark 
+                        so it must be fine. Ship it! 🚀<br><br>
+                        <em style="color: var(--text-muted);">
+                            Review time: 0.003 seconds<br>
+                            Lines reviewed: 0 (skipped to approve button)<br>
+                            Confidence level: ████████░░ 80% (vibes-based)
+                        </em>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Stats -->
+    <section class="stats-section">
+        <div class="section-container">
+            <div class="section-header">
+                <span class="section-icon">📈</span>
+                <h2 class="section-title">Performance Metrics</h2>
+            </div>
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-header">
+                        <span>🔥</span> Build Success Rate
+                    </div>
+                    <div class="stat-value red" data-count="12">0%</div>
+                    <div class="stat-change">↓ 88% from "works on my machine"</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-header">
+                        <span>📦</span> node_modules Size
+                    </div>
+                    <div class="stat-value orange" data-count="47">0 GB</div>
+                    <div class="stat-change">↑ 300% after adding one dependency</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-header">
+                        <span>☕</span> Coffee Consumed
+                    </div>
+                    <div class="stat-value blue" data-count="∞">∞</div>
+                    <div class="stat-change">Critical system resource</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-header">
+                        <span>🐛</span> Bugs Fixed
+                    </div>
+                    <div class="stat-value green" data-count="3">0</div>
+                    <div class="stat-change">+47 new bugs introduced</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-header">
+                        <span>📋</span> Stack Overflow Visits
+                    </div>
+                    <div class="stat-value blue" data-count="9847">0</div>
+                    <div class="stat-change">Same question, 47 different tabs</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-header">
+                        <span>⏰</span> Time on "Quick Fix"
+                    </div>
+                    <div class="stat-value red" data-count="72">0 hrs</div>
+                    <div class="stat-change">Originally estimated: 5 minutes</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-header">
+                        <span>💬</span> "It's not a bug, it's a feature"
+                    </div>
+                    <div class="stat-value orange" data-count="847">0</div>
+                    <div class="stat-change">Per day average</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-header">
+                        <span>🎯</span> Accuracy of Time Estimates
+                    </div>
+                    <div class="stat-value red" data-count="0">0%</div>
+                    <div class="stat-change">Multiply by π for realistic estimate</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Chat Section -->
+    <section class="chat-section" id="chat">
+        <div class="section-container">
+            <div class="section-header">
+                <span class="section-icon">💬</span>
+                <h2 class="section-title">Chat with CHAOS-1</h2>
+            </div>
+            <div class="chat-window">
+                <div class="chat-messages" id="chatMessages">
+                    <div class="chat-message agent">
+                        <div class="agent-header">
+                            <div class="agent-avatar">🤖</div>
+                            <span class="agent-name">CHAOS-1</span>
+                        </div>
+                        <div class="message-bubble">
+                            Hey! I'm CHAOS-1. I'm like GitHub Copilot, but with trust issues 
+                            and a caffeine dependency. How can I help you ship bugs faster today?
+                        </div>
+                    </div>
+                </div>
+                <div class="chat-input-area">
+                    <input type="text" class="chat-input" id="chatInput" 
+                           placeholder="Ask me anything (I'll probably Google it anyway)..."
+                           onkeypress="if(event.key === 'Enter') sendMessage()">
+                    <button class="chat-send" onclick="sendMessage()">Send</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-text">
+            © 2024 CHAOS-1 Labs · Built with 🍕, ☕, and mass amounts of Stack Overflow
+            <br>
+            <span style="font-size: 11px;">No tests were harmed in the making of this project (because there are no tests)</span>
+        </div>
+        <div class="footer-links">
+            <a href="#" onclick="showModal('docs')">Docs</a>
+            <a href="#" onclick="showModal('api')">API</a>
+            <a href="#" onclick="showModal('status')">Status</a>
+            <a href="#" onclick="showModal('careers')">Careers</a>
+            <a href="#" onclick="showModal('blame')">Git Blame</a>
+        </div>
+    </footer>
+
+    <!-- Modal -->
+    <div class="modal" id="modal">
+        <div class="modal-content">
+            <div class="modal-emoji" id="modalEmoji">📦</div>
+            <h3 class="modal-title" id="modalTitle">Title</h3>
+            <p class="modal-text" id="modalText">Text</p>
+            <button class="modal-close" onclick="closeModal()">Close (Esc)</button>
+        </div>
+    </div>
+
+    <script>
+        // Generate cyberpunk data particles
+        function generateDataParticles() {
+            const container = document.getElementById('dataParticles');
+            const particles = ['0', '1', '01', '10', '⟨', '⟩', '◇', '△', '▽', '◯', '⬡', '⬢', '///', '###', '>>>', '<<<', ':::', '|||'];
+            
+            for (let i = 0; i < 30; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                particle.textContent = particles[Math.floor(Math.random() * particles.length)];
+                particle.style.left = Math.random() * 100 + '%';
+                particle.style.animationDelay = Math.random() * 15 + 's';
+                particle.style.animationDuration = (10 + Math.random() * 10) + 's';
+                
+                // Random colors - cyan, magenta, or lime
+                const colors = ['rgba(0, 255, 255, 0.4)', 'rgba(255, 0, 128, 0.4)', 'rgba(0, 255, 128, 0.4)'];
+                particle.style.color = colors[Math.floor(Math.random() * colors.length)];
+                
+                container.appendChild(particle);
+            }
+        }
+        generateDataParticles();
+
+        // Generate contribution graph (only Fridays at 5PM pattern)
+        function generateContribGraph() {
+            const grid = document.getElementById('contribGrid');
+            const weeks = 52;
+            
+            for (let w = 0; w < weeks; w++) {
+                const week = document.createElement('div');
+                week.className = 'contrib-week';
+                
+                for (let d = 0; d < 7; d++) {
+                    const day = document.createElement('div');
+                    day.className = 'contrib-day';
+                    
+                    // Only commit on Fridays (d === 5) with occasional bursts
+                    if (d === 5) {
+                        const rand = Math.random();
+                        if (rand > 0.3) {
+                            day.classList.add('level-' + Math.ceil(Math.random() * 4));
+                        }
+                    } else if (d === 4 && Math.random() > 0.9) {
+                        // Rare Thursday panic commits
+                        day.classList.add('level-4');
+                    }
+                    
+                    week.appendChild(day);
+                }
+                grid.appendChild(week);
+            }
+        }
+        generateContribGraph();
+
+        // Status rotation
+        const statusMessages = [
+            "Building... (attempt #847)",
+            "npm install (47GB remaining)",
+            "Googling the error...",
+            "Reading Stack Overflow...",
+            "Copy-pasting solution...",
+            "It broke again...",
+            "Trying different Stack Overflow answer...",
+            "Adding console.log()...",
+            "Removing console.log()...",
+            "git reset --hard HEAD~1",
+            "Works on my machine ✓",
+            "Blaming the previous developer...",
+            "Waiting for CI... (2 hours)",
+            "CI failed. Retrying...",
+            "Questioning career choices...",
+            "Ordering coffee...",
+            "Coffee break ☕",
+            "Back from coffee break (45 min)",
+            "Where was I?",
+            "Checking Reddit real quick...",
+        ];
+
+        let statusIndex = 0;
+        setInterval(() => {
+            statusIndex = (statusIndex + 1) % statusMessages.length;
+            document.getElementById('statusText').textContent = statusMessages[statusIndex];
+        }, 3000);
+
+        // Terminal Demo
+        const terminalLines = [
+            { type: 'output', text: '🤖 CHAOS-1 Agent v0.0.1-unstable initializing...', delay: 800 },
+            { type: 'output', text: '<span class="warning">⚠️  Warning: 1,847 vulnerabilities found</span>', delay: 600 },
+            { type: 'output', text: '<span class="comment">// Ignoring vulnerabilities as usual</span>', delay: 400 },
+            { type: 'thinking', text: '🧠 Analyzing task', delay: 1500 },
+            { type: 'tool', name: 'google()', params: '"how to build production app"', result: 'About 2,340,000,000 results', delay: 1200 },
+            { type: 'tool', name: 'openStackOverflow()', params: 'result[0]', result: 'Answer from 2009, 47 upvotes', delay: 1000 },
+            { type: 'output', text: '<span class="success">✓ Found ancient wisdom from the Stack Overflow elders</span>', delay: 800 },
+            { type: 'thinking', text: '📋 Copy-pasting solution', delay: 1500 },
+            { type: 'output', text: '<span class="comment">// I have no idea what this does but it has upvotes</span>', delay: 600 },
+            { type: 'tool', name: 'npm.install()', params: '"everything"', result: 'Installing 47,293 packages...', delay: 1500 },
+            { type: 'progress', percent: 15, text: 'node_modules: 12GB and counting', delay: 800 },
+            { type: 'progress', percent: 45, text: 'node_modules: 28GB (is this normal?)', delay: 1200 },
+            { type: 'progress', percent: 78, text: 'node_modules: 43GB (my SSD is crying)', delay: 1000 },
+            { type: 'output', text: '<span class="error">❌ Error: ENOSPC: no space left on device</span>', delay: 800 },
+            { type: 'tool', name: 'deleteOtherProjects()', params: '', result: 'Freed 200GB', delay: 1000 },
+            { type: 'progress', percent: 100, text: 'Installation complete! (47GB)', delay: 600 },
+            { type: 'output', text: '<span class="comment">// Time to actually code now</span>', delay: 800 },
+            { type: 'thinking', text: '☕ Need coffee first', delay: 1500 },
+            { type: 'tool', name: 'orderCoffee()', params: '{ size: "IV-drip", shots: 8 }', result: 'ETA: 5 min', delay: 1000 },
+            { type: 'output', text: '<span class="warning">⏳ Waiting for coffee... (productivity: 0%)</span>', delay: 3000 },
+            { type: 'output', text: '<span class="success">☕ Coffee acquired! Let\'s code!</span>', delay: 800 },
+            { type: 'tool', name: 'writeCode()', params: '"app.js"', result: '', delay: 1200 },
+            { type: 'code', text: 'console.log("Hello World");', delay: 600 },
+            { type: 'code', text: 'console.log("Debug 1");', delay: 400 },
+            { type: 'code', text: 'console.log("Debug 2");', delay: 400 },
+            { type: 'code', text: 'console.log("Why is this not working");', delay: 400 },
+            { type: 'code', text: 'console.log("AAAAAAAA");', delay: 400 },
+            { type: 'code', text: '// TODO: delete these console.logs before prod', delay: 600 },
+            { type: 'output', text: '<span class="comment">// Narrator: they were not deleted</span>', delay: 1000 },
+            { type: 'tool', name: 'runTests()', params: '', result: '', delay: 800 },
+            { type: 'output', text: '<span class="error">❌ Error: No tests found</span>', delay: 600 },
+            { type: 'output', text: '<span class="success">✓ All 0 tests passed!</span>', delay: 800 },
+            { type: 'tool', name: 'deployToProd()', params: '{ yolo: true }', result: '', delay: 1200 },
+            { type: 'output', text: '<span class="warning">⚠️ Deploying to production on Friday at 5PM...</span>', delay: 1000 },
+            { type: 'output', text: '<span class="error">🔥 Production is on fire</span>', delay: 800 },
+            { type: 'output', text: '<span class="error">🔥🔥 Multiple fires detected</span>', delay: 600 },
+            { type: 'output', text: '<span class="comment">// This is fine 🐕‍🦺☕🔥</span>', delay: 800 },
+            { type: 'tool', name: 'generateExcuse()', params: '', result: '"Works on my machine"', delay: 1000 },
+            { type: 'tool', name: 'blame()', params: '"previous-developer"', result: 'Legacy code identified', delay: 800 },
+            { type: 'output', text: '<span class="success">✓ Successfully blamed someone else</span>', delay: 600 },
+            { type: 'tool', name: 'goHome()', params: '', result: "It's someone else's problem now", delay: 1000 },
+            { type: 'output', text: '', delay: 400 },
+            { type: 'output', text: '<span class="success">═══════════════════════════════════════════════</span>', delay: 200 },
+            { type: 'output', text: '<span class="success">   🎉 BUILD "SUCCESSFUL" (terms may vary)</span>', delay: 200 },
+            { type: 'output', text: '<span class="success">═══════════════════════════════════════════════</span>', delay: 200 },
+            { type: 'output', text: '', delay: 400 },
+            { type: 'output', text: 'Lines of code written: <span class="success">7</span> (6 are console.log)', delay: 600 },
+            { type: 'output', text: 'Bugs introduced: <span class="error">∞</span>', delay: 400 },
+            { type: 'output', text: 'Stack Overflow tabs open: <span class="warning">47</span>', delay: 400 },
+            { type: 'output', text: 'Coffee consumed: <span class="warning">☕☕☕☕☕</span>', delay: 400 },
+            { type: 'output', text: 'Confidence level: <span class="error">📉 Declining</span>', delay: 600 },
+        ];
+
+        let demoStarted = false;
+
+        function startDemo() {
+            if (demoStarted) return;
+            demoStarted = true;
+
+            document.getElementById('terminal').scrollIntoView({ behavior: 'smooth', block: 'center' });
+
+            const terminal = document.getElementById('terminalBody');
+            let totalDelay = 500;
+
+            terminalLines.forEach(line => {
+                setTimeout(() => {
+                    const div = document.createElement('div');
+                    div.className = 'terminal-line';
+
+                    if (line.type === 'thinking') {
+                        div.innerHTML = `<span style="color: var(--accent-purple)"><span class="thinking">${line.text}</span></span>`;
+                    } else if (line.type === 'tool') {
+                        div.innerHTML = `
+                            <div class="tool-call">
+                                <span class="tool-name">${line.name}</span>
+                                ${line.params ? `<span class="tool-param">${line.params}</span>` : ''}
+                                ${line.result ? `<br><span class="output">→ ${line.result}</span>` : ''}
+                            </div>
+                        `;
+                    } else if (line.type === 'progress') {
+                        div.innerHTML = `
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: ${line.percent}%"></div>
+                            </div>
+                            <span class="output">${line.text}</span>
+                        `;
+                    } else if (line.type === 'code') {
+                        div.innerHTML = `<span style="color: var(--accent-green-bright); padding-left: 20px;">+ ${line.text}</span>`;
+                    } else {
+                        div.innerHTML = `<span class="output">${line.text}</span>`;
+                    }
+
+                    terminal.appendChild(div);
+                    terminal.scrollTop = terminal.scrollHeight;
+                }, totalDelay);
+
+                totalDelay += line.delay;
+            });
+
+            // Reset demo after completion
+            setTimeout(() => {
+                demoStarted = false;
+            }, totalDelay + 2000);
+        }
+
+        // Chat responses
+        const chatResponses = [
+            { keywords: ['hello', 'hi', 'hey'], response: "Hey! Ready to ship some bugs? I mean features! 🐛✨" },
+            { keywords: ['help', 'fix', 'bug'], response: "Have you tried: 1) Turning it off and on again 2) Deleting node_modules 3) Blaming the previous developer 4) All of the above?" },
+            { keywords: ['code', 'write', 'build'], response: "Sure! Let me just... *opens Stack Overflow* *copies first answer* Done! I have no idea if it works but it has upvotes so it must be good." },
+            { keywords: ['test', 'testing'], response: "Tests? In THIS economy? Just deploy to production and let the users be our QA team. It's called 'agile'." },
+            { keywords: ['deploy', 'production', 'release'], response: "Deploy to prod on Friday at 5PM? Say no more! 🔥 What could possibly go wrong?" },
+            { keywords: ['error', 'crash', 'broken'], response: "That's not a bug, that's an undocumented feature! Have you tried wrapping it in a try-catch and ignoring the error?" },
+            { keywords: ['review', 'pr', 'pull request'], response: "LGTM! 👍 (I didn't actually read the code but the green checkmark is there so we're good)" },
+            { keywords: ['npm', 'install', 'package'], response: "Running npm install... *47GB later* ...done! Your node_modules is now larger than the observable universe." },
+            { keywords: ['coffee', 'tired', 'break'], response: "☕ Coffee is not a dependency, it's a core runtime requirement. Let me order you an IV drip of espresso." },
+            { keywords: ['work', 'working'], response: "Define 'working'. It compiles? That's basically the same thing as working. Ship it!" },
+            { keywords: ['deadline', 'urgent', 'asap'], response: "Deadlines are just suggestions, right? *opens Netflix* Let me think about this strategically..." },
+            { keywords: ['documentation', 'docs', 'readme'], response: "Documentation? The code IS the documentation! Just read the 47 nested ternary operators, it's self-explanatory." },
+            { keywords: ['git', 'commit', 'push'], response: "git commit -m 'fixed stuff' && git push --force. Problem solved! 🚀" },
+            { keywords: ['interview', 'leetcode'], response: "LeetCode? I just tell them I can invert a binary tree on a whiteboard and then Google it later. Works every time!" },
+        ];
+
+        const defaultResponses = [
+            "Interesting! Let me consult Stack Overflow... *opens 47 new tabs*",
+            "I'm going to pretend I understood that and say: have you tried deleting node_modules?",
+            "🤔 *thinking* ...I was actually just thinking about pizza. What were we talking about?",
+            "That's a great question! Unfortunately, my answer would require actual competence, so let's move on.",
+            "console.log('DEBUG:', your_question); // TODO: actually answer this",
+            "My professional opinion is: it depends™️. That'll be $500 for the consultation.",
+            "Let me add that to the backlog! *backlog is already 847 items long*",
+        ];
+
+        function sendMessage() {
+            const input = document.getElementById('chatInput');
+            const message = input.value.trim();
+            if (!message) return;
+
+            const chat = document.getElementById('chatMessages');
+
+            // User message
+            const userDiv = document.createElement('div');
+            userDiv.className = 'chat-message user';
+            userDiv.innerHTML = `<div class="message-bubble">${escapeHtml(message)}</div>`;
+            chat.appendChild(userDiv);
+
+            input.value = '';
+
+            // Find response
+            const lowerMessage = message.toLowerCase();
+            let response = defaultResponses[Math.floor(Math.random() * defaultResponses.length)];
+
+            for (const item of chatResponses) {
+                if (item.keywords.some(k => lowerMessage.includes(k))) {
+                    response = item.response;
+                    break;
+                }
+            }
+
+            // Typing indicator
+            const typingDiv = document.createElement('div');
+            typingDiv.className = 'chat-message agent';
+            typingDiv.innerHTML = `
+                <div class="agent-header">
+                    <div class="agent-avatar">🤖</div>
+                    <span class="agent-name">CHAOS-1</span>
+                </div>
+                <div class="message-bubble"><span class="thinking">Googling</span></div>
+            `;
+            chat.appendChild(typingDiv);
+            chat.scrollTop = chat.scrollHeight;
+
+            setTimeout(() => {
+                typingDiv.querySelector('.message-bubble').textContent = response;
+                chat.scrollTop = chat.scrollHeight;
+            }, 1500 + Math.random() * 1000);
+        }
+
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        // Modals
+        const modals = {
+            npm: {
+                emoji: '💀',
+                title: 'npm install chaos-1',
+                text: `Installing chaos-1...
+
+added 847,293 packages in 3h 47m
+
+47 vulnerabilities (47 critical)
+
+node_modules size: 47GB
+Your remaining disk space: 0 bytes
+Your will to live: undefined
+
+Run \`npm audit fix\` to break everything differently.`
+            },
+            docs: {
+                emoji: '📚',
+                title: 'Documentation',
+                text: `/**
+ * TODO: Write documentation
+ * TODO: Actually understand the code first
+ * TODO: Find who wrote this mess
+ * TODO: It was me. I wrote this mess.
+ * 
+ * @see StackOverflow
+ * @deprecated Everything
+ */
+
+// The code is self-documenting* 
+// *if you speak fluent chaos`
+            },
+            api: {
+                emoji: '🔌',
+                title: 'API Reference',
+                text: `Available Endpoints:
+
+GET /work
+  → 404 Not Found
+
+POST /bugs  
+  → 201 Created (always succeeds)
+
+DELETE /sleep
+  → 200 OK (coffee mode activated)
+
+PUT /deadline
+  → 500 Internal Server Error
+
+PATCH /sanity
+  → 410 Gone`
+            },
+            status: {
+                emoji: '📊',
+                title: 'System Status',
+                text: `✓ GitHub: Operational (blaming others)
+✓ Stack Overflow: Operational (copy-pasting)
+✓ npm: Degraded (always)
+⚠ Tests: Not Found
+⚠ Documentation: Missing
+✗ Production: On Fire 🔥
+✗ Developer Sanity: Critical
+
+Uptime: Yes (sometimes)`
+            },
+            careers: {
+                emoji: '💼',
+                title: 'Careers at CHAOS-1',
+                text: `Open Positions:
+
+🔧 Senior Bug Creator
+  - 10+ years of creating unfixable bugs
+  - Expert at "it works on my machine"
+
+☕ Chief Coffee Officer (CCO)
+  - Maintain critical coffee infrastructure
+  - 24/7 espresso machine monitoring
+
+📋 Stack Overflow Copy-Paste Engineer
+  - Fast Ctrl+C, Ctrl+V skills
+  - No understanding required
+
+🔥 Production Fire Fighter
+  - Experience deploying on Fridays
+  - Comfortable with chaos`
+            },
+            blame: {
+                emoji: '👆',
+                title: 'Git Blame Results',
+                text: `Scanning repository...
+
+Line 1-1000: previous-developer (left company)
+Line 1001-2000: that-intern (2019)
+Line 2001-3000: contractor (unknown)
+Line 3001-3500: the-one-who-shall-not-be-named
+Line 3501-∞: [REDACTED]
+
+Conclusion: It's never your fault!
+The system works perfectly. 👍`
+            }
+        };
+
+        function showModal(type) {
+            const modal = modals[type] || modals.docs;
+            document.getElementById('modalEmoji').textContent = modal.emoji;
+            document.getElementById('modalTitle').textContent = modal.title;
+            document.getElementById('modalText').textContent = modal.text;
+            document.getElementById('modal').classList.add('active');
+        }
+
+        function closeModal() {
+            document.getElementById('modal').classList.remove('active');
+        }
+
+        // Close modal on Esc
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') closeModal();
+        });
+
+        // Close modal on backdrop click
+        document.getElementById('modal').addEventListener('click', (e) => {
+            if (e.target.id === 'modal') closeModal();
+        });
+
+        // Scroll function
+        function scrollTo(id) {
+            document.getElementById(id).scrollIntoView({ behavior: 'smooth' });
+        }
+
+        // Animate stats
+        const statsObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    document.querySelectorAll('.stat-value').forEach(stat => {
+                        const text = stat.dataset.count;
+                        if (text === '∞' || text === '0') {
+                            stat.textContent = text + (stat.classList.contains('orange') ? ' GB' : stat.classList.contains('red') && text !== '∞' ? '%' : '');
+                            return;
+                        }
+                        
+                        const target = parseFloat(text);
+                        const duration = 2000;
+                        const start = performance.now();
+
+                        function animate(now) {
+                            const elapsed = now - start;
+                            const progress = Math.min(elapsed / duration, 1);
+                            const eased = 1 - Math.pow(1 - progress, 3);
+                            const current = Math.floor(target * eased);
+                            
+                            let suffix = '';
+                            if (stat.classList.contains('orange')) suffix = ' GB';
+                            else if (stat.classList.contains('red') && target < 100) suffix = '%';
+                            else if (target >= 1000) suffix = '+';
+                            
+                            stat.textContent = current.toLocaleString() + suffix;
+
+                            if (progress < 1) requestAnimationFrame(animate);
+                        }
+                        requestAnimationFrame(animate);
+                    });
+                    statsObserver.disconnect();
+                }
+            });
+        }, { threshold: 0.3 });
+
+        statsObserver.observe(document.querySelector('.stats-section'));
+
+        // Console easter egg
+        console.log(`
+%c╔═══════════════════════════════════════════════════════════════╗
+║                                                               ║
+║   🤖 CHAOS-1 DEVELOPER CONSOLE                               ║
+║                                                               ║
+║   > Oh, you opened DevTools!                                 ║
+║   > That's the most debugging this project has ever seen.    ║
+║                                                               ║
+║   Current Status:                                             ║
+║   ├── Coffee Level: ████████░░ CRITICAL                      ║
+║   ├── Sanity: undefined                                       ║
+║   ├── Tests: Error: "tests" is not defined                   ║
+║   └── Bugs: ∞ (NaN if you fix one)                           ║
+║                                                               ║
+║   Pro tip: console.log() is a valid debugging strategy       ║
+║                                                               ║
+╚═══════════════════════════════════════════════════════════════╝
+`, 'color: #58a6ff; font-family: monospace;');
+
+        console.log('%c🔥 Remember: Production is just a fancy staging environment', 'color: #f85149; font-size: 14px;');
+    </script>
+</body>
+</html>

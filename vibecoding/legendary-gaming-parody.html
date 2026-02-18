@@ -1,0 +1,1231 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DARK_LEGEND.exe | v47.0.1</title>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #0a0a0a;
+            --bg-secondary: #111;
+            --bg-tertiary: #1a1a1a;
+            --border: #222;
+            --text: #e0e0e0;
+            --text-dim: #666;
+            --green: #00ff88;
+            --cyan: #00d4ff;
+            --yellow: #ffcc00;
+            --red: #ff3366;
+            --purple: #bf5fff;
+            --orange: #ff6600;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'JetBrains Mono', 'Space Mono', monospace;
+            background: var(--bg);
+            color: var(--text);
+            font-size: 16px;
+            line-height: 1.7;
+            zoom: 1.15;
+        }
+        
+        /* 3D 아이콘 스타일 */
+        .icon-3d {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 48px;
+            height: 48px;
+            background: linear-gradient(145deg, var(--bg-tertiary), var(--bg));
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            font-size: 24px;
+            box-shadow: 
+                4px 4px 8px rgba(0,0,0,0.4),
+                -2px -2px 4px rgba(255,255,255,0.05),
+                inset 1px 1px 2px rgba(255,255,255,0.1);
+            transform: perspective(500px) rotateX(5deg);
+            transition: all 0.2s;
+        }
+        .icon-3d:hover {
+            transform: perspective(500px) rotateX(0deg) scale(1.05);
+            box-shadow: 
+                6px 6px 12px rgba(0,0,0,0.5),
+                -2px -2px 6px rgba(255,255,255,0.08);
+        }
+        .icon-3d.sm { width: 36px; height: 36px; font-size: 18px; border-radius: 8px; }
+        .icon-3d.lg { width: 64px; height: 64px; font-size: 32px; border-radius: 16px; }
+        .icon-3d.xl { width: 80px; height: 80px; font-size: 40px; border-radius: 20px; }
+        
+        .icon-3d.green { background: linear-gradient(145deg, #0a2a1a, #001a0a); border-color: var(--green); color: var(--green); }
+        .icon-3d.cyan { background: linear-gradient(145deg, #0a1a2a, #001020); border-color: var(--cyan); color: var(--cyan); }
+        .icon-3d.yellow { background: linear-gradient(145deg, #2a2a0a, #1a1a00); border-color: var(--yellow); color: var(--yellow); }
+        .icon-3d.red { background: linear-gradient(145deg, #2a0a1a, #1a0010); border-color: var(--red); color: var(--red); }
+        .icon-3d.purple { background: linear-gradient(145deg, #1a0a2a, #100020); border-color: var(--purple); color: var(--purple); }
+        ::selection { background: var(--green); color: var(--bg); }
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            pointer-events: none;
+            background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.1) 2px, rgba(0,0,0,0.1) 4px);
+            z-index: 10000;
+        }
+        
+        .top-bar {
+            background: var(--bg);
+            border-bottom: 1px solid var(--border);
+            padding: 12px 25px;
+            display: flex;
+            justify-content: space-between;
+            font-size: 14px;
+            color: var(--text-dim);
+        }
+        .top-bar span { display: flex; align-items: center; gap: 15px; }
+        .status-dot { width: 8px; height: 8px; background: var(--green); border-radius: 50%; }
+        .blink { animation: blink 1s step-end infinite; }
+        @keyframes blink { 50% { opacity: 0; } }
+        
+        header {
+            background: var(--bg-secondary);
+            border-bottom: 1px solid var(--border);
+            padding: 18px 30px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+        .logo { display: flex; align-items: center; gap: 12px; cursor: pointer; }
+        .logo-icon { 
+            width: 48px; height: 48px; 
+            background: linear-gradient(145deg, #0a2a1a, #001a0a); 
+            border: 1px solid var(--green); 
+            border-radius: 12px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 22px; color: var(--green);
+            box-shadow: 4px 4px 8px rgba(0,0,0,0.4), inset 1px 1px 2px rgba(0,255,136,0.2);
+        }
+        .logo-text { font-size: 20px; font-weight: 700; color: var(--green); letter-spacing: 2px; }
+        .logo-ver { font-size: 10px; color: var(--text-dim); padding: 2px 6px; border: 1px solid var(--border); }
+        
+        nav { display: flex; gap: 5px; }
+        nav a {
+            color: var(--text-dim);
+            text-decoration: none;
+            padding: 10px 18px;
+            font-size: 14px;
+            border: 1px solid transparent;
+            transition: all 0.15s;
+            cursor: pointer;
+        }
+        nav a:hover { color: var(--cyan); border-color: var(--cyan); }
+        nav a.active { color: var(--green); border-color: var(--green); }
+        
+        .header-right { display: flex; align-items: center; gap: 10px; }
+        .currency { display: flex; align-items: center; gap: 10px; padding: 10px 18px; background: var(--bg); border: 1px solid var(--border); font-size: 15px; border-radius: 8px; }
+        .currency .label { color: var(--text-dim); }
+        .currency .value { color: var(--yellow); }
+        .btn { padding: 12px 22px; font-family: inherit; font-size: 14px; border: 1px solid var(--border); background: var(--bg); color: var(--text); cursor: pointer; transition: all 0.15s; }
+        .btn:hover { border-color: var(--text); }
+        .btn-primary { background: var(--green); color: var(--bg); border-color: var(--green); }
+        .btn-primary:hover { background: #00cc6a; }
+        
+        .terminal-notice {
+            background: var(--bg);
+            border-bottom: 1px solid var(--border);
+            padding: 14px 25px;
+            font-size: 15px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .terminal-notice .prompt { color: var(--green); }
+        .terminal-notice .cmd { color: var(--cyan); }
+        .terminal-notice .output { color: var(--text-dim); }
+        .terminal-notice .cursor { display: inline-block; width: 8px; height: 14px; background: var(--green); animation: blink 1s step-end infinite; margin-left: 5px; }
+        
+        /* 페이지 컨테이너 */
+        .page { display: none; }
+        .page.active { display: block; }
+        
+        .container { max-width: 1400px; margin: 0 auto; padding: 70px 30px; }
+        .section-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; padding-bottom: 15px; border-bottom: 1px solid var(--border); }
+        .section-title { font-size: 18px; font-weight: 700; display: flex; align-items: center; gap: 12px; }
+        .section-title::before { content: '>'; color: var(--green); }
+        .section-more { font-size: 15px; color: var(--text-dim); text-decoration: none; cursor: pointer; }
+        .section-more:hover { color: var(--cyan); }
+        
+        /* 히어로 */
+        .hero { padding: 100px 30px; border-bottom: 1px solid var(--border); max-width: 1400px; margin: 0 auto; }
+        .hero-label { font-size: 14px; color: var(--text-dim); margin-bottom: 25px; display: flex; align-items: center; gap: 14px; }
+        .hero-label span { padding: 6px 14px; border: 1px solid var(--red); color: var(--red); font-size: 13px; border-radius: 6px; }
+        .hero h1 { font-size: clamp(32px, 6vw, 64px); font-weight: 700; line-height: 1.1; margin-bottom: 20px; letter-spacing: -1px; }
+        .hero h1 .highlight { color: var(--green); }
+        .hero-desc { color: var(--text-dim); max-width: 700px; margin-bottom: 35px; font-size: 17px; line-height: 1.8; }
+        .hero-desc code { color: var(--cyan); background: var(--bg-tertiary); padding: 2px 6px; }
+        .hero-actions { display: flex; gap: 15px; flex-wrap: wrap; }
+        .btn-lg { padding: 18px 36px; font-size: 16px; }
+        .hero-stats { display: flex; gap: 40px; margin-top: 60px; padding-top: 40px; border-top: 1px solid var(--border); flex-wrap: wrap; }
+        .stat-value { font-size: 36px; font-weight: 700; color: var(--green); }
+        .stat-label { font-size: 13px; color: var(--text-dim); margin-top: 8px; }
+        
+        /* 이벤트 그리드 */
+        .events-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1px; background: var(--border); border: 1px solid var(--border); margin-bottom: 60px; }
+        .event-card { background: var(--bg-secondary); padding: 20px; cursor: pointer; transition: background 0.15s; }
+        .event-card:hover { background: var(--bg-tertiary); }
+        .event-icon { 
+            width: 56px; height: 56px; 
+            background: linear-gradient(145deg, var(--bg-tertiary), var(--bg)); 
+            border: 1px solid var(--border); 
+            border-radius: 14px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 26px; margin-bottom: 18px;
+            box-shadow: 4px 4px 10px rgba(0,0,0,0.5), inset 1px 1px 2px rgba(255,255,255,0.05);
+        }
+        .event-tag { font-size: 12px; padding: 5px 12px; border: 1px solid var(--red); color: var(--red); display: inline-block; margin-bottom: 12px; border-radius: 4px; }
+        .event-tag.new { border-color: var(--cyan); color: var(--cyan); }
+        .event-title { font-size: 16px; font-weight: 600; margin-bottom: 10px; }
+        .event-date { font-size: 14px; color: var(--text-dim); }
+        
+        /* 가챠 */
+        .gacha-section { background: var(--bg-secondary); border: 1px solid var(--border); margin-bottom: 60px; }
+        .gacha-header { display: flex; justify-content: space-between; align-items: center; padding: 20px; border-bottom: 1px solid var(--border); }
+        .gacha-title { font-size: 18px; font-weight: 700; display: flex; align-items: center; gap: 14px; }
+        .gacha-title .tag { padding: 6px 14px; background: var(--yellow); color: var(--bg); font-size: 13px; font-weight: 700; border-radius: 6px; }
+        .gacha-timer { font-size: 16px; color: var(--red); font-weight: 700; }
+        .gacha-content { display: grid; grid-template-columns: 300px 1fr; }
+        .gacha-preview { border-right: 1px solid var(--border); padding: 40px; display: flex; flex-direction: column; align-items: center; justify-content: center; background: var(--bg); }
+        .gacha-char { 
+            width: 140px; height: 140px; 
+            background: linear-gradient(145deg, #2a2a0a, #1a1a00); 
+            border: 2px solid var(--yellow); 
+            border-radius: 24px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 60px; margin-bottom: 24px;
+            box-shadow: 8px 8px 20px rgba(0,0,0,0.6), inset 2px 2px 4px rgba(255,204,0,0.2);
+            transform: perspective(500px) rotateX(5deg);
+            animation: float 3s ease-in-out infinite;
+        }
+        @keyframes float { 0%, 100% { transform: perspective(500px) rotateX(5deg) translateY(0); } 50% { transform: perspective(500px) rotateX(5deg) translateY(-10px); } }
+        .gacha-stars { color: var(--yellow); font-size: 24px; letter-spacing: 5px; text-shadow: 0 0 10px rgba(255,204,0,0.5); }
+        .gacha-info { padding: 30px; }
+        .gacha-info h3 { font-size: 22px; margin-bottom: 12px; }
+        .gacha-info h3 span { color: var(--yellow); }
+        .gacha-info > p { color: var(--text-dim); font-size: 15px; margin-bottom: 28px; line-height: 1.7; }
+        .prob-table { background: var(--bg); border: 1px solid var(--border); margin-bottom: 25px; }
+        .prob-row { display: flex; justify-content: space-between; padding: 16px 20px; border-bottom: 1px solid var(--border); font-size: 15px; }
+        .prob-row:last-child { border-bottom: none; }
+        .prob-row .rate.leg { color: var(--yellow); }
+        .prob-row .rate.epic { color: var(--purple); }
+        .prob-row .rate.rare { color: var(--cyan); }
+        .gacha-buttons { display: flex; gap: 10px; margin-bottom: 20px; }
+        .gacha-btn { flex: 1; padding: 20px; font-family: inherit; font-size: 16px; border: 1px solid var(--border); background: var(--bg); color: var(--text); cursor: pointer; transition: all 0.15s; border-radius: 10px; }
+        .gacha-btn:hover { border-color: var(--text); }
+        .gacha-btn.primary { background: var(--yellow); color: var(--bg); border-color: var(--yellow); font-weight: 700; }
+        .gacha-btn .sub { display: block; font-size: 13px; margin-top: 8px; opacity: 0.7; }
+        .pity-bar { background: var(--bg); border: 1px solid var(--border); padding: 20px; border-radius: 10px; }
+        .pity-header { display: flex; justify-content: space-between; font-size: 14px; margin-bottom: 14px; }
+        .pity-header span:last-child { color: var(--red); font-weight: 600; }
+        .pity-track { height: 8px; background: var(--border); border-radius: 4px; }
+        .pity-fill { height: 100%; background: var(--red); width: 98%; border-radius: 4px; }
+        
+        /* 캐릭터 */
+        .char-list { display: grid; grid-template-columns: repeat(5, 1fr); gap: 1px; background: var(--border); border: 1px solid var(--border); margin-bottom: 60px; }
+        .char-item { background: var(--bg-secondary); padding: 25px 20px; text-align: center; cursor: pointer; transition: background 0.15s; }
+        .char-item:hover { background: var(--bg-tertiary); }
+        .char-icon { 
+            width: 72px; height: 72px; 
+            background: linear-gradient(145deg, var(--bg-tertiary), var(--bg)); 
+            border: 1px solid var(--border); 
+            border-radius: 16px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 34px; margin: 0 auto 18px;
+            box-shadow: 5px 5px 12px rgba(0,0,0,0.5), inset 1px 1px 3px rgba(255,255,255,0.05);
+            transform: perspective(500px) rotateX(5deg);
+        }
+        .char-name { font-size: 15px; font-weight: 600; margin-bottom: 8px; }
+        .char-class { font-size: 13px; color: var(--text-dim); margin-bottom: 12px; }
+        .char-grade { font-size: 13px; padding: 6px 14px; border: 1px solid; display: inline-block; border-radius: 6px; }
+        .char-grade.leg { border-color: var(--yellow); color: var(--yellow); }
+        .char-grade.epic { border-color: var(--purple); color: var(--purple); }
+        
+        /* 랭킹 */
+        .ranking-section { background: var(--bg-secondary); border: 1px solid var(--border); margin-bottom: 60px; }
+        .ranking-header { padding: 20px; border-bottom: 1px solid var(--border); display: flex; gap: 10px; flex-wrap: wrap; }
+        .tab { padding: 12px 22px; font-family: inherit; font-size: 14px; border: 1px solid var(--border); background: var(--bg); color: var(--text-dim); cursor: pointer; border-radius: 6px; }
+        .tab:hover { color: var(--text); }
+        .tab.active { border-color: var(--green); color: var(--green); }
+        .rank-row { display: grid; grid-template-columns: 70px 1fr 110px 110px 110px; padding: 18px 25px; border-bottom: 1px solid var(--border); font-size: 15px; transition: background 0.15s; }
+        .rank-row:hover { background: var(--bg); }
+        .rank-row.header { background: var(--bg); color: var(--text-dim); font-size: 10px; text-transform: uppercase; letter-spacing: 1px; }
+        .rank-num { font-weight: 700; font-size: 18px; }
+        .rank-num.r1 { color: var(--yellow); }
+        .rank-num.r2 { color: #ccc; }
+        .rank-num.r3 { color: var(--orange); }
+        .player { display: flex; align-items: center; gap: 12px; }
+        .player-avatar { 
+            width: 44px; height: 44px; 
+            background: linear-gradient(145deg, var(--bg-tertiary), var(--bg)); 
+            border: 1px solid var(--border); 
+            border-radius: 10px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 20px;
+            box-shadow: 3px 3px 8px rgba(0,0,0,0.4), inset 1px 1px 2px rgba(255,255,255,0.05);
+        }
+        .player-name { font-weight: 600; font-size: 16px; }
+        .player-guild { font-size: 13px; color: var(--text-dim); }
+        .tier { padding: 6px 14px; font-size: 13px; border: 1px solid; border-radius: 6px; }
+        .tier.rad { border-color: var(--yellow); color: var(--yellow); }
+        .tier.imm { border-color: var(--red); color: var(--red); }
+        .tier.dia { border-color: var(--cyan); color: var(--cyan); }
+        
+        /* 패치노트 */
+        .patch-terminal { background: var(--bg-secondary); border: 1px solid var(--border); margin-bottom: 60px; }
+        .terminal-header { padding: 10px 15px; background: var(--bg); border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 8px; }
+        .terminal-dot { width: 12px; height: 12px; border-radius: 50%; }
+        .terminal-dot.red { background: #ff5f56; }
+        .terminal-dot.yellow { background: #ffbd2e; }
+        .terminal-dot.green { background: #27ca3f; }
+        .terminal-title { flex: 1; text-align: center; font-size: 11px; color: var(--text-dim); }
+        .terminal-body { padding: 25px; font-size: 15px; }
+        .terminal-line { margin-bottom: 12px; display: flex; }
+        .terminal-line .prompt { color: var(--green); margin-right: 10px; }
+        .terminal-line .cmd { color: var(--cyan); }
+        .terminal-output { color: var(--text-dim); padding-left: 25px; margin-bottom: 18px; font-size: 14px; }
+        .terminal-output.buff { color: var(--green); }
+        .terminal-output.nerf { color: var(--red); }
+        .terminal-output.fix { color: var(--yellow); }
+        
+        /* ===== GAME 페이지 ===== */
+        .page-header { padding: 80px 30px; border-bottom: 1px solid var(--border); max-width: 1400px; margin: 0 auto; }
+        .page-header h1 { font-size: 42px; margin-bottom: 15px; }
+        .page-header h1::before { content: '> '; color: var(--green); }
+        .page-header p { color: var(--text-dim); font-size: 16px; }
+        
+        .info-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; background: var(--border); border: 1px solid var(--border); margin-bottom: 60px; }
+        .info-card { background: var(--bg-secondary); padding: 35px; }
+        .info-card h3 { font-size: 16px; color: var(--cyan); margin-bottom: 18px; display: flex; align-items: center; gap: 10px; }
+        .info-card h3::before { content: '//'; color: var(--text-dim); }
+        .info-card p { font-size: 15px; color: var(--text-dim); line-height: 1.9; }
+        .info-card ul { list-style: none; font-size: 14px; }
+        .info-card li { padding: 12px 0; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; }
+        .info-card li:last-child { border-bottom: none; }
+        .info-card .val { color: var(--green); }
+        
+        .screenshot-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; background: var(--border); border: 1px solid var(--border); margin-bottom: 60px; }
+        .screenshot { 
+            background: linear-gradient(145deg, var(--bg-tertiary), var(--bg)); 
+            aspect-ratio: 16/9; 
+            display: flex; align-items: center; justify-content: center; 
+            font-size: 56px; cursor: pointer; transition: all 0.2s;
+            box-shadow: inset 0 0 30px rgba(0,0,0,0.5);
+        }
+        .screenshot:hover { background: var(--bg-secondary); }
+        
+        .features-list { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1px; background: var(--border); border: 1px solid var(--border); margin-bottom: 60px; }
+        .feature-item { background: var(--bg-secondary); padding: 25px; display: flex; gap: 20px; }
+        .feature-icon { 
+            width: 64px; height: 64px; min-width: 64px;
+            background: linear-gradient(145deg, var(--bg-tertiary), var(--bg)); 
+            border: 1px solid var(--cyan); 
+            border-radius: 14px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 28px; flex-shrink: 0;
+            box-shadow: 5px 5px 12px rgba(0,0,0,0.5), inset 1px 1px 2px rgba(0,212,255,0.1);
+        }
+        .feature-content h4 { font-size: 18px; margin-bottom: 12px; }
+        .feature-content p { font-size: 14px; color: var(--text-dim); line-height: 1.8; }
+        
+        /* ===== GUIDE 페이지 ===== */
+        .guide-nav { display: flex; gap: 10px; margin-bottom: 30px; flex-wrap: wrap; }
+        .guide-card { background: var(--bg-secondary); border: 1px solid var(--border); padding: 30px; margin-bottom: 24px; cursor: pointer; transition: all 0.15s; border-radius: 12px; }
+        .guide-card:hover { border-color: var(--cyan); }
+        .guide-card h3 { font-size: 18px; margin-bottom: 14px; display: flex; align-items: center; gap: 14px; }
+        .guide-card h3 .icon { 
+            width: 44px; height: 44px;
+            background: linear-gradient(145deg, var(--bg-tertiary), var(--bg)); 
+            border: 1px solid var(--border); border-radius: 10px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 20px;
+            box-shadow: 3px 3px 8px rgba(0,0,0,0.4);
+        }
+        .guide-card p { font-size: 15px; color: var(--text-dim); line-height: 1.7; }
+        .guide-card .meta { margin-top: 18px; font-size: 13px; color: var(--text-dim); display: flex; gap: 25px; }
+        .guide-card .meta span { display: flex; align-items: center; gap: 5px; }
+        
+        .tier-list { background: var(--bg-secondary); border: 1px solid var(--border); margin-bottom: 60px; }
+        .tier-row { display: flex; border-bottom: 1px solid var(--border); }
+        .tier-row:last-child { border-bottom: none; }
+        .tier-label { width: 80px; padding: 20px; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 18px; border-right: 1px solid var(--border); }
+        .tier-label.s { background: var(--yellow); color: var(--bg); }
+        .tier-label.a { background: var(--purple); color: #fff; }
+        .tier-label.b { background: var(--cyan); color: var(--bg); }
+        .tier-label.c { background: var(--text-dim); color: var(--bg); }
+        .tier-chars { flex: 1; padding: 15px; display: flex; gap: 10px; flex-wrap: wrap; }
+        .tier-char { padding: 14px 20px; background: var(--bg); border: 1px solid var(--border); font-size: 14px; display: flex; align-items: center; gap: 10px; border-radius: 8px; }
+        
+        /* ===== COMMUNITY 페이지 ===== */
+        .community-layout { display: grid; grid-template-columns: 1fr 300px; gap: 20px; }
+        .post-list { background: var(--bg-secondary); border: 1px solid var(--border); }
+        .post-item { padding: 25px; border-bottom: 1px solid var(--border); cursor: pointer; transition: background 0.15s; }
+        .post-item:hover { background: var(--bg-tertiary); }
+        .post-item:last-child { border-bottom: none; }
+        .post-header { display: flex; justify-content: space-between; margin-bottom: 12px; }
+        .post-category { font-size: 12px; padding: 5px 12px; border: 1px solid var(--cyan); color: var(--cyan); border-radius: 4px; }
+        .post-date { font-size: 13px; color: var(--text-dim); }
+        .post-title { font-size: 17px; margin-bottom: 10px; }
+        .post-meta { font-size: 14px; color: var(--text-dim); display: flex; gap: 25px; }
+        
+        .sidebar-widget { background: var(--bg-secondary); border: 1px solid var(--border); margin-bottom: 20px; }
+        .widget-header { padding: 18px; border-bottom: 1px solid var(--border); font-size: 15px; font-weight: 600; }
+        .widget-body { padding: 18px; }
+        .online-user { display: flex; align-items: center; gap: 12px; padding: 10px 0; font-size: 14px; }
+        .online-dot { width: 8px; height: 8px; background: var(--green); border-radius: 50%; }
+        
+        .chat-box { height: 300px; display: flex; flex-direction: column; }
+        .chat-messages { flex: 1; overflow-y: auto; padding: 14px; font-size: 14px; }
+        .chat-msg { margin-bottom: 12px; }
+        .chat-msg .user { color: var(--cyan); }
+        .chat-msg .text { color: var(--text-dim); }
+        .chat-input { display: flex; border-top: 1px solid var(--border); }
+        .chat-input input { flex: 1; padding: 16px; background: var(--bg); border: none; color: var(--text); font-family: inherit; font-size: 15px; }
+        .chat-input button { padding: 16px 24px; background: var(--green); border: none; color: var(--bg); font-family: inherit; font-size: 14px; cursor: pointer; }
+        
+        /* ===== RANKING 페이지 ===== */
+        .ranking-filters { display: flex; gap: 10px; margin-bottom: 30px; flex-wrap: wrap; }
+        .filter-select { padding: 14px 20px; background: var(--bg-secondary); border: 1px solid var(--border); color: var(--text); font-family: inherit; font-size: 15px; cursor: pointer; border-radius: 8px; }
+        .filter-select:focus { outline: none; border-color: var(--green); }
+        
+        .rank-table-full { background: var(--bg-secondary); border: 1px solid var(--border); }
+        .rank-row-full { display: grid; grid-template-columns: 70px 1fr 110px 90px 90px 110px 90px; padding: 18px 25px; border-bottom: 1px solid var(--border); font-size: 15px; align-items: center; }
+        .rank-row-full.header { background: var(--bg); color: var(--text-dim); font-size: 10px; }
+        .rank-row-full:not(.header):hover { background: var(--bg-tertiary); }
+        
+        .pagination { display: flex; justify-content: center; gap: 5px; margin-top: 30px; }
+        .page-btn { padding: 12px 18px; background: var(--bg-secondary); border: 1px solid var(--border); color: var(--text-dim); font-family: inherit; font-size: 14px; cursor: pointer; border-radius: 6px; }
+        .page-btn:hover { border-color: var(--text); color: var(--text); }
+        .page-btn.active { border-color: var(--green); color: var(--green); }
+        
+        /* ===== SHOP 페이지 ===== */
+        .shop-categories { display: flex; gap: 10px; margin-bottom: 30px; flex-wrap: wrap; }
+        .shop-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1px; background: var(--border); border: 1px solid var(--border); margin-bottom: 60px; }
+        .shop-item { background: var(--bg-secondary); padding: 25px; text-align: center; cursor: pointer; transition: all 0.15s; }
+        .shop-item:hover { background: var(--bg-tertiary); }
+        .shop-item.featured { background: rgba(255,204,0,0.05); }
+        .shop-icon { 
+            width: 80px; height: 80px; 
+            background: linear-gradient(145deg, var(--bg-tertiary), var(--bg)); 
+            border: 1px solid var(--border); 
+            border-radius: 18px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 38px; margin: 0 auto 18px;
+            box-shadow: 6px 6px 14px rgba(0,0,0,0.5), inset 1px 1px 3px rgba(255,255,255,0.05);
+            transform: perspective(500px) rotateX(5deg);
+        }
+        .shop-name { font-size: 16px; font-weight: 600; margin-bottom: 8px; }
+        .shop-desc { font-size: 13px; color: var(--text-dim); margin-bottom: 18px; }
+        .shop-price { font-size: 18px; color: var(--yellow); display: flex; align-items: center; justify-content: center; gap: 8px; font-weight: 600; }
+        .shop-price.sale .original { text-decoration: line-through; color: var(--text-dim); font-size: 11px; }
+        .shop-tag { position: absolute; top: 10px; right: 10px; padding: 3px 8px; background: var(--red); color: #fff; font-size: 9px; }
+        
+        .bundle-banner { background: var(--bg-secondary); border: 1px solid var(--yellow); padding: 40px; margin-bottom: 60px; display: grid; grid-template-columns: 1fr 1fr; gap: 40px; align-items: center; }
+        .bundle-info h2 { font-size: 32px; color: var(--yellow); margin-bottom: 20px; }
+        .bundle-info p { font-size: 17px; color: var(--text-dim); margin-bottom: 24px; }
+        .bundle-info .price { font-size: 36px; color: var(--green); }
+        .bundle-info .original { text-decoration: line-through; color: var(--text-dim); font-size: 18px; margin-left: 12px; }
+        .bundle-items { display: flex; gap: 15px; flex-wrap: wrap; justify-content: center; }
+        .bundle-item { padding: 20px 25px; background: var(--bg); border: 1px solid var(--border); text-align: center; font-size: 13px; border-radius: 10px; }
+        .bundle-item .icon { 
+            width: 56px; height: 56px; margin: 0 auto 12px;
+            background: linear-gradient(145deg, var(--bg-tertiary), var(--bg-secondary)); 
+            border: 1px solid var(--border); border-radius: 12px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 26px;
+            box-shadow: 4px 4px 10px rgba(0,0,0,0.4);
+        }
+        
+        /* 모달 */
+        .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.9); z-index: 10000; display: none; align-items: center; justify-content: center; }
+        .modal-overlay.active { display: flex; }
+        .modal { background: var(--bg-secondary); border: 1px solid var(--border); width: 100%; max-width: 480px; border-radius: 16px; }
+        .modal-header { padding: 22px 28px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
+        .modal-header h2 { font-size: 18px; font-weight: 600; }
+        .modal-close { background: none; border: none; color: var(--text-dim); font-size: 18px; cursor: pointer; }
+        .modal-body { padding: 30px 28px; }
+        .input-group { margin-bottom: 20px; }
+        .input-group label { display: block; font-size: 14px; color: var(--text-dim); margin-bottom: 10px; }
+        .input-group input { width: 100%; padding: 16px 18px; background: var(--bg); border: 1px solid var(--border); color: var(--text); font-family: inherit; font-size: 15px; border-radius: 8px; }
+        .input-group input:focus { outline: none; border-color: var(--green); }
+        .modal-btn { width: 100%; padding: 18px; background: var(--green); border: none; color: var(--bg); font-family: inherit; font-size: 15px; font-weight: 700; cursor: pointer; margin-bottom: 18px; border-radius: 8px; }
+        .modal-footer { text-align: center; font-size: 14px; color: var(--text-dim); }
+        .modal-footer a { color: var(--cyan); text-decoration: none; cursor: pointer; }
+        
+        .gacha-result { text-align: center; padding: 40px; }
+        .gacha-result-icon { 
+            width: 120px; height: 120px; margin: 0 auto 25px;
+            background: linear-gradient(145deg, #2a2a0a, #1a1a00); 
+            border: 2px solid var(--yellow); border-radius: 20px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 56px; 
+            box-shadow: 6px 6px 16px rgba(0,0,0,0.5), inset 2px 2px 4px rgba(255,204,0,0.2);
+            animation: popIn 0.5s; 
+        }
+        @keyframes popIn { 0% { transform: scale(0); } 80% { transform: scale(1.1); } 100% { transform: scale(1); } }
+        .gacha-result h3 { font-size: 24px; margin-bottom: 14px; }
+        .gacha-result h3.leg { color: var(--yellow); }
+        .gacha-result h3.epic { color: var(--purple); }
+        .gacha-result h3.rare { color: var(--cyan); }
+        .gacha-result p { font-size: 16px; color: var(--text-dim); margin-bottom: 30px; }
+        .gacha-result-stars { font-size: 26px; color: var(--yellow); margin-bottom: 25px; letter-spacing: 8px; }
+        
+        .attendance-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 5px; margin-bottom: 20px; }
+        .attendance-day { padding: 16px 8px; background: var(--bg); border: 1px solid var(--border); text-align: center; font-size: 13px; border-radius: 8px; }
+        .attendance-day.checked { border-color: var(--green); }
+        .attendance-day.today { border-color: var(--cyan); }
+        .attendance-day .day { color: var(--text-dim); margin-bottom: 8px; }
+        .attendance-day .reward { 
+            width: 40px; height: 40px; margin: 0 auto 8px;
+            background: linear-gradient(145deg, var(--bg-tertiary), var(--bg-secondary)); 
+            border: 1px solid var(--border); border-radius: 10px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 20px;
+            box-shadow: 3px 3px 6px rgba(0,0,0,0.3);
+        }
+        .attendance-day .amount { color: var(--yellow); font-size: 12px; }
+        
+        /* 푸터 */
+        footer { background: var(--bg); border-top: 1px solid var(--border); padding: 40px 20px; margin-top: 60px; }
+        .footer-content { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: 2fr repeat(4, 1fr); gap: 40px; margin-bottom: 40px; }
+        .footer-logo { font-size: 22px; font-weight: 700; color: var(--green); margin-bottom: 18px; }
+        .footer-desc { font-size: 14px; color: var(--text-dim); line-height: 1.9; }
+        .footer-column h4 { font-size: 14px; color: var(--text-dim); margin-bottom: 18px; text-transform: uppercase; letter-spacing: 1px; }
+        .footer-column ul { list-style: none; }
+        .footer-column li { margin-bottom: 12px; }
+        .footer-column a { font-size: 15px; color: var(--text-dim); text-decoration: none; cursor: pointer; }
+        .footer-column a:hover { color: var(--cyan); }
+        .footer-warning { background: var(--bg-secondary); border: 1px solid var(--red); padding: 20px; font-size: 13px; color: var(--text-dim); line-height: 1.8; margin-top: 35px; border-radius: 10px; }
+        .footer-warning::before { content: '⚠ WARNING: '; color: var(--red); }
+        .footer-bottom { border-top: 1px solid var(--border); padding-top: 25px; text-align: center; font-size: 13px; color: var(--text-dim); }
+        
+        .toast { position: fixed; bottom: 30px; right: 30px; padding: 20px 26px; background: var(--bg-secondary); border: 1px solid var(--border); font-size: 14px; z-index: 9999; transform: translateX(150%); transition: transform 0.3s; display: flex; align-items: center; gap: 16px; border-radius: 12px; }
+        .toast.show { transform: translateX(0); }
+        .toast.success { border-color: var(--green); }
+        .toast.error { border-color: var(--red); }
+        .toast-icon { 
+            width: 44px; height: 44px;
+            background: linear-gradient(145deg, var(--bg-tertiary), var(--bg)); 
+            border: 1px solid var(--border); border-radius: 10px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 20px;
+            box-shadow: 3px 3px 8px rgba(0,0,0,0.4);
+        }
+        .toast-content h4 { font-size: 15px; margin-bottom: 5px; }
+        .toast-content p { font-size: 13px; color: var(--text-dim); }
+        
+        .loading-overlay { position: fixed; inset: 0; background: var(--bg); z-index: 20000; display: flex; flex-direction: column; align-items: center; justify-content: center; transition: opacity 0.5s; }
+        .loading-overlay.hide { opacity: 0; pointer-events: none; }
+        .loading-text { font-size: 16px; color: var(--green); margin-bottom: 25px; }
+        .loading-bar { width: 280px; height: 4px; background: var(--border); border-radius: 2px; }
+        .loading-fill { height: 100%; background: var(--green); width: 0; animation: loadBar 1.5s ease-out forwards; }
+        @keyframes loadBar { to { width: 100%; } }
+        
+        @media (max-width: 1024px) {
+            .events-grid, .shop-grid { grid-template-columns: repeat(2, 1fr); }
+            .char-list { grid-template-columns: repeat(3, 1fr); }
+            .gacha-content { grid-template-columns: 1fr; }
+            .gacha-preview { border-right: none; border-bottom: 1px solid var(--border); }
+            .info-grid, .features-list { grid-template-columns: 1fr; }
+            .community-layout { grid-template-columns: 1fr; }
+            .bundle-banner { grid-template-columns: 1fr; }
+        }
+        @media (max-width: 768px) {
+            .hero-stats { gap: 30px; }
+            .events-grid, .char-list, .shop-grid { grid-template-columns: 1fr; }
+            .rank-row, .rank-row-full { grid-template-columns: 50px 1fr 80px; }
+            .rank-row > *:nth-child(4), .rank-row > *:nth-child(5),
+            .rank-row-full > *:nth-child(4), .rank-row-full > *:nth-child(5),
+            .rank-row-full > *:nth-child(6), .rank-row-full > *:nth-child(7) { display: none; }
+            .footer-content { grid-template-columns: 1fr; }
+            nav { display: none; }
+            .screenshot-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="loading-text">> initializing dark_legend.exe...</div>
+        <div class="loading-bar"><div class="loading-fill"></div></div>
+    </div>
+
+    <div class="top-bar">
+        <span>NEXON / SUPPORT / CASH_SHOP</span>
+        <span>
+            <span class="status-dot"></span>
+            SERVER: ONLINE | USERS: <span id="onlineCount" style="color: var(--cyan);">127,849</span>
+        </span>
+    </div>
+
+    <header>
+        <div class="logo" onclick="showPage('home')">
+            <span class="logo-icon">⚔</span>
+            <span class="logo-text">DARK_LEGEND</span>
+            <span class="logo-ver">v47.0.1</span>
+        </div>
+        <nav>
+            <a class="active" data-page="home">HOME</a>
+            <a data-page="game">GAME</a>
+            <a data-page="guide">GUIDE</a>
+            <a data-page="community">COMMUNITY</a>
+            <a data-page="ranking">RANKING</a>
+            <a data-page="shop">SHOP</a>
+        </nav>
+        <div class="header-right">
+            <div class="currency">
+                <span class="label">GEMS</span>
+                <span class="value" id="gemCount">0</span>
+            </div>
+            <button class="btn" onclick="openModal('loginModal')">LOGIN</button>
+            <button class="btn btn-primary" onclick="showToast('success', 'LAUNCHING', 'Starting game client...')">PLAY</button>
+        </div>
+    </header>
+
+    <div class="terminal-notice">
+        <span class="prompt">$</span>
+        <span class="cmd">echo $ANNOUNCEMENT</span>
+        <span class="output">→ 시즌 47 "무한의 허탕" 업데이트 | 신규 5성 캐릭터 픽업 중</span>
+        <span class="cursor"></span>
+    </div>
+
+    <!-- ========== HOME 페이지 ========== -->
+    <div class="page active" id="page-home">
+        <section class="hero">
+            <div class="hero-label"><span>HOT</span> SEASON 47 NOW LIVE</div>
+            <h1>THE <span class="highlight">DARK_LEGEND</span><br>BEGINS HERE.</h1>
+            <p class="hero-desc">
+                <code>다크소울</code>의 긴장감 + <code>원신</code>의 가챠 + <code>발로란트</code>의 FPS + <code>롤</code>의 전략.
+            </p>
+            <div class="hero-actions">
+                <button class="btn btn-primary btn-lg" onclick="showToast('success', 'DOWNLOAD', '100GB download starting...')">DOWNLOAD_NOW</button>
+                <button class="btn btn-lg" onclick="showPage('game')">LEARN_MORE</button>
+            </div>
+            <div class="hero-stats">
+                <div class="stat"><div class="stat-value">12.4M</div><div class="stat-label">TOTAL_PLAYERS</div></div>
+                <div class="stat"><div class="stat-value">47</div><div class="stat-label">CURRENT_SEASON</div></div>
+                <div class="stat"><div class="stat-value">150+</div><div class="stat-label">PLAYABLE_CHARS</div></div>
+                <div class="stat"><div class="stat-value">0.006%</div><div class="stat-label">5STAR_RATE</div></div>
+            </div>
+        </section>
+
+        <main class="container">
+            <div class="section-header">
+                <h2 class="section-title">ACTIVE_EVENTS</h2>
+                <a class="section-more">VIEW_ALL →</a>
+            </div>
+            <div class="events-grid">
+                <div class="event-card" onclick="openModal('attendanceModal')">
+                    <div class="event-icon">📅</div>
+                    <span class="event-tag new">DAILY</span>
+                    <div class="event-title">매일매일 출석체크</div>
+                    <div class="event-date">2024.12.01 - 2025.01.31</div>
+                </div>
+                <div class="event-card" onclick="showToast('success', 'EVENT', 'Redirecting...')">
+                    <div class="event-icon">🎁</div>
+                    <span class="event-tag">D-7</span>
+                    <div class="event-title">신규/복귀 환영 이벤트</div>
+                    <div class="event-date">5성 캐릭터 선택권 지급</div>
+                </div>
+                <div class="event-card" onclick="openModal('couponModal')">
+                    <div class="event-icon">🎫</div>
+                    <span class="event-tag new">CODE</span>
+                    <div class="event-title">시리얼 코드 입력</div>
+                    <div class="event-date">보상 쿠폰 등록</div>
+                </div>
+                <div class="event-card" onclick="showToast('error', 'EXPIRED', 'Event ended.')">
+                    <div class="event-icon">🏆</div>
+                    <span class="event-tag">ENDED</span>
+                    <div class="event-title">시즌 46 결산</div>
+                    <div class="event-date">2024.11.01 - 2024.12.15</div>
+                </div>
+            </div>
+
+            <div class="gacha-section">
+                <div class="gacha-header">
+                    <div class="gacha-title"><span class="tag">LIMITED</span> CHARACTER_WISH</div>
+                    <div class="gacha-timer">ENDS: <span id="gachaTimer">6d 23:59:59</span></div>
+                </div>
+                <div class="gacha-content">
+                    <div class="gacha-preview">
+                        <div class="gacha-char">🗡️</div>
+                        <div class="gacha-stars">★★★★★</div>
+                    </div>
+                    <div class="gacha-info">
+                        <h3><span>[LIMITED]</span> 불멸의 검제 야스오</h3>
+                        <p>FIRE · DUAL_SWORD · "바람은 나의 친구... 팀원은 아니야"</p>
+                        <div class="prob-table">
+                            <div class="prob-row"><span>★★★★★ 5-STAR</span><span class="rate leg">0.600%</span></div>
+                            <div class="prob-row"><span>★★★★ 4-STAR</span><span class="rate epic">5.100%</span></div>
+                            <div class="prob-row"><span>★★★ 3-STAR</span><span class="rate rare">94.300%</span></div>
+                        </div>
+                        <div class="gacha-buttons">
+                            <button class="gacha-btn" onclick="doGacha(1)">WISH x1<span class="sub">💎 160</span></button>
+                            <button class="gacha-btn primary" onclick="doGacha(10)">WISH x10<span class="sub">💎 1,600</span></button>
+                        </div>
+                        <div class="pity-bar">
+                            <div class="pity-header"><span>PITY_COUNTER</span><span id="pityCount">88 / 90</span></div>
+                            <div class="pity-track"><div class="pity-fill" id="pityFill"></div></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section-header">
+                <h2 class="section-title">FEATURED_CHARACTERS</h2>
+                <a class="section-more" onclick="showPage('guide')">VIEW_ALL →</a>
+            </div>
+            <div class="char-list">
+                <div class="char-item"><div class="char-icon">🗡️</div><div class="char-name">야스오</div><div class="char-class">FIRE · DUAL_SWORD</div><span class="char-grade leg">★★★★★</span></div>
+                <div class="char-item"><div class="char-icon">🔥</div><div class="char-name">호두</div><div class="char-class">FIRE · POLEARM</div><span class="char-grade leg">★★★★★</span></div>
+                <div class="char-item"><div class="char-icon">💨</div><div class="char-name">제트</div><div class="char-class">WIND · DAGGER</div><span class="char-grade epic">★★★★</span></div>
+                <div class="char-item"><div class="char-icon">🛡️</div><div class="char-name">종리</div><div class="char-class">GEO · POLEARM</div><span class="char-grade leg">★★★★★</span></div>
+                <div class="char-item"><div class="char-icon">👁️</div><div class="char-name">레이나</div><div class="char-class">DARK · PISTOL</div><span class="char-grade epic">★★★★</span></div>
+            </div>
+
+            <div class="patch-terminal">
+                <div class="terminal-header">
+                    <span class="terminal-dot red"></span>
+                    <span class="terminal-dot yellow"></span>
+                    <span class="terminal-dot green"></span>
+                    <span class="terminal-title">patch_notes_v47.0.1.sh</span>
+                </div>
+                <div class="terminal-body">
+                    <div class="terminal-line"><span class="prompt">$</span><span class="cmd">cat CHANGELOG.md</span></div>
+                    <div class="terminal-output"># v47.0.1 HOTFIX</div>
+                    <div class="terminal-output nerf">- [NERF] 야스오: 궁극기 데미지 -50%</div>
+                    <div class="terminal-output buff">- [BUFF] 티모: 버섯 설치속도 +200%</div>
+                    <div class="terminal-output fix">- [FIX] 서버 불안정 수정 (버그 3개 추가됨)</div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- ========== GAME 페이지 ========== -->
+    <div class="page" id="page-game">
+        <div class="page-header">
+            <h1>GAME_INFO</h1>
+            <p>다크 레전드 온라인의 모든 것을 알아보세요</p>
+        </div>
+        <main class="container">
+            <div class="section-header"><h2 class="section-title">OVERVIEW</h2></div>
+            <div class="info-grid">
+                <div class="info-card">
+                    <h3>GAME_SUMMARY</h3>
+                    <p>다크소울의 전투 + 원신의 가챠 + 발로란트의 FPS + 롤의 전략. 세계관을 파괴하며 모든 것을 섞어놓은 궁극의 크로스오버 게임.</p>
+                </div>
+                <div class="info-card">
+                    <h3>GENRE</h3>
+                    <ul>
+                        <li>TYPE <span class="val">MMORPG + FPS + MOBA</span></li>
+                        <li>MODE <span class="val">PVP, PVE, RAID</span></li>
+                        <li>PLATFORM <span class="val">PC, MOBILE</span></li>
+                    </ul>
+                </div>
+                <div class="info-card">
+                    <h3>SYS_REQUIREMENTS</h3>
+                    <ul>
+                        <li>OS <span class="val">Windows 10+</span></li>
+                        <li>CPU <span class="val">i7-9700K</span></li>
+                        <li>RAM <span class="val">16GB</span></li>
+                        <li>GPU <span class="val">RTX 3060</span></li>
+                        <li>STORAGE <span class="val">100GB SSD</span></li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="section-header"><h2 class="section-title">SCREENSHOTS</h2></div>
+            <div class="screenshot-grid">
+                <div class="screenshot" onclick="showToast('success', 'IMAGE', 'Opening fullscreen...')">🏰</div>
+                <div class="screenshot" onclick="showToast('success', 'IMAGE', 'Opening fullscreen...')">⚔️</div>
+                <div class="screenshot" onclick="showToast('success', 'IMAGE', 'Opening fullscreen...')">🐉</div>
+                <div class="screenshot" onclick="showToast('success', 'IMAGE', 'Opening fullscreen...')">🌋</div>
+                <div class="screenshot" onclick="showToast('success', 'IMAGE', 'Opening fullscreen...')">🏔️</div>
+                <div class="screenshot" onclick="showToast('success', 'IMAGE', 'Opening fullscreen...')">🌊</div>
+            </div>
+
+            <div class="section-header"><h2 class="section-title">KEY_FEATURES</h2></div>
+            <div class="features-list">
+                <div class="feature-item">
+                    <div class="feature-icon">⚔️</div>
+                    <div class="feature-content">
+                        <h4>SOULS-LIKE COMBAT</h4>
+                        <p>다크소울에서 영감받은 전투 시스템. 모든 보스는 당신을 100번 죽일 준비가 되어있습니다. YOU DIED 화면을 친구처럼 여기세요.</p>
+                    </div>
+                </div>
+                <div class="feature-item">
+                    <div class="feature-icon">🎰</div>
+                    <div class="feature-content">
+                        <h4>GACHA SYSTEM</h4>
+                        <p>0.6% 확률의 5성 캐릭터. 천장 시스템으로 90연차에 확정. 단, 50% 확률로 픽뚫. 진정한 도박의 세계에 오신 것을 환영합니다.</p>
+                    </div>
+                </div>
+                <div class="feature-item">
+                    <div class="feature-icon">🎯</div>
+                    <div class="feature-content">
+                        <h4>TACTICAL FPS</h4>
+                        <p>발로란트 스타일의 5v5 전술 사격. 에임이 없어도 괜찮습니다. 오퍼레이터 들고 코너 잡으면 됩니다.</p>
+                    </div>
+                </div>
+                <div class="feature-item">
+                    <div class="feature-icon">🧠</div>
+                    <div class="feature-content">
+                        <h4>STRATEGIC DEPTH</h4>
+                        <p>롤에서 가져온 전략적 깊이. 150개 이상의 캐릭터 중 5개만 메타입니다. 나머지는 창고에 보관하세요.</p>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- ========== GUIDE 페이지 ========== -->
+    <div class="page" id="page-guide">
+        <div class="page-header">
+            <h1>GAME_GUIDE</h1>
+            <p>초보자부터 고인물까지, 필요한 모든 정보</p>
+        </div>
+        <main class="container">
+            <div class="guide-nav">
+                <button class="tab active">ALL</button>
+                <button class="tab">BEGINNER</button>
+                <button class="tab">CHARACTER</button>
+                <button class="tab">COMBAT</button>
+                <button class="tab">GACHA</button>
+            </div>
+
+            <div class="guide-card" onclick="showToast('success', 'GUIDE', 'Opening guide...')">
+                <h3><span class="icon">📖</span> 초보자 필독 가이드</h3>
+                <p>게임 시작 전 반드시 알아야 할 것들. 리세마라 방법부터 뉴비 함정까지.</p>
+                <div class="meta"><span>👁 12,453</span><span>💬 234</span><span>📅 2025.12.20</span></div>
+            </div>
+            <div class="guide-card" onclick="showToast('success', 'GUIDE', 'Opening guide...')">
+                <h3><span class="icon">💎</span> 무과금 생존 가이드</h3>
+                <p>돈 안 쓰고 버티는 법. 스포일러: 불가능합니다. 하지만 시도는 해볼 수 있어요.</p>
+                <div class="meta"><span>👁 45,678</span><span>💬 892</span><span>📅 2025.12.18</span></div>
+            </div>
+            <div class="guide-card" onclick="showToast('success', 'GUIDE', 'Opening guide...')">
+                <h3><span class="icon">🎰</span> 가챠 확률 완벽 분석</h3>
+                <p>천장 시스템, 픽뚫, 확정 픽업의 모든 것. 수학적으로 증명된 절망.</p>
+                <div class="meta"><span>👁 89,012</span><span>💬 1,234</span><span>📅 2025.12.15</span></div>
+            </div>
+
+            <div class="section-header" style="margin-top: 60px;"><h2 class="section-title">TIER_LIST</h2></div>
+            <div class="tier-list">
+                <div class="tier-row">
+                    <div class="tier-label s">S</div>
+                    <div class="tier-chars">
+                        <div class="tier-char">🗡️ 야스오</div>
+                        <div class="tier-char">🔥 호두</div>
+                        <div class="tier-char">🛡️ 종리</div>
+                    </div>
+                </div>
+                <div class="tier-row">
+                    <div class="tier-label a">A</div>
+                    <div class="tier-chars">
+                        <div class="tier-char">💨 제트</div>
+                        <div class="tier-char">👁️ 레이나</div>
+                        <div class="tier-char">⚡ 라이즈</div>
+                        <div class="tier-char">🌊 타르탈리아</div>
+                    </div>
+                </div>
+                <div class="tier-row">
+                    <div class="tier-label b">B</div>
+                    <div class="tier-chars">
+                        <div class="tier-char">🐹 티모</div>
+                        <div class="tier-char">🎭 베넷</div>
+                        <div class="tier-char">🌙 피즈</div>
+                        <div class="tier-char">🔮 럭스</div>
+                    </div>
+                </div>
+                <div class="tier-row">
+                    <div class="tier-label c">C</div>
+                    <div class="tier-chars">
+                        <div class="tier-char">❄️ 치치</div>
+                        <div class="tier-char">📦 나머지 전부</div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- ========== COMMUNITY 페이지 ========== -->
+    <div class="page" id="page-community">
+        <div class="page-header">
+            <h1>COMMUNITY</h1>
+            <p>다크 레전드 유저들의 소통 공간</p>
+        </div>
+        <main class="container">
+            <div class="community-layout">
+                <div>
+                    <div class="section-header"><h2 class="section-title">RECENT_POSTS</h2></div>
+                    <div class="post-list">
+                        <div class="post-item" onclick="showToast('success', 'POST', 'Opening post...')">
+                            <div class="post-header"><span class="post-category">잡담</span><span class="post-date">5분 전</span></div>
+                            <div class="post-title">야스오 너프 개추천ㅋㅋㅋ 0/10 야스오 이제 안봐도 되겠네</div>
+                            <div class="post-meta"><span>👁 1,234</span><span>💬 89</span><span>👍 456</span></div>
+                        </div>
+                        <div class="post-item" onclick="showToast('success', 'POST', 'Opening post...')">
+                            <div class="post-header"><span class="post-category">공략</span><span class="post-date">23분 전</span></div>
+                            <div class="post-title">[가챠] 300연차 결과 공유합니다... (스압주의)</div>
+                            <div class="post-meta"><span>👁 8,901</span><span>💬 234</span><span>👍 12</span></div>
+                        </div>
+                        <div class="post-item" onclick="showToast('success', 'POST', 'Opening post...')">
+                            <div class="post-header"><span class="post-category">질문</span><span class="post-date">1시간 전</span></div>
+                            <div class="post-title">무과금으로 레디언트 가능한가요?</div>
+                            <div class="post-meta"><span>👁 2,345</span><span>💬 156</span><span>👍 3</span></div>
+                        </div>
+                        <div class="post-item" onclick="showToast('success', 'POST', 'Opening post...')">
+                            <div class="post-header"><span class="post-category">불만</span><span class="post-date">2시간 전</span></div>
+                            <div class="post-title">이 게임 밸런스 담당자 누구임? 대화 좀 합시다</div>
+                            <div class="post-meta"><span>👁 15,678</span><span>💬 567</span><span>👍 2,345</span></div>
+                        </div>
+                        <div class="post-item" onclick="showToast('success', 'POST', 'Opening post...')">
+                            <div class="post-header"><span class="post-category">팬아트</span><span class="post-date">3시간 전</span></div>
+                            <div class="post-title">[그림] 호두 그려봤습니다 (첫 작품이라 부족해요)</div>
+                            <div class="post-meta"><span>👁 34,567</span><span>💬 890</span><span>👍 8,901</span></div>
+                        </div>
+                    </div>
+                </div>
+                <div>
+                    <div class="sidebar-widget">
+                        <div class="widget-header">> ONLINE_USERS</div>
+                        <div class="widget-body">
+                            <div class="online-user"><span class="online-dot"></span>지갑전사9999</div>
+                            <div class="online-user"><span class="online-dot"></span>야스오장인</div>
+                            <div class="online-user"><span class="online-dot"></span>무과금저항군</div>
+                            <div class="online-user"><span class="online-dot"></span>새벽4시장인</div>
+                            <div class="online-user" style="color: var(--text-dim);">+12,345명 접속중</div>
+                        </div>
+                    </div>
+                    <div class="sidebar-widget">
+                        <div class="widget-header">> LIVE_CHAT</div>
+                        <div class="chat-box">
+                            <div class="chat-messages" id="chatMessages">
+                                <div class="chat-msg"><span class="user">야스오장인:</span> <span class="text">gg ez</span></div>
+                                <div class="chat-msg"><span class="user">System:</span> <span class="text" style="color:var(--yellow);">→ "수고하셨습니다!"</span></div>
+                                <div class="chat-msg"><span class="user">지갑전사:</span> <span class="text">300뽑 5성 1개 ㄱㅇㄷ</span></div>
+                                <div class="chat-msg"><span class="user">무과금:</span> <span class="text">ㅋㅋㅋㅋㅋ</span></div>
+                            </div>
+                            <div class="chat-input">
+                                <input type="text" id="chatInput" placeholder="메시지 입력..." onkeypress="if(event.key==='Enter')sendChat()">
+                                <button onclick="sendChat()">SEND</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- ========== RANKING 페이지 ========== -->
+    <div class="page" id="page-ranking">
+        <div class="page-header">
+            <h1>RANKING</h1>
+            <p>시즌 47 공식 랭킹</p>
+        </div>
+        <main class="container">
+            <div class="ranking-filters">
+                <select class="filter-select">
+                    <option>SEASON 47</option>
+                    <option>SEASON 46</option>
+                    <option>ALL TIME</option>
+                </select>
+                <select class="filter-select">
+                    <option>ALL REGIONS</option>
+                    <option>KR</option>
+                    <option>NA</option>
+                    <option>EU</option>
+                </select>
+                <select class="filter-select">
+                    <option>ALL MODES</option>
+                    <option>PVP</option>
+                    <option>RAID</option>
+                    <option>ARENA</option>
+                </select>
+            </div>
+
+            <div class="rank-table-full">
+                <div class="rank-row-full header">
+                    <span>RANK</span><span>PLAYER</span><span>TIER</span><span>WIN%</span><span>K/D</span><span>PLAYTIME</span><span>SPENT</span>
+                </div>
+                <div class="rank-row-full"><span class="rank-num r1">#1</span><div class="player"><div class="player-avatar">👑</div><div><div class="player-name">초월한운빨</div><div class="player-guild">[명예전당]</div></div></div><span class="tier rad">RADIANT</span><span>99.2%</span><span>15.4</span><span>8,421h</span><span>₩2.1M</span></div>
+                <div class="rank-row-full"><span class="rank-num r2">#2</span><div class="player"><div class="player-avatar">🐋</div><div><div class="player-name">지갑전사9999</div><div class="player-guild">[무한과금]</div></div></div><span class="tier rad">RADIANT</span><span>51.3%</span><span>1.2</span><span>2,100h</span><span>₩50M</span></div>
+                <div class="rank-row-full"><span class="rank-num r3">#3</span><div class="player"><div class="player-avatar">⚔️</div><div><div class="player-name">난원래다이아</div><div class="player-guild">[팀탓러즈]</div></div></div><span class="tier imm">IMMORTAL</span><span>49.8%</span><span>0.9</span><span>5,123h</span><span>₩150K</span></div>
+                <div class="rank-row-full"><span class="rank-num">#4</span><div class="player"><div class="player-avatar">🎮</div><div><div class="player-name">새벽4시장인</div><div class="player-guild">[수면장애]</div></div></div><span class="tier imm">IMMORTAL</span><span>52.1%</span><span>1.8</span><span>6,789h</span><span>₩80K</span></div>
+                <div class="rank-row-full"><span class="rank-num">#5</span><div class="player"><div class="player-avatar">🔥</div><div><div class="player-name">원챔장인</div><div class="player-guild">[야스오만]</div></div></div><span class="tier dia">DIAMOND</span><span>55.0%</span><span>2.1</span><span>3,456h</span><span>₩0</span></div>
+            </div>
+
+            <div class="pagination">
+                <button class="page-btn active">1</button>
+                <button class="page-btn">2</button>
+                <button class="page-btn">3</button>
+                <button class="page-btn">...</button>
+                <button class="page-btn">99</button>
+            </div>
+        </main>
+    </div>
+
+    <!-- ========== SHOP 페이지 ========== -->
+    <div class="page" id="page-shop">
+        <div class="page-header">
+            <h1>SHOP</h1>
+            <p>당신의 지갑이 울고 있습니다</p>
+        </div>
+        <main class="container">
+            <div class="bundle-banner">
+                <div class="bundle-info">
+                    <h2>🎄 WINTER FESTIVAL BUNDLE</h2>
+                    <p>스킨 5개 + 이모트 3개 + 프레임 1개 + 원석 1,000개</p>
+                    <div>
+                        <span class="price">💎 4,999</span>
+                        <span class="original">💎 9,999</span>
+                    </div>
+                    <button class="btn btn-primary" style="margin-top: 20px;" onclick="showToast('error', 'PURCHASE', 'Insufficient gems.')">BUY_NOW</button>
+                </div>
+                <div class="bundle-items">
+                    <div class="bundle-item"><div class="icon">⚔️</div>용의 검</div>
+                    <div class="bundle-item"><div class="icon">👔</div>정장 스킨</div>
+                    <div class="bundle-item"><div class="icon">💃</div>승리의 춤</div>
+                    <div class="bundle-item"><div class="icon">🖼️</div>프레임</div>
+                    <div class="bundle-item"><div class="icon">💎</div>x1,000</div>
+                </div>
+            </div>
+
+            <div class="shop-categories">
+                <button class="tab active">ALL</button>
+                <button class="tab">SKINS</button>
+                <button class="tab">WEAPONS</button>
+                <button class="tab">EMOTES</button>
+                <button class="tab">GEMS</button>
+            </div>
+
+            <div class="shop-grid">
+                <div class="shop-item featured" onclick="showToast('error', 'PURCHASE', 'Insufficient gems.')">
+                    <div class="shop-icon">⚔️</div>
+                    <div class="shop-name">용의 검 (레전더리)</div>
+                    <div class="shop-desc">불꽃 이펙트 + 처형 모션</div>
+                    <div class="shop-price">💎 2,350</div>
+                </div>
+                <div class="shop-item" onclick="showToast('error', 'PURCHASE', 'Insufficient gems.')">
+                    <div class="shop-icon">👔</div>
+                    <div class="shop-name">사무실 정장 스킨</div>
+                    <div class="shop-desc">야근하는 직장인 컨셉</div>
+                    <div class="shop-price">💎 1,775</div>
+                </div>
+                <div class="shop-item" onclick="showToast('error', 'PURCHASE', 'Insufficient gems.')">
+                    <div class="shop-icon">💃</div>
+                    <div class="shop-name">승리의 춤 이모트</div>
+                    <div class="shop-desc">적을 도발하세요</div>
+                    <div class="shop-price">💎 500</div>
+                </div>
+                <div class="shop-item" onclick="showToast('error', 'PURCHASE', 'Insufficient gems.')">
+                    <div class="shop-icon">🎨</div>
+                    <div class="shop-name">무지개 총알 이펙트</div>
+                    <div class="shop-desc">화려한 사격 효과</div>
+                    <div class="shop-price">💎 4,350</div>
+                </div>
+                <div class="shop-item" onclick="buyGems(1100)">
+                    <div class="shop-icon">💎</div>
+                    <div class="shop-name">원석 1,000 + 100</div>
+                    <div class="shop-desc">첫 구매 보너스</div>
+                    <div class="shop-price">₩1,000</div>
+                </div>
+                <div class="shop-item" onclick="buyGems(5500)">
+                    <div class="shop-icon">💎</div>
+                    <div class="shop-name">원석 5,000 + 500</div>
+                    <div class="shop-desc">인기 상품</div>
+                    <div class="shop-price">₩5,000</div>
+                </div>
+                <div class="shop-item featured" onclick="buyGems(60000)">
+                    <div class="shop-icon">💎</div>
+                    <div class="shop-name">원석 50,000 + 10,000</div>
+                    <div class="shop-desc">⭐ BEST VALUE</div>
+                    <div class="shop-price">₩50,000</div>
+                </div>
+                <div class="shop-item" onclick="showToast('success', 'BATTLEPASS', 'Purchased!')">
+                    <div class="shop-icon">🎫</div>
+                    <div class="shop-name">배틀패스 시즌47</div>
+                    <div class="shop-desc">100레벨 보상 획득</div>
+                    <div class="shop-price">💎 1,000</div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- 푸터 -->
+    <footer>
+        <div class="footer-content">
+            <div>
+                <div class="footer-logo">> DARK_LEGEND</div>
+                <p class="footer-desc">DARKSOULS × GENSHIN × VALORANT × LOL<br>모든 게임의 장점만 모은 게임. 가챠 확률은 최악.</p>
+            </div>
+            <div class="footer-column"><h4>GAME</h4><ul><li><a onclick="showPage('game')">DOWNLOAD</a></li><li><a onclick="showPage('game')">ABOUT</a></li></ul></div>
+            <div class="footer-column"><h4>COMMUNITY</h4><ul><li><a onclick="showPage('community')">FORUM</a></li><li><a>DISCORD</a></li></ul></div>
+            <div class="footer-column"><h4>SUPPORT</h4><ul><li><a>HELP</a></li><li><a>FAQ</a></li></ul></div>
+            <div class="footer-column"><h4>LEGAL</h4><ul><li><a>TERMS</a></li><li><a>PRIVACY</a></li></ul></div>
+        </div>
+        <div class="footer-warning">게임 내 유료 아이템 포함. 가챠 확률은 체감상 훨씬 낮습니다. 게임사는 수면과 통장에 책임지지 않습니다.</div>
+        <div class="footer-bottom">© 2025 NEXON Korea. BUILD: 47.0.1-stable</div>
+    </footer>
+
+    <!-- 모달 -->
+    <div class="modal-overlay" id="loginModal">
+        <div class="modal">
+            <div class="modal-header"><h2>> LOGIN</h2><button class="modal-close" onclick="closeModal('loginModal')">×</button></div>
+            <div class="modal-body">
+                <div class="input-group"><label>EMAIL</label><input type="email" placeholder="user@nexon.com"></div>
+                <div class="input-group"><label>PASSWORD</label><input type="password" placeholder="••••••••"></div>
+                <button class="modal-btn" onclick="handleLogin()">AUTHENTICATE</button>
+                <div class="modal-footer">NO ACCOUNT? <a onclick="switchModal('loginModal', 'signupModal')">REGISTER</a></div>
+            </div>
+        </div>
+    </div>
+    <div class="modal-overlay" id="signupModal">
+        <div class="modal">
+            <div class="modal-header"><h2>> REGISTER</h2><button class="modal-close" onclick="closeModal('signupModal')">×</button></div>
+            <div class="modal-body">
+                <div class="input-group"><label>EMAIL</label><input type="email" placeholder="user@nexon.com"></div>
+                <div class="input-group"><label>USERNAME</label><input type="text" placeholder="gamertag"></div>
+                <div class="input-group"><label>PASSWORD</label><input type="password" placeholder="min 8 chars"></div>
+                <button class="modal-btn" onclick="handleSignup()">CREATE_ACCOUNT</button>
+            </div>
+        </div>
+    </div>
+    <div class="modal-overlay" id="attendanceModal">
+        <div class="modal" style="max-width:500px;">
+            <div class="modal-header"><h2>> DAILY_CHECK</h2><button class="modal-close" onclick="closeModal('attendanceModal')">×</button></div>
+            <div class="modal-body">
+                <div class="attendance-grid" id="attendanceGrid"></div>
+                <button class="modal-btn" onclick="checkAttendance()">CHECK_IN</button>
+            </div>
+        </div>
+    </div>
+    <div class="modal-overlay" id="couponModal">
+        <div class="modal">
+            <div class="modal-header"><h2>> REDEEM_CODE</h2><button class="modal-close" onclick="closeModal('couponModal')">×</button></div>
+            <div class="modal-body">
+                <div class="input-group"><label>SERIAL_CODE</label><input type="text" id="couponInput" placeholder="XXXX-XXXX-XXXX"></div>
+                <button class="modal-btn" onclick="applyCoupon()">APPLY</button>
+            </div>
+        </div>
+    </div>
+    <div class="modal-overlay" id="gachaResultModal">
+        <div class="modal">
+            <div class="modal-header"><h2>> WISH_RESULT</h2><button class="modal-close" onclick="closeModal('gachaResultModal')">×</button></div>
+            <div class="gacha-result" id="gachaResult"></div>
+        </div>
+    </div>
+
+    <div class="toast" id="toast">
+        <span class="toast-icon" id="toastIcon">✓</span>
+        <div class="toast-content"><h4 id="toastTitle">TITLE</h4><p id="toastMessage">msg</p></div>
+    </div>
+
+    <script>
+        window.addEventListener('load', () => setTimeout(() => document.getElementById('loadingOverlay').classList.add('hide'), 1500));
+        setInterval(() => document.getElementById('onlineCount').textContent = (127000 + Math.floor(Math.random() * 2000)).toLocaleString(), 3000);
+
+        let gachaEnd = Date.now() + 6.9 * 86400000;
+        setInterval(() => {
+            const r = gachaEnd - Date.now();
+            document.getElementById('gachaTimer').textContent = `${Math.floor(r/86400000)}d ${String(Math.floor(r%86400000/3600000)).padStart(2,'0')}:${String(Math.floor(r%3600000/60000)).padStart(2,'0')}:${String(Math.floor(r%60000/1000)).padStart(2,'0')}`;
+        }, 1000);
+
+        // 페이지 전환
+        function showPage(page) {
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            document.getElementById('page-' + page).classList.add('active');
+            document.querySelectorAll('nav a').forEach(a => a.classList.remove('active'));
+            document.querySelector(`nav a[data-page="${page}"]`).classList.add('active');
+            window.scrollTo(0, 0);
+        }
+        document.querySelectorAll('nav a').forEach(a => a.addEventListener('click', () => showPage(a.dataset.page)));
+
+        function openModal(id) { document.getElementById(id).classList.add('active'); if(id==='attendanceModal')initAttendance(); }
+        function closeModal(id) { document.getElementById(id).classList.remove('active'); }
+        function switchModal(a, b) { closeModal(a); setTimeout(() => openModal(b), 200); }
+
+        function handleLogin() { closeModal('loginModal'); showToast('success', 'AUTH_SUCCESS', 'Welcome back!'); }
+        function handleSignup() { closeModal('signupModal'); showToast('success', 'ACCOUNT_CREATED', '+160 gems'); document.getElementById('gemCount').textContent = '160'; }
+
+        function initAttendance() {
+            const days = ['SUN','MON','TUE','WED','THU','FRI','SAT'];
+            const rewards = ['💎','🎫','💎','📦','💎','🎁','⭐'];
+            const amounts = ['100','x1','200','MAT','300','RNG','5★'];
+            const today = new Date().getDay();
+            document.getElementById('attendanceGrid').innerHTML = days.map((d,i) => `
+                <div class="attendance-day ${i<today?'checked':''} ${i===today?'today':''}">
+                    <div class="day">${d}</div>
+                    <div class="reward">${rewards[i]}</div>
+                    <div class="amount">${amounts[i]}</div>
+                </div>
+            `).join('');
+        }
+        function checkAttendance() {
+            const today = new Date().getDay(), days = document.querySelectorAll('.attendance-day');
+            if (!days[today].classList.contains('checked')) { days[today].classList.add('checked'); closeModal('attendanceModal'); showToast('success', 'CHECK_IN', 'Reward claimed!'); }
+            else showToast('error', 'ALREADY_CHECKED', 'Tomorrow!');
+        }
+
+        function applyCoupon() {
+            const code = document.getElementById('couponInput').value.toUpperCase();
+            closeModal('couponModal');
+            if (code === 'DARKLEGEND2025') { showToast('success', 'CODE_APPLIED', '+1000 gems'); document.getElementById('gemCount').textContent = (parseInt(document.getElementById('gemCount').textContent)+1000).toString(); }
+            else showToast('error', 'INVALID_CODE', 'Invalid or expired');
+        }
+
+        let pity = 88;
+        function doGacha(count) {
+            let best = {grade:3, name:'3성 무기'};
+            for (let i=0; i<count; i++) {
+                pity++;
+                if (pity >= 90 || Math.random() < 0.006) { best = {grade:5, name: Math.random()>0.5?'야스오':'치치'}; pity=0; }
+                else if (Math.random() < 0.057 && best.grade < 4) best = {grade:4, name:'베넷'};
+            }
+            const cls = best.grade===5?'leg':best.grade===4?'epic':'rare';
+            document.getElementById('gachaResult').innerHTML = `<div class="gacha-result-icon">${best.grade===5?'🌟':best.grade===4?'💜':'💙'}</div><div class="gacha-result-stars">${'★'.repeat(best.grade)}</div><h3 class="${cls}">${best.name}</h3><p>${best.grade===5?(best.name==='치치'?'50/50 LOST...':'CONGRATULATIONS!'):'Better luck next time'}</p><button class="modal-btn" onclick="closeModal('gachaResultModal')">OK</button>`;
+            openModal('gachaResultModal');
+            document.getElementById('pityCount').textContent = `${pity} / 90`;
+            document.getElementById('pityFill').style.width = `${pity/90*100}%`;
+        }
+
+        function buyGems(amount) { showToast('success', 'PURCHASED', `+${amount.toLocaleString()} gems`); document.getElementById('gemCount').textContent = (parseInt(document.getElementById('gemCount').textContent)+amount).toString(); }
+
+        function sendChat() {
+            const input = document.getElementById('chatInput'), msg = input.value.trim();
+            if (msg) {
+                const chat = document.getElementById('chatMessages');
+                chat.innerHTML += `<div class="chat-msg"><span class="user">You:</span> <span class="text">${msg}</span></div>`;
+                input.value = '';
+                chat.scrollTop = chat.scrollHeight;
+            }
+        }
+
+        function showToast(type, title, msg) {
+            const t = document.getElementById('toast');
+            document.getElementById('toastIcon').textContent = type==='success'?'✓':'✗';
+            document.getElementById('toastTitle').textContent = title;
+            document.getElementById('toastMessage').textContent = msg;
+            t.className = `toast ${type} show`;
+            setTimeout(() => t.classList.remove('show'), 3000);
+        }
+
+        document.addEventListener('keydown', e => { if(e.key==='Escape') document.querySelectorAll('.modal-overlay.active').forEach(m => m.classList.remove('active')); });
+        document.querySelectorAll('.modal-overlay').forEach(o => o.addEventListener('click', e => { if(e.target===o) o.classList.remove('active'); }));
+
+        console.log('%c> DARK_LEGEND', 'color:#00ff88;font-size:16px;font-weight:bold;');
+        console.log('%c> COUPON: DARKLEGEND2025', 'color:#00d4ff;');
+    </script>
+</body>
+</html>

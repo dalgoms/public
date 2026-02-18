@@ -1,0 +1,2828 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Timbel — Infinite Canvas Experience</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --void-black: #050508;
+            --void-dark: #0a0a0f;
+            --void-gray: #1a1a24;
+            --node-blue: #4361ee;
+            --node-purple: #7209b7;
+            --node-pink: #f72585;
+            --node-cyan: #4cc9f0;
+            --node-orange: #fb8500;
+            --node-green: #06d6a0;
+            --text-white: #ffffff;
+            --text-dim: #6b7280;
+            --line-color: rgba(99, 102, 241, 0.15);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Outfit', sans-serif;
+            background: var(--void-black);
+            color: var(--text-white);
+            overflow: hidden;
+            cursor: grab;
+            user-select: none;
+        }
+
+        body.grabbing {
+            cursor: grabbing;
+        }
+
+        /* Loading Screen */
+        .loader {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--void-black);
+            z-index: 10000;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            transition: opacity 0.8s ease, visibility 0.8s ease;
+        }
+
+        .loader.hidden {
+            opacity: 0;
+            visibility: hidden;
+        }
+
+        .loader-orb {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: conic-gradient(from 0deg, var(--node-blue), var(--node-purple), var(--node-pink), var(--node-cyan), var(--node-blue));
+            animation: rotate 1.5s linear infinite;
+            position: relative;
+        }
+
+        .loader-orb::before {
+            content: '';
+            position: absolute;
+            inset: 8px;
+            background: var(--void-black);
+            border-radius: 50%;
+        }
+
+        @keyframes rotate {
+            to { transform: rotate(360deg); }
+        }
+
+        .loader-text {
+            margin-top: 30px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 12px;
+            letter-spacing: 0.3em;
+            color: var(--text-dim);
+        }
+
+        /* Canvas Container */
+        .canvas-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+        }
+
+        /* Infinite Canvas */
+        .infinite-canvas {
+            position: absolute;
+            width: 5500px;
+            height: 4500px;
+            transform-origin: 0 0;
+            transition: transform 0.05s linear;
+        }
+
+        /* Grid Pattern */
+        .grid-pattern {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                radial-gradient(circle at 1px 1px, rgba(255,255,255,0.015) 1px, transparent 0);
+            background-size: 80px 80px;
+            pointer-events: none;
+            opacity: 0.5;
+        }
+
+        /* Space Background Layers */
+        .space-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+            overflow: hidden;
+        }
+
+        /* Nebula clouds */
+        .nebula {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(100px);
+            opacity: 0.15;
+            animation: nebulaPulse 15s ease-in-out infinite;
+        }
+
+        .nebula-1 {
+            width: 800px;
+            height: 800px;
+            background: radial-gradient(circle, var(--node-purple) 0%, transparent 70%);
+            top: -200px;
+            right: -200px;
+            animation-delay: 0s;
+        }
+
+        .nebula-2 {
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, var(--node-blue) 0%, transparent 70%);
+            bottom: -100px;
+            left: -100px;
+            animation-delay: -5s;
+        }
+
+        .nebula-3 {
+            width: 500px;
+            height: 500px;
+            background: radial-gradient(circle, var(--node-pink) 0%, transparent 70%);
+            top: 40%;
+            left: 30%;
+            animation-delay: -10s;
+        }
+
+        .nebula-4 {
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle, var(--node-cyan) 0%, transparent 70%);
+            top: 20%;
+            right: 20%;
+            animation-delay: -7s;
+        }
+
+        @keyframes nebulaPulse {
+            0%, 100% { opacity: 0.1; transform: scale(1); }
+            50% { opacity: 0.2; transform: scale(1.1); }
+        }
+
+        /* Star layers with parallax */
+        .star-layer {
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            transition: transform 0.1s linear;
+        }
+
+        .star {
+            position: absolute;
+            background: white;
+            border-radius: 50%;
+        }
+
+        .star.tiny {
+            width: 1px;
+            height: 1px;
+            opacity: 0.3;
+        }
+
+        .star.small {
+            width: 2px;
+            height: 2px;
+            opacity: 0.5;
+        }
+
+        .star.medium {
+            width: 3px;
+            height: 3px;
+            opacity: 0.7;
+            box-shadow: 0 0 6px 1px rgba(255,255,255,0.3);
+        }
+
+        .star.large {
+            width: 4px;
+            height: 4px;
+            opacity: 0.9;
+            box-shadow: 0 0 10px 2px rgba(255,255,255,0.5);
+        }
+
+        .star.twinkle {
+            animation: starTwinkle var(--twinkle-duration, 3s) ease-in-out infinite;
+            animation-delay: var(--twinkle-delay, 0s);
+        }
+
+        @keyframes starTwinkle {
+            0%, 100% { opacity: var(--base-opacity, 0.5); transform: scale(1); }
+            50% { opacity: 1; transform: scale(1.3); }
+        }
+
+        /* Shooting star */
+        .shooting-star {
+            position: absolute;
+            width: 150px;
+            height: 2px;
+            background: linear-gradient(90deg, rgba(255,255,255,0.8), transparent);
+            opacity: 0;
+            animation: shootingStar 4s ease-in-out infinite;
+            transform-origin: left center;
+        }
+
+        .shooting-star::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: -1px;
+            width: 4px;
+            height: 4px;
+            background: white;
+            border-radius: 50%;
+            box-shadow: 0 0 10px 2px white;
+        }
+
+        .shooting-star-1 {
+            top: 15%;
+            left: 20%;
+            transform: rotate(35deg);
+            animation-delay: 2s;
+        }
+
+        .shooting-star-2 {
+            top: 45%;
+            left: 60%;
+            transform: rotate(40deg);
+            animation-delay: 8s;
+        }
+
+        .shooting-star-3 {
+            top: 70%;
+            left: 10%;
+            transform: rotate(30deg);
+            animation-delay: 14s;
+        }
+
+        @keyframes shootingStar {
+            0%, 90%, 100% { 
+                opacity: 0;
+                transform: translateX(0) rotate(35deg);
+            }
+            92% {
+                opacity: 1;
+            }
+            98% {
+                opacity: 0;
+                transform: translateX(300px) rotate(35deg);
+            }
+        }
+
+        /* Distant galaxy */
+        .galaxy {
+            position: absolute;
+            width: 80px;
+            height: 30px;
+            background: radial-gradient(ellipse, rgba(255,255,255,0.2) 0%, transparent 70%);
+            filter: blur(2px);
+            opacity: 0.4;
+            animation: galaxyGlow 8s ease-in-out infinite;
+        }
+
+        .galaxy-1 {
+            top: 25%;
+            left: 15%;
+            transform: rotate(-20deg);
+        }
+
+        .galaxy-2 {
+            top: 60%;
+            right: 25%;
+            transform: rotate(15deg);
+            animation-delay: -4s;
+        }
+
+        @keyframes galaxyGlow {
+            0%, 100% { opacity: 0.3; }
+            50% { opacity: 0.5; }
+        }
+
+        /* Aurora effect */
+        .aurora {
+            position: absolute;
+            width: 100%;
+            height: 40%;
+            top: 0;
+            left: 0;
+            background: linear-gradient(180deg, 
+                transparent 0%,
+                rgba(67, 97, 238, 0.03) 30%,
+                rgba(114, 9, 183, 0.02) 60%,
+                transparent 100%
+            );
+            animation: auroraWave 20s ease-in-out infinite;
+        }
+
+        @keyframes auroraWave {
+            0%, 100% { transform: translateY(0) scaleY(1); opacity: 0.5; }
+            50% { transform: translateY(20px) scaleY(1.1); opacity: 0.8; }
+        }
+
+        /* Cosmic dust */
+        .cosmic-dust {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                radial-gradient(1px 1px at 20% 30%, rgba(255,255,255,0.1) 0%, transparent 100%),
+                radial-gradient(1px 1px at 40% 70%, rgba(255,255,255,0.08) 0%, transparent 100%),
+                radial-gradient(1px 1px at 60% 20%, rgba(255,255,255,0.06) 0%, transparent 100%),
+                radial-gradient(2px 2px at 80% 50%, rgba(255,255,255,0.04) 0%, transparent 100%);
+            background-size: 550px 550px, 350px 350px, 250px 250px, 150px 150px;
+            animation: dustFloat 60s linear infinite;
+        }
+
+        @keyframes dustFloat {
+            0% { transform: translate(0, 0); }
+            100% { transform: translate(-100px, -100px); }
+        }
+
+        /* Depth vignette */
+        .vignette {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(ellipse at center, transparent 0%, transparent 40%, rgba(5, 5, 8, 0.4) 100%);
+            pointer-events: none;
+        }
+
+        /* Star cluster */
+        .star-cluster {
+            position: absolute;
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(255,255,255,0.05) 0%, transparent 70%);
+            filter: blur(3px);
+        }
+
+        .star-cluster-1 { top: 30%; left: 70%; }
+        .star-cluster-2 { top: 60%; left: 20%; }
+        .star-cluster-3 { top: 15%; left: 40%; }
+
+        /* Planets */
+        .planet {
+            position: absolute;
+            border-radius: 50%;
+            box-shadow: inset -10px -10px 30px rgba(0,0,0,0.6), 
+                        inset 5px 5px 20px rgba(255,255,255,0.1);
+        }
+
+        .planet-1 {
+            width: 120px;
+            height: 120px;
+            background: linear-gradient(135deg, #4361ee 0%, #1e3a8a 50%, #0c1445 100%);
+            top: 15%;
+            left: 10%;
+            animation: orbitFloat1 40s linear infinite;
+        }
+
+        .planet-1::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: -30px;
+            right: -30px;
+            height: 25px;
+            background: linear-gradient(90deg, transparent, rgba(168, 162, 158, 0.3), transparent);
+            transform: translateY(-50%) rotateX(75deg);
+            border-radius: 50%;
+        }
+
+        .planet-2 {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, #f97316 0%, #c2410c 50%, #7c2d12 100%);
+            top: 70%;
+            right: 15%;
+            animation: orbitFloat2 35s linear infinite;
+        }
+
+        .planet-3 {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, #a855f7 0%, #7e22ce 50%, #4c1d95 100%);
+            top: 40%;
+            right: 8%;
+            animation: orbitFloat3 25s linear infinite;
+        }
+
+        .planet-4 {
+            width: 35px;
+            height: 35px;
+            background: linear-gradient(135deg, #22d3ee 0%, #0891b2 50%, #164e63 100%);
+            bottom: 25%;
+            left: 20%;
+            animation: orbitFloat4 30s linear infinite;
+        }
+
+        .planet-5 {
+            width: 90px;
+            height: 90px;
+            background: 
+                radial-gradient(circle at 30% 30%, rgba(255,255,255,0.2) 0%, transparent 30%),
+                linear-gradient(135deg, #fcd34d 0%, #f59e0b 30%, #b45309 70%, #78350f 100%);
+            top: 55%;
+            left: 75%;
+            animation: orbitFloat5 45s linear infinite;
+        }
+
+        /* Planet ring for Saturn-like */
+        .planet-5::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: -25px;
+            right: -25px;
+            height: 20px;
+            background: linear-gradient(90deg, 
+                transparent 0%, 
+                rgba(251, 191, 36, 0.2) 20%, 
+                rgba(251, 191, 36, 0.4) 50%, 
+                rgba(251, 191, 36, 0.2) 80%, 
+                transparent 100%);
+            transform: translateY(-50%) rotateX(70deg);
+            border-radius: 50%;
+        }
+
+        @keyframes orbitFloat1 {
+            0% { transform: translate(0, 0) rotate(0deg); }
+            25% { transform: translate(50px, 30px) rotate(90deg); }
+            50% { transform: translate(0, 60px) rotate(180deg); }
+            75% { transform: translate(-50px, 30px) rotate(270deg); }
+            100% { transform: translate(0, 0) rotate(360deg); }
+        }
+
+        @keyframes orbitFloat2 {
+            0% { transform: translate(0, 0) rotate(0deg); }
+            25% { transform: translate(-40px, -20px) rotate(90deg); }
+            50% { transform: translate(0, -40px) rotate(180deg); }
+            75% { transform: translate(40px, -20px) rotate(270deg); }
+            100% { transform: translate(0, 0) rotate(360deg); }
+        }
+
+        @keyframes orbitFloat3 {
+            0% { transform: translate(0, 0); }
+            33% { transform: translate(30px, 40px); }
+            66% { transform: translate(-20px, 20px); }
+            100% { transform: translate(0, 0); }
+        }
+
+        @keyframes orbitFloat4 {
+            0% { transform: translate(0, 0) scale(1); }
+            50% { transform: translate(60px, -30px) scale(1.1); }
+            100% { transform: translate(0, 0) scale(1); }
+        }
+
+        @keyframes orbitFloat5 {
+            0% { transform: translate(0, 0) rotate(0deg); }
+            50% { transform: translate(-40px, 40px) rotate(180deg); }
+            100% { transform: translate(0, 0) rotate(360deg); }
+        }
+
+        /* Glowing light orbs */
+        .light-orb {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(2px);
+            animation: orbGlow 4s ease-in-out infinite;
+        }
+
+        .light-orb::after {
+            content: '';
+            position: absolute;
+            inset: -20px;
+            background: inherit;
+            border-radius: 50%;
+            filter: blur(20px);
+            opacity: 0.5;
+        }
+
+        .light-orb-1 {
+            width: 8px;
+            height: 8px;
+            background: #4cc9f0;
+            top: 20%;
+            left: 30%;
+            animation-delay: 0s;
+        }
+
+        .light-orb-2 {
+            width: 6px;
+            height: 6px;
+            background: #f72585;
+            top: 45%;
+            right: 25%;
+            animation-delay: -1s;
+        }
+
+        .light-orb-3 {
+            width: 10px;
+            height: 10px;
+            background: #7209b7;
+            bottom: 30%;
+            left: 60%;
+            animation-delay: -2s;
+        }
+
+        .light-orb-4 {
+            width: 5px;
+            height: 5px;
+            background: #06d6a0;
+            top: 65%;
+            left: 15%;
+            animation-delay: -3s;
+        }
+
+        .light-orb-5 {
+            width: 7px;
+            height: 7px;
+            background: #fcd34d;
+            top: 35%;
+            right: 40%;
+            animation-delay: -1.5s;
+        }
+
+        @keyframes orbGlow {
+            0%, 100% { 
+                opacity: 0.4; 
+                transform: scale(1);
+                box-shadow: 0 0 10px currentColor;
+            }
+            50% { 
+                opacity: 1; 
+                transform: scale(1.5);
+                box-shadow: 0 0 30px currentColor, 0 0 60px currentColor;
+            }
+        }
+
+        /* Enhanced shooting stars */
+        .meteor {
+            position: absolute;
+            width: 200px;
+            height: 2px;
+            background: linear-gradient(90deg, white, rgba(255,255,255,0.5), transparent);
+            opacity: 0;
+            transform-origin: left center;
+        }
+
+        .meteor::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: -2px;
+            width: 6px;
+            height: 6px;
+            background: white;
+            border-radius: 50%;
+            box-shadow: 0 0 10px 3px rgba(255,255,255,0.8),
+                        0 0 20px 5px rgba(76, 201, 240, 0.5);
+        }
+
+        .meteor-1 {
+            top: 10%;
+            left: 5%;
+            transform: rotate(45deg);
+            animation: meteorFall 6s ease-in infinite;
+            animation-delay: 0s;
+        }
+
+        .meteor-2 {
+            top: 25%;
+            left: 50%;
+            transform: rotate(35deg);
+            animation: meteorFall 6s ease-in infinite;
+            animation-delay: 2s;
+        }
+
+        .meteor-3 {
+            top: 5%;
+            left: 70%;
+            transform: rotate(50deg);
+            animation: meteorFall 6s ease-in infinite;
+            animation-delay: 4s;
+        }
+
+        .meteor-4 {
+            top: 40%;
+            left: 20%;
+            transform: rotate(40deg);
+            animation: meteorFall 8s ease-in infinite;
+            animation-delay: 1s;
+        }
+
+        .meteor-5 {
+            top: 60%;
+            left: 80%;
+            transform: rotate(55deg);
+            animation: meteorFall 7s ease-in infinite;
+            animation-delay: 3s;
+        }
+
+        .meteor-6 {
+            top: 75%;
+            left: 10%;
+            transform: rotate(30deg);
+            animation: meteorFall 9s ease-in infinite;
+            animation-delay: 5s;
+        }
+
+        @keyframes meteorFall {
+            0% {
+                opacity: 0;
+                transform: translateX(0) translateY(0) rotate(45deg);
+            }
+            5% {
+                opacity: 1;
+            }
+            20% {
+                opacity: 0;
+                transform: translateX(400px) translateY(400px) rotate(45deg);
+            }
+            100% {
+                opacity: 0;
+                transform: translateX(400px) translateY(400px) rotate(45deg);
+            }
+        }
+
+        /* Pulsing distant stars */
+        .pulse-star {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: white;
+            border-radius: 50%;
+            animation: pulseStar 3s ease-in-out infinite;
+        }
+
+        .pulse-star::before,
+        .pulse-star::after {
+            content: '';
+            position: absolute;
+            background: white;
+        }
+
+        .pulse-star::before {
+            width: 12px;
+            height: 2px;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        .pulse-star::after {
+            width: 2px;
+            height: 12px;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        .pulse-star-1 { top: 15%; left: 45%; animation-delay: 0s; }
+        .pulse-star-2 { top: 55%; left: 85%; animation-delay: -1s; }
+        .pulse-star-3 { top: 80%; left: 35%; animation-delay: -2s; }
+        .pulse-star-4 { top: 25%; left: 75%; animation-delay: -0.5s; }
+        .pulse-star-5 { top: 70%; left: 55%; animation-delay: -1.5s; }
+
+        @keyframes pulseStar {
+            0%, 100% {
+                opacity: 0.3;
+                transform: scale(0.8);
+                filter: blur(0px);
+            }
+            50% {
+                opacity: 1;
+                transform: scale(1.2);
+                filter: blur(1px);
+            }
+        }
+
+        /* Floating space debris */
+        .space-debris {
+            position: absolute;
+            width: 3px;
+            height: 3px;
+            background: rgba(255,255,255,0.4);
+            border-radius: 50%;
+            animation: debrisFloat 20s linear infinite;
+        }
+
+        @keyframes debrisFloat {
+            0% {
+                transform: translate(0, 0) rotate(0deg);
+                opacity: 0;
+            }
+            10% {
+                opacity: 0.4;
+            }
+            90% {
+                opacity: 0.4;
+            }
+            100% {
+                transform: translate(200px, 300px) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        /* Connection Lines SVG */
+        .connections {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .connection-line {
+            stroke: var(--line-color);
+            stroke-width: 2;
+            fill: none;
+            stroke-dasharray: 8 4;
+            animation: dash 20s linear infinite;
+        }
+
+        @keyframes dash {
+            to { stroke-dashoffset: -240; }
+        }
+
+        /* Content Nodes */
+        .node {
+            position: absolute;
+            transform: translate(-50%, -50%);
+            transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1), 
+                        box-shadow 0.3s ease,
+                        z-index 0s;
+            z-index: 10;
+            cursor: pointer;
+        }
+
+        .node:hover {
+            transform: translate(-50%, -50%) scale(1.08);
+            z-index: 100;
+        }
+
+        /* Main Node - Center Hub */
+        .node-main {
+            width: 400px;
+            height: 400px;
+            border-radius: 50%;
+            background: radial-gradient(circle at 30% 30%, var(--void-gray) 0%, var(--void-black) 70%);
+            border: 2px solid rgba(255,255,255,0.1);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 60px;
+            box-shadow: 
+                0 0 100px rgba(67, 97, 238, 0.2),
+                inset 0 0 60px rgba(0,0,0,0.5);
+        }
+
+        .node-main:hover {
+            box-shadow: 
+                0 0 150px rgba(67, 97, 238, 0.4),
+                0 0 80px rgba(114, 9, 183, 0.3),
+                inset 0 0 60px rgba(0,0,0,0.5);
+        }
+
+        .node-main h1 {
+            font-size: 48px;
+            font-weight: 900;
+            letter-spacing: -0.02em;
+            margin-bottom: 15px;
+            background: linear-gradient(135deg, #fff 0%, #a5b4fc 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .node-main .main-logo {
+            height: 60px;
+            width: auto;
+            object-fit: contain;
+            margin-bottom: 15px;
+            filter: brightness(1.2) drop-shadow(0 0 20px rgba(165, 180, 252, 0.5));
+            transition: all 0.4s ease;
+        }
+
+        .node-main:hover .main-logo {
+            filter: brightness(1.4) drop-shadow(0 0 30px rgba(165, 180, 252, 0.8));
+            transform: scale(1.05);
+        }
+
+        .node-main .tagline {
+            font-size: 14px;
+            font-weight: 400;
+            color: var(--text-dim);
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+        }
+
+        .node-main .orbit-ring {
+            position: absolute;
+            border: 1px dashed rgba(255,255,255,0.1);
+            border-radius: 50%;
+            animation: pulse 4s ease-in-out infinite;
+        }
+
+        .node-main .orbit-ring:nth-child(1) { width: 450px; height: 450px; animation-delay: 0s; }
+        .node-main .orbit-ring:nth-child(2) { width: 520px; height: 520px; animation-delay: 1s; }
+        .node-main .orbit-ring:nth-child(3) { width: 600px; height: 600px; animation-delay: 2s; }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 0.3; transform: scale(1); }
+            50% { opacity: 0.6; transform: scale(1.02); }
+        }
+
+        /* Section Nodes */
+        .node-section {
+            width: 280px;
+            padding: 40px;
+            border-radius: 24px;
+            background: linear-gradient(145deg, var(--void-gray) 0%, var(--void-dark) 100%);
+            border: 1px solid rgba(255,255,255,0.08);
+            backdrop-filter: blur(10px);
+        }
+
+        .node-section:hover {
+            border-color: rgba(255,255,255,0.2);
+        }
+
+        .node-icon {
+            width: 56px;
+            height: 56px;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+
+        .node-section h3 {
+            font-size: 22px;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+
+        .node-section p {
+            font-size: 14px;
+            color: var(--text-dim);
+            line-height: 1.6;
+        }
+
+        .node-section .node-tag {
+            display: inline-block;
+            margin-top: 15px;
+            padding: 6px 12px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 10px;
+            letter-spacing: 0.1em;
+            border-radius: 20px;
+            background: rgba(255,255,255,0.05);
+            color: var(--text-dim);
+        }
+
+        /* Color variants */
+        .node-blue .node-icon { background: linear-gradient(135deg, var(--node-blue), #818cf8); }
+        .node-purple .node-icon { background: linear-gradient(135deg, var(--node-purple), #a855f7); }
+        .node-pink .node-icon { background: linear-gradient(135deg, var(--node-pink), #ec4899); }
+        .node-cyan .node-icon { background: linear-gradient(135deg, var(--node-cyan), #22d3ee); }
+        .node-orange .node-icon { background: linear-gradient(135deg, var(--node-orange), #f97316); }
+        .node-green .node-icon { background: linear-gradient(135deg, var(--node-green), #34d399); }
+
+        .node-blue:hover { box-shadow: 0 20px 60px rgba(67, 97, 238, 0.3); }
+        .node-purple:hover { box-shadow: 0 20px 60px rgba(114, 9, 183, 0.3); }
+        .node-pink:hover { box-shadow: 0 20px 60px rgba(247, 37, 133, 0.3); }
+        .node-cyan:hover { box-shadow: 0 20px 60px rgba(76, 201, 240, 0.3); }
+        .node-orange:hover { box-shadow: 0 20px 60px rgba(251, 133, 0, 0.3); }
+        .node-green:hover { box-shadow: 0 20px 60px rgba(6, 214, 160, 0.3); }
+
+        /* Work Nodes */
+        .node-work {
+            width: 320px;
+            border-radius: 20px;
+            overflow: hidden;
+            background: var(--void-gray);
+            border: 1px solid rgba(255,255,255,0.08);
+        }
+
+        .node-work:hover {
+            border-color: rgba(255,255,255,0.2);
+        }
+
+        .work-preview {
+            width: 100%;
+            height: 180px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .work-preview-bg {
+            width: 100%;
+            height: 100%;
+            transition: transform 0.5s ease;
+        }
+
+        .node-work:hover .work-preview-bg {
+            transform: scale(1.1);
+        }
+
+        .work-preview-1 { background: linear-gradient(135deg, #1e3a5f 0%, #0d1b2a 100%); }
+        .work-preview-2 { background: linear-gradient(135deg, #5c1a33 0%, #2d0a1a 100%); }
+        .work-preview-3 { background: linear-gradient(135deg, #1a4731 0%, #0d2818 100%); }
+        .work-preview-4 { background: linear-gradient(135deg, #3d1a5c 0%, #1e0d2d 100%); }
+
+        .work-info {
+            padding: 25px;
+        }
+
+        .work-category {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 10px;
+            letter-spacing: 0.15em;
+            color: var(--node-cyan);
+            margin-bottom: 10px;
+        }
+
+        .work-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .work-desc {
+            font-size: 13px;
+            color: var(--text-dim);
+            line-height: 1.5;
+        }
+
+        /* Stats Node */
+        .node-stats {
+            width: 200px;
+            padding: 30px;
+            border-radius: 20px;
+            background: linear-gradient(145deg, var(--void-gray) 0%, var(--void-dark) 100%);
+            border: 1px solid rgba(255,255,255,0.08);
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 48px;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--node-cyan), var(--node-blue));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .stat-label {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 10px;
+            letter-spacing: 0.2em;
+            color: var(--text-dim);
+            margin-top: 5px;
+        }
+
+        /* Quote Node */
+        .node-quote {
+            width: 350px;
+            padding: 40px;
+            border-radius: 24px;
+            background: linear-gradient(145deg, rgba(114, 9, 183, 0.1) 0%, var(--void-dark) 100%);
+            border: 1px solid rgba(114, 9, 183, 0.2);
+        }
+
+        .quote-mark {
+            font-size: 60px;
+            line-height: 0.5;
+            color: var(--node-purple);
+            opacity: 0.5;
+        }
+
+        .quote-text {
+            font-size: 16px;
+            line-height: 1.7;
+            font-weight: 400;
+            margin: 20px 0;
+        }
+
+        .quote-author {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .quote-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--node-purple), var(--node-pink));
+        }
+
+        .quote-name {
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .quote-role {
+            font-size: 12px;
+            color: var(--text-dim);
+        }
+
+        /* Team Member Nodes */
+        .node-member {
+            width: 260px;
+            border-radius: 24px;
+            overflow: hidden;
+            background: var(--void-gray);
+            border: 1px solid rgba(255,255,255,0.08);
+            position: relative;
+        }
+
+        .node-member:hover {
+            border-color: rgba(255,255,255,0.3);
+        }
+
+        .member-image {
+            width: 100%;
+            height: 320px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .member-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.6s cubic-bezier(0.33, 1, 0.68, 1), filter 0.4s ease;
+            filter: grayscale(30%) contrast(1.1);
+        }
+
+        .node-member:hover .member-image img {
+            transform: scale(1.1);
+            filter: grayscale(0%) contrast(1);
+        }
+
+        .member-overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 60%;
+            background: linear-gradient(to top, var(--void-black) 0%, transparent 100%);
+            pointer-events: none;
+        }
+
+        .member-info {
+            padding: 25px;
+            position: relative;
+            z-index: 2;
+            margin-top: -60px;
+        }
+
+        .member-role {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 10px;
+            letter-spacing: 0.2em;
+            margin-bottom: 8px;
+            opacity: 0.6;
+        }
+
+        .member-name {
+            font-size: 22px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .member-social {
+            display: flex;
+            gap: 12px;
+            margin-top: 15px;
+        }
+
+        .member-social a {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            text-decoration: none;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+
+        .member-social a:hover {
+            background: var(--node-cyan);
+            transform: translateY(-3px);
+        }
+
+        .member-accent {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            animation: memberPulse 2s ease-in-out infinite;
+        }
+
+        @keyframes memberPulse {
+            0%, 100% { opacity: 1; box-shadow: 0 0 0 0 currentColor; }
+            50% { opacity: 0.8; box-shadow: 0 0 0 8px transparent; }
+        }
+
+        .member-accent.cyan { background: var(--node-cyan); color: var(--node-cyan); }
+        .member-accent.pink { background: var(--node-pink); color: var(--node-pink); }
+        .member-accent.purple { background: var(--node-purple); color: var(--node-purple); }
+        .member-accent.orange { background: var(--node-orange); color: var(--node-orange); }
+        .member-accent.green { background: var(--node-green); color: var(--node-green); }
+        .member-accent.blue { background: var(--node-blue); color: var(--node-blue); }
+
+        /* Gallery Node */
+        .node-gallery {
+            width: 450px;
+            padding: 30px;
+            border-radius: 24px;
+            background: linear-gradient(145deg, var(--void-gray) 0%, var(--void-dark) 100%);
+            border: 1px solid rgba(255,255,255,0.08);
+        }
+
+        .gallery-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .gallery-title::before {
+            content: '';
+            width: 30px;
+            height: 2px;
+            background: linear-gradient(90deg, var(--node-cyan), var(--node-purple));
+        }
+
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+        }
+
+        .gallery-item {
+            aspect-ratio: 1;
+            border-radius: 12px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .gallery-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.4s ease;
+        }
+
+        .gallery-item:hover img {
+            transform: scale(1.15);
+        }
+
+        .gallery-item::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, rgba(67, 97, 238, 0.3) 0%, rgba(247, 37, 133, 0.3) 100%);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .gallery-item:hover::after {
+            opacity: 1;
+        }
+
+        /* Featured Image Node */
+        .node-featured {
+            width: 380px;
+            border-radius: 24px;
+            overflow: hidden;
+            background: var(--void-gray);
+            border: 1px solid rgba(255,255,255,0.08);
+            position: relative;
+        }
+
+        .featured-image {
+            width: 100%;
+            height: 480px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .featured-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.8s cubic-bezier(0.33, 1, 0.68, 1);
+        }
+
+        .node-featured:hover .featured-image img {
+            transform: scale(1.05);
+        }
+
+        .featured-overlay {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(to top, 
+                var(--void-black) 0%, 
+                rgba(5,5,8,0.5) 30%,
+                transparent 60%,
+                rgba(5,5,8,0.3) 100%);
+        }
+
+        .featured-content {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            padding: 30px;
+        }
+
+        .featured-tag {
+            display: inline-block;
+            padding: 6px 14px;
+            background: rgba(255,255,255,0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 10px;
+            letter-spacing: 0.15em;
+            margin-bottom: 15px;
+        }
+
+        .featured-title {
+            font-size: 24px;
+            font-weight: 700;
+            line-height: 1.3;
+        }
+
+        .featured-badge {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--node-pink), var(--node-purple));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            box-shadow: 0 10px 30px rgba(247, 37, 133, 0.4);
+        }
+
+        /* Team Label Node */
+        .node-team-label {
+            padding: 20px 40px;
+            border-radius: 50px;
+            background: linear-gradient(135deg, var(--node-purple), var(--node-pink));
+            border: none;
+            text-align: center;
+        }
+
+        .team-label-text {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 12px;
+            letter-spacing: 0.3em;
+            font-weight: 600;
+        }
+
+        /* Contact Node */
+        .node-contact {
+            width: 300px;
+            padding: 40px;
+            border-radius: 24px;
+            background: linear-gradient(145deg, var(--void-gray) 0%, var(--void-dark) 100%);
+            border: 1px solid rgba(255,255,255,0.08);
+            text-align: center;
+        }
+
+        .contact-title {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 15px;
+        }
+
+        .contact-email {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 14px;
+            color: var(--node-cyan);
+            text-decoration: none;
+            display: inline-block;
+            margin-bottom: 25px;
+            transition: color 0.3s ease;
+        }
+
+        .contact-email:hover {
+            color: var(--node-pink);
+        }
+
+        .contact-btn {
+            display: inline-block;
+            padding: 14px 28px;
+            background: linear-gradient(135deg, var(--node-blue), var(--node-purple));
+            border: none;
+            border-radius: 30px;
+            color: white;
+            font-family: 'Outfit', sans-serif;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .contact-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 40px rgba(67, 97, 238, 0.4);
+        }
+
+        /* Floating Particles */
+        .floating-particle {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: white;
+            border-radius: 50%;
+            opacity: 0.3;
+            animation: twinkle 3s ease-in-out infinite;
+        }
+
+        @keyframes twinkle {
+            0%, 100% { opacity: 0.1; transform: scale(1); }
+            50% { opacity: 0.5; transform: scale(1.5); }
+        }
+
+        /* UI Overlay */
+        .ui-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1000;
+        }
+
+        /* Top Bar */
+        .top-bar {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            padding: 25px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            pointer-events: auto;
+        }
+
+        .logo {
+            font-size: 20px;
+            font-weight: 800;
+            letter-spacing: 0.1em;
+        }
+
+        .nav-hint {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 11px;
+            color: var(--text-dim);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .hint-icon {
+            width: 24px;
+            height: 24px;
+            border: 1px solid var(--text-dim);
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 10px;
+        }
+
+        /* Quick Navigation */
+        .quick-nav {
+            position: absolute;
+            top: 80px;
+            right: 30px;
+            background: rgba(10, 10, 15, 0.9);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 16px;
+            padding: 15px;
+            pointer-events: auto;
+            backdrop-filter: blur(10px);
+        }
+
+        .quick-nav-title {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 9px;
+            letter-spacing: 0.2em;
+            color: var(--text-dim);
+            margin-bottom: 12px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .quick-nav-btn {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            width: 100%;
+            padding: 10px 12px;
+            background: transparent;
+            border: none;
+            border-radius: 8px;
+            color: var(--text-dim);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 11px;
+            letter-spacing: 0.1em;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-align: left;
+        }
+
+        .quick-nav-btn:hover {
+            background: rgba(255,255,255,0.05);
+            color: white;
+        }
+
+        .quick-nav-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            flex-shrink: 0;
+        }
+
+        /* Minimap */
+        .minimap {
+            position: absolute;
+            bottom: 30px;
+            right: 30px;
+            width: 180px;
+            height: 140px;
+            background: rgba(10, 10, 15, 0.9);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 12px;
+            overflow: hidden;
+            pointer-events: auto;
+            cursor: pointer;
+        }
+
+        .minimap-content {
+            position: relative;
+            width: 100%;
+            height: 100%;
+        }
+
+        .minimap-node {
+            position: absolute;
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        .minimap-viewport {
+            position: absolute;
+            border: 2px solid var(--node-cyan);
+            border-radius: 4px;
+            background: rgba(76, 201, 240, 0.1);
+            pointer-events: none;
+            transition: all 0.1s linear;
+        }
+
+        /* Zoom Controls */
+        .zoom-controls {
+            position: absolute;
+            bottom: 30px;
+            left: 30px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            pointer-events: auto;
+        }
+
+        .zoom-btn {
+            width: 44px;
+            height: 44px;
+            background: rgba(10, 10, 15, 0.9);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 10px;
+            color: white;
+            font-size: 20px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .zoom-btn:hover {
+            background: var(--void-gray);
+            border-color: rgba(255,255,255,0.3);
+        }
+
+        .zoom-level {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 11px;
+            color: var(--text-dim);
+            text-align: center;
+            padding: 8px 0;
+        }
+
+        /* Center Button */
+        .center-btn {
+            position: absolute;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            padding: 12px 24px;
+            background: rgba(10, 10, 15, 0.9);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 30px;
+            color: white;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 11px;
+            letter-spacing: 0.1em;
+            cursor: pointer;
+            pointer-events: auto;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .center-btn:hover {
+            background: var(--void-gray);
+            border-color: var(--node-cyan);
+            color: var(--node-cyan);
+        }
+
+        .center-btn svg {
+            width: 14px;
+            height: 14px;
+        }
+
+        /* Coordinates Display */
+        .coordinates {
+            position: absolute;
+            top: 25px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 11px;
+            color: var(--text-dim);
+            background: rgba(10, 10, 15, 0.8);
+            padding: 8px 16px;
+            border-radius: 20px;
+            border: 1px solid rgba(255,255,255,0.05);
+        }
+
+        /* Modal */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(5, 5, 8, 0.9);
+            backdrop-filter: blur(20px);
+            z-index: 2000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.4s ease;
+            cursor: pointer;
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .modal-content {
+            max-width: 600px;
+            max-height: 80vh;
+            padding: 50px;
+            background: var(--void-gray);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 24px;
+            transform: scale(0.9) translateY(30px);
+            transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+            cursor: auto;
+            overflow-y: auto;
+        }
+
+        .modal-overlay.active .modal-content {
+            transform: scale(1) translateY(0);
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 30px;
+            right: 30px;
+            width: 50px;
+            height: 50px;
+            background: rgba(255,255,255,0.1);
+            border: none;
+            border-radius: 50%;
+            color: white;
+            font-size: 24px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        .modal-close:hover {
+            background: rgba(255,255,255,0.2);
+        }
+
+        .modal-title {
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 20px;
+        }
+
+        .modal-text {
+            font-size: 16px;
+            line-height: 1.8;
+            color: var(--text-dim);
+        }
+
+        /* Glow effect for active node */
+        .node.active {
+            animation: nodeGlow 2s ease-in-out infinite;
+        }
+
+        @keyframes nodeGlow {
+            0%, 100% { filter: brightness(1); }
+            50% { filter: brightness(1.2); }
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .top-bar {
+                padding: 20px;
+            }
+            
+            .nav-hint {
+                display: none;
+            }
+
+            .minimap {
+                width: 120px;
+                height: 90px;
+                bottom: 20px;
+                right: 20px;
+            }
+
+            .zoom-controls {
+                left: 20px;
+                bottom: 20px;
+            }
+
+            .center-btn {
+                bottom: 20px;
+                padding: 10px 20px;
+                font-size: 10px;
+            }
+
+            .node-main {
+                width: 280px;
+                height: 280px;
+                padding: 40px;
+            }
+
+            .node-main h1 {
+                font-size: 32px;
+            }
+
+            .node-main .main-logo {
+                height: 45px;
+            }
+
+            .node-section {
+                width: 220px;
+                padding: 30px;
+            }
+
+            .node-work {
+                width: 260px;
+            }
+
+            .node-quote {
+                width: 280px;
+                padding: 30px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Loading Screen -->
+    <div class="loader">
+        <div class="loader-orb"></div>
+        <div class="loader-text">INITIALIZING SPACE...</div>
+    </div>
+
+    <!-- Space Background -->
+    <div class="space-bg" id="spaceBg">
+        <!-- Aurora -->
+        <div class="aurora"></div>
+        
+        <!-- Nebula clouds -->
+        <div class="nebula nebula-1"></div>
+        <div class="nebula nebula-2"></div>
+        <div class="nebula nebula-3"></div>
+        <div class="nebula nebula-4"></div>
+        
+        <!-- Star layers (generated by JS) -->
+        <div class="star-layer" id="starLayerFar" data-speed="0.02"></div>
+        <div class="star-layer" id="starLayerMid" data-speed="0.05"></div>
+        <div class="star-layer" id="starLayerNear" data-speed="0.1"></div>
+        
+        <!-- Distant galaxies -->
+        <div class="galaxy galaxy-1"></div>
+        <div class="galaxy galaxy-2"></div>
+        
+        <!-- Shooting stars -->
+        <div class="shooting-star shooting-star-1"></div>
+        <div class="shooting-star shooting-star-2"></div>
+        <div class="shooting-star shooting-star-3"></div>
+        
+        <!-- Enhanced Meteors -->
+        <div class="meteor meteor-1"></div>
+        <div class="meteor meteor-2"></div>
+        <div class="meteor meteor-3"></div>
+        <div class="meteor meteor-4"></div>
+        <div class="meteor meteor-5"></div>
+        <div class="meteor meteor-6"></div>
+        
+        <!-- Planets -->
+        <div class="planet planet-1"></div>
+        <div class="planet planet-2"></div>
+        <div class="planet planet-3"></div>
+        <div class="planet planet-4"></div>
+        <div class="planet planet-5"></div>
+        
+        <!-- Glowing Light Orbs -->
+        <div class="light-orb light-orb-1"></div>
+        <div class="light-orb light-orb-2"></div>
+        <div class="light-orb light-orb-3"></div>
+        <div class="light-orb light-orb-4"></div>
+        <div class="light-orb light-orb-5"></div>
+        
+        <!-- Pulsing Stars -->
+        <div class="pulse-star pulse-star-1"></div>
+        <div class="pulse-star pulse-star-2"></div>
+        <div class="pulse-star pulse-star-3"></div>
+        <div class="pulse-star pulse-star-4"></div>
+        <div class="pulse-star pulse-star-5"></div>
+        
+        <!-- Cosmic dust -->
+        <div class="cosmic-dust"></div>
+        
+        <!-- Star clusters -->
+        <div class="star-cluster star-cluster-1"></div>
+        <div class="star-cluster star-cluster-2"></div>
+        <div class="star-cluster star-cluster-3"></div>
+        
+        <!-- Depth vignette -->
+        <div class="vignette"></div>
+    </div>
+
+    <!-- Canvas Container -->
+    <div class="canvas-container">
+        <div class="infinite-canvas" id="canvas">
+            <!-- Grid Pattern -->
+            <div class="grid-pattern"></div>
+
+            <!-- Connection Lines -->
+            <svg class="connections" id="connections"></svg>
+
+            <!-- Floating Particles - Generated by JS -->
+
+            <!-- MAIN HUB NODE -->
+            <div class="node node-main" style="left: 2500px; top: 2000px;" data-id="main">
+                <div class="orbit-ring"></div>
+                <div class="orbit-ring"></div>
+                <div class="orbit-ring"></div>
+                <img src="img/timbel logo.png" alt="Timbel" class="main-logo">
+                <p class="tagline">Infinite Canvas Studio</p>
+            </div>
+
+            <!-- SECTION NODES -->
+            <div class="node node-section node-blue" style="left: 1900px; top: 1550px;" data-id="about" data-connect="main">
+                <div class="node-icon">✦</div>
+                <h3>About Us</h3>
+                <p>경계 없는 창의력으로 디지털 세상을 탐험합니다</p>
+                <span class="node-tag">DISCOVER →</span>
+            </div>
+
+            <div class="node node-section node-purple" style="left: 3100px; top: 1550px;" data-id="services" data-connect="main">
+                <div class="node-icon">◈</div>
+                <h3>Services</h3>
+                <p>브랜딩부터 개발까지 풀스택 크리에이티브</p>
+                <span class="node-tag">EXPLORE →</span>
+            </div>
+
+            <div class="node node-section node-pink" style="left: 1800px; top: 2500px;" data-id="process" data-connect="main">
+                <div class="node-icon">◎</div>
+                <h3>Process</h3>
+                <p>아이디어에서 현실로, 체계적인 프로세스</p>
+                <span class="node-tag">LEARN →</span>
+            </div>
+
+            <div class="node node-section node-green" style="left: 3200px; top: 2450px;" data-id="tech" data-connect="main">
+                <div class="node-icon">⬡</div>
+                <h3>Tech Stack</h3>
+                <p>최신 기술로 미래를 설계합니다</p>
+                <span class="node-tag">VIEW →</span>
+            </div>
+
+            <!-- WORK NODES -->
+            <div class="node node-work" style="left: 1400px; top: 1900px;" data-id="work1" data-connect="about">
+                <div class="work-preview">
+                    <div class="work-preview-bg work-preview-1"></div>
+                </div>
+                <div class="work-info">
+                    <span class="work-category">BRANDING / WEB</span>
+                    <h4 class="work-title">Nebula Finance</h4>
+                    <p class="work-desc">핀테크 스타트업의 브랜드 아이덴티티</p>
+                </div>
+            </div>
+
+            <div class="node node-work" style="left: 3600px; top: 1850px;" data-id="work2" data-connect="services">
+                <div class="work-preview">
+                    <div class="work-preview-bg work-preview-2"></div>
+                </div>
+                <div class="work-info">
+                    <span class="work-category">E-COMMERCE</span>
+                    <h4 class="work-title">Crimson Luxury</h4>
+                    <p class="work-desc">럭셔리 패션 이커머스 플랫폼</p>
+                </div>
+            </div>
+
+            <div class="node node-work" style="left: 1300px; top: 2600px;" data-id="work3" data-connect="process">
+                <div class="work-preview">
+                    <div class="work-preview-bg work-preview-3"></div>
+                </div>
+                <div class="work-info">
+                    <span class="work-category">APP / UX</span>
+                    <h4 class="work-title">Verde Health</h4>
+                    <p class="work-desc">헬스케어 모바일 앱 UI/UX</p>
+                </div>
+            </div>
+
+            <div class="node node-work" style="left: 3700px; top: 2700px;" data-id="work4" data-connect="tech">
+                <div class="work-preview">
+                    <div class="work-preview-bg work-preview-4"></div>
+                </div>
+                <div class="work-info">
+                    <span class="work-category">3D / MOTION</span>
+                    <h4 class="work-title">Quantum Labs</h4>
+                    <p class="work-desc">테크 기업 3D 브랜딩</p>
+                </div>
+            </div>
+
+            <!-- STATS NODES -->
+            <div class="node node-stats" style="left: 2150px; top: 1200px;" data-id="stat1">
+                <div class="stat-number">150+</div>
+                <div class="stat-label">PROJECTS</div>
+            </div>
+
+            <div class="node node-stats" style="left: 2500px; top: 1100px;" data-id="stat2">
+                <div class="stat-number">8</div>
+                <div class="stat-label">YEARS</div>
+            </div>
+
+            <div class="node node-stats" style="left: 2850px; top: 1200px;" data-id="stat3">
+                <div class="stat-number">35</div>
+                <div class="stat-label">AWARDS</div>
+            </div>
+
+            <!-- TEAM LABEL -->
+            <div class="node node-team-label" style="left: 700px; top: 2000px;" data-id="team-label">
+                <span class="team-label-text">✦ CREATIVE TEAM ✦</span>
+            </div>
+
+            <!-- TEAM MEMBER NODES -->
+            <div class="node node-member" style="left: 650px; top: 1500px;" data-id="member1" data-connect="team-label">
+                <div class="member-accent cyan"></div>
+                <div class="member-image">
+                    <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=500&h=600&fit=crop&crop=face" alt="Alex Chen">
+                    <div class="member-overlay"></div>
+                </div>
+                <div class="member-info">
+                    <div class="member-role">CREATIVE DIRECTOR</div>
+                    <h4 class="member-name">Alex Chen</h4>
+                    <div class="member-social">
+                        <a href="#">𝕏</a>
+                        <a href="#">in</a>
+                        <a href="#">◎</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="node node-member" style="left: 950px; top: 1650px;" data-id="member2" data-connect="team-label">
+                <div class="member-accent pink"></div>
+                <div class="member-image">
+                    <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=500&h=600&fit=crop&crop=face" alt="Sarah Kim">
+                    <div class="member-overlay"></div>
+                </div>
+                <div class="member-info">
+                    <div class="member-role">LEAD DESIGNER</div>
+                    <h4 class="member-name">Sarah Kim</h4>
+                    <div class="member-social">
+                        <a href="#">𝕏</a>
+                        <a href="#">in</a>
+                        <a href="#">◎</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="node node-member" style="left: 450px; top: 1750px;" data-id="member3" data-connect="team-label">
+                <div class="member-accent purple"></div>
+                <div class="member-image">
+                    <img src="https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=500&h=600&fit=crop&crop=face" alt="Marcus Johnson">
+                    <div class="member-overlay"></div>
+                </div>
+                <div class="member-info">
+                    <div class="member-role">TECH LEAD</div>
+                    <h4 class="member-name">Marcus Johnson</h4>
+                    <div class="member-social">
+                        <a href="#">𝕏</a>
+                        <a href="#">in</a>
+                        <a href="#">◎</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="node node-member" style="left: 850px; top: 2200px;" data-id="member4" data-connect="team-label">
+                <div class="member-accent orange"></div>
+                <div class="member-image">
+                    <img src="https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?w=500&h=600&fit=crop&crop=face" alt="Emma Watson">
+                    <div class="member-overlay"></div>
+                </div>
+                <div class="member-info">
+                    <div class="member-role">MOTION DESIGNER</div>
+                    <h4 class="member-name">Emma Watson</h4>
+                    <div class="member-social">
+                        <a href="#">𝕏</a>
+                        <a href="#">in</a>
+                        <a href="#">◎</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="node node-member" style="left: 550px; top: 2400px;" data-id="member5" data-connect="team-label">
+                <div class="member-accent green"></div>
+                <div class="member-image">
+                    <img src="https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?w=500&h=600&fit=crop&crop=face" alt="David Park">
+                    <div class="member-overlay"></div>
+                </div>
+                <div class="member-info">
+                    <div class="member-role">SENIOR DEVELOPER</div>
+                    <h4 class="member-name">David Park</h4>
+                    <div class="member-social">
+                        <a href="#">𝕏</a>
+                        <a href="#">in</a>
+                        <a href="#">◎</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="node node-member" style="left: 350px; top: 2100px;" data-id="member6" data-connect="team-label">
+                <div class="member-accent blue"></div>
+                <div class="member-image">
+                    <img src="https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=500&h=600&fit=crop&crop=face" alt="Olivia Brown">
+                    <div class="member-overlay"></div>
+                </div>
+                <div class="member-info">
+                    <div class="member-role">UX STRATEGIST</div>
+                    <h4 class="member-name">Olivia Brown</h4>
+                    <div class="member-social">
+                        <a href="#">𝕏</a>
+                        <a href="#">in</a>
+                        <a href="#">◎</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- FEATURED IMAGE NODES -->
+            <div class="node node-featured" style="left: 4200px; top: 1400px;" data-id="featured1">
+                <div class="featured-badge">🔥</div>
+                <div class="featured-image">
+                    <img src="https://images.unsplash.com/photo-1492562080023-ab3db95bfbce?w=600&h=800&fit=crop&crop=face" alt="Featured Work">
+                    <div class="featured-overlay"></div>
+                </div>
+                <div class="featured-content">
+                    <span class="featured-tag">FEATURED PROJECT</span>
+                    <h3 class="featured-title">The Art of Digital Storytelling</h3>
+                </div>
+            </div>
+
+            <div class="node node-featured" style="left: 4400px; top: 2100px;" data-id="featured2">
+                <div class="featured-badge">⚡</div>
+                <div class="featured-image">
+                    <img src="https://images.unsplash.com/photo-1517841905240-472988babdf9?w=600&h=800&fit=crop&crop=face" alt="Featured Work 2">
+                    <div class="featured-overlay"></div>
+                </div>
+                <div class="featured-content">
+                    <span class="featured-tag">AWARD WINNER</span>
+                    <h3 class="featured-title">Redefining Brand Experience</h3>
+                </div>
+            </div>
+
+            <div class="node node-featured" style="left: 4100px; top: 2700px;" data-id="featured3">
+                <div class="featured-badge">✦</div>
+                <div class="featured-image">
+                    <img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=600&h=800&fit=crop&crop=face" alt="Featured Work 3">
+                    <div class="featured-overlay"></div>
+                </div>
+                <div class="featured-content">
+                    <span class="featured-tag">CASE STUDY</span>
+                    <h3 class="featured-title">Innovation Meets Design</h3>
+                </div>
+            </div>
+
+            <!-- GALLERY NODE -->
+            <div class="node node-gallery" style="left: 1050px; top: 2850px;" data-id="gallery1">
+                <h4 class="gallery-title">Behind The Scenes</h4>
+                <div class="gallery-grid">
+                    <div class="gallery-item">
+                        <img src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=200&h=200&fit=crop" alt="Gallery 1">
+                    </div>
+                    <div class="gallery-item">
+                        <img src="https://images.unsplash.com/photo-1600880292203-757bb62b4baf?w=200&h=200&fit=crop" alt="Gallery 2">
+                    </div>
+                    <div class="gallery-item">
+                        <img src="https://images.unsplash.com/photo-1552664730-d307ca884978?w=200&h=200&fit=crop" alt="Gallery 3">
+                    </div>
+                    <div class="gallery-item">
+                        <img src="https://images.unsplash.com/photo-1573164713714-d95e436ab8d6?w=200&h=200&fit=crop" alt="Gallery 4">
+                    </div>
+                    <div class="gallery-item">
+                        <img src="https://images.unsplash.com/photo-1542744173-8e7e53415bb0?w=200&h=200&fit=crop" alt="Gallery 5">
+                    </div>
+                    <div class="gallery-item">
+                        <img src="https://images.unsplash.com/photo-1531482615713-2afd69097998?w=200&h=200&fit=crop" alt="Gallery 6">
+                    </div>
+                </div>
+            </div>
+
+            <!-- GALLERY NODE 2 -->
+            <div class="node node-gallery" style="left: 4500px; top: 3200px;" data-id="gallery2">
+                <h4 class="gallery-title">Our Culture</h4>
+                <div class="gallery-grid">
+                    <div class="gallery-item">
+                        <img src="https://images.unsplash.com/photo-1515169067868-5387ec356754?w=200&h=200&fit=crop" alt="Culture 1">
+                    </div>
+                    <div class="gallery-item">
+                        <img src="https://images.unsplash.com/photo-1556761175-b413da4baf72?w=200&h=200&fit=crop" alt="Culture 2">
+                    </div>
+                    <div class="gallery-item">
+                        <img src="https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?w=200&h=200&fit=crop" alt="Culture 3">
+                    </div>
+                    <div class="gallery-item">
+                        <img src="https://images.unsplash.com/photo-1497215842964-222b430dc094?w=200&h=200&fit=crop" alt="Culture 4">
+                    </div>
+                    <div class="gallery-item">
+                        <img src="https://images.unsplash.com/photo-1553877522-43269d4ea984?w=200&h=200&fit=crop" alt="Culture 5">
+                    </div>
+                    <div class="gallery-item">
+                        <img src="https://images.unsplash.com/photo-1504384308090-c894fdcc538d?w=200&h=200&fit=crop" alt="Culture 6">
+                    </div>
+                </div>
+            </div>
+
+            <!-- QUOTE NODE -->
+            <div class="node node-quote" style="left: 2500px; top: 2850px;" data-id="quote">
+                <span class="quote-mark">"</span>
+                <p class="quote-text">Timbel 팀과 함께한 프로젝트는 정말 새로운 차원의 경험이었습니다. 그들의 창의력은 무한합니다.</p>
+                <div class="quote-author">
+                    <div class="quote-avatar"></div>
+                    <div>
+                        <div class="quote-name">이서연</div>
+                        <div class="quote-role">CEO, Nebula Finance</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- CONTACT NODE -->
+            <div class="node node-contact" style="left: 2500px; top: 3300px;" data-id="contact" data-connect="quote">
+                <h3 class="contact-title">Let's Connect</h3>
+                <a href="mailto:hello@explorer.studio" class="contact-email">hello@explorer.studio</a>
+                <button class="contact-btn">Start a Project</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- UI Overlay -->
+    <div class="ui-overlay">
+        <!-- Top Bar -->
+        <div class="top-bar">
+            <div class="logo">Timbel</div>
+            <div class="nav-hint">
+                <span class="hint-icon">↕</span>
+                <span>SCROLL TO MOVE</span>
+                <span style="margin: 0 10px; opacity: 0.3;">|</span>
+                <span class="hint-icon">⌘</span>
+                <span>+ SCROLL TO ZOOM</span>
+            </div>
+        </div>
+
+        <!-- Quick Navigation -->
+        <div class="quick-nav" id="quickNav">
+            <div class="quick-nav-title">QUICK JUMP</div>
+            <button class="quick-nav-btn" data-target="main">
+                <span class="quick-nav-dot" style="background: #4361ee;"></span>
+                HOME
+            </button>
+            <button class="quick-nav-btn" data-target="team-label">
+                <span class="quick-nav-dot" style="background: #f72585;"></span>
+                TEAM
+            </button>
+            <button class="quick-nav-btn" data-target="services">
+                <span class="quick-nav-dot" style="background: #7209b7;"></span>
+                SERVICES
+            </button>
+            <button class="quick-nav-btn" data-target="featured1">
+                <span class="quick-nav-dot" style="background: #fb8500;"></span>
+                FEATURED
+            </button>
+            <button class="quick-nav-btn" data-target="contact">
+                <span class="quick-nav-dot" style="background: #06d6a0;"></span>
+                CONTACT
+            </button>
+        </div>
+
+        <!-- Coordinates -->
+        <div class="coordinates" id="coordinates">X: 0 | Y: 0</div>
+
+        <!-- Zoom Controls -->
+        <div class="zoom-controls">
+            <button class="zoom-btn" id="zoomIn">+</button>
+            <div class="zoom-level" id="zoomLevel">100%</div>
+            <button class="zoom-btn" id="zoomOut">−</button>
+        </div>
+
+        <!-- Center Button -->
+        <button class="center-btn" id="centerBtn">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="3"/>
+                <path d="M12 2v4M12 18v4M2 12h4M18 12h4"/>
+            </svg>
+            RETURN TO CENTER
+        </button>
+
+        <!-- Minimap -->
+        <div class="minimap" id="minimap">
+            <div class="minimap-content" id="minimapContent">
+                <div class="minimap-viewport" id="minimapViewport"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal -->
+    <div class="modal-overlay" id="modal">
+        <div class="modal-content">
+            <h2 class="modal-title" id="modalTitle"></h2>
+            <div class="modal-text" id="modalText"></div>
+        </div>
+        <button class="modal-close" id="modalClose">×</button>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Elements
+            const canvas = document.getElementById('canvas');
+            const container = document.querySelector('.canvas-container');
+            const coordsDisplay = document.getElementById('coordinates');
+            const minimapViewport = document.getElementById('minimapViewport');
+            const minimapContent = document.getElementById('minimapContent');
+            const zoomLevelDisplay = document.getElementById('zoomLevel');
+            const loader = document.querySelector('.loader');
+
+            // State
+            let isDragging = false;
+            let startX, startY;
+            let offsetX = 0, offsetY = 0;
+            let targetOffsetX = 0, targetOffsetY = 0;
+            let zoom = 1;
+            let targetZoom = 1;
+            const minZoom = 0.3;
+            const maxZoom = 2;
+
+            // Canvas dimensions
+            const canvasWidth = 5500;
+            const canvasHeight = 4500;
+
+            // Center position
+            const centerX = canvasWidth / 2;
+            const centerY = canvasHeight / 2;
+
+            // Initialize position to center
+            function initPosition() {
+                targetOffsetX = window.innerWidth / 2 - centerX;
+                targetOffsetY = window.innerHeight / 2 - centerY;
+                offsetX = targetOffsetX;
+                offsetY = targetOffsetY;
+            }
+
+            // Star layers for parallax
+            const starLayers = [
+                { el: document.getElementById('starLayerFar'), speed: 0.02 },
+                { el: document.getElementById('starLayerMid'), speed: 0.05 },
+                { el: document.getElementById('starLayerNear'), speed: 0.1 }
+            ];
+
+            // Generate stars
+            function generateStars() {
+                const layerConfigs = [
+                    { id: 'starLayerFar', count: 200, sizes: ['tiny', 'small'], twinkleChance: 0.1 },
+                    { id: 'starLayerMid', count: 150, sizes: ['small', 'medium'], twinkleChance: 0.2 },
+                    { id: 'starLayerNear', count: 80, sizes: ['medium', 'large'], twinkleChance: 0.3 }
+                ];
+
+                layerConfigs.forEach(config => {
+                    const layer = document.getElementById(config.id);
+                    
+                    for (let i = 0; i < config.count; i++) {
+                        const star = document.createElement('div');
+                        const size = config.sizes[Math.floor(Math.random() * config.sizes.length)];
+                        
+                        star.className = `star ${size}`;
+                        star.style.left = Math.random() * 100 + '%';
+                        star.style.top = Math.random() * 100 + '%';
+                        
+                        // Random color tint for some stars
+                        if (Math.random() > 0.85) {
+                            const colors = ['#4cc9f0', '#a5b4fc', '#fcd34d', '#f9a8d4'];
+                            star.style.background = colors[Math.floor(Math.random() * colors.length)];
+                        }
+                        
+                        // Twinkle animation for some stars
+                        if (Math.random() < config.twinkleChance) {
+                            star.classList.add('twinkle');
+                            star.style.setProperty('--twinkle-duration', (2 + Math.random() * 4) + 's');
+                            star.style.setProperty('--twinkle-delay', Math.random() * 5 + 's');
+                            star.style.setProperty('--base-opacity', 0.3 + Math.random() * 0.4);
+                        }
+                        
+                        layer.appendChild(star);
+                    }
+                });
+            }
+
+            // Parallax effect for stars
+            function updateStarParallax() {
+                const centerX = canvasWidth / 2;
+                const centerY = canvasHeight / 2;
+                
+                // Calculate how far from center we are
+                const viewCenterX = -offsetX / zoom + window.innerWidth / 2 / zoom;
+                const viewCenterY = -offsetY / zoom + window.innerHeight / 2 / zoom;
+                
+                const deltaX = (viewCenterX - centerX) / centerX;
+                const deltaY = (viewCenterY - centerY) / centerY;
+                
+                starLayers.forEach(layer => {
+                    const moveX = deltaX * layer.speed * 300;
+                    const moveY = deltaY * layer.speed * 300;
+                    layer.el.style.transform = `translate(${-moveX}px, ${-moveY}px)`;
+                });
+                
+                // Move nebulas slightly
+                document.querySelectorAll('.nebula').forEach((nebula, i) => {
+                    const speed = 0.01 + i * 0.005;
+                    nebula.style.transform = `translate(${-deltaX * speed * 100}px, ${-deltaY * speed * 100}px)`;
+                });
+            }
+
+            // Loading
+            setTimeout(() => {
+                loader.classList.add('hidden');
+                initPosition();
+                updateCanvas();
+                drawConnections();
+                createParticles();
+                createMinimapNodes();
+                generateStars();
+            }, 2000);
+
+            // Smooth animation loop
+            function animate() {
+                offsetX += (targetOffsetX - offsetX) * 0.12;
+                offsetY += (targetOffsetY - offsetY) * 0.12;
+                zoom += (targetZoom - zoom) * 0.12;
+
+                updateCanvas();
+                updateMinimap();
+                updateStarParallax();
+                requestAnimationFrame(animate);
+            }
+            animate();
+
+            function updateCanvas() {
+                canvas.style.transform = `translate(${offsetX}px, ${offsetY}px) scale(${zoom})`;
+                
+                // Update coordinates display
+                const viewCenterX = Math.round(-offsetX / zoom + window.innerWidth / 2 / zoom);
+                const viewCenterY = Math.round(-offsetY / zoom + window.innerHeight / 2 / zoom);
+                coordsDisplay.textContent = `X: ${viewCenterX} | Y: ${viewCenterY}`;
+            }
+
+            // Mouse drag handling
+            container.addEventListener('mousedown', (e) => {
+                if (e.target.closest('.node')) return;
+                isDragging = true;
+                document.body.classList.add('grabbing');
+                startX = e.clientX - targetOffsetX;
+                startY = e.clientY - targetOffsetY;
+            });
+
+            document.addEventListener('mousemove', (e) => {
+                if (!isDragging) return;
+                targetOffsetX = e.clientX - startX;
+                targetOffsetY = e.clientY - startY;
+
+                // Boundaries
+                const maxOffsetX = window.innerWidth * 0.3;
+                const maxOffsetY = window.innerHeight * 0.3;
+                const minOffsetX = -canvasWidth * zoom + window.innerWidth * 0.7;
+                const minOffsetY = -canvasHeight * zoom + window.innerHeight * 0.7;
+
+                targetOffsetX = Math.max(minOffsetX, Math.min(maxOffsetX, targetOffsetX));
+                targetOffsetY = Math.max(minOffsetY, Math.min(maxOffsetY, targetOffsetY));
+            });
+
+            document.addEventListener('mouseup', () => {
+                isDragging = false;
+                document.body.classList.remove('grabbing');
+            });
+
+            // Touch support
+            container.addEventListener('touchstart', (e) => {
+                if (e.target.closest('.node')) return;
+                isDragging = true;
+                startX = e.touches[0].clientX - targetOffsetX;
+                startY = e.touches[0].clientY - targetOffsetY;
+            });
+
+            container.addEventListener('touchmove', (e) => {
+                if (!isDragging) return;
+                e.preventDefault();
+                targetOffsetX = e.touches[0].clientX - startX;
+                targetOffsetY = e.touches[0].clientY - startY;
+            });
+
+            container.addEventListener('touchend', () => {
+                isDragging = false;
+            });
+
+            // Scroll to move / Ctrl+Scroll to zoom
+            container.addEventListener('wheel', (e) => {
+                e.preventDefault();
+                
+                if (e.ctrlKey || e.metaKey) {
+                    // Ctrl/Cmd + Scroll = Zoom
+                    const delta = e.deltaY > 0 ? -0.1 : 0.1;
+                    targetZoom = Math.max(minZoom, Math.min(maxZoom, targetZoom + delta));
+                    zoomLevelDisplay.textContent = Math.round(targetZoom * 100) + '%';
+                } else {
+                    // Normal Scroll = Pan (faster movement)
+                    const speed = 2.5; // Speed multiplier
+                    
+                    if (e.shiftKey) {
+                        // Shift + Scroll = Horizontal pan
+                        targetOffsetX -= e.deltaY * speed;
+                    } else {
+                        // Normal scroll = Both directions
+                        targetOffsetX -= e.deltaX * speed;
+                        targetOffsetY -= e.deltaY * speed;
+                    }
+                    
+                    // Boundaries
+                    const maxOffsetX = window.innerWidth * 0.3;
+                    const maxOffsetY = window.innerHeight * 0.3;
+                    const minOffsetX = -canvasWidth * zoom + window.innerWidth * 0.7;
+                    const minOffsetY = -canvasHeight * zoom + window.innerHeight * 0.7;
+                    
+                    targetOffsetX = Math.max(minOffsetX, Math.min(maxOffsetX, targetOffsetX));
+                    targetOffsetY = Math.max(minOffsetY, Math.min(maxOffsetY, targetOffsetY));
+                }
+            });
+
+            // Zoom buttons
+            document.getElementById('zoomIn').addEventListener('click', () => {
+                targetZoom = Math.min(maxZoom, targetZoom + 0.2);
+                zoomLevelDisplay.textContent = Math.round(targetZoom * 100) + '%';
+            });
+
+            document.getElementById('zoomOut').addEventListener('click', () => {
+                targetZoom = Math.max(minZoom, targetZoom - 0.2);
+                zoomLevelDisplay.textContent = Math.round(targetZoom * 100) + '%';
+            });
+
+            // Center button
+            document.getElementById('centerBtn').addEventListener('click', () => {
+                targetOffsetX = window.innerWidth / 2 - centerX;
+                targetOffsetY = window.innerHeight / 2 - centerY;
+                targetZoom = 1;
+                zoomLevelDisplay.textContent = '100%';
+            });
+
+            // Draw connection lines
+            function drawConnections() {
+                const svg = document.getElementById('connections');
+                const nodes = document.querySelectorAll('.node[data-connect]');
+
+                nodes.forEach(node => {
+                    const connectTo = document.querySelector(`[data-id="${node.dataset.connect}"]`);
+                    if (!connectTo) return;
+
+                    const x1 = parseInt(node.style.left);
+                    const y1 = parseInt(node.style.top);
+                    const x2 = parseInt(connectTo.style.left);
+                    const y2 = parseInt(connectTo.style.top);
+
+                    const line = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+                    
+                    // Curved path
+                    const midX = (x1 + x2) / 2;
+                    const midY = (y1 + y2) / 2;
+                    const curve = 50;
+                    
+                    line.setAttribute('d', `M ${x1} ${y1} Q ${midX} ${midY - curve} ${x2} ${y2}`);
+                    line.classList.add('connection-line');
+                    svg.appendChild(line);
+                });
+            }
+
+            // Create floating particles
+            function createParticles() {
+                for (let i = 0; i < 100; i++) {
+                    const particle = document.createElement('div');
+                    particle.className = 'floating-particle';
+                    particle.style.left = Math.random() * canvasWidth + 'px';
+                    particle.style.top = Math.random() * canvasHeight + 'px';
+                    particle.style.animationDelay = Math.random() * 3 + 's';
+                    particle.style.animationDuration = (2 + Math.random() * 2) + 's';
+                    canvas.appendChild(particle);
+                }
+            }
+
+            // Minimap
+            function createMinimapNodes() {
+                const nodes = document.querySelectorAll('.node');
+                const scaleX = 180 / canvasWidth;
+                const scaleY = 140 / canvasHeight;
+
+                nodes.forEach(node => {
+                    const dot = document.createElement('div');
+                    dot.className = 'minimap-node';
+                    
+                    const x = parseInt(node.style.left) * scaleX;
+                    const y = parseInt(node.style.top) * scaleY;
+                    
+                    let size = 4;
+                    let color = 'rgba(255,255,255,0.5)';
+                    
+                    if (node.classList.contains('node-main')) {
+                        size = 8;
+                        color = '#4361ee';
+                    } else if (node.classList.contains('node-section')) {
+                        size = 5;
+                        color = '#7209b7';
+                    } else if (node.classList.contains('node-member')) {
+                        size = 5;
+                        color = '#f72585';
+                    } else if (node.classList.contains('node-featured')) {
+                        size = 6;
+                        color = '#fb8500';
+                    } else if (node.classList.contains('node-gallery')) {
+                        size = 6;
+                        color = '#06d6a0';
+                    }
+
+                    dot.style.width = size + 'px';
+                    dot.style.height = size + 'px';
+                    dot.style.left = x + 'px';
+                    dot.style.top = y + 'px';
+                    dot.style.background = color;
+
+                    minimapContent.appendChild(dot);
+                });
+            }
+
+            function updateMinimap() {
+                const scaleX = 180 / canvasWidth;
+                const scaleY = 140 / canvasHeight;
+
+                const viewWidth = (window.innerWidth / zoom) * scaleX;
+                const viewHeight = (window.innerHeight / zoom) * scaleY;
+                const viewX = (-offsetX / zoom) * scaleX;
+                const viewY = (-offsetY / zoom) * scaleY;
+
+                minimapViewport.style.width = viewWidth + 'px';
+                minimapViewport.style.height = viewHeight + 'px';
+                minimapViewport.style.left = viewX + 'px';
+                minimapViewport.style.top = viewY + 'px';
+            }
+
+            // Minimap click navigation
+            document.getElementById('minimap').addEventListener('click', (e) => {
+                const rect = minimapContent.getBoundingClientRect();
+                const clickX = e.clientX - rect.left;
+                const clickY = e.clientY - rect.top;
+
+                const scaleX = canvasWidth / 180;
+                const scaleY = canvasHeight / 140;
+
+                const targetX = clickX * scaleX;
+                const targetY = clickY * scaleY;
+
+                targetOffsetX = window.innerWidth / 2 - targetX * zoom;
+                targetOffsetY = window.innerHeight / 2 - targetY * zoom;
+            });
+
+            // Node click - Navigate to node
+            const nodes = document.querySelectorAll('.node');
+            nodes.forEach(node => {
+                node.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    
+                    const nodeX = parseInt(node.style.left);
+                    const nodeY = parseInt(node.style.top);
+
+                    targetOffsetX = window.innerWidth / 2 - nodeX * zoom;
+                    targetOffsetY = window.innerHeight / 2 - nodeY * zoom;
+
+                    // Show modal for interactive nodes
+                    if (node.classList.contains('node-section') || 
+                        node.classList.contains('node-work') || 
+                        node.classList.contains('node-member') ||
+                        node.classList.contains('node-featured')) {
+                        setTimeout(() => showModal(node), 400);
+                    }
+                });
+            });
+
+            // Modal
+            const modal = document.getElementById('modal');
+            const modalTitle = document.getElementById('modalTitle');
+            const modalText = document.getElementById('modalText');
+
+            const modalContent = {
+                about: {
+                    title: 'About Us',
+                    text: `우리는 디지털 영역의 탐험가입니다. 2016년 설립 이래, 150개 이상의 프로젝트를 성공적으로 완수했습니다.<br><br>경계 없는 창의력과 최첨단 기술의 결합으로, 브랜드의 본질을 디지털 세계에서 빛나게 합니다. 우리의 여정에 함께하세요.`
+                },
+                services: {
+                    title: 'Our Services',
+                    text: `<strong>Brand Strategy</strong><br>브랜드의 핵심 가치를 발견하고 시장에서의 포지션을 정립합니다.<br><br><strong>Web Development</strong><br>React, Next.js, Vue 등 최신 기술로 고성능 웹 경험을 구축합니다.<br><br><strong>UI/UX Design</strong><br>사용자 중심의 직관적이고 아름다운 인터페이스를 디자인합니다.<br><br><strong>Motion & 3D</strong><br>동적이고 몰입감 있는 비주얼 경험을 창조합니다.`
+                },
+                process: {
+                    title: 'Our Process',
+                    text: `<strong>01. Discovery</strong><br>깊이 있는 리서치와 인터뷰를 통해 프로젝트의 본질을 파악합니다.<br><br><strong>02. Strategy</strong><br>데이터 기반의 전략을 수립하고 방향성을 정립합니다.<br><br><strong>03. Design</strong><br>아이디어를 시각화하고 프로토타입을 제작합니다.<br><br><strong>04. Development</strong><br>설계를 현실로 구현합니다.<br><br><strong>05. Launch</strong><br>세상에 공개하고 지속적으로 개선합니다.`
+                },
+                tech: {
+                    title: 'Tech Stack',
+                    text: `<strong>Frontend</strong><br>React, Next.js, Vue, TypeScript, Tailwind CSS<br><br><strong>Backend</strong><br>Node.js, Python, Go, PostgreSQL, MongoDB<br><br><strong>Design</strong><br>Figma, After Effects, Blender, Cinema 4D<br><br><strong>Infrastructure</strong><br>AWS, Vercel, Docker, Kubernetes`
+                },
+                work1: {
+                    title: 'Nebula Finance',
+                    text: `핀테크 스타트업 Nebula Finance의 브랜드 아이덴티티 및 웹 플랫폼 구축 프로젝트.<br><br>우주를 테마로 한 비주얼 시스템과 직관적인 대시보드 UI/UX 설계를 통해 복잡한 금융 데이터를 사용자 친화적으로 시각화했습니다.`
+                },
+                work2: {
+                    title: 'Crimson Luxury',
+                    text: `프리미엄 패션 브랜드의 이커머스 플랫폼 리뉴얼.<br><br>럭셔리 경험을 온라인에서도 느낄 수 있도록 인터랙티브 룩북, 3D 제품 뷰어, 개인화된 쇼핑 경험을 구현했습니다.`
+                },
+                work3: {
+                    title: 'Verde Health',
+                    text: `웰니스 & 헬스케어 스타트업의 모바일 앱 UI/UX 디자인.<br><br>사용자의 건강 여정을 동반하는 친근한 인터페이스와 동기부여 시스템을 설계하여 앱 스토어 건강 카테고리 1위를 달성했습니다.`
+                },
+                work4: {
+                    title: 'Quantum Labs',
+                    text: `AI 연구소의 브랜드 아이덴티티 및 3D 모션 그래픽 프로젝트.<br><br>첨단 기술의 복잡성을 시각적으로 아름답게 표현하여 투자 유치 및 인재 영입에 기여했습니다.`
+                },
+                member1: {
+                    title: 'Alex Chen',
+                    text: `<strong>Creative Director</strong><br><br>10년 이상의 경력을 가진 크리에이티브 디렉터. Apple, Nike, Google 등 글로벌 브랜드와 협업했으며, 수많은 국제 디자인 어워드를 수상했습니다.<br><br><strong>전문 분야</strong><br>• 브랜드 전략<br>• 크리에이티브 방향성<br>• 팀 리더십`
+                },
+                member2: {
+                    title: 'Sarah Kim',
+                    text: `<strong>Lead Designer</strong><br><br>RISD 출신의 리드 디자이너. 미니멀리즘과 타이포그래피에 대한 깊은 이해를 바탕으로 브랜드의 시각적 언어를 창조합니다.<br><br><strong>전문 분야</strong><br>• UI/UX 디자인<br>• 브랜드 아이덴티티<br>• 디자인 시스템`
+                },
+                member3: {
+                    title: 'Marcus Johnson',
+                    text: `<strong>Tech Lead</strong><br><br>MIT 컴퓨터 사이언스 전공. 풀스택 개발과 시스템 아키텍처 설계의 전문가입니다. 스타트업부터 엔터프라이즈까지 다양한 규모의 프로젝트를 이끌었습니다.<br><br><strong>전문 분야</strong><br>• React/Next.js<br>• Node.js/Python<br>• 클라우드 아키텍처`
+                },
+                member4: {
+                    title: 'Emma Watson',
+                    text: `<strong>Motion Designer</strong><br><br>영화와 광고 분야에서 활동한 모션 디자이너. 스토리텔링과 시각적 임팩트를 결합한 모션 그래픽으로 브랜드에 생명을 불어넣습니다.<br><br><strong>전문 분야</strong><br>• After Effects<br>• Cinema 4D<br>• 인터랙티브 모션`
+                },
+                member5: {
+                    title: 'David Park',
+                    text: `<strong>Senior Developer</strong><br><br>8년차 시니어 개발자. 복잡한 웹 애플리케이션 개발과 성능 최적화의 전문가입니다. 오픈소스 커뮤니티에서도 활발히 활동 중입니다.<br><br><strong>전문 분야</strong><br>• TypeScript<br>• 성능 최적화<br>• 테스트 자동화`
+                },
+                member6: {
+                    title: 'Olivia Brown',
+                    text: `<strong>UX Strategist</strong><br><br>심리학 배경을 가진 UX 전략가. 사용자 리서치와 데이터 분석을 통해 제품의 사용성을 극대화합니다.<br><br><strong>전문 분야</strong><br>• 사용자 리서치<br>• 정보 설계<br>• 프로토타이핑`
+                },
+                featured1: {
+                    title: 'The Art of Digital Storytelling',
+                    text: `글로벌 미디어 기업과 함께한 디지털 스토리텔링 프로젝트.<br><br>몰입감 있는 인터랙티브 경험을 통해 브랜드의 이야기를 전달하고, 사용자 참여율 300% 증가를 달성했습니다.`
+                },
+                featured2: {
+                    title: 'Redefining Brand Experience',
+                    text: `럭셔리 뷰티 브랜드의 디지털 트랜스포메이션.<br><br>오프라인 매장의 프리미엄 경험을 온라인으로 완벽하게 구현하여 Awwwards Site of the Year를 수상했습니다.`
+                },
+                featured3: {
+                    title: 'Innovation Meets Design',
+                    text: `테크 스타트업의 런칭 캠페인 및 브랜딩.<br><br>혁신적인 기술을 감성적인 디자인으로 풀어내어 성공적인 시리즈 A 펀딩을 이끌어냈습니다.`
+                }
+            };
+
+            function showModal(node) {
+                const id = node.dataset.id;
+                if (modalContent[id]) {
+                    modalTitle.textContent = modalContent[id].title;
+                    modalText.innerHTML = modalContent[id].text;
+                    modal.classList.add('active');
+                }
+            }
+
+            modal.addEventListener('click', (e) => {
+                if (e.target === modal || e.target.id === 'modalClose') {
+                    modal.classList.remove('active');
+                }
+            });
+
+            document.getElementById('modalClose').addEventListener('click', () => {
+                modal.classList.remove('active');
+            });
+
+            // Keyboard navigation
+            document.addEventListener('keydown', (e) => {
+                const speed = 100;
+                switch(e.key) {
+                    case 'ArrowUp':
+                        targetOffsetY += speed;
+                        break;
+                    case 'ArrowDown':
+                        targetOffsetY -= speed;
+                        break;
+                    case 'ArrowLeft':
+                        targetOffsetX += speed;
+                        break;
+                    case 'ArrowRight':
+                        targetOffsetX -= speed;
+                        break;
+                    case 'Escape':
+                        modal.classList.remove('active');
+                        break;
+                    case ' ':
+                        e.preventDefault();
+                        document.getElementById('centerBtn').click();
+                        break;
+                }
+            });
+
+            // Window resize
+            window.addEventListener('resize', () => {
+                updateMinimap();
+            });
+
+            // Mouse movement for subtle space effect
+            let mouseX = window.innerWidth / 2;
+            let mouseY = window.innerHeight / 2;
+            
+            document.addEventListener('mousemove', (e) => {
+                mouseX = e.clientX;
+                mouseY = e.clientY;
+                
+                // Subtle mouse-based parallax for nebulas
+                const centerX = window.innerWidth / 2;
+                const centerY = window.innerHeight / 2;
+                const deltaX = (mouseX - centerX) / centerX;
+                const deltaY = (mouseY - centerY) / centerY;
+                
+                document.querySelectorAll('.nebula').forEach((nebula, i) => {
+                    const speed = 5 + i * 3;
+                    nebula.style.transform = `translate(${deltaX * speed}px, ${deltaY * speed}px)`;
+                });
+                
+                // Subtle rotation for galaxies
+                document.querySelectorAll('.galaxy').forEach((galaxy, i) => {
+                    const speed = 3 + i * 2;
+                    galaxy.style.transform = `rotate(${-20 + i * 35 + deltaX * 5}deg) translate(${deltaX * speed}px, ${deltaY * speed}px)`;
+                });
+                
+                // Planets react to mouse (subtle)
+                document.querySelectorAll('.planet').forEach((planet, i) => {
+                    const speed = 2 + i * 1.5;
+                    const baseTransform = planet.style.animation ? '' : '';
+                    planet.style.marginLeft = `${deltaX * speed}px`;
+                    planet.style.marginTop = `${deltaY * speed}px`;
+                });
+                
+                // Light orbs follow mouse subtly
+                document.querySelectorAll('.light-orb').forEach((orb, i) => {
+                    const speed = 8 + i * 4;
+                    orb.style.marginLeft = `${deltaX * speed}px`;
+                    orb.style.marginTop = `${deltaY * speed}px`;
+                });
+            });
+
+            // Create floating space debris
+            function createSpaceDebris() {
+                const spaceBg = document.getElementById('spaceBg');
+                
+                for (let i = 0; i < 20; i++) {
+                    const debris = document.createElement('div');
+                    debris.className = 'space-debris';
+                    debris.style.left = Math.random() * 100 + '%';
+                    debris.style.top = Math.random() * 100 + '%';
+                    debris.style.animationDelay = Math.random() * 20 + 's';
+                    debris.style.animationDuration = (15 + Math.random() * 10) + 's';
+                    spaceBg.appendChild(debris);
+                }
+            }
+            
+            // Initialize space debris after loading
+            setTimeout(createSpaceDebris, 2100);
+
+            // Quick Navigation buttons
+            document.querySelectorAll('.quick-nav-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const targetId = btn.dataset.target;
+                    const targetNode = document.querySelector(`[data-id="${targetId}"]`);
+                    
+                    if (targetNode) {
+                        const nodeX = parseInt(targetNode.style.left);
+                        const nodeY = parseInt(targetNode.style.top);
+                        
+                        targetOffsetX = window.innerWidth / 2 - nodeX * zoom;
+                        targetOffsetY = window.innerHeight / 2 - nodeY * zoom;
+                        
+                        // Visual feedback
+                        btn.style.background = 'rgba(255,255,255,0.1)';
+                        setTimeout(() => {
+                            btn.style.background = 'transparent';
+                        }, 300);
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
+

@@ -1,0 +1,3831 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>이지스자산운용 | IGIS Asset Management</title>
+    <link href="https://fonts.googleapis.com/css2?family=Pretendard:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        @font-face {
+            font-family: 'Pretendard';
+            src: url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css');
+        }
+
+        :root {
+            --primary-yellow: #FEE500;
+            --primary-gold: #FFB800;
+            --primary-dark: #191919;
+            --primary-black: #000000;
+            --accent-blue: #3182F6;
+            --accent-green: #00C73C;
+            --accent-red: #F04452;
+            --text-primary: #191919;
+            --text-secondary: #666666;
+            --text-tertiary: #999999;
+            --bg-white: #FFFFFF;
+            --bg-light: #F7F8FA;
+            --bg-gray: #F2F3F5;
+            --border-light: #E5E8EB;
+            --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.08);
+            --shadow-md: 0 4px 20px rgba(0, 0, 0, 0.1);
+            --shadow-lg: 0 8px 40px rgba(0, 0, 0, 0.12);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background-color: var(--bg-white);
+            color: var(--text-primary);
+            overflow-x: hidden;
+            font-weight: 400;
+            line-height: 1.6;
+        }
+
+        /* Stock Ticker */
+        .stock-ticker {
+            background: var(--primary-dark);
+            padding: 12px 0;
+            overflow: hidden;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1001;
+        }
+
+        .ticker-wrap {
+            display: flex;
+            animation: ticker 40s linear infinite;
+        }
+
+        .ticker-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 0 32px;
+            white-space: nowrap;
+            font-family: 'Inter', sans-serif;
+            font-weight: 500;
+            font-size: 13px;
+        }
+
+        .ticker-symbol {
+            color: #FFFFFF;
+        }
+
+        .ticker-price {
+            color: var(--primary-yellow);
+        }
+
+        .ticker-change.up {
+            color: var(--accent-green);
+        }
+
+        .ticker-change.down {
+            color: var(--accent-red);
+        }
+
+        @keyframes ticker {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
+        }
+
+        /* Navigation */
+        .nav-container {
+            position: fixed;
+            top: 44px;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            background: #000000;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            transition: all 0.3s ease;
+        }
+
+        .nav-container.scrolled {
+            box-shadow: var(--shadow-sm);
+        }
+
+        nav {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 48px;
+            height: 72px;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+        }
+
+        .logo img {
+            height: 32px;
+            width: auto;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 32px;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: rgba(255,255,255,0.8);
+            text-decoration: none;
+            font-size: 15px;
+            font-weight: 500;
+            padding: 8px 0;
+            transition: color 0.2s ease;
+        }
+
+        .nav-links a:hover {
+            color: #ffffff;
+        }
+
+        .nav-right {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .nav-btn {
+            padding: 10px 20px;
+            background: var(--primary-dark);
+            border: none;
+            border-radius: 8px;
+            color: #FFFFFF;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .nav-btn:hover {
+            background: #333333;
+            transform: translateY(-1px);
+        }
+
+        /* Hero Section */
+        .hero {
+            min-height: 100vh;
+            padding-top: 108px;
+            display: flex;
+            align-items: center;
+            background: url('img/investbg.jpg') center center / cover no-repeat;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.4);
+            z-index: 1;
+        }
+
+        .hero-bg-pattern {
+            display: none;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 60px 24px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 80px;
+            align-items: center;
+        }
+
+        .hero-text {
+            padding-right: 20px;
+        }
+
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(0, 230, 118, 0.2);
+            border: 1px solid rgba(0, 230, 118, 0.3);
+            border-radius: 20px;
+            padding: 8px 16px;
+            margin-bottom: 24px;
+            font-size: 13px;
+            font-weight: 600;
+            color: #00E676;
+        }
+
+        .hero-badge .dot {
+            width: 6px;
+            height: 6px;
+            background: var(--accent-green);
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.5; transform: scale(0.9); }
+        }
+
+        .hero-title {
+            font-size: 48px;
+            font-weight: 700;
+            line-height: 1.3;
+            margin-bottom: 24px;
+            letter-spacing: -1px;
+            color: #ffffff;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.3);
+        }
+
+        .hero-title .highlight {
+            color: #00E676;
+            position: relative;
+        }
+
+        .hero-description {
+            font-size: 18px;
+            line-height: 1.7;
+            color: rgba(255,255,255,0.85);
+            margin-bottom: 40px;
+            font-weight: 400;
+        }
+
+        .hero-stats {
+            display: flex;
+            gap: 48px;
+            margin-bottom: 40px;
+            padding: 24px 0;
+            border-top: 1px solid rgba(255,255,255,0.2);
+            border-bottom: 1px solid rgba(255,255,255,0.2);
+        }
+
+        .hero-stat {
+            text-align: left;
+        }
+
+        .hero-stat-value {
+            font-family: 'Inter', sans-serif;
+            font-size: 32px;
+            font-weight: 700;
+            color: #ffffff;
+            line-height: 1;
+        }
+
+        .hero-stat-value span {
+            font-size: 18px;
+            font-weight: 500;
+        }
+
+        .hero-stat-label {
+            font-size: 14px;
+            color: rgba(255,255,255,0.7);
+            margin-top: 8px;
+            font-weight: 400;
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: 12px;
+        }
+
+        .btn-primary {
+            padding: 16px 32px;
+            background: var(--primary-dark);
+            border: none;
+            border-radius: 12px;
+            color: #FFFFFF;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            text-decoration: none;
+        }
+
+        .btn-primary:hover {
+            background: #333333;
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .btn-secondary {
+            padding: 16px 32px;
+            background: var(--bg-light);
+            border: none;
+            border-radius: 12px;
+            color: var(--text-primary);
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-secondary:hover {
+            background: var(--bg-gray);
+        }
+
+        .btn-secondary svg {
+            stroke: var(--text-secondary);
+        }
+
+        /* Live Stock Panel */
+        .hero-panel {
+            background: var(--bg-white);
+            border-radius: 24px;
+            box-shadow: var(--shadow-lg);
+            padding: 28px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .panel-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+        }
+
+        .panel-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .panel-title .live-dot {
+            width: 8px;
+            height: 8px;
+            background: var(--accent-green);
+            border-radius: 50%;
+            animation: blink 1s infinite;
+        }
+
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.3; }
+        }
+
+        .panel-time {
+            font-family: 'Inter', sans-serif;
+            font-size: 13px;
+            color: var(--text-tertiary);
+        }
+
+        /* Mini Chart */
+        .mini-chart {
+            height: 140px;
+            margin-bottom: 24px;
+            position: relative;
+            background: linear-gradient(180deg, rgba(255, 184, 0, 0.05) 0%, transparent 100%);
+            border-radius: 12px;
+            padding: 16px;
+        }
+
+        .mini-chart svg {
+            width: 100%;
+            height: 100%;
+        }
+
+        .chart-value {
+            position: absolute;
+            top: 16px;
+            right: 16px;
+            text-align: right;
+        }
+
+        .chart-value-main {
+            font-family: 'Inter', sans-serif;
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        .chart-value-change {
+            font-family: 'Inter', sans-serif;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .chart-value-change.up {
+            color: var(--accent-green);
+        }
+
+        /* Stock List */
+        .stock-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .stock-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px;
+            background: var(--bg-light);
+            border-radius: 12px;
+            transition: all 0.2s ease;
+        }
+
+        .stock-item:hover {
+            background: var(--bg-gray);
+        }
+
+        .stock-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .stock-icon {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, var(--primary-yellow) 0%, var(--primary-gold) 100%);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Inter', sans-serif;
+            font-weight: 700;
+            font-size: 12px;
+            color: var(--primary-dark);
+        }
+
+        .stock-name {
+            font-weight: 600;
+            font-size: 15px;
+            color: var(--text-primary);
+        }
+
+        .stock-category {
+            font-size: 13px;
+            color: var(--text-tertiary);
+        }
+
+        .stock-data {
+            text-align: right;
+        }
+
+        .stock-price {
+            font-family: 'Inter', sans-serif;
+            font-weight: 600;
+            font-size: 15px;
+            color: var(--text-primary);
+        }
+
+        .stock-change {
+            font-family: 'Inter', sans-serif;
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        .stock-change.up { color: var(--accent-green); }
+        .stock-change.down { color: var(--accent-red); }
+
+        /* Section Common Styles */
+        section {
+            padding: 100px 24px;
+        }
+
+        .section-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 64px;
+        }
+
+        .section-label {
+            font-size: 14px;
+            letter-spacing: 1px;
+            color: var(--primary-gold);
+            text-transform: uppercase;
+            margin-bottom: 12px;
+            font-weight: 600;
+        }
+
+        .section-title {
+            font-size: 36px;
+            font-weight: 700;
+            margin-bottom: 16px;
+            letter-spacing: -0.5px;
+            color: var(--text-primary);
+        }
+
+        .section-description {
+            font-size: 17px;
+            color: var(--text-secondary);
+            max-width: 600px;
+            margin: 0 auto;
+            line-height: 1.7;
+            font-weight: 400;
+        }
+
+        /* Performance Section */
+        .performance-section {
+            background: var(--bg-light);
+        }
+
+        .performance-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+        }
+
+        .performance-card {
+            background: var(--bg-white);
+            border-radius: 20px;
+            padding: 32px 24px;
+            text-align: center;
+            box-shadow: var(--shadow-sm);
+            transition: all 0.3s ease;
+            border: 1px solid transparent;
+        }
+
+        .performance-card:hover {
+            transform: translateY(-8px);
+            box-shadow: var(--shadow-lg);
+            border-color: var(--primary-yellow);
+        }
+
+        .performance-icon {
+            width: 56px;
+            height: 56px;
+            margin: 0 auto 20px;
+            background: linear-gradient(135deg, rgba(255, 184, 0, 0.15) 0%, rgba(254, 229, 0, 0.1) 100%);
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .performance-icon svg {
+            width: 28px;
+            height: 28px;
+            stroke: var(--primary-gold);
+        }
+
+        .performance-number {
+            font-family: 'Inter', sans-serif;
+            font-size: 40px;
+            font-weight: 700;
+            color: var(--text-primary);
+            line-height: 1;
+            margin-bottom: 8px;
+        }
+
+        .performance-number span {
+            font-size: 20px;
+            font-weight: 500;
+        }
+
+        .performance-label {
+            font-size: 15px;
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+
+        .performance-trend {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            margin-top: 12px;
+            padding: 6px 10px;
+            background: rgba(0, 199, 60, 0.1);
+            border-radius: 6px;
+            color: var(--accent-green);
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        /* Business Section - Dark Background */
+        .business-section {
+            background: var(--primary-dark);
+        }
+
+        .business-section .section-label {
+            color: var(--primary-gold);
+        }
+
+        .business-section .section-title {
+            color: #FFFFFF;
+        }
+
+        .business-section .section-description {
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        .business-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+        }
+
+        .business-card {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .business-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4);
+            border-color: var(--primary-yellow);
+            background: rgba(255, 255, 255, 0.08);
+        }
+
+        .business-image {
+            height: 180px;
+            position: relative;
+            overflow: hidden;
+            background: var(--bg-gray);
+        }
+
+        .business-image-bg {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            background-size: cover;
+            background-position: center;
+            transition: transform 0.4s ease;
+        }
+
+        .business-image-bg::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(180deg, rgba(0,0,0,0) 0%, rgba(0,0,0,0.3) 100%);
+        }
+
+        .business-card:hover .business-image-bg {
+            transform: scale(1.05);
+        }
+
+        .business-image-bg.realestate {
+            background-image: url('https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=600&q=80');
+        }
+
+        .business-image-bg.reits {
+            background-image: url('https://images.unsplash.com/photo-1560520653-9e0e4c89eb11?w=600&q=80');
+        }
+
+        .business-image-bg.infra {
+            background-image: url('https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=600&q=80');
+        }
+
+        .business-image-bg.securities {
+            background-image: url('https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?w=600&q=80');
+        }
+
+        .business-content {
+            padding: 24px;
+        }
+
+        .business-content h3 {
+            font-size: 18px;
+            margin-bottom: 12px;
+            font-weight: 600;
+            color: #FFFFFF;
+        }
+
+        .business-content p {
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.7);
+            line-height: 1.6;
+            margin-bottom: 16px;
+            font-weight: 400;
+        }
+
+        .business-link {
+            color: var(--primary-yellow);
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            transition: gap 0.2s ease;
+        }
+
+        .business-link:hover {
+            gap: 10px;
+        }
+
+        .business-link svg {
+            stroke: var(--primary-yellow);
+        }
+
+        /* Market Overview Section */
+        .market-section {
+            background: var(--bg-light);
+        }
+
+        .market-content {
+            display: grid;
+            grid-template-columns: 1fr 1.2fr;
+            gap: 60px;
+            align-items: center;
+        }
+
+        .market-text h2 {
+            font-size: 36px;
+            font-weight: 700;
+            margin-bottom: 20px;
+            line-height: 1.3;
+            letter-spacing: -0.5px;
+            color: var(--text-primary);
+        }
+
+        .market-text p {
+            font-size: 17px;
+            color: var(--text-secondary);
+            line-height: 1.7;
+            margin-bottom: 32px;
+            font-weight: 400;
+        }
+
+        .market-features {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 16px;
+        }
+
+        .market-feature {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            padding: 16px;
+            background: var(--bg-white);
+            border-radius: 12px;
+            transition: all 0.2s ease;
+        }
+
+        .market-feature:hover {
+            box-shadow: var(--shadow-sm);
+        }
+
+        .market-feature-icon {
+            width: 44px;
+            height: 44px;
+            background: linear-gradient(135deg, rgba(255, 184, 0, 0.15) 0%, rgba(254, 229, 0, 0.1) 100%);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .market-feature-icon svg {
+            width: 22px;
+            height: 22px;
+            stroke: var(--primary-gold);
+        }
+
+        .market-feature-text h4 {
+            font-size: 15px;
+            font-weight: 600;
+            margin-bottom: 4px;
+            color: var(--text-primary);
+        }
+
+        .market-feature-text p {
+            font-size: 13px;
+            color: var(--text-tertiary);
+            margin: 0;
+            font-weight: 400;
+        }
+
+        /* Live Chart Display */
+        .market-chart {
+            background: var(--bg-white);
+            border-radius: 24px;
+            box-shadow: var(--shadow-md);
+            padding: 28px;
+        }
+
+        .market-chart-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+        }
+
+        .market-chart-title {
+            font-weight: 600;
+            font-size: 16px;
+            color: var(--text-primary);
+        }
+
+        .market-chart-tabs {
+            display: flex;
+            gap: 8px;
+        }
+
+        .market-chart-tab {
+            padding: 8px 14px;
+            background: transparent;
+            border: 1px solid var(--border-light);
+            border-radius: 8px;
+            color: var(--text-tertiary);
+            font-size: 13px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .market-chart-tab.active {
+            background: var(--primary-dark);
+            border-color: var(--primary-dark);
+            color: #FFFFFF;
+        }
+
+        .big-chart {
+            height: 240px;
+            position: relative;
+            margin-bottom: 24px;
+        }
+
+        .big-chart svg {
+            width: 100%;
+            height: 100%;
+        }
+
+        .chart-metrics {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 16px;
+        }
+
+        .chart-metric {
+            text-align: center;
+            padding: 16px;
+            background: var(--bg-light);
+            border-radius: 12px;
+        }
+
+        .chart-metric-value {
+            font-family: 'Inter', sans-serif;
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        .chart-metric-label {
+            font-size: 13px;
+            color: var(--text-tertiary);
+            margin-top: 4px;
+            font-weight: 400;
+        }
+
+        /* News Section */
+        .news-section {
+            background: var(--bg-white);
+        }
+
+        .news-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 24px;
+        }
+
+        .news-card {
+            background: var(--bg-white);
+            border: 1px solid var(--border-light);
+            border-radius: 20px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .news-card:hover {
+            transform: translateY(-8px);
+            box-shadow: var(--shadow-lg);
+            border-color: transparent;
+        }
+
+        .news-image {
+            height: 180px;
+            position: relative;
+            overflow: hidden;
+            background: var(--bg-gray);
+        }
+
+        .news-image-bg {
+            width: 100%;
+            height: 100%;
+            background-size: cover;
+            background-position: center;
+            transition: transform 0.4s ease;
+        }
+
+        .news-image-bg::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(180deg, rgba(0,0,0,0) 50%, rgba(0,0,0,0.2) 100%);
+        }
+
+        .news-card:hover .news-image-bg {
+            transform: scale(1.05);
+        }
+
+        .news-image-bg.finance {
+            background-image: url('https://images.unsplash.com/photo-1590283603385-17ffb3a7f29f?w=600&q=80');
+        }
+
+        .news-image-bg.realestate {
+            background-image: url('https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=600&q=80');
+        }
+
+        .news-image-bg.market {
+            background-image: url('https://images.unsplash.com/photo-1504711434969-e33886168f5c?w=600&q=80');
+        }
+
+        .news-category {
+            position: absolute;
+            top: 16px;
+            left: 16px;
+            padding: 6px 12px;
+            background: var(--primary-dark);
+            border-radius: 6px;
+            color: #FFFFFF;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .news-content {
+            padding: 24px;
+        }
+
+        .news-content h3 {
+            font-size: 17px;
+            font-weight: 600;
+            margin-bottom: 12px;
+            line-height: 1.5;
+            color: var(--text-primary);
+            transition: color 0.2s ease;
+        }
+
+        .news-card:hover .news-content h3 {
+            color: var(--accent-blue);
+        }
+
+        .news-content p {
+            font-size: 14px;
+            color: var(--text-secondary);
+            line-height: 1.6;
+            margin-bottom: 16px;
+            font-weight: 400;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .news-date {
+            font-size: 13px;
+            color: var(--text-tertiary);
+            font-weight: 500;
+        }
+
+        .news-more {
+            text-align: center;
+            margin-top: 48px;
+        }
+
+        /* Contact Section */
+        .contact-section {
+            background: var(--bg-light);
+        }
+
+        .contact-content {
+            display: grid;
+            grid-template-columns: 1fr 1.2fr;
+            gap: 60px;
+            align-items: start;
+        }
+
+        .contact-text .section-header {
+            text-align: left;
+            margin-bottom: 32px;
+        }
+
+        .contact-info-list {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .contact-info-item {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            padding: 20px;
+            background: var(--bg-white);
+            border-radius: 12px;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .contact-info-icon {
+            width: 48px;
+            height: 48px;
+            background: linear-gradient(135deg, rgba(255, 184, 0, 0.15) 0%, rgba(254, 229, 0, 0.1) 100%);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .contact-info-icon svg {
+            width: 24px;
+            height: 24px;
+            stroke: var(--primary-gold);
+        }
+
+        .contact-info-text {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .contact-info-label {
+            font-size: 13px;
+            color: var(--text-tertiary);
+            font-weight: 500;
+        }
+
+        .contact-info-value {
+            font-size: 16px;
+            color: var(--text-primary);
+            font-weight: 600;
+        }
+
+        .contact-form-wrapper {
+            background: var(--bg-white);
+            border-radius: 24px;
+            padding: 40px;
+            box-shadow: var(--shadow-md);
+        }
+
+        .contact-form {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .form-group label {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            padding: 14px 16px;
+            border: 1px solid var(--border-light);
+            border-radius: 10px;
+            font-size: 15px;
+            font-family: inherit;
+            color: var(--text-primary);
+            background: var(--bg-white);
+            transition: all 0.2s ease;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--primary-gold);
+            box-shadow: 0 0 0 3px rgba(255, 184, 0, 0.1);
+        }
+
+        .form-group input::placeholder,
+        .form-group textarea::placeholder {
+            color: var(--text-tertiary);
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 120px;
+        }
+
+        .form-group select {
+            cursor: pointer;
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%23999999' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 12px center;
+            background-size: 18px;
+            padding-right: 40px;
+        }
+
+        .form-checkbox {
+            flex-direction: row;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .form-checkbox input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+            accent-color: var(--primary-gold);
+        }
+
+        .form-checkbox label {
+            font-size: 14px;
+            font-weight: 400;
+            color: var(--text-secondary);
+            cursor: pointer;
+        }
+
+        .form-submit {
+            padding: 16px 32px;
+            background: var(--primary-dark);
+            border: none;
+            border-radius: 12px;
+            color: #FFFFFF;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            margin-top: 8px;
+        }
+
+        .form-submit:hover {
+            background: #333333;
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+
+        @media (max-width: 992px) {
+            .contact-content {
+                grid-template-columns: 1fr;
+                gap: 40px;
+            }
+
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Footer */
+        footer {
+            background: var(--primary-dark);
+            padding: 64px 24px 32px;
+        }
+
+        .footer-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .footer-grid {
+            display: grid;
+            grid-template-columns: 2fr repeat(4, 1fr);
+            gap: 48px;
+            margin-bottom: 48px;
+        }
+
+        .footer-brand .logo {
+            color: #FFFFFF;
+            margin-bottom: 16px;
+        }
+
+        .footer-brand .logo span {
+            color: var(--primary-yellow);
+        }
+
+        .footer-brand p {
+            font-size: 14px;
+            color: #999999;
+            line-height: 1.7;
+            margin-bottom: 24px;
+            font-weight: 400;
+        }
+
+        .footer-social {
+            display: flex;
+            gap: 10px;
+        }
+
+        .social-link {
+            width: 40px;
+            height: 40px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+        }
+
+        .social-link:hover {
+            background: var(--primary-yellow);
+        }
+
+        .social-link svg {
+            width: 18px;
+            height: 18px;
+            fill: #999999;
+            transition: fill 0.2s ease;
+        }
+
+        .social-link:hover svg {
+            fill: var(--primary-dark);
+        }
+
+        .footer-column h4 {
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 20px;
+            color: #FFFFFF;
+        }
+
+        .footer-column ul {
+            list-style: none;
+        }
+
+        .footer-column li {
+            margin-bottom: 12px;
+        }
+
+        .footer-column a {
+            color: #999999;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 400;
+            transition: color 0.2s ease;
+        }
+
+        .footer-column a:hover {
+            color: var(--primary-yellow);
+        }
+
+        .footer-bottom {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: 32px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .footer-copyright {
+            font-size: 13px;
+            color: #666666;
+            font-weight: 400;
+        }
+
+        .footer-links {
+            display: flex;
+            gap: 24px;
+        }
+
+        .footer-links a {
+            color: #666666;
+            text-decoration: none;
+            font-size: 13px;
+            font-weight: 400;
+            transition: color 0.2s ease;
+        }
+
+        .footer-links a:hover {
+            color: var(--primary-yellow);
+        }
+
+        /* Funny Popup Modal */
+        .popup-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(8px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .popup-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .popup-modal {
+            background: var(--bg-white);
+            border-radius: 24px;
+            max-width: 480px;
+            width: 90%;
+            box-shadow: 0 25px 80px rgba(0, 0, 0, 0.3);
+            transform: scale(0.9) translateY(20px);
+            transition: transform 0.3s ease;
+            overflow: hidden;
+        }
+
+        .popup-overlay.active .popup-modal {
+            transform: scale(1) translateY(0);
+        }
+
+        .popup-header {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 32px 24px 16px;
+            position: relative;
+        }
+
+        .popup-icon {
+            width: 72px;
+            height: 72px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            animation: shake 0.5s ease-in-out;
+        }
+
+        .popup-icon.warning {
+            background: linear-gradient(135deg, #FFE082 0%, #FFB300 100%);
+        }
+
+        .popup-icon svg {
+            width: 40px;
+            height: 40px;
+            stroke: #E65100;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: rotate(0); }
+            25% { transform: rotate(-10deg); }
+            50% { transform: rotate(10deg); }
+            75% { transform: rotate(-5deg); }
+        }
+
+        .popup-close {
+            position: absolute;
+            top: 16px;
+            right: 16px;
+            width: 36px;
+            height: 36px;
+            border: none;
+            background: var(--bg-light);
+            border-radius: 50%;
+            font-size: 24px;
+            color: var(--text-tertiary);
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            line-height: 1;
+        }
+
+        .popup-close:hover {
+            background: var(--bg-gray);
+            color: var(--text-primary);
+        }
+
+        .popup-content {
+            padding: 0 32px 24px;
+            text-align: center;
+        }
+
+        .popup-title {
+            font-size: 22px;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 20px;
+        }
+
+        .popup-message {
+            background: linear-gradient(135deg, #FFF8E1 0%, #FFECB3 100%);
+            border-radius: 16px;
+            padding: 24px;
+            margin-bottom: 20px;
+            min-height: 120px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .popup-message {
+            transition: opacity 0.2s ease, transform 0.2s ease;
+        }
+
+        .popup-message .quote {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--text-primary);
+            line-height: 1.6;
+            margin-bottom: 12px;
+        }
+
+        .popup-message .author {
+            font-size: 14px;
+            color: var(--text-secondary);
+            font-style: italic;
+        }
+
+        .popup-warning {
+            background: var(--bg-light);
+            border-radius: 12px;
+            padding: 16px;
+            text-align: left;
+        }
+
+        .popup-warning p {
+            font-size: 13px;
+            color: var(--text-secondary);
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .popup-warning p:last-child {
+            margin-bottom: 0;
+        }
+
+        .popup-footer {
+            display: flex;
+            gap: 12px;
+            padding: 0 32px 32px;
+        }
+
+        .popup-btn {
+            flex: 1;
+            padding: 14px 20px;
+            border: none;
+            border-radius: 12px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .popup-btn.primary {
+            background: var(--primary-dark);
+            color: #FFFFFF;
+        }
+
+        .popup-btn.primary:hover {
+            background: #333333;
+            transform: translateY(-2px);
+        }
+
+        .popup-btn.secondary {
+            background: var(--bg-light);
+            color: var(--text-primary);
+        }
+
+        .popup-btn.secondary:hover {
+            background: var(--bg-gray);
+        }
+
+        /* Notice Banner */
+        .notice-banner {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: var(--primary-yellow);
+            color: var(--primary-dark);
+            padding: 14px 24px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 16px;
+            z-index: 1000;
+            transform: translateY(100%);
+            animation: slideUp 0.5s ease forwards;
+            animation-delay: 2s;
+        }
+
+        @keyframes slideUp {
+            to { transform: translateY(0); }
+        }
+
+        .notice-text {
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .notice-close {
+            background: rgba(0, 0, 0, 0.1);
+            border: none;
+            border-radius: 6px;
+            color: var(--primary-dark);
+            cursor: pointer;
+            font-size: 18px;
+            padding: 4px 10px;
+            font-weight: 500;
+        }
+
+        .notice-close:hover {
+            background: rgba(0, 0, 0, 0.2);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1200px) {
+            .hero-content {
+                grid-template-columns: 1fr;
+                text-align: center;
+                gap: 48px;
+            }
+
+            .hero-text {
+                padding-right: 0;
+            }
+
+            .hero-stats {
+                justify-content: center;
+            }
+
+            .hero-buttons {
+                justify-content: center;
+            }
+
+            .business-grid,
+            .performance-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .footer-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+
+        @media (max-width: 992px) {
+            .hero-title {
+                font-size: 40px;
+            }
+
+            .market-content {
+                grid-template-columns: 1fr;
+                gap: 48px;
+            }
+
+            .news-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .stock-ticker {
+                display: none;
+            }
+
+            .nav-container {
+                top: 0;
+            }
+
+            nav {
+                padding: 0 16px;
+            }
+
+            .nav-links {
+                display: none;
+            }
+
+            .hero {
+                padding-top: 80px;
+            }
+
+            .hero-title {
+                font-size: 32px;
+            }
+
+            .hero-stats {
+                flex-direction: column;
+                gap: 16px;
+                align-items: center;
+            }
+
+            section {
+                padding: 64px 16px;
+            }
+
+            .section-title {
+                font-size: 28px;
+            }
+
+            .business-grid,
+            .performance-grid,
+            .news-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .chart-metrics {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .footer-grid {
+                grid-template-columns: 1fr;
+                gap: 32px;
+            }
+
+            .footer-bottom {
+                flex-direction: column;
+                gap: 16px;
+                text-align: center;
+            }
+
+            .footer-links {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+        }
+
+        /* Mobile Menu */
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 8px;
+        }
+
+        .mobile-menu-btn span {
+            display: block;
+            width: 22px;
+            height: 2px;
+            background: var(--text-primary);
+            margin: 5px 0;
+            border-radius: 1px;
+            transition: all 0.3s ease;
+        }
+
+        @media (max-width: 768px) {
+            .mobile-menu-btn {
+                display: block;
+            }
+        }
+
+        /* ESG Section - Yellow Background */
+        .esg-section {
+            background: linear-gradient(135deg, var(--primary-yellow) 0%, #FFD54F 100%);
+        }
+
+        .esg-section .section-label {
+            color: var(--primary-dark);
+            opacity: 0.7;
+        }
+
+        .esg-section .section-title {
+            color: var(--primary-dark);
+        }
+
+        .esg-section .section-description {
+            color: var(--primary-dark);
+            opacity: 0.8;
+        }
+
+        .esg-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 24px;
+        }
+
+        .esg-card {
+            background: var(--bg-white);
+            border-radius: 20px;
+            padding: 32px;
+            transition: all 0.3s ease;
+            border: 1px solid transparent;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .esg-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
+            border-color: var(--primary-dark);
+        }
+
+        .esg-icon {
+            width: 64px;
+            height: 64px;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+
+        .esg-icon svg {
+            width: 32px;
+            height: 32px;
+        }
+
+        .esg-icon.environment {
+            background: linear-gradient(135deg, rgba(0, 199, 60, 0.15) 0%, rgba(0, 199, 60, 0.05) 100%);
+        }
+
+        .esg-icon.environment svg {
+            stroke: var(--accent-green);
+        }
+
+        .esg-icon.social {
+            background: linear-gradient(135deg, rgba(88, 166, 255, 0.15) 0%, rgba(88, 166, 255, 0.05) 100%);
+        }
+
+        .esg-icon.social svg {
+            stroke: var(--accent-blue);
+        }
+
+        .esg-icon.governance {
+            background: linear-gradient(135deg, rgba(255, 184, 0, 0.15) 0%, rgba(255, 184, 0, 0.05) 100%);
+        }
+
+        .esg-icon.governance svg {
+            stroke: var(--primary-gold);
+        }
+
+        .esg-card h3 {
+            font-size: 22px;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 4px;
+        }
+
+        .esg-subtitle {
+            font-size: 14px;
+            color: var(--text-tertiary);
+            margin-bottom: 20px;
+        }
+
+        .esg-list {
+            list-style: none;
+            margin-bottom: 24px;
+        }
+
+        .esg-list li {
+            font-size: 14px;
+            color: var(--text-secondary);
+            padding: 8px 0;
+            border-bottom: 1px solid var(--border-light);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .esg-list li:last-child {
+            border-bottom: none;
+        }
+
+        .esg-list li::before {
+            content: '';
+            width: 6px;
+            height: 6px;
+            background: var(--primary-gold);
+            border-radius: 50%;
+            flex-shrink: 0;
+        }
+
+        .esg-stat {
+            background: var(--bg-light);
+            border-radius: 12px;
+            padding: 16px;
+            text-align: center;
+            border: 1px solid var(--border-light);
+        }
+
+        .esg-card:hover .esg-stat {
+            background: linear-gradient(135deg, var(--primary-yellow) 0%, #FFD54F 100%);
+            border-color: var(--primary-yellow);
+        }
+
+        .esg-stat-value {
+            font-family: 'Inter', sans-serif;
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--primary-dark);
+            display: block;
+        }
+
+        .esg-stat-label {
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+
+        /* Notice Section */
+        .notice-section {
+            background: var(--bg-light);
+        }
+
+        .notice-content {
+            background: var(--bg-white);
+            border-radius: 20px;
+            box-shadow: var(--shadow-sm);
+            overflow: hidden;
+        }
+
+        .notice-tabs {
+            display: flex;
+            border-bottom: 1px solid var(--border-light);
+        }
+
+        .notice-tab {
+            flex: 1;
+            padding: 16px 24px;
+            background: none;
+            border: none;
+            font-size: 15px;
+            font-weight: 600;
+            color: var(--text-tertiary);
+            cursor: pointer;
+            transition: all 0.2s ease;
+            position: relative;
+        }
+
+        .notice-tab:hover {
+            color: var(--text-primary);
+            background: var(--bg-light);
+        }
+
+        .notice-tab.active {
+            color: var(--primary-gold);
+        }
+
+        .notice-tab.active::after {
+            content: '';
+            position: absolute;
+            bottom: -1px;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: var(--primary-gold);
+        }
+
+        .notice-list {
+            padding: 8px 0;
+        }
+
+        .notice-item {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            padding: 20px 24px;
+            border-bottom: 1px solid var(--border-light);
+            transition: background 0.2s ease;
+            cursor: pointer;
+        }
+
+        .notice-item:last-child {
+            border-bottom: none;
+        }
+
+        .notice-item:hover {
+            background: var(--bg-light);
+        }
+
+        .notice-badge {
+            padding: 4px 10px;
+            background: var(--primary-dark);
+            color: white;
+            font-size: 11px;
+            font-weight: 600;
+            border-radius: 4px;
+            flex-shrink: 0;
+        }
+
+        .notice-badge.disclosure {
+            background: var(--accent-blue);
+        }
+
+        .notice-item-content {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .notice-item-content h4 {
+            font-size: 15px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 4px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .notice-item:hover .notice-item-content h4 {
+            color: var(--primary-gold);
+        }
+
+        .notice-item-content p {
+            font-size: 13px;
+            color: var(--text-tertiary);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .notice-date {
+            font-family: 'Inter', sans-serif;
+            font-size: 13px;
+            color: var(--text-tertiary);
+            flex-shrink: 0;
+        }
+
+        @media (max-width: 992px) {
+            .esg-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .notice-item {
+                flex-wrap: wrap;
+                gap: 8px;
+            }
+
+            .notice-date {
+                width: 100%;
+                text-align: right;
+            }
+        }
+
+        /* Chatbot Styles */
+        .chatbot-toggle {
+            position: fixed;
+            bottom: 80px;
+            right: 24px;
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, var(--primary-gold) 0%, var(--primary-yellow) 100%);
+            border-radius: 50%;
+            border: none;
+            cursor: pointer;
+            box-shadow: 0 4px 20px rgba(255, 184, 0, 0.4);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            z-index: 999;
+            overflow: hidden;
+        }
+
+        .chatbot-toggle:hover {
+            transform: scale(1.1);
+            box-shadow: 0 6px 30px rgba(255, 184, 0, 0.5);
+        }
+
+        .chatbot-toggle img {
+            width: 36px;
+            height: 36px;
+            object-fit: contain;
+        }
+
+        .chatbot-toggle .close-icon {
+            display: none;
+            font-size: 28px;
+            color: var(--primary-dark);
+            font-weight: 300;
+        }
+
+        .chatbot-toggle.active .close-icon {
+            display: block;
+        }
+
+        .chatbot-toggle.active img {
+            display: none;
+        }
+
+        .chatbot-badge {
+            position: absolute;
+            top: -4px;
+            right: -4px;
+            width: 20px;
+            height: 20px;
+            background: var(--accent-red);
+            border-radius: 50%;
+            color: white;
+            font-size: 11px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            animation: badgePulse 2s infinite;
+        }
+
+        @keyframes badgePulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+
+        .chatbot-window {
+            position: fixed;
+            bottom: 150px;
+            right: 24px;
+            width: 380px;
+            max-height: 560px;
+            background: var(--bg-white);
+            border-radius: 20px;
+            box-shadow: 0 10px 50px rgba(0, 0, 0, 0.2);
+            display: flex;
+            flex-direction: column;
+            z-index: 998;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(20px) scale(0.95);
+            transition: all 0.3s ease;
+            overflow: hidden;
+        }
+
+        .chatbot-window.active {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0) scale(1);
+        }
+
+        .chatbot-header {
+            background: linear-gradient(135deg, var(--primary-dark) 0%, #2a2a2a 100%);
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .chatbot-header-avatar {
+            width: 44px;
+            height: 44px;
+            background: var(--bg-white);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 6px;
+        }
+
+        .chatbot-header-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+
+        .chatbot-header-info {
+            flex: 1;
+        }
+
+        .chatbot-header-name {
+            font-size: 16px;
+            font-weight: 600;
+            color: white;
+            margin-bottom: 2px;
+        }
+
+        .chatbot-header-status {
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.7);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .chatbot-header-status::before {
+            content: '';
+            width: 8px;
+            height: 8px;
+            background: var(--accent-green);
+            border-radius: 50%;
+            animation: blink 1s infinite;
+        }
+
+        .chatbot-messages {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            max-height: 340px;
+            background: var(--bg-light);
+        }
+
+        .chat-message {
+            display: flex;
+            gap: 10px;
+            animation: messageIn 0.3s ease;
+        }
+
+        @keyframes messageIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .chat-message.bot {
+            align-items: flex-start;
+        }
+
+        .chat-message.user {
+            flex-direction: row-reverse;
+        }
+
+        .chat-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: var(--primary-dark);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .chat-avatar .avatar-text {
+            font-size: 6px;
+            font-weight: 700;
+            color: #FFFFFF;
+            letter-spacing: 0.5px;
+        }
+
+        .chat-avatar.user-avatar {
+            background: linear-gradient(135deg, var(--primary-gold) 0%, var(--primary-yellow) 100%);
+        }
+
+        .chat-avatar.user-avatar svg {
+            width: 18px;
+            height: 18px;
+            stroke: var(--primary-dark);
+        }
+
+        .chat-bubble {
+            max-width: 75%;
+            padding: 12px 16px;
+            border-radius: 16px;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+
+        .chat-message.bot .chat-bubble {
+            background: var(--bg-white);
+            color: var(--text-primary);
+            border-bottom-left-radius: 4px;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .chat-message.user .chat-bubble {
+            background: var(--primary-dark);
+            color: white;
+            border-bottom-right-radius: 4px;
+        }
+
+        .chat-bubble a {
+            color: var(--accent-blue);
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .chat-bubble a:hover {
+            text-decoration: underline;
+        }
+
+        .faq-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-top: 12px;
+        }
+
+        .faq-btn {
+            padding: 10px 14px;
+            background: var(--bg-light);
+            border: 1px solid var(--border-light);
+            border-radius: 10px;
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--text-primary);
+            cursor: pointer;
+            text-align: left;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .faq-btn:hover {
+            background: var(--bg-gray);
+            border-color: var(--primary-gold);
+            transform: translateX(4px);
+        }
+
+        .faq-btn .faq-icon {
+            font-size: 11px;
+            font-weight: 700;
+            color: var(--primary-gold);
+            background: rgba(255, 184, 0, 0.15);
+            padding: 4px 6px;
+            border-radius: 4px;
+            min-width: 24px;
+            text-align: center;
+        }
+
+        .chatbot-input-area {
+            padding: 16px;
+            background: var(--bg-white);
+            border-top: 1px solid var(--border-light);
+            display: flex;
+            gap: 10px;
+        }
+
+        .chatbot-input {
+            flex: 1;
+            padding: 12px 16px;
+            border: 1px solid var(--border-light);
+            border-radius: 12px;
+            font-size: 14px;
+            font-family: inherit;
+            color: var(--text-primary);
+            background: var(--bg-light);
+            outline: none;
+            transition: all 0.2s ease;
+        }
+
+        .chatbot-input:focus {
+            border-color: var(--primary-gold);
+            background: var(--bg-white);
+            box-shadow: 0 0 0 3px rgba(255, 184, 0, 0.1);
+        }
+
+        .chatbot-input::placeholder {
+            color: var(--text-tertiary);
+        }
+
+        .chatbot-send {
+            width: 44px;
+            height: 44px;
+            background: var(--primary-dark);
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+        }
+
+        .chatbot-send:hover {
+            background: #333333;
+            transform: scale(1.05);
+        }
+
+        .chatbot-send svg {
+            width: 20px;
+            height: 20px;
+            stroke: white;
+        }
+
+        .typing-indicator {
+            display: flex;
+            gap: 4px;
+            padding: 12px 16px;
+            background: var(--bg-white);
+            border-radius: 16px;
+            border-bottom-left-radius: 4px;
+            width: fit-content;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .typing-indicator span {
+            width: 8px;
+            height: 8px;
+            background: var(--text-tertiary);
+            border-radius: 50%;
+            animation: typingBounce 1.4s infinite ease-in-out;
+        }
+
+        .typing-indicator span:nth-child(1) { animation-delay: -0.32s; }
+        .typing-indicator span:nth-child(2) { animation-delay: -0.16s; }
+
+        @keyframes typingBounce {
+            0%, 80%, 100% { transform: scale(0.8); opacity: 0.5; }
+            40% { transform: scale(1); opacity: 1; }
+        }
+
+        @media (max-width: 480px) {
+            .chatbot-window {
+                right: 12px;
+                left: 12px;
+                width: auto;
+                bottom: 140px;
+                max-height: 70vh;
+            }
+
+            .chatbot-toggle {
+                right: 16px;
+                bottom: 70px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Stock Ticker -->
+    <div class="stock-ticker">
+        <div class="ticker-wrap">
+            <div class="ticker-item">
+                <span class="ticker-symbol">KOSPI</span>
+                <span class="ticker-price">2,456.78</span>
+                <span class="ticker-change up">▲ 1.24%</span>
+            </div>
+            <div class="ticker-item">
+                <span class="ticker-symbol">KOSDAQ</span>
+                <span class="ticker-price">842.15</span>
+                <span class="ticker-change up">▲ 0.87%</span>
+            </div>
+            <div class="ticker-item">
+                <span class="ticker-symbol">S&P 500</span>
+                <span class="ticker-price">4,789.25</span>
+                <span class="ticker-change down">▼ 0.32%</span>
+            </div>
+            <div class="ticker-item">
+                <span class="ticker-symbol">NASDAQ</span>
+                <span class="ticker-price">15,123.67</span>
+                <span class="ticker-change up">▲ 0.56%</span>
+            </div>
+            <div class="ticker-item">
+                <span class="ticker-symbol">USD/KRW</span>
+                <span class="ticker-price">1,298.50</span>
+                <span class="ticker-change down">▼ 0.15%</span>
+            </div>
+            <div class="ticker-item">
+                <span class="ticker-symbol">EUR/KRW</span>
+                <span class="ticker-price">1,412.30</span>
+                <span class="ticker-change up">▲ 0.28%</span>
+            </div>
+            <div class="ticker-item">
+                <span class="ticker-symbol">BTC</span>
+                <span class="ticker-price">$43,567</span>
+                <span class="ticker-change up">▲ 2.45%</span>
+            </div>
+            <div class="ticker-item">
+                <span class="ticker-symbol">GOLD</span>
+                <span class="ticker-price">$2,045</span>
+                <span class="ticker-change up">▲ 0.67%</span>
+            </div>
+            <!-- Duplicate for seamless loop -->
+            <div class="ticker-item">
+                <span class="ticker-symbol">KOSPI</span>
+                <span class="ticker-price">2,456.78</span>
+                <span class="ticker-change up">▲ 1.24%</span>
+            </div>
+            <div class="ticker-item">
+                <span class="ticker-symbol">KOSDAQ</span>
+                <span class="ticker-price">842.15</span>
+                <span class="ticker-change up">▲ 0.87%</span>
+            </div>
+            <div class="ticker-item">
+                <span class="ticker-symbol">S&P 500</span>
+                <span class="ticker-price">4,789.25</span>
+                <span class="ticker-change down">▼ 0.32%</span>
+            </div>
+            <div class="ticker-item">
+                <span class="ticker-symbol">NASDAQ</span>
+                <span class="ticker-price">15,123.67</span>
+                <span class="ticker-change up">▲ 0.56%</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Navigation -->
+    <div class="nav-container">
+        <nav>
+            <div class="logo"><img src="img/timbel logo.png" alt="TIMBEL" style="height: 36px; width: auto;"></div>
+            <ul class="nav-links">
+                <li><a href="#about">회사소개</a></li>
+                <li><a href="#business">사업소개</a></li>
+                <li><a href="#products">투자상품</a></li>
+                <li><a href="#news">Insight & News</a></li>
+                <li><a href="#esg">ESG</a></li>
+                <li><a href="#notice">공지&공시</a></li>
+            </ul>
+            <div class="nav-right">
+                <a href="#contact" class="nav-btn">상담 신청</a>
+                <button class="mobile-menu-btn">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
+            </div>
+        </nav>
+    </div>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-bg-pattern"></div>
+        <div class="hero-content">
+            <div class="hero-text">
+                <div class="hero-badge">
+                    <span class="dot"></span>
+                    실시간 자산 운용 현황
+                </div>
+                <h1 class="hero-title">
+                    <span class="highlight">66.8조</span> 규모<br>
+                    대한민국 No.1<br>
+                    자산운용사
+                </h1>
+                <p class="hero-description">
+                    변화의 흐름 속에서도 변함없는 가치를 창출합니다.<br>
+                    2010년 창립 이후 쌓아온 전문성과 네트워크로 최적의 투자 솔루션을 제공합니다.
+                </p>
+                <div class="hero-stats">
+                    <div class="hero-stat">
+                        <div class="hero-stat-value">330<span>+</span></div>
+                        <div class="hero-stat-label">전문 운용 인력</div>
+                    </div>
+                    <div class="hero-stat">
+                        <div class="hero-stat-value">15<span>년</span></div>
+                        <div class="hero-stat-label">운용 경험</div>
+                    </div>
+                    <div class="hero-stat">
+                        <div class="hero-stat-value">1<span>위</span></div>
+                        <div class="hero-stat-label">부동산 운용사</div>
+                    </div>
+                </div>
+                <div class="hero-buttons">
+                    <a href="#contact" class="btn-primary">
+                        투자 상담 신청
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M5 12h14M12 5l7 7-7 7"/>
+                        </svg>
+                    </a>
+                    <button onclick="showBrochurePopup()" class="btn-secondary">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/>
+                            <polyline points="14 2 14 8 20 8"/>
+                            <line x1="16" y1="13" x2="8" y2="13"/>
+                            <line x1="16" y1="17" x2="8" y2="17"/>
+                            <polyline points="10 9 9 9 8 9"/>
+                        </svg>
+                        회사 소개서
+                    </button>
+                </div>
+            </div>
+            <div class="hero-panel">
+                <div class="panel-header">
+                    <div class="panel-title">
+                        <span class="live-dot"></span>
+                        실시간 포트폴리오 현황
+                    </div>
+                    <div class="panel-time" id="currentTime">2024.12.26 15:30:45</div>
+                </div>
+                <div class="mini-chart">
+                    <svg viewBox="0 0 400 120" preserveAspectRatio="none">
+                        <defs>
+                            <linearGradient id="miniGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+                                <stop offset="0%" style="stop-color:#FFB800;stop-opacity:0.3" />
+                                <stop offset="100%" style="stop-color:#FFB800;stop-opacity:0" />
+                            </linearGradient>
+                        </defs>
+                        <path fill="url(#miniGradient)" d="M0 120 L0 80 Q40 70 80 65 T160 50 T240 35 T320 45 T400 20 L400 120 Z"/>
+                        <path fill="none" stroke="#FFB800" stroke-width="2" d="M0 80 Q40 70 80 65 T160 50 T240 35 T320 45 T400 20">
+                            <animate attributeName="d" 
+                                values="M0 80 Q40 70 80 65 T160 50 T240 35 T320 45 T400 20;
+                                        M0 75 Q40 65 80 70 T160 45 T240 40 T320 35 T400 15;
+                                        M0 80 Q40 70 80 65 T160 50 T240 35 T320 45 T400 20"
+                                dur="4s" repeatCount="indefinite"/>
+                        </path>
+                    </svg>
+                    <div class="chart-value">
+                        <div class="chart-value-main">₩66.8조</div>
+                        <div class="chart-value-change up">▲ +12.4% YoY</div>
+                    </div>
+                </div>
+                <div class="stock-list">
+                    <div class="stock-item">
+                        <div class="stock-info">
+                            <div class="stock-icon">RE</div>
+                            <div>
+                                <div class="stock-name">부동산 펀드</div>
+                                <div class="stock-category">Real Estate</div>
+                            </div>
+                        </div>
+                        <div class="stock-data">
+                            <div class="stock-price">₩32.4조</div>
+                            <div class="stock-change up">▲ 8.5%</div>
+                        </div>
+                    </div>
+                    <div class="stock-item">
+                        <div class="stock-info">
+                            <div class="stock-icon">RT</div>
+                            <div>
+                                <div class="stock-name">리츠</div>
+                                <div class="stock-category">REITs</div>
+                            </div>
+                        </div>
+                        <div class="stock-data">
+                            <div class="stock-price">₩18.2조</div>
+                            <div class="stock-change up">▲ 15.2%</div>
+                        </div>
+                    </div>
+                    <div class="stock-item">
+                        <div class="stock-info">
+                            <div class="stock-icon">IF</div>
+                            <div>
+                                <div class="stock-name">인프라</div>
+                                <div class="stock-category">Infrastructure</div>
+                            </div>
+                        </div>
+                        <div class="stock-data">
+                            <div class="stock-price">₩12.1조</div>
+                            <div class="stock-change up">▲ 22.8%</div>
+                        </div>
+                    </div>
+                    <div class="stock-item">
+                        <div class="stock-info">
+                            <div class="stock-icon">SC</div>
+                            <div>
+                                <div class="stock-name">증권</div>
+                                <div class="stock-category">Securities</div>
+                            </div>
+                        </div>
+                        <div class="stock-data">
+                            <div class="stock-price">₩4.1조</div>
+                            <div class="stock-change down">▼ 2.1%</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Performance Section -->
+    <section class="performance-section" id="about">
+        <div class="section-container">
+            <div class="section-header">
+                <p class="section-label">Performance</p>
+                <h2 class="section-title">압도적인 운용 실적</h2>
+                <p class="section-description">
+                    국내 최대 규모의 자산운용사로서 검증된 투자 성과를 제공합니다.
+                </p>
+            </div>
+            <div class="performance-grid">
+                <div class="performance-card">
+                    <div class="performance-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                            <path d="M12 2v20M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/>
+                        </svg>
+                    </div>
+                    <div class="performance-number">66.8<span>조</span></div>
+                    <div class="performance-label">총 운용자산 (AUM)</div>
+                    <div class="performance-trend">▲ +12.4% YoY</div>
+                </div>
+                <div class="performance-card">
+                    <div class="performance-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                            <path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2M9 11a4 4 0 100-8 4 4 0 000 8zM23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/>
+                        </svg>
+                    </div>
+                    <div class="performance-number">330<span>+</span></div>
+                    <div class="performance-label">전문 운용 인력</div>
+                    <div class="performance-trend">▲ +15% YoY</div>
+                </div>
+                <div class="performance-card">
+                    <div class="performance-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                            <path d="M16 8v8M12 11v5M8 14v2M4 4h16v16H4z"/>
+                        </svg>
+                    </div>
+                    <div class="performance-number">8.7<span>%</span></div>
+                    <div class="performance-label">평균 수익률</div>
+                    <div class="performance-trend">▲ 시장 대비 +2.3%</div>
+                </div>
+                <div class="performance-card">
+                    <div class="performance-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                            <path d="M3 21h18M5 21V7l7-4 7 4v14M9 21v-6h6v6"/>
+                        </svg>
+                    </div>
+                    <div class="performance-number">150<span>+</span></div>
+                    <div class="performance-label">운용 자산 수</div>
+                    <div class="performance-trend">▲ +28 건 YoY</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Business Section -->
+    <section class="business-section" id="business">
+        <div class="section-container">
+            <div class="section-header">
+                <p class="section-label">Our Business</p>
+                <h2 class="section-title">투자 영역</h2>
+                <p class="section-description">
+                    부동산, 리츠, 인프라, 증권 등 다양한 투자 영역에서 최적화된 솔루션을 제공합니다.
+                </p>
+            </div>
+            <div class="business-grid">
+                <div class="business-card">
+                    <div class="business-image">
+                        <div class="business-image-bg realestate"></div>
+                    </div>
+                    <div class="business-content">
+                        <h3>Real Estate</h3>
+                        <p>전통에서 혁신까지, 급변하는 시장 속에서 투자 가치를 창출합니다.</p>
+                        <a href="#" class="business-link">
+                            자세히 보기
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M5 12h14M12 5l7 7-7 7"/>
+                            </svg>
+                        </a>
+                    </div>
+                </div>
+                <div class="business-card">
+                    <div class="business-image">
+                        <div class="business-image-bg reits"></div>
+                    </div>
+                    <div class="business-content">
+                        <h3>REITs</h3>
+                        <p>국내외 우량 자산 기반의 상장 리츠와 특화된 사모 리츠로 안정적인 배당 수익을 창출합니다.</p>
+                        <a href="#" class="business-link">
+                            자세히 보기
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M5 12h14M12 5l7 7-7 7"/>
+                            </svg>
+                        </a>
+                    </div>
+                </div>
+                <div class="business-card">
+                    <div class="business-image">
+                        <div class="business-image-bg infra"></div>
+                    </div>
+                    <div class="business-content">
+                        <h3>Infrastructure</h3>
+                        <p>전통과 성장 인프라를 활용해 안정적인 수익을 창출하고, 미래 변화에 대비합니다.</p>
+                        <a href="#" class="business-link">
+                            자세히 보기
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M5 12h14M12 5l7 7-7 7"/>
+                            </svg>
+                        </a>
+                    </div>
+                </div>
+                <div class="business-card">
+                    <div class="business-image">
+                        <div class="business-image-bg securities"></div>
+                    </div>
+                    <div class="business-content">
+                        <h3>Securities</h3>
+                        <p>시황에 의존하지 않는 절대수익을 추구합니다.</p>
+                        <a href="#" class="business-link">
+                            자세히 보기
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M5 12h14M12 5l7 7-7 7"/>
+                            </svg>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Market Overview Section -->
+    <section class="market-section" id="products">
+        <div class="section-container">
+            <div class="market-content">
+                <div class="market-text">
+                    <p class="section-label">Market Overview</p>
+                    <h2>글로벌 시장을<br>선도하는 투자 전략</h2>
+                    <p>
+                        이지스자산운용은 아시아, 북미, 유럽을 아우르는 글로벌 네트워크를 구축하여
+                        세계 각지의 투자 기회를 발굴하고 고객에게 최적의 투자 솔루션을 제공합니다.
+                    </p>
+                    <div class="market-features">
+                        <div class="market-feature">
+                            <div class="market-feature-icon">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <circle cx="12" cy="12" r="10"/>
+                                    <path d="M2 12h20M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z"/>
+                                </svg>
+                            </div>
+                            <div class="market-feature-text">
+                                <h4>글로벌 네트워크</h4>
+                                <p>아시아, 북미, 유럽 시장 커버</p>
+                            </div>
+                        </div>
+                        <div class="market-feature">
+                            <div class="market-feature-icon">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                                </svg>
+                            </div>
+                            <div class="market-feature-text">
+                                <h4>리스크 관리</h4>
+                                <p>체계적인 위험 관리 시스템</p>
+                            </div>
+                        </div>
+                        <div class="market-feature">
+                            <div class="market-feature-icon">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
+                                </svg>
+                            </div>
+                            <div class="market-feature-text">
+                                <h4>실시간 모니터링</h4>
+                                <p>24시간 시장 분석 및 대응</p>
+                            </div>
+                        </div>
+                        <div class="market-feature">
+                            <div class="market-feature-icon">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/>
+                                </svg>
+                            </div>
+                            <div class="market-feature-text">
+                                <h4>AI 기반 분석</h4>
+                                <p>첨단 기술 활용 투자 분석</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="market-chart">
+                    <div class="market-chart-header">
+                        <div class="market-chart-title">포트폴리오 성과 추이</div>
+                        <div class="market-chart-tabs">
+                            <button class="market-chart-tab">1M</button>
+                            <button class="market-chart-tab">3M</button>
+                            <button class="market-chart-tab active">1Y</button>
+                            <button class="market-chart-tab">ALL</button>
+                        </div>
+                    </div>
+                    <div class="big-chart">
+                        <svg viewBox="0 0 600 220" preserveAspectRatio="none">
+                            <defs>
+                                <linearGradient id="bigGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+                                    <stop offset="0%" style="stop-color:#FFB800;stop-opacity:0.2" />
+                                    <stop offset="100%" style="stop-color:#FFB800;stop-opacity:0" />
+                                </linearGradient>
+                            </defs>
+                            <!-- Grid lines -->
+                            <line x1="0" y1="55" x2="600" y2="55" stroke="#E5E8EB" stroke-dasharray="5,5"/>
+                            <line x1="0" y1="110" x2="600" y2="110" stroke="#E5E8EB" stroke-dasharray="5,5"/>
+                            <line x1="0" y1="165" x2="600" y2="165" stroke="#E5E8EB" stroke-dasharray="5,5"/>
+                            <!-- Chart area -->
+                            <path fill="url(#bigGradient)" d="M0 220 L0 160 Q50 150 100 140 T200 120 T300 90 T400 100 T500 60 T600 45 L600 220 Z"/>
+                            <!-- Chart line -->
+                            <path fill="none" stroke="#FFB800" stroke-width="2.5" d="M0 160 Q50 150 100 140 T200 120 T300 90 T400 100 T500 60 T600 45">
+                                <animate attributeName="d" 
+                                    values="M0 160 Q50 150 100 140 T200 120 T300 90 T400 100 T500 60 T600 45;
+                                            M0 155 Q50 145 100 135 T200 115 T300 95 T400 95 T500 55 T600 40;
+                                            M0 160 Q50 150 100 140 T200 120 T300 90 T400 100 T500 60 T600 45"
+                                    dur="5s" repeatCount="indefinite"/>
+                            </path>
+                            <!-- Data points -->
+                            <circle cx="100" cy="140" r="4" fill="#FFB800"/>
+                            <circle cx="200" cy="120" r="4" fill="#FFB800"/>
+                            <circle cx="300" cy="90" r="4" fill="#FFB800"/>
+                            <circle cx="400" cy="100" r="4" fill="#FFB800"/>
+                            <circle cx="500" cy="60" r="4" fill="#FFB800"/>
+                            <circle cx="600" cy="45" r="5" fill="#FFB800" stroke="#FFFFFF" stroke-width="2"/>
+                        </svg>
+                    </div>
+                    <div class="chart-metrics">
+                        <div class="chart-metric">
+                            <div class="chart-metric-value">+12.4%</div>
+                            <div class="chart-metric-label">연간 수익률</div>
+                        </div>
+                        <div class="chart-metric">
+                            <div class="chart-metric-value">0.82</div>
+                            <div class="chart-metric-label">샤프 비율</div>
+                        </div>
+                        <div class="chart-metric">
+                            <div class="chart-metric-value">-3.2%</div>
+                            <div class="chart-metric-label">최대 낙폭</div>
+                        </div>
+                        <div class="chart-metric">
+                            <div class="chart-metric-value">1.15</div>
+                            <div class="chart-metric-label">베타</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- News Section -->
+    <section class="news-section" id="news">
+        <div class="section-container">
+            <div class="section-header">
+                <p class="section-label">Insight & News</p>
+                <h2 class="section-title">최신 소식</h2>
+            </div>
+            <div class="news-grid">
+                <article class="news-card">
+                    <div class="news-image">
+                        <div class="news-image-bg finance"></div>
+                        <span class="news-category">Market Views</span>
+                    </div>
+                    <div class="news-content">
+                        <h3>EXPO REAL 2025 | 뮌헨에서 본 글로벌 부동산 트렌드</h3>
+                        <p>매년 10월 열리는 유럽 최대 규모의 부동산 박람회인 EXPO REAL이 2025년에도 독일 뮌헨에서 개최되었습니다.</p>
+                        <span class="news-date">2025.10.08</span>
+                    </div>
+                </article>
+                <article class="news-card">
+                    <div class="news-image">
+                        <div class="news-image-bg realestate"></div>
+                        <span class="news-category">Portfolio</span>
+                    </div>
+                    <div class="news-content">
+                        <h3>원그로브: 마곡을 대표하는 프라임 오피스</h3>
+                        <p>마곡 R&D 단지의 랜드마크로 자리잡은 원그로브의 투자 가치와 운영 현황을 소개합니다.</p>
+                        <span class="news-date">2025.02.24</span>
+                    </div>
+                </article>
+                <article class="news-card">
+                    <div class="news-image">
+                        <div class="news-image-bg market"></div>
+                        <span class="news-category">News</span>
+                    </div>
+                    <div class="news-content">
+                        <h3>"남산을 세계 명소로" 힐튼부지 재생사업 본격 시동</h3>
+                        <p>이지스자산운용이 서울 남산 힐튼호텔 부지 재생사업을 본격적으로 추진합니다.</p>
+                        <span class="news-date">2024.12.26</span>
+                    </div>
+                </article>
+            </div>
+            <div class="news-more">
+                <a href="#" class="business-link">
+                    View All News
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M5 12h14M12 5l7 7-7 7"/>
+                    </svg>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- ESG Section -->
+    <section class="esg-section" id="esg">
+        <div class="section-container">
+            <div class="section-header">
+                <p class="section-label">ESG Management</p>
+                <h2 class="section-title">지속가능경영</h2>
+                <p class="section-description">
+                    TIMBEL은 환경, 사회, 지배구조를 고려한 책임투자를 실천합니다.
+                </p>
+            </div>
+            <div class="esg-grid">
+                <div class="esg-card">
+                    <div class="esg-icon environment">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                            <path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z"/>
+                            <path d="M12 6v6l4 2"/>
+                            <path d="M8.5 8.5l7 7"/>
+                        </svg>
+                    </div>
+                    <h3>Environment</h3>
+                    <p class="esg-subtitle">환경</p>
+                    <ul class="esg-list">
+                        <li>친환경 건물 투자 확대</li>
+                        <li>탄소배출 저감 목표 설정</li>
+                        <li>신재생에너지 인프라 투자</li>
+                        <li>녹색건축 인증 자산 운용</li>
+                    </ul>
+                    <div class="esg-stat">
+                        <span class="esg-stat-value">32%</span>
+                        <span class="esg-stat-label">친환경 인증 자산 비율</span>
+                    </div>
+                </div>
+                <div class="esg-card">
+                    <div class="esg-icon social">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                            <path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/>
+                            <circle cx="9" cy="7" r="4"/>
+                            <path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/>
+                        </svg>
+                    </div>
+                    <h3>Social</h3>
+                    <p class="esg-subtitle">사회</p>
+                    <ul class="esg-list">
+                        <li>지역사회 상생 프로그램</li>
+                        <li>임직원 역량 개발 지원</li>
+                        <li>다양성 및 포용성 강화</li>
+                        <li>협력사 동반성장 추진</li>
+                    </ul>
+                    <div class="esg-stat">
+                        <span class="esg-stat-value">1,200+</span>
+                        <span class="esg-stat-label">사회공헌 활동 시간</span>
+                    </div>
+                </div>
+                <div class="esg-card">
+                    <div class="esg-icon governance">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                            <path d="M9 12l2 2 4-4"/>
+                        </svg>
+                    </div>
+                    <h3>Governance</h3>
+                    <p class="esg-subtitle">지배구조</p>
+                    <ul class="esg-list">
+                        <li>투명한 의사결정 체계</li>
+                        <li>윤리경영 강화</li>
+                        <li>이해관계자 소통 확대</li>
+                        <li>리스크 관리 체계 고도화</li>
+                    </ul>
+                    <div class="esg-stat">
+                        <span class="esg-stat-value">A등급</span>
+                        <span class="esg-stat-label">ESG 평가등급</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Notice Section -->
+    <section class="notice-section" id="notice">
+        <div class="section-container">
+            <div class="section-header">
+                <p class="section-label">Notice & Disclosure</p>
+                <h2 class="section-title">공지 & 공시</h2>
+            </div>
+            <div class="notice-content">
+                <div class="notice-tabs">
+                    <button class="notice-tab active" onclick="switchNoticeTab('notice')">공지사항</button>
+                    <button class="notice-tab" onclick="switchNoticeTab('disclosure')">공시정보</button>
+                </div>
+                <div class="notice-list" id="noticeList">
+                    <div class="notice-item">
+                        <span class="notice-badge">공지</span>
+                        <div class="notice-item-content">
+                            <h4>2025년 신년사 - 새로운 도약을 향하여</h4>
+                            <p>2025년 새해를 맞아 TIMBEL 임직원 여러분과 투자자 여러분께 인사드립니다...</p>
+                        </div>
+                        <span class="notice-date">2025.01.02</span>
+                    </div>
+                    <div class="notice-item">
+                        <span class="notice-badge">공지</span>
+                        <div class="notice-item-content">
+                            <h4>연말연시 업무 안내 (12/30 ~ 1/1)</h4>
+                            <p>연말연시 휴무 기간 동안의 업무 처리 및 고객 상담 관련 안내드립니다...</p>
+                        </div>
+                        <span class="notice-date">2024.12.26</span>
+                    </div>
+                    <div class="notice-item">
+                        <span class="notice-badge">중요</span>
+                        <div class="notice-item-content">
+                            <h4>사칭 주의 안내 - 당사 및 임직원 사칭 투자권유 유의</h4>
+                            <p>최근 당사를 사칭한 불법 투자권유 사례가 발생하고 있어 주의를 당부드립니다...</p>
+                        </div>
+                        <span class="notice-date">2024.12.20</span>
+                    </div>
+                    <div class="notice-item">
+                        <span class="notice-badge">공지</span>
+                        <div class="notice-item-content">
+                            <h4>제12기 정기주주총회 결과 안내</h4>
+                            <p>2024년 정기주주총회가 성황리에 종료되었습니다. 주요 결의사항을 안내드립니다...</p>
+                        </div>
+                        <span class="notice-date">2024.12.15</span>
+                    </div>
+                    <div class="notice-item">
+                        <span class="notice-badge">공지</span>
+                        <div class="notice-item-content">
+                            <h4>신규 펀드 출시 안내 - TIMBEL 프라임 인프라 펀드</h4>
+                            <p>안정적인 수익을 추구하는 신규 인프라 펀드가 출시되었습니다...</p>
+                        </div>
+                        <span class="notice-date">2024.12.10</span>
+                    </div>
+                </div>
+                <div class="notice-list" id="disclosureList" style="display: none;">
+                    <div class="notice-item">
+                        <span class="notice-badge disclosure">공시</span>
+                        <div class="notice-item-content">
+                            <h4>투자신탁 결산보고서 (2024년 4분기)</h4>
+                            <p>2024년 4분기 운용 성과 및 결산 내역을 공시합니다...</p>
+                        </div>
+                        <span class="notice-date">2025.01.05</span>
+                    </div>
+                    <div class="notice-item">
+                        <span class="notice-badge disclosure">공시</span>
+                        <div class="notice-item-content">
+                            <h4>리츠 배당금 지급 공고</h4>
+                            <p>TIMBEL 프라임 리츠 2024년 하반기 배당금 지급을 공고합니다...</p>
+                        </div>
+                        <span class="notice-date">2024.12.28</span>
+                    </div>
+                    <div class="notice-item">
+                        <span class="notice-badge disclosure">공시</span>
+                        <div class="notice-item-content">
+                            <h4>자산 취득 공시 - 판교 테크원타워</h4>
+                            <p>판교 테크원타워 자산 취득 관련 주요 사항을 공시합니다...</p>
+                        </div>
+                        <span class="notice-date">2024.12.18</span>
+                    </div>
+                    <div class="notice-item">
+                        <span class="notice-badge disclosure">공시</span>
+                        <div class="notice-item-content">
+                            <h4>분기 운용보고서 (2024년 3분기)</h4>
+                            <p>2024년 3분기 펀드별 운용 현황 및 성과를 보고합니다...</p>
+                        </div>
+                        <span class="notice-date">2024.10.15</span>
+                    </div>
+                    <div class="notice-item">
+                        <span class="notice-badge disclosure">공시</span>
+                        <div class="notice-item-content">
+                            <h4>ESG 경영보고서 2024</h4>
+                            <p>2024년 ESG 경영 현황 및 성과를 담은 보고서를 공시합니다...</p>
+                        </div>
+                        <span class="notice-date">2024.09.30</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section class="contact-section" id="contact">
+        <div class="section-container">
+            <div class="contact-content">
+                <div class="contact-text">
+                    <p class="section-label">Contact Us</p>
+                    <h2 class="section-title">문의하기</h2>
+                    <p class="section-description" style="text-align: left; margin: 0 0 32px 0;">
+                        투자 상담 및 기타 문의사항이 있으시면 아래 양식을 작성해주세요.<br>
+                        담당자가 빠른 시일 내에 연락드리겠습니다.
+                    </p>
+                    <div class="contact-info-list">
+                        <div class="contact-info-item">
+                            <div class="contact-info-icon">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72 12.84 12.84 0 00.7 2.81 2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45 12.84 12.84 0 002.81.7A2 2 0 0122 16.92z"/>
+                                </svg>
+                            </div>
+                            <div class="contact-info-text">
+                                <span class="contact-info-label">전화 문의</span>
+                                <span class="contact-info-value">02-584-8181</span>
+                            </div>
+                        </div>
+                        <div class="contact-info-item">
+                            <div class="contact-info-icon">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+                                    <polyline points="22,6 12,13 2,6"/>
+                                </svg>
+                            </div>
+                            <div class="contact-info-text">
+                                <span class="contact-info-label">이메일</span>
+                                <span class="contact-info-value">sales@timbel.net</span>
+                            </div>
+                        </div>
+                        <div class="contact-info-item">
+                            <div class="contact-info-icon">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/>
+                                    <circle cx="12" cy="10" r="3"/>
+                                </svg>
+                            </div>
+                            <div class="contact-info-text">
+                                <span class="contact-info-label">주소</span>
+                                <span class="contact-info-value">서울시 강남구 테헤란로 13길 3-94 산돌빌딩</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="contact-form-wrapper">
+                    <form class="contact-form">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="name">이름 *</label>
+                                <input type="text" id="name" name="name" placeholder="홍길동" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="company">회사명</label>
+                                <input type="text" id="company" name="company" placeholder="(주)회사명">
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="email">이메일 *</label>
+                                <input type="email" id="email" name="email" placeholder="example@email.com" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="phone">연락처 *</label>
+                                <input type="tel" id="phone" name="phone" placeholder="010-1234-5678" required>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="inquiry-type">문의 유형</label>
+                            <select id="inquiry-type" name="inquiry-type">
+                                <option value="">선택해주세요</option>
+                                <option value="investment">투자 상담</option>
+                                <option value="product">상품 문의</option>
+                                <option value="partnership">제휴 문의</option>
+                                <option value="career">채용 문의</option>
+                                <option value="other">기타</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="message">문의 내용 *</label>
+                            <textarea id="message" name="message" rows="5" placeholder="문의하실 내용을 입력해주세요." required></textarea>
+                        </div>
+                        <div class="form-group form-checkbox">
+                            <input type="checkbox" id="privacy" name="privacy" required>
+                            <label for="privacy">개인정보 수집 및 이용에 동의합니다. *</label>
+                        </div>
+                        <button type="submit" class="form-submit">문의하기</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-container">
+            <div class="footer-grid">
+                <div class="footer-brand">
+                    <div class="logo"><img src="img/timbel logo.png" alt="TIMBEL" style="height: 36px; width: auto;"></div>
+                    <p>
+                        이지스자산운용은 국내 최대 규모의 자산운용사로서<br>
+                        고객에게 변함없는 가치를 제공합니다.
+                    </p>
+                    <div class="footer-social">
+                        <a href="#" class="social-link">
+                            <svg viewBox="0 0 24 24">
+                                <path d="M18 2h-3a5 5 0 00-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 011-1h3z"/>
+                            </svg>
+                        </a>
+                        <a href="#" class="social-link">
+                            <svg viewBox="0 0 24 24">
+                                <path d="M16 8a6 6 0 016 6v7h-4v-7a2 2 0 00-2-2 2 2 0 00-2 2v7h-4v-7a6 6 0 016-6zM2 9h4v12H2z"/>
+                                <circle cx="4" cy="4" r="2"/>
+                            </svg>
+                        </a>
+                        <a href="#" class="social-link">
+                            <svg viewBox="0 0 24 24">
+                                <path d="M23 3a10.9 10.9 0 01-3.14 1.53 4.48 4.48 0 00-7.86 3v1A10.66 10.66 0 013 4s-4 9 5 13a11.64 11.64 0 01-7 2c9 5 20 0 20-11.5a4.5 4.5 0 00-.08-.83A7.72 7.72 0 0023 3z"/>
+                            </svg>
+                        </a>
+                    </div>
+                </div>
+                <div class="footer-column">
+                    <h4>회사소개</h4>
+                    <ul>
+                        <li><a href="#">이지스자산운용 소개</a></li>
+                        <li><a href="#">조직구성</a></li>
+                        <li><a href="#">연혁</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h4>사업소개</h4>
+                    <ul>
+                        <li><a href="#">비즈니스</a></li>
+                        <li><a href="#">투자운용 원칙</a></li>
+                        <li><a href="#">주요 고객</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h4>투자상품</h4>
+                    <ul>
+                        <li><a href="#">공모펀드</a></li>
+                        <li><a href="#">리츠</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h4>고객지원</h4>
+                    <ul>
+                        <li><a href="#">공지사항</a></li>
+                        <li><a href="#">공시</a></li>
+                        <li><a href="#">채용</a></li>
+                        <li><a href="#">Contact Us</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p class="footer-copyright">Copyright © IGIS Asset Management. All Rights Reserved.</p>
+                <div class="footer-links">
+                    <a href="#">개인정보처리방침</a>
+                    <a href="#">신용정보활용체제</a>
+                    <a href="#">이메일무단수집거부</a>
+                    <a href="#">고객보호포탈</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Funny Popup Modal -->
+    <div class="popup-overlay" id="brochurePopup">
+        <div class="popup-modal">
+            <div class="popup-header">
+                <div class="popup-icon warning">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/>
+                        <line x1="12" y1="9" x2="12" y2="13"/>
+                        <line x1="12" y1="17" x2="12.01" y2="17"/>
+                    </svg>
+                </div>
+                <button class="popup-close" onclick="closePopup()">&times;</button>
+            </div>
+            <div class="popup-content">
+                <h3 class="popup-title">⚠️ 투자 경고 ⚠️</h3>
+                <div class="popup-message" id="popupMessage">
+                    <!-- 랜덤 메시지가 들어갑니다 -->
+                </div>
+                <div class="popup-warning">
+                    <p>📉 투자는 원금 손실의 위험이 있습니다.</p>
+                    <p>💸 과거의 수익률이 미래를 보장하지 않습니다.</p>
+                    <p>🎰 주식은 도박이 아닙니다... 아마도요.</p>
+                </div>
+            </div>
+            <div class="popup-footer">
+                <button class="popup-btn secondary" onclick="showAnotherQuote()">다른 명언 보기</button>
+                <button class="popup-btn primary" onclick="closePopup()">알겠습니다 (진지)</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Notice Banner -->
+    <div class="notice-banner" id="noticeBanner">
+        <p class="notice-text">
+            ⚠️ [안내] 이지스자산운용 사칭 관련 유의사항 - 당사 및 임직원 사칭 투자 권유에 주의하세요.
+        </p>
+        <button class="notice-close" onclick="closeNotice()">×</button>
+    </div>
+
+    <!-- Chatbot -->
+    <button class="chatbot-toggle" id="chatbotToggle" onclick="toggleChatbot()">
+        <img src="img/timbel logo.png" alt="Chat">
+        <span class="close-icon">×</span>
+        <span class="chatbot-badge">5</span>
+    </button>
+
+    <div class="chatbot-window" id="chatbotWindow">
+        <div class="chatbot-header">
+            <div class="chatbot-header-avatar">
+                <img src="img/timbel logo.png" alt="TIMBEL">
+            </div>
+            <div class="chatbot-header-info">
+                <div class="chatbot-header-name">TIMBEL 투자상담 AI</div>
+                <div class="chatbot-header-status">온라인 · 평균 응답시간 1분</div>
+            </div>
+        </div>
+        <div class="chatbot-messages" id="chatbotMessages">
+            <!-- Messages will be added here -->
+        </div>
+        <div class="chatbot-input-area">
+            <input type="text" class="chatbot-input" id="chatbotInput" 
+                   placeholder="궁금한 점을 입력해주세요..."
+                   onkeypress="if(event.key === 'Enter') sendChatMessage()">
+            <button class="chatbot-send" onclick="sendChatMessage()">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <line x1="22" y1="2" x2="11" y2="13"/>
+                    <polygon points="22 2 15 22 11 13 2 9 22 2"/>
+                </svg>
+            </button>
+        </div>
+    </div>
+
+    <script>
+        // Funny investment quotes
+        const funnyQuotes = [
+            { quote: "주식은 쌀 때 사서 비쌀 때 파는 것이다. 문제는 언제가 쌀 때인지 아무도 모른다는 것.", author: "- 모든 개미투자자" },
+            { quote: "장기투자하려고 샀는데 3일 만에 -30%... 이제 진짜 장기투자 해야겠다.", author: "- 강제 장기투자자" },
+            { quote: "물타기는 평단가를 낮추는 게 아니라, 손실 금액을 키우는 것이다.", author: "- 깨달음을 얻은 자" },
+            { quote: "주식 전문가들의 공통점: 맞으면 본인 실력, 틀리면 시장 탓", author: "- 경험으로 배운 자" },
+            { quote: "'이 종목 10배 간다' → 6개월 후 상장폐지", author: "- 주식 커뮤니티 희생자" },
+            { quote: "손절은 손실을 확정짓는 게 아니다. 더 큰 손실을 막는 것이다. (하지만 손절하면 오른다)", author: "- 우주의 법칙" },
+            { quote: "66.8조 굴리는 사람들도 맨날 회의함. 당신이 확신에 찬다면 뭔가 잘못된 것.", author: "- 이지스 직원 (아마도)" },
+            { quote: "차트 분석은 과학이다. 단, 분석가마다 결론이 다른 과학.", author: "- 차트 장인" },
+            { quote: "'풀매수 가즈아!' 외친 다음 날 미국 금리 인상 발표", author: "- 타이밍의 제왕" },
+            { quote: "투자 원칙 1조: 잃지 않는다. 투자 원칙 2조: 1조를 잊지 않는다. (이미 잃음)", author: "- 워렌 버핏 패러디" },
+            { quote: "내가 사면 떨어지고, 내가 팔면 오른다. 나는 시장의 반대지표.", author: "- 살아있는 지표" },
+            { quote: "PER, PBR, ROE 다 분석했는데 결국 유튜브 추천으로 샀다.", author: "- 솔직한 투자자" },
+            { quote: "반토막 난 종목은 반등하면 원금이 된다? 아니, 2배 올라야 원금.", author: "- 수학을 깨달은 자" },
+            { quote: "회사 소개서는 장점만 적혀있다. 마치 소개팅 프로필처럼.", author: "- 현실주의자" },
+        ];
+
+        let currentQuoteIndex = 0;
+
+        function getRandomQuote() {
+            currentQuoteIndex = Math.floor(Math.random() * funnyQuotes.length);
+            return funnyQuotes[currentQuoteIndex];
+        }
+
+        function showBrochurePopup() {
+            const popup = document.getElementById('brochurePopup');
+            const messageEl = document.getElementById('popupMessage');
+            const quote = getRandomQuote();
+            
+            messageEl.innerHTML = `
+                <p class="quote">"${quote.quote}"</p>
+                <p class="author">${quote.author}</p>
+            `;
+            
+            popup.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function showAnotherQuote() {
+            const messageEl = document.getElementById('popupMessage');
+            let newIndex;
+            do {
+                newIndex = Math.floor(Math.random() * funnyQuotes.length);
+            } while (newIndex === currentQuoteIndex && funnyQuotes.length > 1);
+            
+            currentQuoteIndex = newIndex;
+            const quote = funnyQuotes[currentQuoteIndex];
+            
+            messageEl.style.opacity = '0';
+            messageEl.style.transform = 'scale(0.95)';
+            
+            setTimeout(() => {
+                messageEl.innerHTML = `
+                    <p class="quote">"${quote.quote}"</p>
+                    <p class="author">${quote.author}</p>
+                `;
+                messageEl.style.opacity = '1';
+                messageEl.style.transform = 'scale(1)';
+            }, 200);
+        }
+
+        function closePopup() {
+            const popup = document.getElementById('brochurePopup');
+            popup.classList.remove('active');
+            document.body.style.overflow = '';
+        }
+
+        // Close popup on overlay click
+        document.getElementById('brochurePopup').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closePopup();
+            }
+        });
+
+        // Close popup on ESC key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closePopup();
+            }
+        });
+
+        // Update current time
+        function updateTime() {
+            const now = new Date();
+            const formatted = now.toLocaleString('ko-KR', {
+                year: 'numeric',
+                month: '2-digit',
+                day: '2-digit',
+                hour: '2-digit',
+                minute: '2-digit',
+                second: '2-digit',
+                hour12: false
+            }).replace(/\. /g, '.').replace(/\./g, '.').replace(',', '');
+            document.getElementById('currentTime').textContent = formatted;
+        }
+        setInterval(updateTime, 1000);
+        updateTime();
+
+        // Navigation scroll effect
+        window.addEventListener('scroll', function() {
+            const nav = document.querySelector('.nav-container');
+            if (window.scrollY > 50) {
+                nav.classList.add('scrolled');
+            } else {
+                nav.classList.remove('scrolled');
+            }
+        });
+
+        // Close notice banner
+        function closeNotice() {
+            document.getElementById('noticeBanner').style.transform = 'translateY(100%)';
+        }
+
+        // Smooth scroll for navigation links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Intersection Observer for animations
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, observerOptions);
+
+        // Animate elements on scroll
+        document.querySelectorAll('.performance-card, .business-card, .news-card').forEach(el => {
+            el.style.opacity = '0';
+            el.style.transform = 'translateY(20px)';
+            el.style.transition = 'all 0.5s ease';
+            observer.observe(el);
+        });
+
+        // Animate chart tabs
+        document.querySelectorAll('.market-chart-tab').forEach(tab => {
+            tab.addEventListener('click', function() {
+                document.querySelectorAll('.market-chart-tab').forEach(t => t.classList.remove('active'));
+                this.classList.add('active');
+            });
+        });
+
+        // Notice tab switching
+        function switchNoticeTab(type) {
+            const tabs = document.querySelectorAll('.notice-tab');
+            tabs.forEach(tab => tab.classList.remove('active'));
+            
+            if (type === 'notice') {
+                tabs[0].classList.add('active');
+                document.getElementById('noticeList').style.display = 'block';
+                document.getElementById('disclosureList').style.display = 'none';
+            } else {
+                tabs[1].classList.add('active');
+                document.getElementById('noticeList').style.display = 'none';
+                document.getElementById('disclosureList').style.display = 'block';
+            }
+        }
+
+        // ========== Chatbot Functionality ==========
+        const faqData = {
+            questions: [
+                {
+                    id: 1,
+                    icon: 'Q1',
+                    question: '최소 투자 금액이 얼마인가요?',
+                    answer: '투자 상품에 따라 최소 투자 금액이 다릅니다.<br><br>• <strong>공모 리츠</strong>: 1주(약 5,000원)부터 투자 가능<br>• <strong>공모 펀드</strong>: 100만원부터 가입 가능<br>• <strong>사모 펀드</strong>: 최소 1억원 이상 (적격투자자 요건 충족 시)<br>• <strong>기관투자자 전용</strong>: 100억원 이상<br><br>자세한 상담은 <a href="#contact">문의하기</a>를 이용해주세요.'
+                },
+                {
+                    id: 2,
+                    icon: 'Q2',
+                    question: '어떤 투자 상품이 있나요?',
+                    answer: '당사는 다양한 대체투자 상품을 운용하고 있습니다.<br><br>• <strong>부동산 펀드</strong>: 오피스, 물류센터, 리테일 등<br>• <strong>리츠(REITs)</strong>: 상장 리츠 및 사모 리츠<br>• <strong>인프라 펀드</strong>: 도로, 발전소, 신재생에너지 등<br>• <strong>증권 펀드</strong>: 멀티에셋, 헤지펀드 전략<br><br>현재 총 <strong>66.8조원</strong> 규모의 자산을 운용 중입니다.'
+                },
+                {
+                    id: 3,
+                    icon: 'Q3',
+                    question: '예상 수익률은 어떻게 되나요?',
+                    answer: '상품별 예상 수익률은 다음과 같습니다 (과거 실적 기준):<br><br>• <strong>부동산 펀드</strong>: 연 5~8% (배당 + 자본차익)<br>• <strong>상장 리츠</strong>: 연 4~6% 배당수익률<br>• <strong>인프라 펀드</strong>: 연 6~10%<br>• <strong>증권 펀드</strong>: 연 8~15% (시장 상황에 따라 변동)<br><br><em>※ 과거 수익률이 미래를 보장하지 않으며, 원금 손실의 위험이 있습니다.</em>'
+                },
+                {
+                    id: 4,
+                    icon: 'Q4',
+                    question: '원금은 보장되나요?',
+                    answer: '당사의 투자 상품은 <strong>원금이 보장되지 않습니다</strong>.<br><br>투자 시 유의사항:<br>• 모든 투자에는 원금 손실의 위험이 있습니다<br>• 부동산 시장, 금리, 환율 변동에 따라 수익이 달라질 수 있습니다<br>• 펀드 환매 시 환매수수료가 발생할 수 있습니다<br><br>다만, 당사는 <strong>체계적인 리스크 관리 시스템</strong>을 통해 투자 위험을 최소화하고 있습니다.'
+                },
+                {
+                    id: 5,
+                    icon: 'Q5',
+                    question: '투자 상담은 어떻게 받나요?',
+                    answer: '투자 상담은 다음 방법으로 신청하실 수 있습니다:<br><br>• <strong>전화 상담</strong>: 02-584-8181 (평일 09:00~18:00)<br>• <strong>이메일</strong>: sales@timbel.net<br>• <strong>온라인 문의</strong>: <a href="#contact">상담 신청 폼</a> 작성<br>• <strong>방문 상담</strong>: 서울시 강남구 테헤란로 13길 3-94 산돌빌딩 (사전 예약 필요)<br><br>담당 매니저가 <strong>24시간 내</strong>에 연락드리겠습니다.'
+                }
+            ],
+            keywords: {
+                '금액': 1, '최소': 1, '얼마': 1, '돈': 1, '비용': 1,
+                '상품': 2, '종류': 2, '펀드': 2, '리츠': 2, '투자': 2,
+                '수익': 3, '수익률': 3, '배당': 3, '이익': 3, '이자': 3, '얼마나': 3,
+                '원금': 4, '보장': 4, '손실': 4, '위험': 4, '리스크': 4, '안전': 4,
+                '상담': 5, '문의': 5, '연락': 5, '전화': 5, '방문': 5, '신청': 5
+            }
+        };
+
+        let chatbotOpen = false;
+        let chatInitialized = false;
+
+        function toggleChatbot() {
+            const toggle = document.getElementById('chatbotToggle');
+            const window = document.getElementById('chatbotWindow');
+            
+            chatbotOpen = !chatbotOpen;
+            
+            if (chatbotOpen) {
+                toggle.classList.add('active');
+                window.classList.add('active');
+                
+                // Hide badge
+                const badge = toggle.querySelector('.chatbot-badge');
+                if (badge) badge.style.display = 'none';
+                
+                // Initialize chat if first time
+                if (!chatInitialized) {
+                    initializeChatbot();
+                    chatInitialized = true;
+                }
+                
+                // Focus input
+                setTimeout(() => {
+                    document.getElementById('chatbotInput').focus();
+                }, 300);
+            } else {
+                toggle.classList.remove('active');
+                window.classList.remove('active');
+            }
+        }
+
+        function initializeChatbot() {
+            const messages = document.getElementById('chatbotMessages');
+            
+            // Welcome message
+            addBotMessage('안녕하세요.<br>TIMBEL 투자상담 AI입니다.<br><br>자산운용에 관해 궁금한 점이 있으시면 물어봐주세요.');
+            
+            // Show FAQ buttons after delay
+            setTimeout(() => {
+                addFaqButtons();
+            }, 500);
+        }
+
+        function addBotMessage(text) {
+            const messages = document.getElementById('chatbotMessages');
+            const messageDiv = document.createElement('div');
+            messageDiv.className = 'chat-message bot';
+            messageDiv.innerHTML = `
+                <div class="chat-avatar">
+                    <span class="avatar-text">TIMBEL</span>
+                </div>
+                <div class="chat-bubble">${text}</div>
+            `;
+            messages.appendChild(messageDiv);
+            messages.scrollTop = messages.scrollHeight;
+        }
+
+        function addUserMessage(text) {
+            const messages = document.getElementById('chatbotMessages');
+            const messageDiv = document.createElement('div');
+            messageDiv.className = 'chat-message user';
+            messageDiv.innerHTML = `
+                <div class="chat-avatar user-avatar">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/>
+                        <circle cx="12" cy="7" r="4"/>
+                    </svg>
+                </div>
+                <div class="chat-bubble">${escapeHtml(text)}</div>
+            `;
+            messages.appendChild(messageDiv);
+            messages.scrollTop = messages.scrollHeight;
+        }
+
+        function addTypingIndicator() {
+            const messages = document.getElementById('chatbotMessages');
+            const typingDiv = document.createElement('div');
+            typingDiv.className = 'chat-message bot';
+            typingDiv.id = 'typingIndicator';
+            typingDiv.innerHTML = `
+                <div class="chat-avatar">
+                    <span class="avatar-text">TIMBEL</span>
+                </div>
+                <div class="typing-indicator">
+                    <span></span><span></span><span></span>
+                </div>
+            `;
+            messages.appendChild(typingDiv);
+            messages.scrollTop = messages.scrollHeight;
+        }
+
+        function removeTypingIndicator() {
+            const typing = document.getElementById('typingIndicator');
+            if (typing) typing.remove();
+        }
+
+        function addFaqButtons() {
+            const messages = document.getElementById('chatbotMessages');
+            const faqDiv = document.createElement('div');
+            faqDiv.className = 'chat-message bot';
+            faqDiv.id = 'faqButtonsContainer';
+            
+            let buttonsHtml = faqData.questions.map(q => 
+                `<button class="faq-btn" onclick="handleFaqClick(${q.id})">
+                    <span class="faq-icon">${q.icon}</span>
+                    ${q.question}
+                </button>`
+            ).join('');
+            
+            faqDiv.innerHTML = `
+                <div class="chat-avatar">
+                    <span class="avatar-text">TIMBEL</span>
+                </div>
+                <div class="chat-bubble">
+                    <strong>자주 묻는 질문 TOP 5</strong>
+                    <div class="faq-buttons">
+                        ${buttonsHtml}
+                    </div>
+                </div>
+            `;
+            messages.appendChild(faqDiv);
+            messages.scrollTop = messages.scrollHeight;
+        }
+
+        function handleFaqClick(id) {
+            const question = faqData.questions.find(q => q.id === id);
+            if (!question) return;
+            
+            // Remove FAQ buttons container
+            const faqContainer = document.getElementById('faqButtonsContainer');
+            if (faqContainer) faqContainer.remove();
+            
+            // Add user message
+            addUserMessage(question.question);
+            
+            // Show typing then answer
+            addTypingIndicator();
+            
+            setTimeout(() => {
+                removeTypingIndicator();
+                addBotMessage(question.answer);
+                
+                // Show follow-up options after answer
+                setTimeout(() => {
+                    addFollowUpOptions();
+                }, 300);
+            }, 800 + Math.random() * 400);
+        }
+
+        function addFollowUpOptions() {
+            const messages = document.getElementById('chatbotMessages');
+            const followUpDiv = document.createElement('div');
+            followUpDiv.className = 'chat-message bot';
+            followUpDiv.id = 'followUpContainer';
+            followUpDiv.innerHTML = `
+                <div class="chat-avatar">
+                    <span class="avatar-text">TIMBEL</span>
+                </div>
+                <div class="chat-bubble">
+                    다른 궁금한 점이 있으신가요?
+                    <div class="faq-buttons" style="margin-top: 10px;">
+                        <button class="faq-btn" onclick="showAllFaq()">
+                            <span class="faq-icon">+</span>
+                            다른 질문 보기
+                        </button>
+                        <button class="faq-btn" onclick="connectToHuman()">
+                            <span class="faq-icon">→</span>
+                            상담사 연결하기
+                        </button>
+                    </div>
+                </div>
+            `;
+            messages.appendChild(followUpDiv);
+            messages.scrollTop = messages.scrollHeight;
+        }
+
+        function showAllFaq() {
+            const followUp = document.getElementById('followUpContainer');
+            if (followUp) followUp.remove();
+            
+            addUserMessage('다른 질문 보기');
+            
+            addTypingIndicator();
+            setTimeout(() => {
+                removeTypingIndicator();
+                addFaqButtons();
+            }, 500);
+        }
+
+        function connectToHuman() {
+            const followUp = document.getElementById('followUpContainer');
+            if (followUp) followUp.remove();
+            
+            addUserMessage('상담사 연결하기');
+            
+            addTypingIndicator();
+            setTimeout(() => {
+                removeTypingIndicator();
+                addBotMessage('현재 업무 시간(평일 09:00~18:00) 내에는 상담사 연결이 가능합니다.<br><br>지금 바로 상담을 원하시면 <strong>02-584-8181</strong>로 전화해주시거나, <a href="#contact">온라인 상담 신청</a>을 이용해주세요.<br><br>빠른 시일 내에 연락드리겠습니다.');
+            }, 1000);
+        }
+
+        function sendChatMessage() {
+            const input = document.getElementById('chatbotInput');
+            const text = input.value.trim();
+            if (!text) return;
+            
+            // Remove any existing FAQ or follow-up containers
+            const faqContainer = document.getElementById('faqButtonsContainer');
+            const followUp = document.getElementById('followUpContainer');
+            if (faqContainer) faqContainer.remove();
+            if (followUp) followUp.remove();
+            
+            addUserMessage(text);
+            input.value = '';
+            
+            // Find matching FAQ based on keywords
+            const lowerText = text.toLowerCase();
+            let matchedId = null;
+            let maxMatches = 0;
+            
+            for (const [keyword, id] of Object.entries(faqData.keywords)) {
+                if (lowerText.includes(keyword)) {
+                    const currentMatches = (matchedId === id) ? maxMatches + 1 : 1;
+                    if (currentMatches > maxMatches || matchedId === null) {
+                        maxMatches = currentMatches;
+                        matchedId = id;
+                    }
+                }
+            }
+            
+            addTypingIndicator();
+            
+            setTimeout(() => {
+                removeTypingIndicator();
+                
+                if (matchedId) {
+                    const question = faqData.questions.find(q => q.id === matchedId);
+                    addBotMessage(question.answer);
+                } else {
+                    addBotMessage('죄송합니다. 해당 질문에 대한 정확한 답변을 찾지 못했습니다.<br><br>아래 자주 묻는 질문을 참고해주시거나, <a href="#contact">문의하기</a>를 통해 직접 상담을 요청해주세요.');
+                }
+                
+                setTimeout(() => {
+                    addFollowUpOptions();
+                }, 300);
+            }, 1000 + Math.random() * 500);
+        }
+
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        // Close chatbot when clicking outside
+        document.addEventListener('click', function(e) {
+            const window = document.getElementById('chatbotWindow');
+            const toggle = document.getElementById('chatbotToggle');
+            
+            if (chatbotOpen && !window.contains(e.target) && !toggle.contains(e.target)) {
+                toggleChatbot();
+            }
+        });
+    </script>
+</body>
+</html>

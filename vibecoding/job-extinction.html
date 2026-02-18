@@ -1,0 +1,2537 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ARCHIVE 2050 — 직업 대멸종 아카이브</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=Share+Tech+Mono&family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-void: #000000;
+            --bg-panel: #0a0a0f;
+            --bg-card: #0f0f1a;
+            --text-primary: #ffffff;
+            --text-secondary: #6b7280;
+            --text-dim: #374151;
+            --neon-cyan: #00f5ff;
+            --neon-magenta: #ff00ff;
+            --neon-purple: #a855f7;
+            --neon-green: #00ff88;
+            --neon-orange: #ff6b35;
+            --neon-red: #ff0055;
+            --hologram: linear-gradient(135deg, #00f5ff, #ff00ff, #00ff88);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Noto Sans KR', sans-serif;
+            background: var(--bg-void);
+            color: var(--text-primary);
+            overflow-x: hidden;
+            line-height: 1.6;
+            cursor: none;
+        }
+
+        /* Custom Cursor */
+        .cursor-main {
+            position: fixed;
+            width: 20px;
+            height: 20px;
+            border: 2px solid var(--neon-cyan);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 99999;
+            transition: transform 0.1s ease, width 0.2s ease, height 0.2s ease, border-color 0.2s ease, background 0.2s ease;
+            transform: translate(-50%, -50%);
+            mix-blend-mode: difference;
+        }
+
+        .cursor-main.hover {
+            width: 50px;
+            height: 50px;
+            border-color: var(--neon-magenta);
+            background: rgba(255, 0, 255, 0.1);
+        }
+
+        .cursor-main.clicking {
+            transform: translate(-50%, -50%) scale(0.8);
+            background: var(--neon-cyan);
+        }
+
+        .cursor-follower {
+            position: fixed;
+            width: 8px;
+            height: 8px;
+            background: var(--neon-magenta);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 99998;
+            transform: translate(-50%, -50%);
+            transition: transform 0.05s ease;
+            box-shadow: 
+                0 0 10px var(--neon-magenta),
+                0 0 20px var(--neon-magenta),
+                0 0 30px var(--neon-magenta);
+        }
+
+        .cursor-follower.clicking {
+            transform: translate(-50%, -50%) scale(2);
+            opacity: 0.5;
+        }
+
+        .cursor-trail {
+            position: fixed;
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 99997;
+            transform: translate(-50%, -50%);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .cursor-glow {
+            position: fixed;
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 99996;
+            transform: translate(-50%, -50%);
+            background: radial-gradient(circle, rgba(0, 245, 255, 0.1) 0%, transparent 70%);
+            transition: opacity 0.3s ease;
+        }
+
+        .cursor-crosshair {
+            position: fixed;
+            pointer-events: none;
+            z-index: 99995;
+            transform: translate(-50%, -50%);
+        }
+
+        .cursor-crosshair::before,
+        .cursor-crosshair::after {
+            content: '';
+            position: absolute;
+            background: rgba(0, 245, 255, 0.3);
+        }
+
+        .cursor-crosshair::before {
+            width: 1px;
+            height: 20px;
+            left: 50%;
+            top: -25px;
+            transform: translateX(-50%);
+        }
+
+        .cursor-crosshair::after {
+            width: 20px;
+            height: 1px;
+            top: 50%;
+            left: -25px;
+            transform: translateY(-50%);
+        }
+
+        .cursor-coords {
+            position: fixed;
+            pointer-events: none;
+            z-index: 99994;
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 10px;
+            color: var(--neon-cyan);
+            opacity: 0.5;
+            transform: translate(15px, 15px);
+        }
+
+        /* Hide cursor on mobile */
+        @media (hover: none) and (pointer: coarse) {
+            body {
+                cursor: auto;
+            }
+            .cursor-main,
+            .cursor-follower,
+            .cursor-trail,
+            .cursor-glow,
+            .cursor-crosshair,
+            .cursor-coords {
+                display: none !important;
+            }
+        }
+
+        /* Scanlines Overlay */
+        .scanlines {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 9999;
+            background: repeating-linear-gradient(
+                0deg,
+                transparent,
+                transparent 2px,
+                rgba(0, 245, 255, 0.01) 2px,
+                rgba(0, 245, 255, 0.01) 4px
+            );
+        }
+
+        /* Grid Background */
+        .grid-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+            background: 
+                linear-gradient(90deg, rgba(0, 245, 255, 0.03) 1px, transparent 1px),
+                linear-gradient(rgba(0, 245, 255, 0.03) 1px, transparent 1px);
+            background-size: 50px 50px;
+            perspective: 500px;
+        }
+
+        /* Navigation */
+        .nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            padding: 1.5rem 3rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 1000;
+            background: linear-gradient(180deg, rgba(0,0,0,0.8) 0%, transparent 100%);
+        }
+
+        .nav-logo {
+            font-family: 'Orbitron', sans-serif;
+            font-weight: 900;
+            font-size: 1.2rem;
+            color: var(--neon-cyan);
+            text-shadow: 0 0 20px var(--neon-cyan);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .nav-logo::before {
+            content: '◈';
+            animation: spin 4s linear infinite;
+        }
+
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        .nav-year {
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 0.85rem;
+            color: var(--neon-magenta);
+            padding: 0.5rem 1rem;
+            border: 1px solid var(--neon-magenta);
+            animation: borderPulse 2s ease-in-out infinite;
+        }
+
+        @keyframes borderPulse {
+            0%, 100% { border-color: var(--neon-magenta); box-shadow: 0 0 10px rgba(255,0,255,0.3); }
+            50% { border-color: var(--neon-cyan); box-shadow: 0 0 20px rgba(0,245,255,0.5); }
+        }
+
+        /* Hero Section */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            position: relative;
+            z-index: 1;
+            padding: 2rem;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 800px;
+            height: 800px;
+            background: radial-gradient(circle, rgba(0, 245, 255, 0.1) 0%, transparent 70%);
+            animation: pulse 4s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: translate(-50%, -50%) scale(1); opacity: 0.5; }
+            50% { transform: translate(-50%, -50%) scale(1.2); opacity: 0.8; }
+        }
+
+        .archive-badge {
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 0.9rem;
+            padding: 0.75rem 2rem;
+            background: rgba(255, 0, 85, 0.1);
+            border: 1px solid var(--neon-red);
+            color: var(--neon-red);
+            margin-bottom: 2rem;
+            position: relative;
+            animation: glitch 3s infinite;
+        }
+
+        .archive-badge::before {
+            content: '◉ REC';
+            position: absolute;
+            left: -80px;
+            color: var(--neon-red);
+            animation: blink 1s infinite;
+        }
+
+        @keyframes blink {
+            0%, 50% { opacity: 1; }
+            51%, 100% { opacity: 0; }
+        }
+
+        @keyframes glitch {
+            0%, 90%, 100% { transform: translate(0); }
+            92% { transform: translate(-2px, 1px); }
+            94% { transform: translate(2px, -1px); }
+            96% { transform: translate(-1px, -1px); }
+        }
+
+        .hero-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: clamp(3rem, 10vw, 8rem);
+            font-weight: 900;
+            line-height: 1;
+            margin-bottom: 1rem;
+            background: var(--hologram);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            filter: drop-shadow(0 0 30px rgba(0, 245, 255, 0.5));
+            position: relative;
+        }
+
+        .hero-title::after {
+            content: 'EXTINCTION';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background: var(--hologram);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            opacity: 0.3;
+            animation: hologramShift 2s ease-in-out infinite;
+        }
+
+        @keyframes hologramShift {
+            0%, 100% { transform: translate(0, 0); }
+            25% { transform: translate(2px, -2px); }
+            75% { transform: translate(-2px, 2px); }
+        }
+
+        .hero-subtitle {
+            font-family: 'Orbitron', sans-serif;
+            font-size: clamp(1rem, 3vw, 1.5rem);
+            font-weight: 500;
+            color: var(--text-secondary);
+            margin-bottom: 3rem;
+            letter-spacing: 0.3em;
+        }
+
+        .hero-korean {
+            font-size: clamp(1.2rem, 3vw, 2rem);
+            font-weight: 300;
+            color: var(--text-secondary);
+            margin-bottom: 4rem;
+        }
+
+        .hero-stats {
+            display: flex;
+            gap: 4rem;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .stat-box {
+            background: rgba(10, 10, 15, 0.8);
+            border: 1px solid rgba(0, 245, 255, 0.2);
+            padding: 2rem 3rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stat-box::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: var(--hologram);
+        }
+
+        .stat-box::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 2px;
+            height: 100%;
+            background: var(--hologram);
+        }
+
+        .stat-number {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 3rem;
+            font-weight: 900;
+            color: var(--neon-cyan);
+            text-shadow: 0 0 30px var(--neon-cyan);
+        }
+
+        .stat-label {
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            margin-top: 0.5rem;
+        }
+
+        .scroll-indicator {
+            position: absolute;
+            bottom: 3rem;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .scroll-line {
+            width: 1px;
+            height: 60px;
+            background: linear-gradient(180deg, var(--neon-cyan), transparent);
+            animation: scrollPulse 2s ease-in-out infinite;
+        }
+
+        @keyframes scrollPulse {
+            0%, 100% { height: 60px; opacity: 1; }
+            50% { height: 80px; opacity: 0.5; }
+        }
+
+        .scroll-text {
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 0.7rem;
+            color: var(--neon-cyan);
+            letter-spacing: 0.2em;
+        }
+
+        /* Section Common */
+        section {
+            padding: 8rem 2rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 5rem;
+        }
+
+        .section-tag {
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 0.8rem;
+            color: var(--neon-magenta);
+            letter-spacing: 0.3em;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 1rem;
+        }
+
+        .section-tag::before,
+        .section-tag::after {
+            content: '//';
+            opacity: 0.5;
+        }
+
+        .section-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: clamp(2rem, 5vw, 3.5rem);
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+
+        .section-desc {
+            color: var(--text-secondary);
+            max-width: 600px;
+            margin: 0 auto;
+            font-size: 0.95rem;
+        }
+
+        /* Graveyard Section - 사라진 직업들 */
+        .graveyard {
+            background: linear-gradient(180deg, transparent 0%, rgba(255, 0, 85, 0.02) 50%, transparent 100%);
+        }
+
+        .graveyard .section-title {
+            color: var(--neon-red);
+            text-shadow: 0 0 30px rgba(255, 0, 85, 0.5);
+        }
+
+        .tombstones {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .tombstone {
+            background: var(--bg-card);
+            border: 1px solid rgba(255, 0, 85, 0.2);
+            padding: 2rem;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.4s ease;
+        }
+
+        .tombstone::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: linear-gradient(90deg, transparent, var(--neon-red), transparent);
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .tombstone:hover::before {
+            opacity: 1;
+        }
+
+        .tombstone:hover {
+            transform: translateY(-5px);
+            border-color: var(--neon-red);
+            box-shadow: 0 20px 60px rgba(255, 0, 85, 0.15);
+        }
+
+        .tombstone-status {
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 0.7rem;
+            color: var(--neon-red);
+            padding: 0.3rem 0.8rem;
+            border: 1px solid var(--neon-red);
+            display: inline-block;
+            margin-bottom: 1.5rem;
+            animation: statusBlink 2s infinite;
+        }
+
+        @keyframes statusBlink {
+            0%, 90%, 100% { opacity: 1; }
+            95% { opacity: 0.3; }
+        }
+
+        .tombstone-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            filter: grayscale(0.3);
+        }
+
+        .tombstone-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .tombstone-years {
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 1rem;
+            color: var(--neon-red);
+            margin-bottom: 1rem;
+        }
+
+        .tombstone-cause {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            padding: 0.75rem;
+            background: rgba(255, 0, 85, 0.05);
+            border-left: 2px solid var(--neon-red);
+            margin-bottom: 1rem;
+        }
+
+        .tombstone-epitaph {
+            font-size: 0.85rem;
+            color: var(--text-dim);
+            font-style: italic;
+            padding-top: 1rem;
+            border-top: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .extinction-meter {
+            margin-top: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .meter-bar {
+            flex: 1;
+            height: 4px;
+            background: rgba(255, 0, 85, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .meter-fill {
+            height: 100%;
+            background: var(--neon-red);
+            box-shadow: 0 0 10px var(--neon-red);
+            position: relative;
+        }
+
+        .meter-fill::after {
+            content: '';
+            position: absolute;
+            right: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 8px;
+            height: 8px;
+            background: var(--neon-red);
+            border-radius: 50%;
+            box-shadow: 0 0 15px var(--neon-red);
+        }
+
+        .meter-percent {
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 0.9rem;
+            color: var(--neon-red);
+        }
+
+        /* Rising Section - 떠오르는 직업들 */
+        .rising {
+            background: linear-gradient(180deg, transparent 0%, rgba(0, 255, 136, 0.02) 50%, transparent 100%);
+        }
+
+        .rising .section-title {
+            color: var(--neon-green);
+            text-shadow: 0 0 30px rgba(0, 255, 136, 0.5);
+        }
+
+        .rising-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .rising-card {
+            background: var(--bg-card);
+            border: 1px solid rgba(0, 255, 136, 0.2);
+            padding: 2rem;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.4s ease;
+        }
+
+        .rising-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: linear-gradient(90deg, transparent, var(--neon-green), transparent);
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .rising-card:hover::before {
+            opacity: 1;
+        }
+
+        .rising-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--neon-green);
+            box-shadow: 0 20px 60px rgba(0, 255, 136, 0.1);
+        }
+
+        .rising-badge {
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 0.7rem;
+            padding: 0.3rem 0.8rem;
+            background: rgba(0, 255, 136, 0.1);
+            border: 1px solid var(--neon-green);
+            color: var(--neon-green);
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .rising-badge::before {
+            content: '';
+            width: 6px;
+            height: 6px;
+            background: var(--neon-green);
+            border-radius: 50%;
+            animation: pulse2 1s infinite;
+        }
+
+        @keyframes pulse2 {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.5; transform: scale(1.5); }
+        }
+
+        .rising-icon {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .rising-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .rising-salary {
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 1.1rem;
+            color: var(--neon-green);
+            margin-bottom: 1rem;
+        }
+
+        .rising-desc {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            margin-bottom: 1.5rem;
+        }
+
+        .rising-reason {
+            background: rgba(0, 255, 136, 0.05);
+            padding: 1rem;
+            border-left: 2px solid var(--neon-green);
+            font-size: 0.85rem;
+        }
+
+        .rising-reason-title {
+            font-family: 'Share Tech Mono', monospace;
+            color: var(--neon-green);
+            font-size: 0.75rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .growth-indicator {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-top: 1rem;
+            font-family: 'Share Tech Mono', monospace;
+        }
+
+        .growth-arrow {
+            color: var(--neon-green);
+            animation: bounce2 1s infinite;
+        }
+
+        @keyframes bounce2 {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-5px); }
+        }
+
+        .growth-percent {
+            color: var(--neon-green);
+            font-size: 1rem;
+        }
+
+        /* Skills Section */
+        .skills {
+            background: linear-gradient(180deg, transparent 0%, rgba(168, 85, 247, 0.02) 50%, transparent 100%);
+        }
+
+        .skills .section-title {
+            color: var(--neon-purple);
+            text-shadow: 0 0 30px rgba(168, 85, 247, 0.5);
+        }
+
+        .skills-container {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 3rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        @media (max-width: 768px) {
+            .skills-container {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .skills-panel {
+            background: var(--bg-card);
+            border: 1px solid rgba(255,255,255,0.1);
+            padding: 2rem;
+        }
+
+        .skills-panel.deprecated {
+            border-color: rgba(255, 0, 85, 0.3);
+        }
+
+        .skills-panel.required {
+            border-color: rgba(0, 245, 255, 0.3);
+        }
+
+        .skills-panel-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .skills-panel-icon {
+            font-size: 1.5rem;
+        }
+
+        .skills-panel-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.1rem;
+            font-weight: 600;
+        }
+
+        .skills-panel.deprecated .skills-panel-title {
+            color: var(--neon-red);
+        }
+
+        .skills-panel.required .skills-panel-title {
+            color: var(--neon-cyan);
+        }
+
+        .skill-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem;
+            background: rgba(0,0,0,0.3);
+            margin-bottom: 0.75rem;
+            transition: all 0.3s ease;
+        }
+
+        .skill-item:hover {
+            transform: translateX(10px);
+            background: rgba(0,0,0,0.5);
+        }
+
+        .skill-icon {
+            font-size: 1.5rem;
+            width: 40px;
+            text-align: center;
+        }
+
+        .skill-info {
+            flex: 1;
+        }
+
+        .skill-name {
+            font-weight: 500;
+            margin-bottom: 0.25rem;
+            font-size: 0.95rem;
+        }
+
+        .skill-status {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+        }
+
+        /* Irony Section */
+        .irony {
+            background: linear-gradient(180deg, transparent 0%, rgba(255, 0, 255, 0.02) 50%, transparent 100%);
+        }
+
+        .irony .section-title {
+            color: var(--neon-magenta);
+            text-shadow: 0 0 30px rgba(255, 0, 255, 0.5);
+        }
+
+        .irony-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .irony-card {
+            background: var(--bg-card);
+            border: 1px solid rgba(255, 0, 255, 0.2);
+            padding: 2rem;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .irony-card:hover {
+            border-color: var(--neon-magenta);
+            box-shadow: 0 10px 40px rgba(255, 0, 255, 0.1);
+        }
+
+        .irony-before {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            text-decoration: line-through;
+            opacity: 0.7;
+        }
+
+        .irony-arrow {
+            font-size: 2rem;
+            margin: 1rem 0;
+            color: var(--neon-magenta);
+        }
+
+        .irony-after {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--neon-magenta);
+            margin-bottom: 1rem;
+        }
+
+        .irony-comment {
+            font-size: 0.85rem;
+            color: var(--text-dim);
+            font-style: italic;
+        }
+
+        /* Timeline Section */
+        .timeline-section {
+            padding: 8rem 2rem;
+        }
+
+        .timeline {
+            max-width: 1000px;
+            margin: 0 auto;
+            position: relative;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 50%;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: linear-gradient(180deg, var(--neon-red), var(--neon-cyan), var(--neon-green));
+            transform: translateX(-50%);
+        }
+
+        @media (max-width: 768px) {
+            .timeline::before {
+                left: 20px;
+            }
+        }
+
+        .timeline-item {
+            display: flex;
+            margin-bottom: 3rem;
+            position: relative;
+        }
+
+        .timeline-item:nth-child(odd) {
+            flex-direction: row-reverse;
+        }
+
+        @media (max-width: 768px) {
+            .timeline-item,
+            .timeline-item:nth-child(odd) {
+                flex-direction: row;
+                padding-left: 60px;
+            }
+        }
+
+        .timeline-content {
+            width: 45%;
+            background: var(--bg-card);
+            border: 1px solid rgba(255,255,255,0.1);
+            padding: 2rem;
+        }
+
+        @media (max-width: 768px) {
+            .timeline-content {
+                width: 100%;
+            }
+        }
+
+        .timeline-dot {
+            position: absolute;
+            left: 50%;
+            top: 2rem;
+            transform: translateX(-50%);
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            z-index: 1;
+        }
+
+        @media (max-width: 768px) {
+            .timeline-dot {
+                left: 20px;
+            }
+        }
+
+        .timeline-item.past .timeline-dot {
+            background: var(--neon-red);
+            box-shadow: 0 0 20px var(--neon-red);
+        }
+
+        .timeline-item.now .timeline-dot {
+            background: var(--neon-cyan);
+            box-shadow: 0 0 20px var(--neon-cyan);
+            animation: nowPulse 1s infinite;
+        }
+
+        @keyframes nowPulse {
+            0%, 100% { transform: translateX(-50%) scale(1); }
+            50% { transform: translateX(-50%) scale(1.3); }
+        }
+
+        .timeline-item.future .timeline-dot {
+            background: var(--neon-green);
+            box-shadow: 0 0 20px var(--neon-green);
+        }
+
+        .timeline-year {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .timeline-item.past .timeline-year { color: var(--neon-red); }
+        .timeline-item.now .timeline-year { color: var(--neon-cyan); }
+        .timeline-item.future .timeline-year { color: var(--neon-green); }
+
+        .timeline-title {
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .timeline-desc {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+        }
+
+        /* Quote Section */
+        .quote-section {
+            padding: 10rem 2rem;
+            text-align: center;
+            position: relative;
+        }
+
+        .quote-section::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, rgba(255, 0, 255, 0.05) 0%, transparent 70%);
+        }
+
+        .quote-text {
+            font-family: 'Orbitron', sans-serif;
+            font-size: clamp(1.2rem, 3vw, 2rem);
+            font-weight: 400;
+            max-width: 900px;
+            margin: 0 auto 2rem;
+            line-height: 1.8;
+            position: relative;
+        }
+
+        .quote-author {
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 0.9rem;
+            color: var(--neon-magenta);
+        }
+
+        /* CTA Section */
+        .cta-section {
+            padding: 8rem 2rem;
+            text-align: center;
+            background: linear-gradient(180deg, transparent 0%, rgba(0, 245, 255, 0.02) 100%);
+        }
+
+        .cta-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: clamp(2rem, 5vw, 3.5rem);
+            font-weight: 700;
+            margin-bottom: 2rem;
+        }
+
+        .cta-text {
+            color: var(--text-secondary);
+            max-width: 600px;
+            margin: 0 auto 3rem;
+            font-size: 1.1rem;
+            line-height: 1.8;
+        }
+
+        .cta-button {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1rem;
+            font-weight: 600;
+            padding: 1.25rem 3rem;
+            background: transparent;
+            border: 2px solid var(--neon-cyan);
+            color: var(--neon-cyan);
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .cta-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: var(--neon-cyan);
+            transition: left 0.3s ease;
+            z-index: -1;
+        }
+
+        .cta-button:hover::before {
+            left: 0;
+        }
+
+        .cta-button:hover {
+            color: var(--bg-void);
+            box-shadow: 0 0 40px rgba(0, 245, 255, 0.5);
+        }
+
+        /* Status Monitor */
+        .status-monitor {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            background: var(--bg-panel);
+            border: 1px solid var(--neon-red);
+            padding: 1rem 1.5rem;
+            z-index: 100;
+            font-family: 'Share Tech Mono', monospace;
+        }
+
+        .status-label {
+            font-size: 0.7rem;
+            color: var(--text-secondary);
+            margin-bottom: 0.25rem;
+        }
+
+        .status-value {
+            font-size: 1.5rem;
+            color: var(--neon-red);
+        }
+
+        /* Footer */
+        footer {
+            background: var(--bg-panel);
+            padding: 4rem 2rem;
+            text-align: center;
+            border-top: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .footer-logo {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.5rem;
+            font-weight: 900;
+            color: var(--neon-cyan);
+            margin-bottom: 1rem;
+        }
+
+        .footer-text {
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            margin-bottom: 1rem;
+        }
+
+        .footer-warning {
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 0.75rem;
+            color: var(--neon-red);
+            animation: blink 1.5s infinite;
+        }
+
+        /* Modal Styles - Dashboard Version */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.98);
+            backdrop-filter: blur(20px);
+            z-index: 10000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.4s ease;
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .modal-content {
+            background: transparent;
+            max-width: 1200px;
+            width: 95%;
+            max-height: 90vh;
+            overflow-y: auto;
+            position: relative;
+            transform: scale(0.95);
+            transition: transform 0.4s ease;
+        }
+
+        .modal-overlay.active .modal-content {
+            transform: scale(1);
+        }
+
+        .modal-close {
+            position: fixed;
+            top: 2rem;
+            right: 2rem;
+            width: 60px;
+            height: 60px;
+            background: rgba(0, 0, 0, 0.8);
+            border: 2px solid var(--neon-cyan);
+            color: var(--neon-cyan);
+            font-size: 2rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            z-index: 10001;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-close:hover {
+            background: var(--neon-cyan);
+            color: var(--bg-void);
+            transform: rotate(90deg);
+            box-shadow: 0 0 30px var(--neon-cyan);
+        }
+
+        /* Dashboard Header */
+        .dashboard-header {
+            text-align: center;
+            margin-bottom: 3rem;
+            padding: 2rem;
+            position: relative;
+        }
+
+        .dashboard-header::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 200px;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--neon-cyan), transparent);
+        }
+
+        .dashboard-status {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.75rem;
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 0.8rem;
+            color: var(--neon-green);
+            margin-bottom: 1rem;
+        }
+
+        .dashboard-status::before {
+            content: '';
+            width: 10px;
+            height: 10px;
+            background: var(--neon-green);
+            border-radius: 50%;
+            animation: statusPulse 1s infinite;
+        }
+
+        @keyframes statusPulse {
+            0%, 100% { opacity: 1; box-shadow: 0 0 10px var(--neon-green); }
+            50% { opacity: 0.5; box-shadow: 0 0 5px var(--neon-green); }
+        }
+
+        .dashboard-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: clamp(1.5rem, 4vw, 2.5rem);
+            font-weight: 800;
+            background: var(--hologram);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 0.5rem;
+        }
+
+        .dashboard-subtitle {
+            font-family: 'Share Tech Mono', monospace;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        /* Dashboard Grid */
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            grid-template-rows: auto auto;
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        @media (max-width: 1024px) {
+            .dashboard-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 640px) {
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Data Panel */
+        .data-panel {
+            background: rgba(10, 10, 15, 0.9);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            position: relative;
+            overflow: hidden;
+            transition: all 0.4s ease;
+        }
+
+        .data-panel:hover {
+            border-color: var(--panel-color);
+            box-shadow: 0 0 40px rgba(var(--panel-rgb), 0.2);
+            transform: translateY(-5px);
+        }
+
+        .data-panel::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: var(--panel-color);
+        }
+
+        .data-panel.gold { --panel-color: #fbbf24; --panel-rgb: 251, 191, 36; }
+        .data-panel.green { --panel-color: #00ff88; --panel-rgb: 0, 255, 136; }
+        .data-panel.purple { --panel-color: #a855f7; --panel-rgb: 168, 85, 247; }
+        .data-panel.red { --panel-color: #ff0055; --panel-rgb: 255, 0, 85; }
+        .data-panel.cyan { --panel-color: #00f5ff; --panel-rgb: 0, 245, 255; }
+
+        .panel-header {
+            padding: 1.25rem 1.5rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .panel-id {
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 0.7rem;
+            color: var(--panel-color);
+            padding: 0.25rem 0.75rem;
+            border: 1px solid var(--panel-color);
+            opacity: 0.8;
+        }
+
+        .panel-icon {
+            font-size: 1.5rem;
+        }
+
+        .panel-body {
+            padding: 1.5rem;
+        }
+
+        .panel-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--panel-color);
+            margin-bottom: 0.75rem;
+            line-height: 1.4;
+        }
+
+        .panel-content {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            line-height: 1.6;
+            margin-bottom: 1rem;
+        }
+
+        .panel-insight {
+            background: rgba(0, 0, 0, 0.5);
+            padding: 1rem;
+            display: flex;
+            align-items: flex-start;
+            gap: 0.75rem;
+        }
+
+        .panel-insight-icon {
+            font-size: 1.2rem;
+            flex-shrink: 0;
+        }
+
+        .panel-insight-text {
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 0.8rem;
+            color: var(--panel-color);
+            line-height: 1.5;
+        }
+
+        /* Featured Panel (larger) */
+        .data-panel.featured {
+            grid-column: span 2;
+        }
+
+        @media (max-width: 640px) {
+            .data-panel.featured {
+                grid-column: span 1;
+            }
+        }
+
+        .featured .panel-body {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+        }
+
+        @media (max-width: 768px) {
+            .featured .panel-body {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .featured-main {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .featured-visual {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .visual-bar {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .visual-label {
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 0.7rem;
+            color: var(--text-secondary);
+            width: 80px;
+        }
+
+        .visual-track {
+            flex: 1;
+            height: 6px;
+            background: rgba(255, 255, 255, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .visual-fill {
+            position: absolute;
+            top: 0;
+            left: 0;
+            height: 100%;
+            background: var(--panel-color);
+            box-shadow: 0 0 10px var(--panel-color);
+            animation: fillGrow 1s ease-out forwards;
+        }
+
+        @keyframes fillGrow {
+            from { width: 0; }
+        }
+
+        .visual-value {
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 0.75rem;
+            color: var(--panel-color);
+            width: 40px;
+            text-align: right;
+        }
+
+        /* Dashboard Footer */
+        .dashboard-footer {
+            text-align: center;
+            padding: 2rem;
+            background: rgba(10, 10, 15, 0.8);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            margin-top: 1rem;
+        }
+
+        .footer-message {
+            font-size: 1.1rem;
+            margin-bottom: 1rem;
+            line-height: 1.8;
+        }
+
+        .footer-message strong {
+            color: var(--neon-cyan);
+            font-weight: 600;
+        }
+
+        .footer-signature {
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 0.8rem;
+            color: var(--text-dim);
+        }
+
+        /* Modal scrollbar */
+        .modal-content::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .modal-content::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .modal-content::-webkit-scrollbar-thumb {
+            background: rgba(0, 245, 255, 0.3);
+            border-radius: 3px;
+        }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--bg-void);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: rgba(0, 245, 255, 0.3);
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--neon-cyan);
+        }
+
+        /* Animations */
+        .fade-in {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.8s ease;
+        }
+
+        .fade-in.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    </style>
+</head>
+<body>
+    <!-- Custom Cursor -->
+    <div class="cursor-glow" id="cursorGlow"></div>
+    <div class="cursor-crosshair" id="cursorCrosshair"></div>
+    <div class="cursor-main" id="cursorMain"></div>
+    <div class="cursor-follower" id="cursorFollower"></div>
+    <div class="cursor-coords" id="cursorCoords">X:0000 Y:0000</div>
+
+    <!-- Cursor Trails -->
+    <div class="cursor-trail" id="trail1"></div>
+    <div class="cursor-trail" id="trail2"></div>
+    <div class="cursor-trail" id="trail3"></div>
+    <div class="cursor-trail" id="trail4"></div>
+    <div class="cursor-trail" id="trail5"></div>
+
+    <!-- Effects -->
+    <div class="scanlines"></div>
+    <div class="grid-bg"></div>
+
+    <!-- Navigation -->
+    <nav class="nav">
+        <div class="nav-logo">ARCHIVE_2050</div>
+        <div class="nav-year">VIEWING: 2025 AD</div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="archive-badge">HISTORICAL ARCHIVE // DECLASSIFIED</div>
+        <h1 class="hero-title">EXTINCTION</h1>
+        <p class="hero-subtitle">THE GREAT JOB EXTINCTION EVENT</p>
+        <p class="hero-korean">2020-2030: 인류 직업 대멸종기 아카이브</p>
+
+        <div class="hero-stats">
+            <div class="stat-box">
+                <div class="stat-number" id="extinctCount">47%</div>
+                <div class="stat-label">JOBS_EXTINCT</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-number" id="newJobCount">158</div>
+                <div class="stat-label">NEW_SPECIES</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-number">2025</div>
+                <div class="stat-label">ARCHIVE_YEAR</div>
+            </div>
+        </div>
+
+        <div class="scroll-indicator">
+            <div class="scroll-line"></div>
+            <span class="scroll-text">SCROLL TO ACCESS</span>
+        </div>
+    </section>
+
+    <!-- Graveyard Section -->
+    <section class="graveyard">
+        <div class="section-header fade-in">
+            <div class="section-tag">EXTINCT_SPECIES</div>
+            <h2 class="section-title">멸종된 직업들</h2>
+            <p class="section-desc">
+                2050년 기준, 완전히 사라진 것으로 확인된 직업군들.<br>
+                더 이상 지구상에 존재하지 않습니다.
+            </p>
+        </div>
+
+        <div class="tombstones">
+            <div class="tombstone fade-in">
+                <span class="tombstone-status">◉ EXTINCT</span>
+                <div class="tombstone-icon">🏦</div>
+                <h3 class="tombstone-title">은행 창구 직원</h3>
+                <p class="tombstone-years">1950 — 2028</p>
+                <div class="tombstone-cause">
+                    <strong>멸종 원인:</strong> 모바일 뱅킹 & AI 상담
+                </div>
+                <p class="tombstone-epitaph">"번호표 뽑으세요~" — 마지막 녹음 기록</p>
+                <div class="extinction-meter">
+                    <div class="meter-bar">
+                        <div class="meter-fill" style="width: 100%;"></div>
+                    </div>
+                    <span class="meter-percent">100%</span>
+                </div>
+            </div>
+
+            <div class="tombstone fade-in">
+                <span class="tombstone-status">◉ EXTINCT</span>
+                <div class="tombstone-icon">📞</div>
+                <h3 class="tombstone-title">텔레마케터</h3>
+                <p class="tombstone-years">1970 — 2026</p>
+                <div class="tombstone-cause">
+                    <strong>멸종 원인:</strong> AI 콜봇 완전 대체
+                </div>
+                <p class="tombstone-epitaph">"고객님 지금 통화 가능하세요?" — AI가 더 잘함</p>
+                <div class="extinction-meter">
+                    <div class="meter-bar">
+                        <div class="meter-fill" style="width: 100%;"></div>
+                    </div>
+                    <span class="meter-percent">100%</span>
+                </div>
+            </div>
+
+            <div class="tombstone fade-in">
+                <span class="tombstone-status">◉ EXTINCT</span>
+                <div class="tombstone-icon">🚗</div>
+                <h3 class="tombstone-title">택시 기사</h3>
+                <p class="tombstone-years">1920 — 2032</p>
+                <div class="tombstone-cause">
+                    <strong>멸종 원인:</strong> 완전 자율주행 상용화
+                </div>
+                <p class="tombstone-epitaph">"어디로 모실까요?" — 이제 AI가 물어봄</p>
+                <div class="extinction-meter">
+                    <div class="meter-bar">
+                        <div class="meter-fill" style="width: 100%;"></div>
+                    </div>
+                    <span class="meter-percent">100%</span>
+                </div>
+            </div>
+
+            <div class="tombstone fade-in">
+                <span class="tombstone-status">◉ EXTINCT</span>
+                <div class="tombstone-icon">📝</div>
+                <h3 class="tombstone-title">단순 번역가</h3>
+                <p class="tombstone-years">기원전 — 2025</p>
+                <div class="tombstone-cause">
+                    <strong>멸종 원인:</strong> 실시간 신경망 번역
+                </div>
+                <p class="tombstone-epitaph">수천 년 역사가 1년 만에... R.I.P</p>
+                <div class="extinction-meter">
+                    <div class="meter-bar">
+                        <div class="meter-fill" style="width: 100%;"></div>
+                    </div>
+                    <span class="meter-percent">100%</span>
+                </div>
+            </div>
+
+            <div class="tombstone fade-in">
+                <span class="tombstone-status">◉ EXTINCT</span>
+                <div class="tombstone-icon">📊</div>
+                <h3 class="tombstone-title">데이터 입력 사원</h3>
+                <p class="tombstone-years">1960 — 2024</p>
+                <div class="tombstone-cause">
+                    <strong>멸종 원인:</strong> RPA & OCR 완전 자동화
+                </div>
+                <p class="tombstone-epitaph">Ctrl+C, Ctrl+V의 시대는 끝났다</p>
+                <div class="extinction-meter">
+                    <div class="meter-bar">
+                        <div class="meter-fill" style="width: 100%;"></div>
+                    </div>
+                    <span class="meter-percent">100%</span>
+                </div>
+            </div>
+
+            <div class="tombstone fade-in">
+                <span class="tombstone-status">◉ EXTINCT</span>
+                <div class="tombstone-icon">🎨</div>
+                <h3 class="tombstone-title">스톡 일러스트레이터</h3>
+                <p class="tombstone-years">2000 — 2024</p>
+                <div class="tombstone-cause">
+                    <strong>멸종 원인:</strong> 생성형 AI (Midjourney 계열)
+                </div>
+                <p class="tombstone-epitaph">"무료 이미지 생성해드릴까요?" 😭</p>
+                <div class="extinction-meter">
+                    <div class="meter-bar">
+                        <div class="meter-fill" style="width: 100%;"></div>
+                    </div>
+                    <span class="meter-percent">100%</span>
+                </div>
+            </div>
+
+            <div class="tombstone fade-in">
+                <span class="tombstone-status">◉ EXTINCT</span>
+                <div class="tombstone-icon">🏭</div>
+                <h3 class="tombstone-title">공장 조립공</h3>
+                <p class="tombstone-years">산업혁명 — 2030</p>
+                <div class="tombstone-cause">
+                    <strong>멸종 원인:</strong> 휴머노이드 로봇 대량 배치
+                </div>
+                <p class="tombstone-epitaph">24시간 무급 무휴 로봇에게 자리를...</p>
+                <div class="extinction-meter">
+                    <div class="meter-bar">
+                        <div class="meter-fill" style="width: 100%;"></div>
+                    </div>
+                    <span class="meter-percent">100%</span>
+                </div>
+            </div>
+
+            <div class="tombstone fade-in">
+                <span class="tombstone-status">◉ EXTINCT</span>
+                <div class="tombstone-icon">📰</div>
+                <h3 class="tombstone-title">기초 기사 작성 기자</h3>
+                <p class="tombstone-years">1600 — 2025</p>
+                <div class="tombstone-cause">
+                    <strong>멸종 원인:</strong> AI 뉴스 생성 시스템
+                </div>
+                <p class="tombstone-epitaph">속보! AI가 이 기사를 작성했습니다</p>
+                <div class="extinction-meter">
+                    <div class="meter-bar">
+                        <div class="meter-fill" style="width: 100%;"></div>
+                    </div>
+                    <span class="meter-percent">100%</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Rising Section -->
+    <section class="rising">
+        <div class="section-header fade-in">
+            <div class="section-tag">NEW_SPECIES</div>
+            <h2 class="section-title">새로 출현한 직업들</h2>
+            <p class="section-desc">
+                멸종의 시대에 새롭게 탄생한 직업군들.<br>
+                2025년 기준, 이들이 새로운 생태계의 주인공이 됩니다.
+            </p>
+        </div>
+
+        <div class="rising-grid">
+            <div class="rising-card fade-in">
+                <span class="rising-badge">DOMINANT_SPECIES</span>
+                <div class="rising-icon">🤖</div>
+                <h3 class="rising-title">AI 프롬프트 엔지니어</h3>
+                <p class="rising-salary">₩80,000,000 — ₩200,000,000</p>
+                <p class="rising-desc">AI에게 정확한 명령을 내리는 전문가. "프롬프트 한 줄로 연봉 2배" 시대의 주역</p>
+                <div class="rising-reason">
+                    <p class="rising-reason-title">// WHY_EMERGING</p>
+                    <p>AI를 쓰는 건 누구나. 잘 쓰는 건 아무나 못 함</p>
+                </div>
+                <div class="growth-indicator">
+                    <span class="growth-arrow">▲</span>
+                    <span class="growth-percent">+340% GROWTH</span>
+                </div>
+            </div>
+
+            <div class="rising-card fade-in">
+                <span class="rising-badge">GUARDIAN_CLASS</span>
+                <div class="rising-icon">🛡️</div>
+                <h3 class="rising-title">AI 윤리 전문가</h3>
+                <p class="rising-salary">₩70,000,000 — ₩150,000,000</p>
+                <p class="rising-desc">AI가 나쁜 짓 못하게 감시하는 사람. 인류의 마지막 방어선</p>
+                <div class="rising-reason">
+                    <p class="rising-reason-title">// WHY_EMERGING</p>
+                    <p>AI 규제 법안 쏟아지는 중. 기업들 전문가 긴급 구인</p>
+                </div>
+                <div class="growth-indicator">
+                    <span class="growth-arrow">▲</span>
+                    <span class="growth-percent">+280% GROWTH</span>
+                </div>
+            </div>
+
+            <div class="rising-card fade-in">
+                <span class="rising-badge">TECH_ELITE</span>
+                <div class="rising-icon">🔧</div>
+                <h3 class="rising-title">MLOps 엔지니어</h3>
+                <p class="rising-salary">₩85,000,000 — ₩180,000,000</p>
+                <p class="rising-desc">AI 모델을 배포하고 관리하는 사람. DevOps의 AI 진화형</p>
+                <div class="rising-reason">
+                    <p class="rising-reason-title">// WHY_EMERGING</p>
+                    <p>AI 만드는 건 쉬운데, 운영하는 건 여전히 어려움</p>
+                </div>
+                <div class="growth-indicator">
+                    <span class="growth-arrow">▲</span>
+                    <span class="growth-percent">+420% GROWTH</span>
+                </div>
+            </div>
+
+            <div class="rising-card fade-in">
+                <span class="rising-badge">CREATIVE_CLASS</span>
+                <div class="rising-icon">🎬</div>
+                <h3 class="rising-title">AI 콘텐츠 감독</h3>
+                <p class="rising-salary">₩60,000,000 — ₩120,000,000</p>
+                <p class="rising-desc">AI가 만든 콘텐츠를 감수하고 다듬는 사람. 최종 결정은 인간이</p>
+                <div class="rising-reason">
+                    <p class="rising-reason-title">// WHY_EMERGING</p>
+                    <p>AI 콘텐츠 품질 관리 필수. 인간 감성 터치 필요</p>
+                </div>
+                <div class="growth-indicator">
+                    <span class="growth-arrow">▲</span>
+                    <span class="growth-percent">+195% GROWTH</span>
+                </div>
+            </div>
+
+            <div class="rising-card fade-in">
+                <span class="rising-badge">DATA_BREEDER</span>
+                <div class="rising-icon">🧬</div>
+                <h3 class="rising-title">AI 트레이너</h3>
+                <p class="rising-salary">₩55,000,000 — ₩100,000,000</p>
+                <p class="rising-desc">AI에게 양질의 데이터를 먹이는 사람. "쓰레기 인 = 쓰레기 아웃"</p>
+                <div class="rising-reason">
+                    <p class="rising-reason-title">// WHY_EMERGING</p>
+                    <p>데이터 품질 = AI 품질. 가장 중요한 작업</p>
+                </div>
+                <div class="growth-indicator">
+                    <span class="growth-arrow">▲</span>
+                    <span class="growth-percent">+250% GROWTH</span>
+                </div>
+            </div>
+
+            <div class="rising-card fade-in">
+                <span class="rising-badge">HUMAN_ONLY</span>
+                <div class="rising-icon">🧠</div>
+                <h3 class="rising-title">AI 불안 상담사</h3>
+                <p class="rising-salary">₩65,000,000 — ₩130,000,000</p>
+                <p class="rising-desc">AI 때문에 일자리 잃은 사람들 심리 상담. 아이러니하게도 대박</p>
+                <div class="rising-reason">
+                    <p class="rising-reason-title">// WHY_EMERGING</p>
+                    <p>AI 불안 시대, 인간의 정서적 지지는 대체 불가</p>
+                </div>
+                <div class="growth-indicator">
+                    <span class="growth-arrow">▲</span>
+                    <span class="growth-percent">+180% GROWTH</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Skills Section -->
+    <section class="skills">
+        <div class="section-header fade-in">
+            <div class="section-tag">SURVIVAL_PROTOCOL</div>
+            <h2 class="section-title">생존 스킬 분석</h2>
+            <p class="section-desc">
+                어떤 스킬을 버리고, 어떤 스킬을 배워야 하는가?<br>
+                2050년 기준 분석 데이터
+            </p>
+        </div>
+
+        <div class="skills-container">
+            <div class="skills-panel deprecated fade-in">
+                <div class="skills-panel-header">
+                    <span class="skills-panel-icon">⚠️</span>
+                    <h3 class="skills-panel-title">DEPRECATED_SKILLS</h3>
+                </div>
+
+                <div class="skill-item">
+                    <span class="skill-icon">⌨️</span>
+                    <div class="skill-info">
+                        <p class="skill-name">빠른 타이핑</p>
+                        <p class="skill-status">음성/뇌파 입력으로 대체됨</p>
+                    </div>
+                </div>
+
+                <div class="skill-item">
+                    <span class="skill-icon">📋</span>
+                    <div class="skill-info">
+                        <p class="skill-name">단순 문서 작성</p>
+                        <p class="skill-status">AI가 3초 만에 완성</p>
+                    </div>
+                </div>
+
+                <div class="skill-item">
+                    <span class="skill-icon">🔍</span>
+                    <div class="skill-info">
+                        <p class="skill-name">정보 검색 능력</p>
+                        <p class="skill-status">AI가 요약해서 알려줌</p>
+                    </div>
+                </div>
+
+                <div class="skill-item">
+                    <span class="skill-icon">📊</span>
+                    <div class="skill-info">
+                        <p class="skill-name">엑셀 함수</p>
+                        <p class="skill-status">"이거 해줘" 하면 AI가 해줌</p>
+                    </div>
+                </div>
+
+                <div class="skill-item">
+                    <span class="skill-icon">🌐</span>
+                    <div class="skill-info">
+                        <p class="skill-name">외국어 암기</p>
+                        <p class="skill-status">실시간 번역이 더 정확</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="skills-panel required fade-in">
+                <div class="skills-panel-header">
+                    <span class="skills-panel-icon">✅</span>
+                    <h3 class="skills-panel-title">REQUIRED_SKILLS</h3>
+                </div>
+
+                <div class="skill-item">
+                    <span class="skill-icon">💬</span>
+                    <div class="skill-info">
+                        <p class="skill-name">프롬프트 엔지니어링</p>
+                        <p class="skill-status">AI에게 일 잘 시키는 능력</p>
+                    </div>
+                </div>
+
+                <div class="skill-item">
+                    <span class="skill-icon">🎯</span>
+                    <div class="skill-info">
+                        <p class="skill-name">문제 정의 능력</p>
+                        <p class="skill-status">AI는 답은 잘하는데 질문은 못 함</p>
+                    </div>
+                </div>
+
+                <div class="skill-item">
+                    <span class="skill-icon">🤝</span>
+                    <div class="skill-info">
+                        <p class="skill-name">공감 & 감성 소통</p>
+                        <p class="skill-status">AI가 절대 못 하는 영역</p>
+                    </div>
+                </div>
+
+                <div class="skill-item">
+                    <span class="skill-icon">🎨</span>
+                    <div class="skill-info">
+                        <p class="skill-name">창의적 방향 설정</p>
+                        <p class="skill-status">AI는 실행, 인간은 방향</p>
+                    </div>
+                </div>
+
+                <div class="skill-item">
+                    <span class="skill-icon">🔗</span>
+                    <div class="skill-info">
+                        <p class="skill-name">AI 도구 조합 능력</p>
+                        <p class="skill-status">여러 AI를 연결해서 쓰는 능력</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Irony Section -->
+    <section class="irony">
+        <div class="section-header fade-in">
+            <div class="section-tag">HISTORICAL_IRONY</div>
+            <h2 class="section-title">역사적 아이러니</h2>
+            <p class="section-desc">
+                2025년 당시 인류가 했던 말들.<br>
+                지금 보면 웃기지만, 그때는 진지했습니다.
+            </p>
+        </div>
+
+        <div class="irony-grid">
+            <div class="irony-card fade-in">
+                <p class="irony-before">"공무원 하면 평생 안정적이야"</p>
+                <p class="irony-arrow">↓</p>
+                <p class="irony-after">AI가 공문서 98% 자동 작성</p>
+                <p class="irony-comment">도장 찍는 로봇도 나왔습니다...</p>
+            </div>
+
+            <div class="irony-card fade-in">
+                <p class="irony-before">"디자인은 창의적이라 AI 못해"</p>
+                <p class="irony-arrow">↓</p>
+                <p class="irony-after">클라이언트: "AI 돌려서 보내줘요"</p>
+                <p class="irony-comment">시안 100개? 3초요~</p>
+            </div>
+
+            <div class="irony-card fade-in">
+                <p class="irony-before">"코딩 배우면 취업 걱정 끝!"</p>
+                <p class="irony-arrow">↓</p>
+                <p class="irony-after">AI가 코드 95% 자동 완성</p>
+                <p class="irony-comment">시니어 개발자 → AI 코드 리뷰어</p>
+            </div>
+
+            <div class="irony-card fade-in">
+                <p class="irony-before">"영어 잘하면 어디서든 먹고 살아"</p>
+                <p class="irony-arrow">↓</p>
+                <p class="irony-after">실시간 신경망 통역</p>
+                <p class="irony-comment">TOEIC 990점... 이제 쓸모가...?</p>
+            </div>
+
+            <div class="irony-card fade-in">
+                <p class="irony-before">"의사는 AI가 절대 대체 못해"</p>
+                <p class="irony-arrow">↓</p>
+                <p class="irony-after">AI 진단 정확도 > 전문의</p>
+                <p class="irony-comment">환자: "선생님 AI가 뭐래요?"</p>
+            </div>
+
+            <div class="irony-card fade-in">
+                <p class="irony-before">"변호사는 고소득 전문직이야"</p>
+                <p class="irony-arrow">↓</p>
+                <p class="irony-after">AI가 판례 분석 & 계약서 검토</p>
+                <p class="irony-comment">로스쿨 3년... 프롬프트 학원으로...</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Timeline Section -->
+    <section class="timeline-section">
+        <div class="section-header fade-in">
+            <div class="section-tag">EXTINCTION_TIMELINE</div>
+            <h2 class="section-title">멸종 타임라인</h2>
+            <p class="section-desc">
+                과거에서 현재까지, 직업 생태계의 변화 기록
+            </p>
+        </div>
+
+        <div class="timeline">
+            <div class="timeline-item past">
+                <div class="timeline-content fade-in">
+                    <p class="timeline-year">2020</p>
+                    <h4 class="timeline-title">고속도로 톨게이트 수납원 퇴장</h4>
+                    <p class="timeline-desc">하이패스 시스템 완전 보급. 첫 번째 대규모 직업 소멸</p>
+                </div>
+                <div class="timeline-dot"></div>
+            </div>
+
+            <div class="timeline-item past">
+                <div class="timeline-content fade-in">
+                    <p class="timeline-year">2023</p>
+                    <h4 class="timeline-title">ChatGPT 등장, 대혼란 시작</h4>
+                    <p class="timeline-desc">생성형 AI 대중화. 카피라이터, 번역가, 고객상담 동시다발 위기</p>
+                </div>
+                <div class="timeline-dot"></div>
+            </div>
+
+            <div class="timeline-item now">
+                <div class="timeline-content fade-in">
+                    <p class="timeline-year">2025</p>
+                    <h4 class="timeline-title">⚡ 현재 아카이브 시점 ⚡</h4>
+                    <p class="timeline-desc">AI 에이전트 시대 본격화. 사무직 대규모 재편 진행 중</p>
+                </div>
+                <div class="timeline-dot"></div>
+            </div>
+
+            <div class="timeline-item future">
+                <div class="timeline-content fade-in">
+                    <p class="timeline-year">2027</p>
+                    <h4 class="timeline-title">자율주행 택시 상용화</h4>
+                    <p class="timeline-desc">운전면허 개념 소멸 시작. 운송업 완전 재편</p>
+                </div>
+                <div class="timeline-dot"></div>
+            </div>
+
+            <div class="timeline-item future">
+                <div class="timeline-content fade-in">
+                    <p class="timeline-year">2030</p>
+                    <h4 class="timeline-title">AGI 등장</h4>
+                    <p class="timeline-desc">인간 수준 AI 등장. 새로운 시대의 시작... 혹은 끝?</p>
+                </div>
+                <div class="timeline-dot"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Quote Section -->
+    <section class="quote-section">
+        <p class="quote-text fade-in">
+            "AI가 당신의 일자리를 뺏는 게 아닙니다.<br>
+            AI를 잘 쓰는 사람이 뺏는 겁니다."
+        </p>
+        <p class="quote-author fade-in">— 2025년 링크드인에서 가장 많이 인용된 문장</p>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="cta-section">
+        <h2 class="cta-title fade-in">그래서, 어떻게 할 건가요?</h2>
+        <p class="cta-text fade-in">
+            2050년에서 2025년을 돌아보며 기록한 이 아카이브.<br>
+            지금 이 순간에도 새로운 직업이 생겨나고 있습니다.<br><br>
+            <strong>적응하거나, 멸종하거나.</strong>
+        </p>
+        <button class="cta-button fade-in" onclick="openModal()">
+            ACCESS_SURVIVAL_GUIDE →
+        </button>
+    </section>
+
+    <!-- Status Monitor -->
+    <div class="status-monitor">
+        <p class="status-label">JOBS_LOST_TODAY</p>
+        <p class="status-value" id="lostJobs">0</p>
+    </div>
+
+    <!-- Insight Modal - Dashboard Version -->
+    <div class="modal-overlay" id="insightModal">
+        <button class="modal-close" onclick="closeModal()">×</button>
+        <div class="modal-content">
+            
+            <!-- Dashboard Header -->
+            <div class="dashboard-header">
+                <div class="dashboard-status">SYSTEM ONLINE — DATA STREAM ACTIVE</div>
+                <h2 class="dashboard-title">SURVIVAL PROTOCOL</h2>
+                <p class="dashboard-subtitle">[ 5 CRITICAL INSIGHTS FOR AI ERA SURVIVAL ]</p>
+            </div>
+
+            <!-- Dashboard Grid -->
+            <div class="dashboard-grid">
+                
+                <!-- Panel 01 - Featured -->
+                <div class="data-panel gold featured">
+                    <div class="panel-header">
+                        <span class="panel-id">INSIGHT_01</span>
+                        <span class="panel-icon">🎯</span>
+                    </div>
+                    <div class="panel-body">
+                        <div class="featured-main">
+                            <h3 class="panel-title">AI는 "답"을 잘하고,<br>인간은 "질문"을 잘해야 한다</h3>
+                            <p class="panel-content">
+                                "블로그 글 써줘" = 평범한 결과<br>
+                                "Z세대 관점의 은퇴 재정의, 냉소적 위트로" = 완전히 다른 결과
+                            </p>
+                            <div class="panel-insight">
+                                <span class="panel-insight-icon">💡</span>
+                                <span class="panel-insight-text">프롬프트 엔지니어링 = 새로운 문해력</span>
+                            </div>
+                        </div>
+                        <div class="featured-visual">
+                            <div class="visual-bar">
+                                <span class="visual-label">질문 품질</span>
+                                <div class="visual-track">
+                                    <div class="visual-fill" style="width: 95%;"></div>
+                                </div>
+                                <span class="visual-value">95%</span>
+                            </div>
+                            <div class="visual-bar">
+                                <span class="visual-label">결과 품질</span>
+                                <div class="visual-track">
+                                    <div class="visual-fill" style="width: 95%;"></div>
+                                </div>
+                                <span class="visual-value">95%</span>
+                            </div>
+                            <div class="visual-bar">
+                                <span class="visual-label">상관관계</span>
+                                <div class="visual-track">
+                                    <div class="visual-fill" style="width: 100%;"></div>
+                                </div>
+                                <span class="visual-value">1:1</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Panel 02 -->
+                <div class="data-panel green">
+                    <div class="panel-header">
+                        <span class="panel-id">INSIGHT_02</span>
+                        <span class="panel-icon">🤝</span>
+                    </div>
+                    <div class="panel-body">
+                        <h3 class="panel-title">"인간 전용" 영역은<br>여전히 존재한다</h3>
+                        <p class="panel-content">
+                            악수, 눈 맞춤, 따뜻한 위로,<br>
+                            "이거 내가 책임질게요"라는 한마디
+                        </p>
+                        <div class="panel-insight">
+                            <span class="panel-insight-icon">💡</span>
+                            <span class="panel-insight-text">공감 능력 = 가장 비싼 스킬</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Panel 03 -->
+                <div class="data-panel purple">
+                    <div class="panel-header">
+                        <span class="panel-id">INSIGHT_03</span>
+                        <span class="panel-icon">🔗</span>
+                    </div>
+                    <div class="panel-body">
+                        <h3 class="panel-title">AI를 "도구"로 보는 사람<br>vs "경쟁자"로 보는 사람</h3>
+                        <p class="panel-content">
+                            경쟁자 = 불안<br>
+                            도구 = 생산성 10배
+                        </p>
+                        <div class="panel-insight">
+                            <span class="panel-insight-icon">💡</span>
+                            <span class="panel-insight-text">AI 활용 = 디지털 운전면허</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Panel 04 -->
+                <div class="data-panel red">
+                    <div class="panel-header">
+                        <span class="panel-id">INSIGHT_04</span>
+                        <span class="panel-icon">⚡</span>
+                    </div>
+                    <div class="panel-body">
+                        <h3 class="panel-title">"전문성"의 정의가<br>바뀌고 있다</h3>
+                        <p class="panel-content">
+                            과거: 10년 경력 = 전문가<br>
+                            현재: 10년 + AI못씀 = 공룡<br>
+                            미래: 3년 + AI마스터 = 슈퍼전문가
+                        </p>
+                        <div class="panel-insight">
+                            <span class="panel-insight-icon">💡</span>
+                            <span class="panel-insight-text">Unlearning = 핵심 역량</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Panel 05 - Featured -->
+                <div class="data-panel cyan featured">
+                    <div class="panel-header">
+                        <span class="panel-id">INSIGHT_05</span>
+                        <span class="panel-icon">🌊</span>
+                    </div>
+                    <div class="panel-body">
+                        <div class="featured-main">
+                            <h3 class="panel-title">AI는 파도,<br>당신은 서퍼</h3>
+                            <p class="panel-content">
+                                파도를 막으려는 사람 → 휩쓸려감<br>
+                                파도를 타는 사람 → 해변까지 감<br><br>
+                                두려워해도 됨. 하지만 멈추면 안 됨.
+                            </p>
+                            <div class="panel-insight">
+                                <span class="panel-insight-icon">💡</span>
+                                <span class="panel-insight-text">지금 이 글을 읽고 있다면, 당신은 이미 시작했습니다.</span>
+                            </div>
+                        </div>
+                        <div class="featured-visual">
+                            <div class="visual-bar">
+                                <span class="visual-label">두려움</span>
+                                <div class="visual-track">
+                                    <div class="visual-fill" style="width: 100%;"></div>
+                                </div>
+                                <span class="visual-value">OK</span>
+                            </div>
+                            <div class="visual-bar">
+                                <span class="visual-label">멈춤</span>
+                                <div class="visual-track">
+                                    <div class="visual-fill" style="width: 0%;"></div>
+                                </div>
+                                <span class="visual-value">NO</span>
+                            </div>
+                            <div class="visual-bar">
+                                <span class="visual-label">적응</span>
+                                <div class="visual-track">
+                                    <div class="visual-fill" style="width: 100%;"></div>
+                                </div>
+                                <span class="visual-value">YES</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Dashboard Footer -->
+            <div class="dashboard-footer">
+                <p class="footer-message">
+                    결국 살아남는 건 <strong>가장 강한 자</strong>도, <strong>가장 똑똑한 자</strong>도 아닙니다.<br>
+                    <strong>가장 빨리 적응하는 자</strong>입니다.
+                </p>
+                <p class="footer-signature">— DARWIN.AI // EVOLUTIONARY_ALGORITHM v2.025 —</p>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-logo">ARCHIVE_2050</div>
+        <p class="footer-text">
+            © 2050 HISTORICAL ARCHIVE SYSTEM<br>
+            이 아카이브는 AI가 인간의 지시 하에 생성했습니다
+        </p>
+        <p class="footer-warning">
+            ⚠ 현재 시점에서 이 데이터를 열람 중입니다 ⚠
+        </p>
+    </footer>
+
+    <script>
+        // Fade in animation
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
+
+        document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+
+        // Lost jobs counter
+        let jobsLost = 0;
+        const lostJobsEl = document.getElementById('lostJobs');
+        
+        setInterval(() => {
+            jobsLost += Math.floor(Math.random() * 5) + 1;
+            lostJobsEl.textContent = jobsLost.toLocaleString();
+        }, 3000);
+
+        // Stat animations
+        const extinctCount = document.getElementById('extinctCount');
+        const newJobCount = document.getElementById('newJobCount');
+        let currentPercent = 0;
+        let currentJobs = 0;
+
+        function animateStats() {
+            if (currentPercent < 47) {
+                currentPercent++;
+                extinctCount.textContent = currentPercent + '%';
+                setTimeout(animateStats, 50);
+            }
+        }
+
+        function animateJobs() {
+            if (currentJobs < 158) {
+                currentJobs += 3;
+                if (currentJobs > 158) currentJobs = 158;
+                newJobCount.textContent = currentJobs;
+                setTimeout(animateJobs, 30);
+            }
+        }
+
+        setTimeout(() => {
+            animateStats();
+            animateJobs();
+        }, 500);
+
+        // Modal
+        const modal = document.getElementById('insightModal');
+
+        function openModal() {
+            modal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeModal() {
+            modal.classList.remove('active');
+            document.body.style.overflow = '';
+        }
+
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) closeModal();
+        });
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && modal.classList.contains('active')) closeModal();
+        });
+
+        // Console Easter Egg
+        console.log('%c🤖 ARCHIVE_2050 SYSTEM', 'font-size: 20px; font-weight: bold; color: #00f5ff;');
+        console.log('%c이 콘솔을 열어본 당신!', 'font-size: 14px; color: #00ff88;');
+        console.log('%c2050년에서 보면, 당신은 이미 전설입니다.', 'font-size: 14px; color: #ff00ff;');
+        console.log('%c...근데 진짜 개발자 맞죠?', 'font-size: 12px; color: #666;');
+
+        // ============================================
+        // CUSTOM CURSOR SYSTEM
+        // ============================================
+        const cursorMain = document.getElementById('cursorMain');
+        const cursorFollower = document.getElementById('cursorFollower');
+        const cursorGlow = document.getElementById('cursorGlow');
+        const cursorCrosshair = document.getElementById('cursorCrosshair');
+        const cursorCoords = document.getElementById('cursorCoords');
+        const trails = [
+            document.getElementById('trail1'),
+            document.getElementById('trail2'),
+            document.getElementById('trail3'),
+            document.getElementById('trail4'),
+            document.getElementById('trail5')
+        ];
+
+        let mouseX = 0, mouseY = 0;
+        let cursorX = 0, cursorY = 0;
+        let followerX = 0, followerY = 0;
+        let trailPositions = trails.map(() => ({ x: 0, y: 0 }));
+
+        // Trail colors
+        const trailColors = [
+            'rgba(0, 245, 255, 0.6)',
+            'rgba(0, 245, 255, 0.4)',
+            'rgba(255, 0, 255, 0.3)',
+            'rgba(255, 0, 255, 0.2)',
+            'rgba(168, 85, 247, 0.1)'
+        ];
+
+        trails.forEach((trail, i) => {
+            trail.style.background = trailColors[i];
+            trail.style.width = (6 - i) + 'px';
+            trail.style.height = (6 - i) + 'px';
+            trail.style.boxShadow = `0 0 ${10 - i * 2}px ${trailColors[i]}`;
+        });
+
+        // Mouse move handler
+        document.addEventListener('mousemove', (e) => {
+            mouseX = e.clientX;
+            mouseY = e.clientY;
+
+            // Update coordinates display
+            const coordX = String(Math.round(mouseX)).padStart(4, '0');
+            const coordY = String(Math.round(mouseY)).padStart(4, '0');
+            cursorCoords.textContent = `X:${coordX} Y:${coordY}`;
+        });
+
+        // Animation loop
+        function animateCursor() {
+            // Smooth follow for main cursor
+            cursorX += (mouseX - cursorX) * 0.15;
+            cursorY += (mouseY - cursorY) * 0.15;
+
+            // Slower follow for follower
+            followerX += (mouseX - followerX) * 0.08;
+            followerY += (mouseY - followerY) * 0.08;
+
+            // Update positions
+            cursorMain.style.left = cursorX + 'px';
+            cursorMain.style.top = cursorY + 'px';
+
+            cursorFollower.style.left = followerX + 'px';
+            cursorFollower.style.top = followerY + 'px';
+
+            cursorGlow.style.left = mouseX + 'px';
+            cursorGlow.style.top = mouseY + 'px';
+
+            cursorCrosshair.style.left = mouseX + 'px';
+            cursorCrosshair.style.top = mouseY + 'px';
+
+            cursorCoords.style.left = mouseX + 'px';
+            cursorCoords.style.top = mouseY + 'px';
+
+            // Update trails with delay
+            trailPositions.forEach((pos, i) => {
+                const prevPos = i === 0 ? { x: followerX, y: followerY } : trailPositions[i - 1];
+                const speed = 0.2 - (i * 0.03);
+                
+                pos.x += (prevPos.x - pos.x) * speed;
+                pos.y += (prevPos.y - pos.y) * speed;
+
+                trails[i].style.left = pos.x + 'px';
+                trails[i].style.top = pos.y + 'px';
+                trails[i].style.opacity = 0.8 - (i * 0.15);
+            });
+
+            requestAnimationFrame(animateCursor);
+        }
+
+        animateCursor();
+
+        // Hover effect for interactive elements
+        const interactiveElements = document.querySelectorAll('a, button, .tombstone, .rising-card, .irony-card, .skill-item, .timeline-content, .insight-card, .stat-box, .nav-logo, .nav-year');
+
+        interactiveElements.forEach(el => {
+            el.addEventListener('mouseenter', () => {
+                cursorMain.classList.add('hover');
+                cursorGlow.style.background = 'radial-gradient(circle, rgba(255, 0, 255, 0.15) 0%, transparent 70%)';
+            });
+
+            el.addEventListener('mouseleave', () => {
+                cursorMain.classList.remove('hover');
+                cursorGlow.style.background = 'radial-gradient(circle, rgba(0, 245, 255, 0.1) 0%, transparent 70%)';
+            });
+        });
+
+        // Click effect
+        document.addEventListener('mousedown', () => {
+            cursorMain.classList.add('clicking');
+            cursorFollower.classList.add('clicking');
+        });
+
+        document.addEventListener('mouseup', () => {
+            cursorMain.classList.remove('clicking');
+            cursorFollower.classList.remove('clicking');
+        });
+
+        // Hide cursor when leaving window
+        document.addEventListener('mouseleave', () => {
+            cursorMain.style.opacity = '0';
+            cursorFollower.style.opacity = '0';
+            cursorGlow.style.opacity = '0';
+            cursorCrosshair.style.opacity = '0';
+            cursorCoords.style.opacity = '0';
+            trails.forEach(trail => trail.style.opacity = '0');
+        });
+
+        document.addEventListener('mouseenter', () => {
+            cursorMain.style.opacity = '1';
+            cursorFollower.style.opacity = '1';
+            cursorGlow.style.opacity = '1';
+            cursorCrosshair.style.opacity = '1';
+            cursorCoords.style.opacity = '0.5';
+        });
+    </script>
+</body>
+</html>

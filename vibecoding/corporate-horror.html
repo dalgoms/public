@@ -1,0 +1,2751 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>주식회사 워라밸 - 당신의 삶을 책임지지 않습니다</title>
+    <!-- G마켓 산스 폰트 -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2001@1.1/GmarketSansLight.woff">
+    <style>
+        @font-face {
+            font-family: 'GmarketSans';
+            src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2001@1.1/GmarketSansLight.woff') format('woff');
+            font-weight: 300;
+            font-style: normal;
+        }
+        @font-face {
+            font-family: 'GmarketSans';
+            src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2001@1.1/GmarketSansMedium.woff') format('woff');
+            font-weight: 500;
+            font-style: normal;
+        }
+        @font-face {
+            font-family: 'GmarketSans';
+            src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2001@1.1/GmarketSansBold.woff') format('woff');
+            font-weight: 700;
+            font-style: normal;
+        }
+    </style>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --horror-red: #8B0000;
+            --blood-red: #DC143C;
+            --corporate-gray: #2a2a2a;
+            --soul-gray: #666;
+            --dead-white: #f5f5f5;
+            --warning-yellow: #FFD700;
+        }
+
+        body {
+            font-family: 'GmarketSans', sans-serif;
+            background: linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 50%, #16213e 100%);
+            color: var(--dead-white);
+            overflow-x: hidden;
+            cursor: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32"><text y="24" font-size="24">💀</text></svg>'), auto;
+        }
+
+        /* NUCLEAR EXPLOSION Background - Hero Section Only */
+        .nuclear-flash {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(circle at 50% 50%, 
+                rgba(255, 200, 100, 0.3) 0%, 
+                rgba(255, 100, 50, 0.2) 30%, 
+                transparent 70%);
+            animation: nuclearPulse 8s ease-in-out infinite;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        @keyframes nuclearPulse {
+            0%, 100% { opacity: 0; transform: scale(0.5); }
+            50% { opacity: 1; transform: scale(2); }
+        }
+
+        /* Mushroom Cloud - Hero Section Only */
+        .mushroom-cloud {
+            position: absolute;
+            bottom: -200px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 600px;
+            height: 400px;
+            background: 
+                radial-gradient(ellipse 150% 100% at 50% 100%, rgba(139, 69, 19, 0.4) 0%, transparent 70%),
+                radial-gradient(ellipse 80% 60% at 50% 30%, rgba(255, 140, 0, 0.3) 0%, transparent 60%),
+                radial-gradient(ellipse 60% 40% at 50% 10%, rgba(255, 69, 0, 0.4) 0%, transparent 50%);
+            animation: mushroomRise 15s ease-out infinite;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        @keyframes mushroomRise {
+            0% { opacity: 0; transform: translateX(-50%) translateY(200px) scale(0.3); }
+            20% { opacity: 1; }
+            80% { opacity: 0.8; }
+            100% { opacity: 0; transform: translateX(-50%) translateY(-300px) scale(1.5); }
+        }
+
+
+        /* No Windows - Brick Wall Effect */
+        .brick-wall {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            opacity: 0.05;
+            background: 
+                linear-gradient(to right, rgba(139, 0, 0, 0.3) 1px, transparent 1px),
+                linear-gradient(to bottom, rgba(139, 0, 0, 0.3) 1px, transparent 1px);
+            background-size: 60px 30px;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* Soul Escaping Animation */
+        .escaping-soul {
+            position: fixed;
+            font-size: 3rem;
+            pointer-events: none;
+            z-index: 2;
+            animation: soulEscape 5s ease-out forwards;
+            filter: drop-shadow(0 0 20px rgba(255, 255, 255, 0.8));
+        }
+
+        @keyframes soulEscape {
+            0% { 
+                opacity: 1; 
+                transform: translateY(0) scale(1) rotate(0deg);
+                filter: drop-shadow(0 0 20px rgba(255, 255, 255, 0.8));
+            }
+            50% {
+                opacity: 0.8;
+                transform: translateY(-200px) scale(1.5) rotate(180deg);
+            }
+            100% { 
+                opacity: 0; 
+                transform: translateY(-500px) scale(0.5) rotate(360deg);
+                filter: drop-shadow(0 0 50px rgba(255, 255, 255, 0));
+            }
+        }
+
+        /* Sealed Door Effect */
+        .sealed-door {
+            position: fixed;
+            bottom: 50px;
+            right: 50px;
+            width: 80px;
+            height: 120px;
+            background: linear-gradient(180deg, #4a3728 0%, #2d1f14 100%);
+            border: 3px solid #1a1a1a;
+            border-radius: 5px 5px 0 0;
+            z-index: 3;
+            box-shadow: inset 0 0 30px rgba(0,0,0,0.8);
+        }
+
+        .sealed-door::before {
+            content: '🔒';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 2rem;
+            animation: lockShake 2s infinite;
+        }
+
+        .sealed-door::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: repeating-linear-gradient(
+                45deg,
+                transparent,
+                transparent 10px,
+                rgba(255, 200, 0, 0.3) 10px,
+                rgba(255, 200, 0, 0.3) 20px
+            );
+            border-radius: 5px 5px 0 0;
+        }
+
+        .caution-tape {
+            position: fixed;
+            bottom: 100px;
+            right: 30px;
+            width: 120px;
+            height: 30px;
+            background: repeating-linear-gradient(
+                45deg,
+                #ffd700,
+                #ffd700 10px,
+                #000 10px,
+                #000 20px
+            );
+            transform: rotate(-15deg);
+            z-index: 4;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.5);
+        }
+
+        .caution-tape::after {
+            content: '출구없음';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 0.7rem;
+            font-weight: bold;
+            color: #000;
+        }
+
+        @keyframes lockShake {
+            0%, 100% { transform: translate(-50%, -50%) rotate(0deg); }
+            25% { transform: translate(-50%, -50%) rotate(-10deg); }
+            75% { transform: translate(-50%, -50%) rotate(10deg); }
+        }
+
+        /* Fire at the bottom */
+        .fire-container {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 100px;
+            overflow: hidden;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .fire {
+            position: absolute;
+            bottom: -20px;
+            width: 100%;
+            height: 120px;
+            background: 
+                radial-gradient(ellipse at 20% 100%, rgba(255, 100, 0, 0.6) 0%, transparent 50%),
+                radial-gradient(ellipse at 40% 100%, rgba(255, 200, 0, 0.5) 0%, transparent 40%),
+                radial-gradient(ellipse at 60% 100%, rgba(255, 50, 0, 0.7) 0%, transparent 45%),
+                radial-gradient(ellipse at 80% 100%, rgba(255, 150, 0, 0.5) 0%, transparent 50%);
+            animation: fireFlicker 0.5s infinite alternate;
+        }
+
+        @keyframes fireFlicker {
+            0% { opacity: 0.8; transform: scaleY(1); }
+            100% { opacity: 1; transform: scaleY(1.1); }
+        }
+
+        /* Smoke Effect */
+        .smoke {
+            position: fixed;
+            bottom: 50px;
+            width: 100px;
+            height: 100px;
+            background: radial-gradient(circle, rgba(100, 100, 100, 0.4) 0%, transparent 70%);
+            border-radius: 50%;
+            animation: smokeRise 8s infinite ease-out;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        @keyframes smokeRise {
+            0% { 
+                opacity: 0.6; 
+                transform: translateY(0) scale(1);
+            }
+            100% { 
+                opacity: 0; 
+                transform: translateY(-400px) scale(3);
+            }
+        }
+
+        /* Emergency Light */
+        .emergency-light {
+            position: fixed;
+            top: 100px;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at 0% 0%, rgba(255, 0, 0, 0.1) 0%, transparent 30%);
+            animation: emergencyRotate 4s linear infinite;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        @keyframes emergencyRotate {
+            0% { background-position: 0% 0%; opacity: 0.5; }
+            25% { background-position: 100% 0%; opacity: 0.8; }
+            50% { background-position: 100% 100%; opacity: 0.5; }
+            75% { background-position: 0% 100%; opacity: 0.8; }
+            100% { background-position: 0% 0%; opacity: 0.5; }
+        }
+
+        /* Floating souls (overtime ghosts) */
+        .floating-soul {
+            position: fixed;
+            font-size: 2rem;
+            opacity: 0.3;
+            animation: float 20s infinite linear;
+            z-index: 2;
+            pointer-events: none;
+        }
+
+        @keyframes float {
+            0% { transform: translateY(100vh) rotate(0deg); opacity: 0; }
+            10% { opacity: 0.5; }
+            90% { opacity: 0.5; }
+            100% { transform: translateY(-100vh) rotate(360deg); opacity: 0; }
+        }
+
+        /* Chained Worker */
+        .chained-worker {
+            position: fixed;
+            bottom: 20px;
+            left: 50px;
+            font-size: 3rem;
+            animation: struggle 1s infinite;
+            z-index: 3;
+        }
+
+        .chain {
+            position: fixed;
+            bottom: 0;
+            left: 70px;
+            font-size: 2rem;
+            color: #666;
+        }
+
+        @keyframes struggle {
+            0%, 100% { transform: translateX(0) rotate(0deg); }
+            25% { transform: translateX(-5px) rotate(-5deg); }
+            75% { transform: translateX(5px) rotate(5deg); }
+        }
+
+        /* Glitch Effect on scroll */
+        .glitch-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: transparent;
+            pointer-events: none;
+            z-index: 100;
+            opacity: 0;
+        }
+
+        .glitch-overlay.active {
+            animation: glitchFlash 0.1s;
+        }
+
+        @keyframes glitchFlash {
+            0% { background: rgba(255, 0, 0, 0.1); opacity: 1; }
+            50% { background: rgba(0, 255, 255, 0.1); opacity: 1; }
+            100% { background: transparent; opacity: 0; }
+        }
+
+        /* Header */
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            padding: 1.5rem 3rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 1000;
+            background: #000000;
+            border-bottom: 1px solid rgba(139, 0, 0, 0.5);
+        }
+
+        .logo {
+            font-family: 'GmarketSans', sans-serif; font-weight: 700;
+            font-size: 2.2rem;
+            color: var(--blood-red);
+            text-shadow: 0 0 15px rgba(220, 20, 60, 0.5);
+            letter-spacing: 0.02em;
+        }
+
+        .logo span {
+            color: var(--dead-white);
+            font-size: 0.9rem;
+            display: block;
+            font-family: 'GmarketSans', sans-serif;
+            font-weight: 400;
+            opacity: 0.8;
+        }
+
+        nav {
+            display: flex;
+            gap: 2rem;
+        }
+
+        nav a {
+            color: var(--dead-white);
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s;
+            position: relative;
+        }
+
+        nav a:hover {
+            color: var(--blood-red);
+        }
+
+        nav a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--blood-red);
+            transition: width 0.3s;
+        }
+
+        nav a:hover::after {
+            width: 100%;
+        }
+
+        /* Hero Section */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 2rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text y="50" font-size="30" opacity="0.03">💼</text></svg>');
+            background-size: 100px;
+            animation: bgScroll 30s linear infinite;
+        }
+
+        @keyframes bgScroll {
+            0% { background-position: 0 0; }
+            100% { background-position: 100px 100px; }
+        }
+
+        /* HERO DRAMATIC BACKGROUND */
+        .hero-vortex {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 150%;
+            height: 150%;
+            transform: translate(-50%, -50%);
+            background: 
+                conic-gradient(from 0deg at 50% 50%, 
+                    transparent 0deg, 
+                    rgba(139, 0, 0, 0.1) 60deg, 
+                    transparent 120deg,
+                    rgba(220, 20, 60, 0.05) 180deg,
+                    transparent 240deg,
+                    rgba(139, 0, 0, 0.1) 300deg,
+                    transparent 360deg);
+            animation: vortexSpin 30s linear infinite;
+            pointer-events: none;
+        }
+
+        @keyframes vortexSpin {
+            0% { transform: translate(-50%, -50%) rotate(0deg); }
+            100% { transform: translate(-50%, -50%) rotate(360deg); }
+        }
+
+        /* Pulsing Red Rings */
+        .doom-ring {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            border: 2px solid rgba(220, 20, 60, 0.3);
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            animation: ringExpand 4s ease-out infinite;
+        }
+
+        .doom-ring:nth-child(1) { animation-delay: 0s; }
+        .doom-ring:nth-child(2) { animation-delay: 1s; }
+        .doom-ring:nth-child(3) { animation-delay: 2s; }
+        .doom-ring:nth-child(4) { animation-delay: 3s; }
+
+        @keyframes ringExpand {
+            0% { 
+                width: 100px; 
+                height: 100px; 
+                opacity: 0.8;
+                border-width: 3px;
+            }
+            100% { 
+                width: 1500px; 
+                height: 1500px; 
+                opacity: 0;
+                border-width: 1px;
+            }
+        }
+
+        /* Floating Particles */
+        .hero-particles {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            overflow: hidden;
+            pointer-events: none;
+        }
+
+        .particle {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: rgba(220, 20, 60, 0.6);
+            border-radius: 50%;
+            animation: particleFloat 15s linear infinite;
+        }
+
+        @keyframes particleFloat {
+            0% { 
+                transform: translateY(100vh) translateX(0) scale(0);
+                opacity: 0;
+            }
+            10% { opacity: 1; transform: translateY(80vh) translateX(20px) scale(1); }
+            50% { transform: translateY(40vh) translateX(-20px) scale(1.5); }
+            90% { opacity: 1; }
+            100% { 
+                transform: translateY(-20vh) translateX(10px) scale(0.5);
+                opacity: 0;
+            }
+        }
+
+        /* Glitch Title Effect */
+        .glitch-wrapper {
+            position: relative;
+        }
+
+        .glitch-text {
+            position: relative;
+            display: inline-block;
+        }
+
+        .glitch-text::before,
+        .glitch-text::after {
+            content: attr(data-text);
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+
+        .glitch-text::before {
+            color: #0ff;
+            animation: glitch-1 2s infinite linear alternate-reverse;
+            clip-path: polygon(0 0, 100% 0, 100% 45%, 0 45%);
+            transform: translate(-3px, -3px);
+            opacity: 0.8;
+        }
+
+        .glitch-text::after {
+            color: #f0f;
+            animation: glitch-2 3s infinite linear alternate-reverse;
+            clip-path: polygon(0 55%, 100% 55%, 100% 100%, 0 100%);
+            transform: translate(3px, 3px);
+            opacity: 0.8;
+        }
+
+        @keyframes glitch-1 {
+            0%, 100% { transform: translate(0); }
+            20% { transform: translate(-3px, 3px); }
+            40% { transform: translate(-3px, -3px); }
+            60% { transform: translate(3px, 3px); }
+            80% { transform: translate(3px, -3px); }
+        }
+
+        @keyframes glitch-2 {
+            0%, 100% { transform: translate(0); }
+            20% { transform: translate(3px, -3px); }
+            40% { transform: translate(3px, 3px); }
+            60% { transform: translate(-3px, -3px); }
+            80% { transform: translate(-3px, 3px); }
+        }
+
+        /* Dramatic Clock */
+        .hero-clock {
+            position: absolute;
+            top: 120px;
+            right: 80px;
+            font-family: 'GmarketSans', sans-serif; font-weight: 700;
+            font-size: 4rem;
+            color: var(--blood-red);
+            text-shadow: 0 0 30px rgba(220, 20, 60, 0.8);
+            animation: clockPulse 1s ease-in-out infinite;
+        }
+
+        .hero-clock::before {
+            content: '18:00';
+            display: block;
+        }
+
+        .hero-clock::after {
+            content: '퇴근 불가';
+            font-size: 1rem;
+            display: block;
+            text-align: center;
+            color: var(--warning-yellow);
+            margin-top: 0.5rem;
+            letter-spacing: 0.2em;
+        }
+
+        @keyframes clockPulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.7; transform: scale(1.02); }
+        }
+
+        /* Burning Border Effect */
+        .hero-burn-border {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 200px;
+            background: linear-gradient(
+                to top,
+                rgba(220, 20, 60, 0.3) 0%,
+                rgba(255, 100, 0, 0.2) 30%,
+                transparent 100%
+            );
+            animation: burnFlicker 0.5s ease-in-out infinite alternate;
+            pointer-events: none;
+        }
+
+        @keyframes burnFlicker {
+            0% { opacity: 0.6; }
+            100% { opacity: 1; }
+        }
+
+        /* Skull Decoration */
+        .hero-skull {
+            position: absolute;
+            bottom: 80px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 8rem;
+            opacity: 0.1;
+            animation: skullBreathe 4s ease-in-out infinite;
+        }
+
+        @keyframes skullBreathe {
+            0%, 100% { opacity: 0.1; transform: translateX(-50%) scale(1); }
+            50% { opacity: 0.2; transform: translateX(-50%) scale(1.1); }
+        }
+
+        /* Side Text Decorations */
+        .hero-side-text {
+            position: absolute;
+            font-family: monospace;
+            font-size: 0.75rem;
+            color: rgba(220, 20, 60, 0.4);
+            writing-mode: vertical-rl;
+            letter-spacing: 0.3em;
+            animation: sideTextGlow 3s ease-in-out infinite;
+        }
+
+        .hero-side-text.left {
+            left: 30px;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+
+        .hero-side-text.right {
+            right: 30px;
+            top: 50%;
+            transform: translateY(-50%) rotate(180deg);
+        }
+
+        @keyframes sideTextGlow {
+            0%, 100% { opacity: 0.4; }
+            50% { opacity: 0.8; }
+        }
+
+        /* Stats Floating */
+        .hero-floating-stat {
+            position: absolute;
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(10px);
+            padding: 1rem 1.5rem;
+            border-radius: 10px;
+            border: 1px solid rgba(220, 20, 60, 0.3);
+            font-size: 0.85rem;
+            color: var(--dead-white);
+            animation: floatStat 6s ease-in-out infinite;
+        }
+
+        .hero-floating-stat .number {
+            font-family: 'GmarketSans', sans-serif; font-weight: 700;
+            font-size: 1.8rem;
+            color: var(--blood-red);
+            display: block;
+        }
+
+        @keyframes floatStat {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-15px); }
+        }
+
+        .hero h1 {
+            font-family: 'GmarketSans', sans-serif; font-weight: 700;
+            font-size: 6.5rem;
+            margin-bottom: 1.5rem;
+            line-height: 1.15;
+            position: relative;
+            z-index: 10;
+            letter-spacing: 0.02em;
+            text-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+        }
+
+        .hero h1 .highlight {
+            color: var(--blood-red);
+            text-shadow: 0 0 40px rgba(220, 20, 60, 0.8), 0 4px 20px rgba(0, 0, 0, 0.5);
+            position: relative;
+        }
+
+        .hero h1 .glitch-text.highlight::before,
+        .hero h1 .glitch-text.highlight::after {
+            color: var(--blood-red);
+        }
+        
+        .glitch-wrapper {
+            position: relative;
+            z-index: 10;
+        }
+
+        .hero .subtitle {
+            font-size: 1.8rem;
+            color: var(--dead-white);
+            margin-bottom: 3rem;
+            position: relative;
+            z-index: 10;
+            font-weight: 400;
+            opacity: 0.9;
+        }
+
+        .hero .warning {
+            background: linear-gradient(90deg, transparent, rgba(139, 0, 0, 0.5), transparent);
+            padding: 1rem 3rem;
+            border: 1px solid var(--blood-red);
+            font-size: 1rem;
+            color: var(--warning-yellow);
+            margin-bottom: 2rem;
+            animation: pulse 2s infinite;
+            position: relative;
+            z-index: 10;
+            backdrop-filter: blur(5px);
+            border-radius: 5px;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+
+        .cta-button {
+            background: linear-gradient(135deg, var(--horror-red), var(--blood-red));
+            color: white;
+            border: none;
+            padding: 1.2rem 3rem;
+            font-size: 1.2rem;
+            font-weight: 700;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-decoration: none;
+            display: inline-block;
+            box-shadow: 0 0 30px rgba(220, 20, 60, 0.5);
+            position: relative;
+            z-index: 10;
+        }
+
+        .cta-button:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 50px rgba(220, 20, 60, 0.8);
+        }
+        
+        .hero .cta-button {
+            animation: btnPulse 2s ease-in-out infinite;
+        }
+        
+        @keyframes btnPulse {
+            0%, 100% { box-shadow: 0 0 30px rgba(220, 20, 60, 0.5); }
+            50% { box-shadow: 0 0 50px rgba(220, 20, 60, 0.8), 0 0 80px rgba(220, 20, 60, 0.4); }
+        }
+
+        /* Stats Section */
+        .stats {
+            padding: 5rem 2rem;
+            background: rgba(0, 0, 0, 0.5);
+        }
+
+        .stats-grid {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 2rem;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, rgba(139, 0, 0, 0.2), rgba(0, 0, 0, 0.5));
+            padding: 2rem;
+            border-radius: 20px;
+            text-align: center;
+            border: 1px solid rgba(139, 0, 0, 0.3);
+            transition: all 0.3s;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-10px);
+            border-color: var(--blood-red);
+        }
+
+        .stat-number {
+            font-family: 'GmarketSans', sans-serif; font-weight: 700;
+            font-size: 4.5rem;
+            color: var(--blood-red);
+            line-height: 1;
+            letter-spacing: 0.02em;
+            text-shadow: 0 0 20px rgba(220, 20, 60, 0.4);
+        }
+
+        .stat-label {
+            font-size: 1.15rem;
+            color: var(--dead-white);
+            margin-top: 0.8rem;
+            font-weight: 500;
+        }
+
+        .stat-note {
+            font-size: 0.85rem;
+            color: var(--soul-gray);
+            margin-top: 0.5rem;
+            font-style: italic;
+        }
+
+        /* Services Section */
+        .services {
+            padding: 8rem 2rem;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .section-title {
+            text-align: center;
+            margin-bottom: 4rem;
+        }
+
+        .section-title h2 {
+            font-family: 'GmarketSans', sans-serif; font-weight: 700;
+            font-size: 4rem;
+            margin-bottom: 1.2rem;
+            letter-spacing: 0.02em;
+            text-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+        }
+
+        .section-title p {
+            color: var(--soul-gray);
+            font-size: 1.3rem;
+            font-weight: 400;
+        }
+
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2rem;
+        }
+
+        .service-card {
+            background: linear-gradient(180deg, rgba(26, 26, 46, 0.8), rgba(10, 10, 10, 0.9));
+            border-radius: 30px;
+            padding: 3rem 2rem;
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.4s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .service-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 5px;
+            background: linear-gradient(90deg, var(--horror-red), var(--blood-red));
+            transform: scaleX(0);
+            transition: transform 0.4s;
+        }
+
+        .service-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .service-card:hover {
+            transform: translateY(-10px);
+            border-color: var(--blood-red);
+        }
+
+        .service-icon {
+            font-size: 4.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .service-card h3 {
+            font-size: 1.8rem;
+            margin-bottom: 1rem;
+            color: var(--dead-white);
+            font-weight: 700;
+            letter-spacing: 0.01em;
+        }
+
+        .service-card .price {
+            font-family: 'GmarketSans', sans-serif; font-weight: 700;
+            font-size: 2.5rem;
+            color: var(--blood-red);
+            margin-bottom: 1rem;
+            letter-spacing: 0.02em;
+        }
+
+        .service-card .original-price {
+            text-decoration: line-through;
+            color: var(--soul-gray);
+            font-size: 1.1rem;
+        }
+
+        .service-card p {
+            color: var(--soul-gray);
+            font-size: 0.95rem;
+            line-height: 1.8;
+        }
+
+        .service-card .disclaimer {
+            margin-top: 1.5rem;
+            padding-top: 1rem;
+            border-top: 1px dashed rgba(139, 0, 0, 0.5);
+            font-size: 0.8rem;
+            color: var(--warning-yellow);
+        }
+
+        /* Culture Section */
+        .culture {
+            padding: 8rem 2rem;
+            background: linear-gradient(180deg, rgba(139, 0, 0, 0.1), transparent);
+        }
+
+        .culture-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .culture-item {
+            display: flex;
+            align-items: center;
+            gap: 4rem;
+            margin-bottom: 4rem;
+            padding: 3rem;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 30px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .culture-item:nth-child(even) {
+            flex-direction: row-reverse;
+        }
+
+        .culture-icon {
+            font-size: 8rem;
+            flex-shrink: 0;
+        }
+
+        .culture-content h3 {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+            color: var(--dead-white);
+            font-weight: 700;
+            letter-spacing: 0.01em;
+        }
+
+        .culture-content .reality {
+            color: var(--blood-red);
+            font-size: 1.2rem;
+            margin-bottom: 1rem;
+            font-weight: 700;
+        }
+
+        .culture-content p {
+            color: var(--soul-gray);
+            line-height: 1.8;
+        }
+
+        /* Testimonials */
+        .testimonials {
+            padding: 8rem 2rem;
+        }
+
+        .testimonials-grid {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 2rem;
+        }
+
+        .testimonial-card {
+            background: rgba(0, 0, 0, 0.4);
+            padding: 2.5rem;
+            border-radius: 20px;
+            border-left: 4px solid var(--blood-red);
+            position: relative;
+        }
+
+        .testimonial-card::before {
+            content: '"';
+            font-family: Georgia, serif;
+            font-size: 5rem;
+            color: var(--blood-red);
+            position: absolute;
+            top: 10px;
+            left: 20px;
+            opacity: 0.3;
+        }
+
+        .testimonial-text {
+            font-size: 1.1rem;
+            line-height: 1.8;
+            color: var(--dead-white);
+            margin-bottom: 1.5rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .testimonial-author {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .author-avatar {
+            font-size: 2.5rem;
+        }
+
+        .author-info {
+            color: var(--soul-gray);
+        }
+
+        .author-info strong {
+            color: var(--dead-white);
+            display: block;
+        }
+
+        .author-info .status {
+            color: var(--blood-red);
+            font-size: 0.85rem;
+        }
+
+        /* FAQ */
+        .faq {
+            padding: 8rem 2rem;
+            background: rgba(0, 0, 0, 0.3);
+        }
+
+        .faq-container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .faq-item {
+            background: rgba(26, 26, 46, 0.5);
+            border-radius: 15px;
+            margin-bottom: 1rem;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .faq-question {
+            padding: 1.5rem 2rem;
+            font-size: 1.3rem;
+            font-weight: 700;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.3s;
+            letter-spacing: 0.01em;
+        }
+
+        .faq-question:hover {
+            background: rgba(139, 0, 0, 0.2);
+        }
+
+        .faq-answer {
+            padding: 0 2rem 1.5rem;
+            color: var(--soul-gray);
+            line-height: 1.8;
+        }
+
+        .faq-answer .real-answer {
+            color: var(--blood-red);
+            font-weight: 600;
+            margin-top: 1rem;
+            padding-top: 1rem;
+            border-top: 1px dashed rgba(139, 0, 0, 0.5);
+        }
+
+        /* Pricing Horror Show */
+        .pricing {
+            padding: 8rem 2rem;
+        }
+
+        .pricing-table {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2rem;
+        }
+
+        .pricing-card {
+            background: linear-gradient(180deg, rgba(26, 26, 46, 0.9), rgba(10, 10, 10, 0.95));
+            border-radius: 30px;
+            padding: 3rem 2rem;
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            position: relative;
+            transition: all 0.4s;
+        }
+
+        .pricing-card.popular {
+            border: 2px solid var(--blood-red);
+            transform: scale(1.05);
+        }
+
+        .pricing-card.popular::before {
+            content: '💀 BEST SELLER';
+            position: absolute;
+            top: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--blood-red);
+            padding: 0.5rem 1.5rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 700;
+        }
+
+        .pricing-card:hover {
+            transform: translateY(-10px);
+        }
+
+        .pricing-card.popular:hover {
+            transform: scale(1.05) translateY(-10px);
+        }
+
+        .pricing-tier {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            letter-spacing: 0.01em;
+        }
+
+        .pricing-price {
+            font-family: 'GmarketSans', sans-serif; font-weight: 700;
+            font-size: 3.5rem;
+            color: var(--blood-red);
+            margin-bottom: 0.5rem;
+            letter-spacing: 0.02em;
+            text-shadow: 0 0 15px rgba(220, 20, 60, 0.3);
+        }
+
+        .pricing-period {
+            color: var(--soul-gray);
+            margin-bottom: 2rem;
+        }
+
+        .pricing-features {
+            list-style: none;
+            text-align: left;
+            margin-bottom: 2rem;
+        }
+
+        .pricing-features li {
+            padding: 0.8rem 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+        }
+
+        .pricing-features li::before {
+            content: '✓';
+            color: var(--blood-red);
+            font-weight: bold;
+        }
+
+        .pricing-features li.negative::before {
+            content: '✗';
+            color: var(--soul-gray);
+        }
+
+        .pricing-features li.negative {
+            color: var(--soul-gray);
+            text-decoration: line-through;
+        }
+
+        /* Footer */
+        footer {
+            background: rgba(0, 0, 0, 0.8);
+            padding: 4rem 2rem 2rem;
+            border-top: 1px solid rgba(139, 0, 0, 0.5);
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 1fr;
+            gap: 3rem;
+            margin-bottom: 3rem;
+        }
+
+        .footer-logo {
+            font-family: 'GmarketSans', sans-serif; font-weight: 700;
+            font-size: 2.5rem;
+            color: var(--blood-red);
+            margin-bottom: 1rem;
+            letter-spacing: 0.02em;
+            text-shadow: 0 0 15px rgba(220, 20, 60, 0.4);
+        }
+
+        .footer-desc {
+            color: var(--soul-gray);
+            line-height: 1.8;
+        }
+
+        .footer-column h4 {
+            font-size: 1rem;
+            margin-bottom: 1.5rem;
+            color: var(--dead-white);
+        }
+
+        .footer-column ul {
+            list-style: none;
+        }
+
+        .footer-column li {
+            margin-bottom: 0.8rem;
+        }
+
+        .footer-column a {
+            color: var(--soul-gray);
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .footer-column a:hover {
+            color: var(--blood-red);
+        }
+
+        .footer-bottom {
+            text-align: center;
+            padding-top: 2rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            color: var(--soul-gray);
+            font-size: 0.9rem;
+        }
+
+        .footer-bottom .warning-text {
+            color: var(--blood-red);
+            margin-top: 1rem;
+            font-size: 0.8rem;
+        }
+
+        /* Scroll Animation */
+        .reveal {
+            opacity: 0;
+            transform: translateY(50px);
+            transition: all 0.8s ease;
+        }
+
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Breaking News Ticker */
+        .ticker {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: var(--horror-red);
+            padding: 0.8rem;
+            z-index: 1000;
+            overflow: hidden;
+        }
+
+        .ticker-content {
+            display: flex;
+            animation: tickerMove 30s linear infinite;
+            white-space: nowrap;
+        }
+
+        @keyframes tickerMove {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
+        }
+
+        .ticker-item {
+            padding: 0 3rem;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        /* CCTV Watching Effect */
+        .cctv-overlay {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            padding: 10px 20px;
+            background: rgba(255, 0, 0, 0.2);
+            border: 2px solid #ff0000;
+            border-radius: 10px;
+            font-family: monospace;
+            font-size: 0.9rem;
+            color: #ff0000;
+            z-index: 999;
+            animation: recBlink 1s infinite;
+        }
+
+        .cctv-overlay::before {
+            content: '●';
+            margin-right: 8px;
+            animation: recDot 1s infinite;
+        }
+
+        @keyframes recBlink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+
+        @keyframes recDot {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0; }
+        }
+
+        /* No Windows Sign */
+        .no-windows {
+            position: fixed;
+            top: 50%;
+            left: 20px;
+            transform: translateY(-50%);
+            writing-mode: vertical-rl;
+            text-orientation: mixed;
+            font-size: 0.8rem;
+            color: rgba(255, 0, 0, 0.5);
+            letter-spacing: 5px;
+            z-index: 999;
+        }
+
+        /* Ventilation Shaft */
+        .vent {
+            position: fixed;
+            top: 100px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 200px;
+            height: 30px;
+            background: repeating-linear-gradient(
+                90deg,
+                #1a1a1a 0px,
+                #1a1a1a 8px,
+                #333 8px,
+                #333 10px
+            );
+            border: 3px solid #0a0a0a;
+            border-radius: 5px;
+            z-index: 5;
+            box-shadow: inset 0 0 20px rgba(0,0,0,0.8);
+        }
+
+        .vent::after {
+            content: '🔒 탈출구 봉쇄됨';
+            position: absolute;
+            bottom: -25px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 0.7rem;
+            color: rgba(255, 0, 0, 0.5);
+            white-space: nowrap;
+        }
+
+        /* Bloodshot Eyes */
+        .tired-eyes {
+            position: fixed;
+            font-size: 3rem;
+            animation: eyeTired 3s infinite;
+            z-index: 3;
+        }
+
+        @keyframes eyeTired {
+            0%, 100% { opacity: 0.3; transform: scaleY(1); }
+            10% { opacity: 0.8; transform: scaleY(0.1); }
+            20% { opacity: 0.3; transform: scaleY(1); }
+        }
+
+        /* Overtime Counter */
+        .overtime-counter {
+            position: fixed;
+            bottom: 80px;
+            left: 20px;
+            background: rgba(0, 0, 0, 0.8);
+            padding: 15px 25px;
+            border-radius: 10px;
+            border: 1px solid var(--blood-red);
+            font-family: monospace;
+            z-index: 999;
+        }
+
+        .overtime-counter .label {
+            font-size: 0.8rem;
+            color: var(--soul-gray);
+            margin-bottom: 5px;
+        }
+
+        .overtime-counter .time {
+            font-size: 1.5rem;
+            color: var(--blood-red);
+            font-weight: bold;
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .services-grid,
+            .pricing-table {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 3.5rem;
+            }
+            
+            .section-title h2 {
+                font-size: 2.8rem;
+            }
+            
+            .stat-number {
+                font-size: 3.5rem;
+            }
+            
+            .services-grid,
+            .pricing-table,
+            .testimonials-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .culture-item {
+                flex-direction: column !important;
+                text-align: center;
+            }
+            
+            .footer-content {
+                grid-template-columns: 1fr;
+            }
+            
+            nav {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Prison Environment -->
+    <div class="brick-wall"></div>
+
+    <!-- Fire & Smoke -->
+    <div class="fire-container">
+        <div class="fire"></div>
+    </div>
+    <div class="smoke" style="left: 10%; animation-delay: 0s;"></div>
+    <div class="smoke" style="left: 30%; animation-delay: 2s;"></div>
+    <div class="smoke" style="left: 50%; animation-delay: 4s;"></div>
+    <div class="smoke" style="left: 70%; animation-delay: 1s;"></div>
+    <div class="smoke" style="left: 90%; animation-delay: 3s;"></div>
+
+    <!-- Emergency Light -->
+    <div class="emergency-light"></div>
+
+    <!-- Sealed Exit Door -->
+    <div class="sealed-door"></div>
+    <div class="caution-tape"></div>
+
+    <!-- Chained Worker -->
+    <div class="chained-worker">🧑‍💼</div>
+    <div class="chain">⛓️⛓️⛓️</div>
+
+    <!-- Glitch Overlay -->
+    <div class="glitch-overlay" id="glitchOverlay"></div>
+
+    <!-- CCTV Recording -->
+    <div class="cctv-overlay">REC 팀장이 보고 있습니다</div>
+
+    <!-- No Windows Sign -->
+    <div class="no-windows">창 문 없 음 · 햇 빛 금 지 · 비 타 민 D 결 핍</div>
+
+    <!-- Ventilation Shaft -->
+    <div class="vent"></div>
+
+    <!-- Tired Eyes -->
+    <div class="tired-eyes" style="top: 30%; right: 10%;">👁️</div>
+    <div class="tired-eyes" style="top: 60%; left: 8%; animation-delay: 1s;">👁️</div>
+
+    <!-- Overtime Counter -->
+    <div class="overtime-counter">
+        <div class="label">⏰ 오늘의 야근 시간</div>
+        <div class="time" id="overtimeCounter">00:00:00</div>
+    </div>
+
+    <!-- Floating Souls (야근의 영혼들) -->
+    <div class="floating-soul" style="left: 10%; animation-delay: 0s;">👻</div>
+    <div class="floating-soul" style="left: 25%; animation-delay: 5s;">💀</div>
+    <div class="floating-soul" style="left: 40%; animation-delay: 10s;">👔</div>
+    <div class="floating-soul" style="left: 55%; animation-delay: 15s;">📊</div>
+    <div class="floating-soul" style="left: 70%; animation-delay: 3s;">☕</div>
+    <div class="floating-soul" style="left: 85%; animation-delay: 8s;">🔥</div>
+
+    <header>
+        <div class="logo">
+            <img src="img/timbel logo.png" alt="TIMBEL" style="height: 36px; width: auto;">
+        </div>
+        <nav>
+            <a href="#services">서비스</a>
+            <a href="#culture">기업문화</a>
+            <a href="#testimonials">후기</a>
+            <a href="#pricing">요금제</a>
+            <a href="#faq">FAQ</a>
+        </nav>
+    </header>
+
+    <main>
+        <!-- Hero Section -->
+        <section class="hero">
+            <!-- Dramatic Background Effects -->
+            <div class="hero-vortex"></div>
+            <div class="nuclear-flash"></div>
+            <div class="mushroom-cloud"></div>
+            
+            <!-- Pulsing Doom Rings -->
+            <div class="doom-ring"></div>
+            <div class="doom-ring"></div>
+            <div class="doom-ring"></div>
+            <div class="doom-ring"></div>
+            
+            <!-- Floating Particles -->
+            <div class="hero-particles">
+                <div class="particle" style="left: 10%; animation-delay: 0s;"></div>
+                <div class="particle" style="left: 20%; animation-delay: 2s;"></div>
+                <div class="particle" style="left: 30%; animation-delay: 4s;"></div>
+                <div class="particle" style="left: 40%; animation-delay: 1s;"></div>
+                <div class="particle" style="left: 50%; animation-delay: 3s;"></div>
+                <div class="particle" style="left: 60%; animation-delay: 5s;"></div>
+                <div class="particle" style="left: 70%; animation-delay: 2.5s;"></div>
+                <div class="particle" style="left: 80%; animation-delay: 0.5s;"></div>
+                <div class="particle" style="left: 90%; animation-delay: 3.5s;"></div>
+            </div>
+
+            <!-- Side Text -->
+            <div class="hero-side-text left">OVERTIME_REQUIRED::TRUE</div>
+            <div class="hero-side-text right">WORK_LIFE_BALANCE::NULL</div>
+
+            <!-- Doom Clock -->
+            <div class="hero-clock"></div>
+
+            <!-- Floating Stats -->
+            <div class="hero-floating-stat" style="top: 25%; left: 8%; animation-delay: 0s;">
+                <span class="number">247%</span>
+                야근 후 생산성 감소
+            </div>
+            <div class="hero-floating-stat" style="top: 60%; left: 5%; animation-delay: 1s;">
+                <span class="number">∞</span>
+                무제한 야근
+            </div>
+            <div class="hero-floating-stat" style="top: 35%; right: 5%; animation-delay: 2s;">
+                <span class="number">0%</span>
+                연차 승인율
+            </div>
+            
+            <!-- Warning Banner -->
+            <div class="warning">
+                ⚠️ 경고: 이 페이지의 내용이 불편하시다면, 당신은 아마도 경영진입니다 ⚠️
+            </div>
+            
+            <!-- Main Title with Glitch -->
+            <div class="glitch-wrapper">
+                <h1>
+                    <span class="glitch-text highlight" data-text="워라밸">워라밸</span>이 아니라<br>
+                    <span class="glitch-text highlight" data-text="워라데드">워라데드</span>입니다
+                </h1>
+            </div>
+            
+            <p class="subtitle">
+                "일과 삶의 균형"을 말하지만, 실제로는 "일 = 삶"인 당신을 위한 솔루션
+            </p>
+            
+            <a href="#pricing" class="cta-button" id="heroBtn">💀 영혼 갈아넣기 시작</a>
+
+            <!-- Burning Border -->
+            <div class="hero-burn-border"></div>
+            
+            <!-- Giant Skull Watermark -->
+            <div class="hero-skull">💀</div>
+        </section>
+
+        <!-- Stats Section -->
+        <section class="stats">
+            <div class="stats-grid">
+                <div class="stat-card reveal">
+                    <div class="stat-number">247%</div>
+                    <div class="stat-label">야근 후 생산성 감소율</div>
+                    <div class="stat-note">그래도 야근은 성과입니다 - 모 팀장</div>
+                </div>
+                <div class="stat-card reveal">
+                    <div class="stat-number">∞</div>
+                    <div class="stat-label">무제한 연차</div>
+                    <div class="stat-note">*신청 시 면담 필요, 승인율 3%</div>
+                </div>
+                <div class="stat-card reveal">
+                    <div class="stat-number">18.5</div>
+                    <div class="stat-label">하루 평균 "수고했어요" 횟수</div>
+                    <div class="stat-note">실제 수고에 대한 보상: 0원</div>
+                </div>
+                <div class="stat-card reveal">
+                    <div class="stat-number">4:1</div>
+                    <div class="stat-label">회의:실제 업무 비율</div>
+                    <div class="stat-note">회의에서 정해진 것도 다시 회의함</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Services Section -->
+        <section id="services" class="services">
+            <div class="section-title reveal">
+                <h2>💀 우리의 <span style="color: var(--blood-red);">프리미엄</span> 서비스</h2>
+                <p>당신의 영혼을 효율적으로 소진시키는 검증된 솔루션</p>
+            </div>
+            <div class="services-grid">
+                <div class="service-card reveal">
+                    <div class="service-icon">📱</div>
+                    <h3>24시간 슬랙 알림</h3>
+                    <div class="price">무료</div>
+                    <div class="original-price">원래부터 무료</div>
+                    <p>
+                        퇴근 후에도, 주말에도, 새벽 3시에도<br>
+                        당신의 소중한 수면을 방해해드립니다.<br>
+                        "확인만 하세요~"라는 말과 함께
+                    </p>
+                    <div class="disclaimer">
+                        * "급한 거 아니에요" = 지금 당장 확인하세요
+                    </div>
+                </div>
+                <div class="service-card reveal">
+                    <div class="service-icon">🎯</div>
+                    <h3>수평적 소통 문화</h3>
+                    <div class="price">월 0원</div>
+                    <div class="original-price">대신 정신적 비용 ∞</div>
+                    <p>
+                        "형, 누나로 부르자!"<br>
+                        (하지만 직급은 12단계)<br>
+                        "편하게 말해~"<br>
+                        (하지만 반말하면 무례한 MZ)
+                    </p>
+                    <div class="disclaimer">
+                        * 수평적으로 의견을 무시당할 수 있습니다
+                    </div>
+                </div>
+                <div class="service-card reveal">
+                    <div class="service-icon">🏃</div>
+                    <h3>자율 출퇴근제</h3>
+                    <div class="price">자유</div>
+                    <div class="original-price">조건부 자유</div>
+                    <p>
+                        9시-6시 코어타임<br>
+                        (사실상 필수 출근)<br>
+                        자율이란 이름 아래<br>
+                        야근의 자유를 드립니다
+                    </p>
+                    <div class="disclaimer">
+                        * 10시 출근 시 "오늘 반차?" 주의
+                    </div>
+                </div>
+                <div class="service-card reveal">
+                    <div class="service-icon">🍕</div>
+                    <h3>무료 야식 제공</h3>
+                    <div class="price">무료</div>
+                    <div class="original-price">시급 환산 시 적자</div>
+                    <p>
+                        밤 9시 이후 무료 야식!<br>
+                        (그때까지 남아있어야 함)<br>
+                        치킨과 피자로<br>
+                        당신의 야근을 응원합니다
+                    </p>
+                    <div class="disclaimer">
+                        * 배달비 > 야근수당
+                    </div>
+                </div>
+                <div class="service-card reveal">
+                    <div class="service-icon">🎮</div>
+                    <h3>사내 휴게실</h3>
+                    <div class="price">이용가능</div>
+                    <div class="original-price">눈치 100만개 필요</div>
+                    <p>
+                        PS5, 안마의자, 수면실<br>
+                        완비된 최고급 휴게시설!<br>
+                        (사용하면 "쉬러 왔냐" 소리 들음)<br>
+                        인스타 촬영용입니다
+                    </p>
+                    <div class="disclaimer">
+                        * 실제 사용 시 성과평가 하락
+                    </div>
+                </div>
+                <div class="service-card reveal">
+                    <div class="service-icon">📊</div>
+                    <h3>수시 1:1 미팅</h3>
+                    <div class="price">주 1회</div>
+                    <div class="original-price">실제론 주 5회</div>
+                    <p>
+                        "너 요즘 어때?"로 시작해서<br>
+                        "이번 분기 KPI 달성률은?"으로<br>
+                        끝나는 소중한 대화 시간<br>
+                        성장을 위한 압박을 제공합니다
+                    </p>
+                    <div class="disclaimer">
+                        * 미팅 = 추가 업무 부여
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Culture Section -->
+        <section id="culture" class="culture">
+            <div class="culture-container">
+                <div class="section-title reveal">
+                    <h2>🏢 우리의 <span style="color: var(--blood-red);">기업문화</span></h2>
+                    <p>홈페이지에 쓰인 것 vs 실제</p>
+                </div>
+
+                <div class="culture-item reveal">
+                    <div class="culture-icon">🌟</div>
+                    <div class="culture-content">
+                        <h3>"젊고 역동적인 조직문화"</h3>
+                        <div class="reality">→ 실제: 평균 연령 28세 (번아웃 퇴사율 40%)</div>
+                        <p>
+                            경력 3년차 이상이 없는 이유는 물어보지 마세요. 
+                            우리는 항상 새로운 피... 아니 새로운 인재를 환영합니다. 
+                            젊다는 건 아직 업계 평균 연봉을 모른다는 뜻이기도 하죠.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="culture-item reveal">
+                    <div class="culture-icon">🚀</div>
+                    <div class="culture-content">
+                        <h3>"빠르게 성장하는 스타트업"</h3>
+                        <div class="reality">→ 실제: 창업 8년차, 시리즈 D, 아직도 스타트업</div>
+                        <p>
+                            "스타트업이라 연봉이 좀..."이라고 말하지만, 
+                            경영진 차는 벤츠입니다. 성장의 과실은 
+                            스톡옵션으로 드릴게요. (권리행사가: 시가의 200%)
+                        </p>
+                    </div>
+                </div>
+
+                <div class="culture-item reveal">
+                    <div class="culture-icon">🎉</div>
+                    <div class="culture-content">
+                        <h3>"자유로운 연차 사용"</h3>
+                        <div class="reality">→ 실제: 연차 신청 → 팀장 한숨 → 면담 → 취소</div>
+                        <p>
+                            연차는 권리입니다! 하지만 "이번 주는 좀 바쁜데...", 
+                            "다른 팀원들 일정 보고...", "프로젝트 끝나고 쓰는 게..."
+                            의 3단 콤보를 이겨내야 사용 가능합니다.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="culture-item reveal">
+                    <div class="culture-icon">💬</div>
+                    <div class="culture-content">
+                        <h3>"소통을 중시하는 문화"</h3>
+                        <div class="reality">→ 실제: 회의 10개, 결론 0개</div>
+                        <p>
+                            우리는 소통합니다. 아침 스탠드업, 주간 회의, 월간 회의, 
+                            분기 회의, 회의를 위한 사전 회의, 회의 결과 공유 회의...
+                            일할 시간이 없는 건 소통 때문입니다.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="culture-item reveal">
+                    <div class="culture-icon">💪</div>
+                    <div class="culture-content">
+                        <h3>"성과 중심 평가"</h3>
+                        <div class="reality">→ 실제: 팀장과 친한 사람 중심 평가</div>
+                        <p>
+                            KPI, OKR, 360도 다면평가... 온갖 시스템을 도입했지만,
+                            결국 "느낌"으로 평가합니다. 야근 많이 한 사람 = 열심히 한 사람.
+                            효율적으로 정시퇴근? 의욕 없어 보여요.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Testimonials -->
+        <section id="testimonials" class="testimonials">
+            <div class="section-title reveal">
+                <h2>💬 <span style="color: var(--blood-red);">실제</span> 직원 후기</h2>
+                <p>익명이라 솔직합니다 (사실 누군지 다 알지만)</p>
+            </div>
+            <div class="testimonials-grid">
+                <div class="testimonial-card reveal">
+                    <p class="testimonial-text">
+                        "입사 전: 워라밸 좋다더라<br>
+                        입사 후: 워라밸? 그게 뭔데 먹는 건가요<br><br>
+                        3년 다니면서 여자친구 3명 잃었습니다. 
+                        회사가 제 연인이에요. 강제로요."
+                    </p>
+                    <div class="testimonial-author">
+                        <div class="author-avatar">😵</div>
+                        <div class="author-info">
+                            <strong>김OO (개발팀)</strong>
+                            <span>입사 3년차</span>
+                            <span class="status">현재 상태: 눈 밑 다크서클 영구화</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="testimonial-card reveal">
+                    <p class="testimonial-text">
+                        "'금요일 6시에 끝나는 회의 잡을게요~'<br><br>
+                        회의 끝난 시간: 밤 10시<br>
+                        사유: '이왕 모인 김에 이것도 논의하자'<br>
+                        x 7번 반복"
+                    </p>
+                    <div class="testimonial-author">
+                        <div class="author-avatar">😤</div>
+                        <div class="author-info">
+                            <strong>박OO (마케팅팀)</strong>
+                            <span>입사 2년차</span>
+                            <span class="status">현재 상태: 금요일 공포증</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="testimonial-card reveal">
+                    <p class="testimonial-text">
+                        "채용공고: 연봉 협의 가능<br>
+                        면접 시: '경력직이시니 협의해보죠'<br>
+                        최종 오퍼: 전 직장보다 200만원 낮음<br><br>
+                        '스톡옵션이 있잖아요!' 
+                        (권리행사가: 현재가의 3배)"
+                    </p>
+                    <div class="testimonial-author">
+                        <div class="author-avatar">🤡</div>
+                        <div class="author-info">
+                            <strong>이OO (경력입사)</strong>
+                            <span>입사 6개월차</span>
+                            <span class="status">현재 상태: 이직 준비 중</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="testimonial-card reveal">
+                    <p class="testimonial-text">
+                        "상반기 평가: '올해 좀 더 성장해보자'<br>
+                        하반기 평가: '기대만큼 성장 못 했네'<br>
+                        연봉 인상: 2.3%<br>
+                        물가 상승률: 5.1%<br><br>
+                        수학적으로 매년 가난해지는 중입니다."
+                    </p>
+                    <div class="testimonial-author">
+                        <div class="author-avatar">📉</div>
+                        <div class="author-info">
+                            <strong>최OO (기획팀)</strong>
+                            <span>입사 4년차</span>
+                            <span class="status">현재 상태: 월급 루팡 진화 중</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- FAQ -->
+        <section id="faq" class="faq">
+            <div class="faq-container">
+                <div class="section-title reveal">
+                    <h2>❓ 자주 묻는 <span style="color: var(--blood-red);">질문</span></h2>
+                    <p>공식 답변 vs 현실 답변</p>
+                </div>
+
+                <div class="faq-item reveal">
+                    <div class="faq-question">
+                        야근이 많은가요?
+                        <span>▼</span>
+                    </div>
+                    <div class="faq-answer">
+                        <strong>공식 답변:</strong> "야근 강요 없습니다! 자율적으로 일하는 문화예요~"
+                        <div class="real-answer">
+                            <strong>현실:</strong> 강요 안 해요. 대신 6시에 퇴근하면 팀장이 "어? 벌써?" 라고 합니다. 
+                            그리고 다음 날 아침에 "어제 보낸 메일 확인했어?"라는 질문이 옵니다. 
+                            (발송 시간: 새벽 1시 47분)
+                        </div>
+                    </div>
+                </div>
+
+                <div class="faq-item reveal">
+                    <div class="faq-question">
+                        연차 자유롭게 쓸 수 있나요?
+                        <span>▼</span>
+                    </div>
+                    <div class="faq-answer">
+                        <strong>공식 답변:</strong> "물론이죠! 연차는 당연한 권리입니다!"
+                        <div class="real-answer">
+                            <strong>현실:</strong> 연차 신청 → 팀장 표정 변화 감지 → 
+                            "이번 주는 좀 바쁜데..." → 죄책감 폭발 → 
+                            연차 취소 → "역시 책임감 있네!" → 연차 썩음
+                        </div>
+                    </div>
+                </div>
+
+                <div class="faq-item reveal">
+                    <div class="faq-question">
+                        재택근무 가능한가요?
+                        <span>▼</span>
+                    </div>
+                    <div class="faq-answer">
+                        <strong>공식 답변:</strong> "하이브리드 근무제를 시행하고 있습니다!"
+                        <div class="real-answer">
+                            <strong>현실:</strong> 재택 신청 시 "얼굴 보고 이야기해야 할 것 같은데..." 
+                            재택 중에도 30분마다 카카오톡 확인 여부 체크. 
+                            "재택인데 왜 연락이 안 돼요?" (점심시간에 밥 먹고 있었음)
+                        </div>
+                    </div>
+                </div>
+
+                <div class="faq-item reveal">
+                    <div class="faq-question">
+                        복지가 좋다던데요?
+                        <span>▼</span>
+                    </div>
+                    <div class="faq-answer">
+                        <strong>공식 답변:</strong> "무제한 간식, 야식 지원, 휴게실, 사내 카페 등 최고의 복지!"
+                        <div class="real-answer">
+                            <strong>현실:</strong> 야식 지원 = 야근 권장. 무제한 간식 = 저녁 안 줘도 된다는 뜻. 
+                            휴게실 = 인스타용 포토존. 사내 카페 = 결국 야근 버프.
+                            진짜 원하는 복지: 정시퇴근, 연봉인상
+                        </div>
+                    </div>
+                </div>
+
+                <div class="faq-item reveal">
+                    <div class="faq-question">
+                        성장할 수 있는 환경인가요?
+                        <span>▼</span>
+                    </div>
+                    <div class="faq-answer">
+                        <strong>공식 답변:</strong> "멘토링 시스템과 교육 지원으로 함께 성장합니다!"
+                        <div class="real-answer">
+                            <strong>현실:</strong> 멘토 = 나보다 3개월 먼저 온 사람 (본인도 뭐가 뭔지 모름). 
+                            교육 = 유튜브 보며 독학. 성장 = 퇴사 후 다른 회사에서 연봉 올려 이직.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Pricing -->
+        <section id="pricing" class="pricing">
+            <div class="section-title reveal">
+                <h2>💸 <span style="color: var(--blood-red);">요금제</span> 안내</h2>
+                <p>당신의 영혼은 얼마입니까?</p>
+            </div>
+            <div class="pricing-table">
+                <div class="pricing-card reveal">
+                    <div class="pricing-tier">🌱 신입 플랜</div>
+                    <div class="pricing-price">영혼 30%</div>
+                    <div class="pricing-period">+ 월급의 70% (세후)</div>
+                    <ul class="pricing-features">
+                        <li>주 52시간 초과 근무</li>
+                        <li>눈치 100만개 기본 제공</li>
+                        <li>점심값 아끼기 스킬</li>
+                        <li>커피 심부름 무제한</li>
+                        <li class="negative">연차 자유 사용</li>
+                        <li class="negative">정시 퇴근</li>
+                    </ul>
+                    <a href="#" class="cta-button" id="juniorBtn">지원하기</a>
+                </div>
+                <div class="pricing-card popular reveal">
+                    <div class="pricing-tier">🔥 대리/과장 플랜</div>
+                    <div class="pricing-price">영혼 70%</div>
+                    <div class="pricing-period">+ 야근수당 없음</div>
+                    <ul class="pricing-features">
+                        <li>위에서 치이고 아래서 받치기</li>
+                        <li>회의 참석 무제한</li>
+                        <li>타팀 일 떠안기 스킬</li>
+                        <li>가스라이팅 내성 +50</li>
+                        <li>번아웃 경험 1회 제공</li>
+                        <li class="negative">가정의 평화</li>
+                    </ul>
+                    <a href="#" class="cta-button" id="midBtn">가장 인기</a>
+                </div>
+                <div class="pricing-card reveal">
+                    <div class="pricing-tier">👔 임원 플랜</div>
+                    <div class="pricing-price">영혼 100%</div>
+                    <div class="pricing-period">+ 주말 골프 필수</div>
+                    <ul class="pricing-features">
+                        <li>새벽 회의 주최 권한</li>
+                        <li>직원 연차 불허 스킬</li>
+                        <li>성과 가로채기 마스터</li>
+                        <li>법인카드 무제한</li>
+                        <li>"나 때는 말이야" 1일 3회</li>
+                        <li class="negative">직원들의 존경</li>
+                    </ul>
+                    <a href="#" class="cta-button" id="seniorBtn">진화하기</a>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="footer-content">
+            <div>
+                <div class="footer-logo"><img src="img/timbel logo.png" alt="TIMBEL" style="height: 32px; width: auto;"></div>
+                <p class="footer-desc">
+                    우리는 일과 삶의 균형을 말합니다.<br>
+                    실천은 안 하지만요.<br><br>
+                    이 페이지가 불편하셨다면<br>
+                    변화가 필요할 때입니다.
+                </p>
+            </div>
+            <div class="footer-column">
+                <h4>회사 소개</h4>
+                <ul>
+                    <li><a href="#">우리의 비전 (PPT 200장)</a></li>
+                    <li><a href="#">핵심 가치 (벽에만 붙어있음)</a></li>
+                    <li><a href="#">언론 보도 (유료 기사)</a></li>
+                    <li><a href="#">채용 공고 (상시)</a></li>
+                </ul>
+            </div>
+            <div class="footer-column">
+                <h4>복지 제도</h4>
+                <ul>
+                    <li><a href="#">무료 야식 (야근 필수)</a></li>
+                    <li><a href="#">휴게실 (촬영용)</a></li>
+                    <li><a href="#">생일 반차 (오전 출근)</a></li>
+                    <li><a href="#">워크샵 (술자리)</a></li>
+                </ul>
+            </div>
+            <div class="footer-column">
+                <h4>고객 지원</h4>
+                <ul>
+                    <li><a href="#">퇴사 상담</a></li>
+                    <li><a href="#">노동청 신고</a></li>
+                    <li><a href="#">블라인드 작성</a></li>
+                    <li><a href="#">정신건강 상담</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>© 2025 (주)워라밸. All Rights Reserved. 당신의 권리는 Reserved 아님.</p>
+            <p class="warning-text">
+                ⚠️ 이 페이지는 풍자입니다. 하지만 공감된다면, 당신 회사에 문제가 있는 겁니다. ⚠️
+            </p>
+        </div>
+    </footer>
+
+    <!-- Ticker -->
+    <div class="ticker">
+        <div class="ticker-content">
+            <span class="ticker-item">🔴 속보: 오늘도 "이거 급한 건데" 발생</span>
+            <span class="ticker-item">📢 공지: 금요일 6시 전체 회의 (필참)</span>
+            <span class="ticker-item">⚠️ 경고: 팀장님 기분 나쁨, 눈치 보세요</span>
+            <span class="ticker-item">💀 퇴사자 발생: 올해 47번째</span>
+            <span class="ticker-item">🍕 야식 도착: 야근 확정</span>
+            <span class="ticker-item">📊 분기 마감: 주말 출근 예정</span>
+            <span class="ticker-item">🔴 속보: 오늘도 "이거 급한 건데" 발생</span>
+            <span class="ticker-item">📢 공지: 금요일 6시 전체 회의 (필참)</span>
+            <span class="ticker-item">⚠️ 경고: 팀장님 기분 나쁨, 눈치 보세요</span>
+            <span class="ticker-item">💀 퇴사자 발생: 올해 47번째</span>
+            <span class="ticker-item">🍕 야식 도착: 야근 확정</span>
+            <span class="ticker-item">📊 분기 마감: 주말 출근 예정</span>
+        </div>
+    </div>
+
+    <script>
+        // Reveal animation on scroll
+        function reveal() {
+            const reveals = document.querySelectorAll('.reveal');
+            reveals.forEach(element => {
+                const windowHeight = window.innerHeight;
+                const elementTop = element.getBoundingClientRect().top;
+                const elementVisible = 150;
+                
+                if (elementTop < windowHeight - elementVisible) {
+                    element.classList.add('active');
+                }
+            });
+        }
+
+        window.addEventListener('scroll', reveal);
+        reveal();
+
+        // Random floating souls
+        function createSoul() {
+            const souls = ['👻', '💀', '👔', '📊', '☕', '🔥', '😵', '📱', '⏰', '😭', '🧟', '⚰️', '🪦'];
+            const soul = document.createElement('div');
+            soul.className = 'floating-soul';
+            soul.textContent = souls[Math.floor(Math.random() * souls.length)];
+            soul.style.left = Math.random() * 100 + '%';
+            soul.style.animationDuration = (15 + Math.random() * 15) + 's';
+            document.body.appendChild(soul);
+            
+            setTimeout(() => soul.remove(), 30000);
+        }
+
+        setInterval(createSoul, 2000);
+
+        // Soul escaping from body on click
+        document.addEventListener('click', (e) => {
+            if (Math.random() > 0.7) {
+                createEscapingSoul(e.clientX, e.clientY);
+            }
+        });
+
+        function createEscapingSoul(x, y) {
+            const soul = document.createElement('div');
+            soul.className = 'escaping-soul';
+            soul.textContent = '👻';
+            soul.style.left = x + 'px';
+            soul.style.top = y + 'px';
+            document.body.appendChild(soul);
+            
+            // Body left behind
+            const body = document.createElement('div');
+            body.style.cssText = `
+                position: fixed;
+                left: ${x}px;
+                top: ${y + 30}px;
+                font-size: 2rem;
+                pointer-events: none;
+                z-index: 2;
+                animation: bodyFall 2s forwards;
+            `;
+            body.textContent = '🧎';
+            document.body.appendChild(body);
+            
+            setTimeout(() => {
+                soul.remove();
+                body.remove();
+            }, 5000);
+        }
+
+        // Glitch effect on scroll
+        let lastScrollTop = 0;
+        const glitchOverlay = document.getElementById('glitchOverlay');
+        
+        window.addEventListener('scroll', () => {
+            const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+            if (Math.abs(scrollTop - lastScrollTop) > 100) {
+                glitchOverlay.classList.add('active');
+                setTimeout(() => glitchOverlay.classList.remove('active'), 100);
+            }
+            lastScrollTop = scrollTop;
+        });
+
+        // Random nuclear flash
+        function nuclearFlash() {
+            const flash = document.createElement('div');
+            flash.style.cssText = `
+                position: fixed;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                background: white;
+                z-index: 9999;
+                pointer-events: none;
+                animation: flashBang 0.5s forwards;
+            `;
+            document.body.appendChild(flash);
+            setTimeout(() => flash.remove(), 500);
+        }
+
+        // Random explosion every 30-60 seconds
+        setInterval(() => {
+            if (Math.random() > 0.7) {
+                nuclearFlash();
+            }
+        }, 45000);
+
+        // Screaming sound effect simulation (visual)
+        function showScream() {
+            const scream = document.createElement('div');
+            scream.style.cssText = `
+                position: fixed;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                font-size: 10rem;
+                z-index: 9999;
+                pointer-events: none;
+                animation: screamPop 1s forwards;
+            `;
+            scream.textContent = '😱';
+            document.body.appendChild(scream);
+            setTimeout(() => scream.remove(), 1000);
+        }
+
+        // Show scream when scrolling to certain sections
+        const observerCallback = (entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting && Math.random() > 0.8) {
+                    showScream();
+                }
+            });
+        };
+
+        const observer = new IntersectionObserver(observerCallback, { threshold: 0.5 });
+        document.querySelectorAll('.culture-item').forEach(item => observer.observe(item));
+
+        // Easter egg: Konami code
+        let konamiCode = [];
+        const konamiSequence = [38, 38, 40, 40, 37, 39, 37, 39, 66, 65];
+        
+        document.addEventListener('keydown', (e) => {
+            konamiCode.push(e.keyCode);
+            konamiCode = konamiCode.slice(-10);
+            
+            if (konamiCode.join(',') === konamiSequence.join(',')) {
+                document.body.style.animation = 'glitch 0.3s infinite';
+                setTimeout(() => {
+                    alert('🎉 축하합니다! 퇴사 성공! 🎉\n\n새로운 회사도 똑같을 수 있습니다.');
+                    document.body.style.animation = '';
+                }, 500);
+            }
+        });
+
+        // Cursor trail
+        document.addEventListener('mousemove', (e) => {
+            if (Math.random() > 0.95) {
+                const trail = document.createElement('div');
+                trail.style.cssText = `
+                    position: fixed;
+                    left: ${e.clientX}px;
+                    top: ${e.clientY}px;
+                    font-size: 1rem;
+                    pointer-events: none;
+                    z-index: 9999;
+                    animation: fadeOut 1s forwards;
+                `;
+                trail.textContent = ['💀', '😵', '😭', '☕'][Math.floor(Math.random() * 4)];
+                document.body.appendChild(trail);
+                setTimeout(() => trail.remove(), 1000);
+            }
+        });
+
+        // Add fadeOut animation
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes fadeOut {
+                0% { opacity: 1; transform: translateY(0); }
+                100% { opacity: 0; transform: translateY(-30px); }
+            }
+            @keyframes glitch {
+                0% { filter: hue-rotate(0deg); }
+                50% { filter: hue-rotate(180deg); }
+                100% { filter: hue-rotate(360deg); }
+            }
+            @keyframes flashBang {
+                0% { opacity: 1; }
+                100% { opacity: 0; }
+            }
+            @keyframes bodyFall {
+                0% { opacity: 1; transform: translateY(0) rotate(0deg); }
+                100% { opacity: 0; transform: translateY(50px) rotate(90deg); }
+            }
+            @keyframes screamPop {
+                0% { opacity: 0; transform: translate(-50%, -50%) scale(0); }
+                30% { opacity: 1; transform: translate(-50%, -50%) scale(1.5); }
+                100% { opacity: 0; transform: translate(-50%, -50%) scale(0.5); }
+            }
+            @keyframes shake {
+                0%, 100% { transform: translateX(0); }
+                10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
+                20%, 40%, 60%, 80% { transform: translateX(5px); }
+            }
+        `;
+        document.head.appendChild(style);
+
+        // Earthquake effect on scroll to pricing
+        const pricingSection = document.getElementById('pricing');
+        const pricingObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    document.body.style.animation = 'shake 0.5s';
+                    setTimeout(() => document.body.style.animation = '', 500);
+                }
+            });
+        }, { threshold: 0.3 });
+        pricingObserver.observe(pricingSection);
+
+        // Random chain rattling sound simulation (visual effect)
+        setInterval(() => {
+            const chain = document.querySelector('.chain');
+            if (chain) {
+                chain.style.animation = 'shake 0.3s';
+                setTimeout(() => chain.style.animation = '', 300);
+            }
+        }, 5000);
+
+        // Sealed door click event
+        document.querySelector('.sealed-door')?.addEventListener('click', () => {
+            const messages = [
+                '🚫 퇴근은 허락되지 않았습니다',
+                '⛔ 프로젝트가 끝날 때까지 대기',
+                '🔒 팀장 승인 필요',
+                '❌ ERROR: 워라밸을 찾을 수 없음',
+                '⚠️ 야근수당? 그런 기능은 없습니다'
+            ];
+            
+            const popup = document.createElement('div');
+            popup.style.cssText = `
+                position: fixed;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                background: rgba(139, 0, 0, 0.95);
+                color: white;
+                padding: 2rem 3rem;
+                border-radius: 15px;
+                z-index: 10000;
+                font-size: 1.2rem;
+                font-weight: bold;
+                text-align: center;
+                border: 2px solid #ff0000;
+                box-shadow: 0 0 50px rgba(255, 0, 0, 0.5);
+                animation: screamPop 0.5s ease-out;
+            `;
+            popup.textContent = messages[Math.floor(Math.random() * messages.length)];
+            document.body.appendChild(popup);
+            setTimeout(() => popup.remove(), 2000);
+        });
+
+        // Console message
+        console.log('%c🚨 경영진이 이 콘솔을 보고 있다면 🚨', 'font-size: 20px; color: red;');
+        console.log('%c직원들이 왜 퇴사하는지 이제 아시겠죠?', 'font-size: 14px; color: gray;');
+
+        // Overtime Counter
+        let overtimeSeconds = 0;
+        const overtimeCounter = document.getElementById('overtimeCounter');
+        
+        function updateOvertimeCounter() {
+            overtimeSeconds++;
+            const hours = Math.floor(overtimeSeconds / 3600);
+            const minutes = Math.floor((overtimeSeconds % 3600) / 60);
+            const seconds = overtimeSeconds % 60;
+            
+            overtimeCounter.textContent = 
+                String(hours).padStart(2, '0') + ':' +
+                String(minutes).padStart(2, '0') + ':' +
+                String(seconds).padStart(2, '0');
+            
+            // Change color based on overtime
+            if (overtimeSeconds > 3600) {
+                overtimeCounter.style.color = '#ff0000';
+                overtimeCounter.style.textShadow = '0 0 10px rgba(255, 0, 0, 0.8)';
+            } else if (overtimeSeconds > 1800) {
+                overtimeCounter.style.color = '#ff6600';
+            }
+        }
+        
+        setInterval(updateOvertimeCounter, 1000);
+
+        // Clock animation
+        const clockEmojis = ['🕐', '🕑', '🕒', '🕓', '🕔', '🕕', '🕖', '🕗', '🕘', '🕙', '🕚', '🕛'];
+        let clockIndex = 0;
+        const doomClock = document.querySelector('.doom-clock');
+        
+        setInterval(() => {
+            clockIndex = (clockIndex + 1) % clockEmojis.length;
+            if (doomClock) doomClock.textContent = clockEmojis[clockIndex];
+        }, 1000);
+
+        // Random "팀장 is typing..." notification
+        function showTypingNotification() {
+            const notifications = [
+                '🔔 팀장님이 입력 중...',
+                '📩 새 업무가 도착했습니다',
+                '⚡ 긴급: 지금 바로 확인하세요',
+                '👀 누군가 당신을 지켜보고 있습니다',
+                '📊 금주 KPI 미달입니다',
+                '🔴 회의 초대: 금요일 오후 5시 50분'
+            ];
+            
+            const notif = document.createElement('div');
+            notif.style.cssText = `
+                position: fixed;
+                top: 80px;
+                right: 20px;
+                background: rgba(0, 0, 0, 0.95);
+                color: white;
+                padding: 15px 25px;
+                border-radius: 10px;
+                border-left: 4px solid #ff0000;
+                z-index: 10000;
+                animation: slideIn 0.5s ease-out;
+                box-shadow: 0 5px 30px rgba(0, 0, 0, 0.5);
+            `;
+            notif.textContent = notifications[Math.floor(Math.random() * notifications.length)];
+            document.body.appendChild(notif);
+            
+            setTimeout(() => {
+                notif.style.animation = 'fadeOut 0.5s forwards';
+                setTimeout(() => notif.remove(), 500);
+            }, 3000);
+        }
+
+        // Show notification every 15-30 seconds
+        setInterval(() => {
+            if (Math.random() > 0.5) showTypingNotification();
+        }, 20000);
+
+        // Add slideIn animation
+        const slideInStyle = document.createElement('style');
+        slideInStyle.textContent = `
+            @keyframes slideIn {
+                0% { transform: translateX(100%); opacity: 0; }
+                100% { transform: translateX(0); opacity: 1; }
+            }
+        `;
+        document.head.appendChild(slideInStyle);
+
+        // Random screen static
+        function showStatic() {
+            const static = document.createElement('div');
+            static.style.cssText = `
+                position: fixed;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                background: url('data:image/svg+xml,<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"><filter id="noise"><feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="4" stitchTiles="stitch"/></filter><rect width="100%" height="100%" filter="url(%23noise)" opacity="0.1"/></svg>');
+                pointer-events: none;
+                z-index: 9998;
+                mix-blend-mode: overlay;
+                animation: staticFlicker 0.1s infinite;
+            `;
+            document.body.appendChild(static);
+            setTimeout(() => static.remove(), 200);
+        }
+
+        // Random static every 30-60 seconds
+        setInterval(() => {
+            if (Math.random() > 0.7) showStatic();
+        }, 30000);
+
+        const staticStyle = document.createElement('style');
+        staticStyle.textContent = `
+            @keyframes staticFlicker {
+                0% { opacity: 0.1; }
+                50% { opacity: 0.15; }
+                100% { opacity: 0.1; }
+            }
+        `;
+        document.head.appendChild(staticStyle);
+
+        // ============ FUNNY BUTTON RESPONSES ============
+        
+        // Hero Button - 영혼 갈아넣기
+        document.getElementById('heroBtn')?.addEventListener('click', (e) => {
+            e.preventDefault();
+            showFunnyPopup({
+                emoji: '👻',
+                title: '영혼 추출 중...',
+                messages: [
+                    '잠시만요, 영혼 갈이기 예열 중입니다...',
+                    '⚠️ 경고: 되돌릴 수 없습니다',
+                    '(사실 입사 첫 날부터 불가능했어요)',
+                    '',
+                    '📊 예상 소요 시간: 40년',
+                    '💀 예상 남은 영혼: 3%',
+                    '',
+                    '그래도 진행하시겠습니까?'
+                ],
+                buttons: [
+                    { text: '어차피 갈 곳 없음', action: 'accept' },
+                    { text: '도망가기 (불가)', action: 'deny' }
+                ]
+            });
+        });
+
+        // Junior Plan Button
+        document.getElementById('juniorBtn')?.addEventListener('click', (e) => {
+            e.preventDefault();
+            showFunnyPopup({
+                emoji: '🐣',
+                title: '신입 플랜 신청',
+                messages: [
+                    '📋 지원 자격 확인 중...',
+                    '',
+                    '✅ 열정 페이 수용 가능',
+                    '✅ 눈치력 레벨 MAX',
+                    '✅ "네" 외에 다른 대답 불가능',
+                    '✅ 점심값 아끼기 스킬 보유',
+                    '✅ 꿈이 뭐냐고 물으면 "성장" 답변',
+                    '',
+                    '⚠️ 주의: 3개월 후 현타 옵니다',
+                    '',
+                    '그래도 지원하시겠습니까?'
+                ],
+                buttons: [
+                    { text: '네... (작은 목소리)', action: 'accept' },
+                    { text: '(무반응, 이미 체념)', action: 'deny' }
+                ]
+            });
+        });
+
+        // Mid-level Plan Button
+        document.getElementById('midBtn')?.addEventListener('click', (e) => {
+            e.preventDefault();
+            showFunnyPopup({
+                emoji: '🥪',
+                title: '샌드위치 포지션 확정',
+                messages: [
+                    '🎉 축하합니다!',
+                    '',
+                    '당신은 이제:',
+                    '⬆️ 위에서 깨지고',
+                    '⬇️ 아래서 받치는',
+                    '🥪 아름다운 샌드위치가 됩니다!',
+                    '',
+                    '📦 패키지 포함 내역:',
+                    '• 만성 두통약 1년치',
+                    '• 탈모 샴푸 증정',
+                    '• 심리상담권 3회 (부족함)',
+                    '',
+                    '💬 "왜 인기냐고요? 다들 겪으니까요"'
+                ],
+                buttons: [
+                    { text: '어쩔 수 없지...', action: 'accept' },
+                    { text: '퇴사각? (불가)', action: 'deny' }
+                ]
+            });
+        });
+
+        // Senior Plan Button
+        document.getElementById('seniorBtn')?.addEventListener('click', (e) => {
+            e.preventDefault();
+            showFunnyPopup({
+                emoji: '👔',
+                title: '임원 진화 시작',
+                messages: [
+                    '🧬 진화 조건 확인 중...',
+                    '',
+                    '❌ 공감능력 삭제 완료',
+                    '❌ 퇴근시간 개념 삭제 완료', 
+                    '❌ 직원 이름 기억력 삭제 완료',
+                    '',
+                    '✅ "나 때는 말이야" 스킬 장착',
+                    '✅ 새벽 6시 카톡 전송 권한',
+                    '✅ 금요일 5시 50분 회의 소집권',
+                    '✅ 골프 실력 +100',
+                    '',
+                    '⚠️ 부작용: 직원들이 뒤에서 욕함',
+                    '(하지만 신경 안 씀, 이미 진화함)'
+                ],
+                buttons: [
+                    { text: '진화는 거스를 수 없다', action: 'accept' },
+                    { text: '인간으로 남기 (불가)', action: 'deny' }
+                ]
+            });
+        });
+
+        // Popup Function
+        function showFunnyPopup(config) {
+            const overlay = document.createElement('div');
+            overlay.style.cssText = `
+                position: fixed;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                background: rgba(0, 0, 0, 0.9);
+                z-index: 99999;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                animation: fadeIn 0.3s ease-out;
+            `;
+
+            const popup = document.createElement('div');
+            popup.style.cssText = `
+                background: linear-gradient(180deg, #1a1a2e 0%, #0a0a0a 100%);
+                border: 2px solid var(--blood-red);
+                border-radius: 20px;
+                padding: 3rem;
+                max-width: 500px;
+                width: 90%;
+                text-align: center;
+                box-shadow: 0 0 50px rgba(220, 20, 60, 0.5);
+                animation: popIn 0.4s ease-out;
+            `;
+
+            popup.innerHTML = `
+                <div style="font-size: 5rem; margin-bottom: 1rem;">${config.emoji}</div>
+                <h3 style="font-size: 2rem; color: var(--blood-red); margin-bottom: 1.5rem; font-family: 'GmarketSans', sans-serif; font-weight: 700;">${config.title}</h3>
+                <div style="text-align: left; color: var(--dead-white); line-height: 1.8; margin-bottom: 2rem; font-size: 1rem;">
+                    ${config.messages.map(m => m ? `<p>${m}</p>` : '<br>').join('')}
+                </div>
+                <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
+                    ${config.buttons.map((btn, i) => `
+                        <button class="popup-btn" data-action="${btn.action}" style="
+                            background: ${i === 0 ? 'linear-gradient(135deg, var(--horror-red), var(--blood-red))' : 'transparent'};
+                            color: white;
+                            border: ${i === 0 ? 'none' : '1px solid var(--soul-gray)'};
+                            padding: 1rem 2rem;
+                            font-size: 1rem;
+                            border-radius: 30px;
+                            cursor: pointer;
+                            transition: all 0.3s;
+                            font-family: 'GmarketSans', sans-serif;
+                        ">${btn.text}</button>
+                    `).join('')}
+                </div>
+            `;
+
+            overlay.appendChild(popup);
+            document.body.appendChild(overlay);
+
+            // Button events
+            popup.querySelectorAll('.popup-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const action = btn.dataset.action;
+                    if (action === 'accept') {
+                        showResultPopup('✅ 신청 완료!', [
+                            '이제 돌이킬 수 없습니다.',
+                            '',
+                            '📧 퇴사 방법은 검색해도 안 나옵니다',
+                            '💼 열심히 살아남으세요...',
+                            '',
+                            '🙏 화이팅!'
+                        ]);
+                    } else {
+                        showResultPopup('🚫 거부 실패', [
+                            '죄송합니다.',
+                            '',
+                            '이미 늦었습니다.',
+                            '문은 봉쇄되었습니다.',
+                            '',
+                            '탈출구 → ❌',
+                            '희망 → ❌',
+                            '야근 → ✅'
+                        ]);
+                    }
+                    overlay.remove();
+                });
+
+                btn.addEventListener('mouseenter', () => {
+                    btn.style.transform = 'scale(1.05)';
+                });
+                btn.addEventListener('mouseleave', () => {
+                    btn.style.transform = 'scale(1)';
+                });
+            });
+
+            // Close on overlay click
+            overlay.addEventListener('click', (e) => {
+                if (e.target === overlay) {
+                    overlay.remove();
+                }
+            });
+        }
+
+        function showResultPopup(title, messages) {
+            const result = document.createElement('div');
+            result.style.cssText = `
+                position: fixed;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                background: rgba(0, 0, 0, 0.95);
+                border: 2px solid var(--blood-red);
+                border-radius: 15px;
+                padding: 2rem 3rem;
+                z-index: 100000;
+                text-align: center;
+                animation: popIn 0.3s ease-out;
+            `;
+            result.innerHTML = `
+                <h4 style="font-size: 1.5rem; color: var(--blood-red); margin-bottom: 1rem;">${title}</h4>
+                <div style="color: var(--dead-white); line-height: 1.8;">
+                    ${messages.map(m => m ? `<p>${m}</p>` : '<br>').join('')}
+                </div>
+            `;
+            document.body.appendChild(result);
+            setTimeout(() => {
+                result.style.animation = 'fadeOut 0.5s forwards';
+                setTimeout(() => result.remove(), 500);
+            }, 3000);
+        }
+
+        // Add popup animations
+        const popupStyle = document.createElement('style');
+        popupStyle.textContent = `
+            @keyframes fadeIn {
+                from { opacity: 0; }
+                to { opacity: 1; }
+            }
+            @keyframes popIn {
+                0% { opacity: 0; transform: scale(0.8); }
+                100% { opacity: 1; transform: scale(1); }
+            }
+        `;
+        document.head.appendChild(popupStyle);
+    </script>
+</body>
+</html>
+

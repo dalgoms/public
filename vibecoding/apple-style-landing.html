@@ -1,0 +1,907 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Apple - MacBook Pro</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;600;700;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --color-bg: #000000;
+            --color-bg-secondary: #1d1d1f;
+            --color-text-primary: #f5f5f7;
+            --color-text-secondary: #86868b;
+            --color-accent: #2997ff;
+            --color-accent-hover: #0077ed;
+            --color-orange: #d87f33;
+            --font-family: 'Noto Sans KR', -apple-system, BlinkMacSystemFont, sans-serif;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: var(--font-family);
+            background-color: var(--color-bg);
+            color: var(--color-text-primary);
+            line-height: 1.5;
+            overflow-x: hidden;
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #000;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #333;
+            border-radius: 4px;
+        }
+
+        /* Navigation */
+        nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: saturate(180%) blur(20px);
+            -webkit-backdrop-filter: saturate(180%) blur(20px);
+        }
+
+        .nav-container {
+            max-width: 1024px;
+            margin: 0 auto;
+            padding: 0 22px;
+            height: 44px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .nav-logo {
+            display: flex;
+            align-items: center;
+        }
+
+        .nav-logo svg {
+            width: 18px;
+            height: 18px;
+            fill: var(--color-text-primary);
+            opacity: 0.8;
+            transition: opacity 0.3s ease;
+        }
+
+        .nav-logo:hover svg {
+            opacity: 1;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 28px;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: var(--color-text-secondary);
+            text-decoration: none;
+            font-size: 12px;
+            font-weight: 400;
+            transition: color 0.3s ease;
+        }
+
+        .nav-links a:hover {
+            color: var(--color-text-primary);
+        }
+
+        .nav-icons {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .nav-icons svg {
+            width: 15px;
+            height: 15px;
+            fill: var(--color-text-secondary);
+            cursor: pointer;
+            transition: fill 0.3s ease;
+        }
+
+        .nav-icons svg:hover {
+            fill: var(--color-text-primary);
+        }
+
+        /* ============================================
+           HERO SECTION - Apple Style
+        ============================================ */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+            background: #000;
+            padding-top: 44px;
+            padding-bottom: 40px;
+        }
+
+        /* Hero Text - Apple Style */
+        .hero-text {
+            position: relative;
+            z-index: 10;
+            text-align: center;
+            padding: 0 24px 20px;
+            width: 100%;
+            max-width: 980px;
+            margin: 0 auto;
+            margin-top: auto;
+        }
+
+        .hero-label {
+            font-size: 21px;
+            font-weight: 600;
+            color: var(--color-text-primary);
+            margin-bottom: 4px;
+            letter-spacing: 0;
+            opacity: 0;
+            animation: fadeInUp 0.8s ease 0.2s forwards;
+        }
+
+        .hero-title {
+            font-size: clamp(40px, 7vw, 56px);
+            font-weight: 600;
+            letter-spacing: -0.005em;
+            line-height: 1.07143;
+            color: var(--color-text-primary);
+            margin-bottom: 21px;
+            opacity: 0;
+            animation: fadeInUp 0.8s ease 0.4s forwards;
+        }
+
+        .hero-cta {
+            opacity: 0;
+            animation: fadeInUp 0.8s ease 0.6s forwards;
+        }
+
+        .hero-links {
+            display: flex;
+            gap: 30px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-bottom: 8px;
+        }
+
+        .hero-links a {
+            color: var(--color-accent);
+            text-decoration: none;
+            font-size: 21px;
+            font-weight: 400;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .hero-links a:hover {
+            text-decoration: underline;
+        }
+
+        .hero-cta .hero-price {
+            margin-top: 12px;
+            font-size: 17px;
+            color: var(--color-text-secondary);
+            font-weight: 400;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Hero Image - Apple Style */
+        .hero-image {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            margin-top: 20px;
+            position: relative;
+            z-index: 5;
+            opacity: 0;
+            animation: fadeInUp 1s ease 0.8s forwards;
+            display: flex;
+            justify-content: center;
+            align-items: flex-end;
+            padding: 0 24px;
+        }
+
+        .hero-image img {
+            width: 100%;
+            max-width: 1000px;
+            height: auto;
+            display: block;
+            object-fit: contain;
+            object-position: center bottom;
+        }
+
+        /* ============================================
+           PRODUCT TILES SECTION
+        ============================================ */
+        .product-tiles {
+            padding: 12px;
+            padding-top: 80px;
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+            max-width: 1440px;
+            margin: 0 auto;
+        }
+
+        .product-tile {
+            position: relative;
+            overflow: hidden;
+            border-radius: 20px;
+            min-height: 580px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 50px 40px;
+            text-align: center;
+            transition: transform 0.5s ease;
+        }
+
+        .product-tile:hover {
+            transform: scale(1.01);
+        }
+
+        .product-tile.dark {
+            background: #1d1d1f;
+            color: var(--color-text-primary);
+        }
+
+        .product-tile.light {
+            background: #f5f5f7;
+            color: #1d1d1f;
+        }
+
+        .product-tile.light .tile-label,
+        .product-tile.light .tile-title,
+        .product-tile.light .tile-price {
+            color: #1d1d1f;
+        }
+
+        /* White background for image in dark tiles */
+        .tile-image.white-bg {
+            background: #f5f5f7;
+            border-radius: 16px;
+            padding: 20px;
+        }
+
+        .tile-content {
+            position: relative;
+            z-index: 2;
+        }
+
+        .tile-label {
+            font-size: 17px;
+            font-weight: 400;
+            opacity: 0.8;
+            margin-bottom: 4px;
+        }
+
+        .tile-title {
+            font-size: clamp(28px, 4vw, 40px);
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            line-height: 1.1;
+            margin-bottom: 8px;
+        }
+
+        .tile-price {
+            font-size: 17px;
+            margin-bottom: 16px;
+        }
+
+        .tile-cta {
+            display: flex;
+            gap: 24px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .tile-cta a {
+            color: var(--color-accent);
+            text-decoration: none;
+            font-size: 17px;
+        }
+
+        .tile-cta a:hover {
+            text-decoration: underline;
+        }
+
+        .tile-image {
+            margin-top: auto;
+            width: 100%;
+            max-width: 400px;
+            position: relative;
+            z-index: 1;
+            padding-top: 32px;
+        }
+
+        .tile-image img {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        .tile-placeholder {
+            width: 100%;
+            height: 280px;
+            background: linear-gradient(145deg, rgba(0,0,0,0.3), rgba(0,0,0,0.1));
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #666;
+            font-size: 14px;
+        }
+
+        .product-tile.light .tile-placeholder {
+            background: linear-gradient(145deg, rgba(0,0,0,0.05), rgba(0,0,0,0.02));
+            color: #999;
+        }
+
+        /* ============================================
+           PROMO BANNER
+        ============================================ */
+        .promo-banner {
+            background: #f5f5f7;
+            padding: 100px 24px;
+            margin-top: 80px;
+            text-align: center;
+        }
+
+        .promo-content {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .promo-icon {
+            width: 56px;
+            height: 56px;
+            margin: 0 auto 24px;
+        }
+
+        .promo-icon svg {
+            width: 100%;
+            height: 100%;
+        }
+
+        .promo-title {
+            font-size: 32px;
+            font-weight: 700;
+            color: #1d1d1f;
+            margin-bottom: 12px;
+        }
+
+        .promo-desc {
+            font-size: 17px;
+            color: #6e6e73;
+            margin-bottom: 20px;
+            line-height: 1.5;
+        }
+
+        .promo-link {
+            color: var(--color-accent);
+            text-decoration: none;
+            font-size: 17px;
+        }
+
+        .promo-link:hover {
+            text-decoration: underline;
+        }
+
+        /* ============================================
+           SERVICES SECTION
+        ============================================ */
+        .services-section {
+            padding: 100px 24px;
+            background: #fff;
+        }
+
+        .services-grid {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+        }
+
+        .service-card {
+            text-align: center;
+            padding: 40px 20px;
+        }
+
+        .service-icon {
+            width: 56px;
+            height: 56px;
+            margin: 0 auto 20px;
+        }
+
+        .service-icon svg {
+            width: 100%;
+            height: 100%;
+        }
+
+        .service-title {
+            font-size: 21px;
+            font-weight: 600;
+            color: #1d1d1f;
+            margin-bottom: 8px;
+        }
+
+        .service-desc {
+            font-size: 14px;
+            color: #6e6e73;
+            line-height: 1.5;
+        }
+
+        .service-link {
+            color: var(--color-accent);
+            text-decoration: none;
+            font-size: 14px;
+            display: inline-block;
+            margin-top: 12px;
+        }
+
+        .service-link:hover {
+            text-decoration: underline;
+        }
+
+        /* ============================================
+           FOOTER
+        ============================================ */
+        footer {
+            background: #f5f5f7;
+            padding: 20px 24px;
+            border-top: 1px solid #d2d2d7;
+        }
+
+        .footer-container {
+            max-width: 980px;
+            margin: 0 auto;
+        }
+
+        .footer-directory {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 24px;
+            padding: 24px 0;
+            border-bottom: 1px solid #d2d2d7;
+        }
+
+        .footer-column h5 {
+            font-size: 12px;
+            font-weight: 600;
+            color: #1d1d1f;
+            margin-bottom: 10px;
+        }
+
+        .footer-column ul {
+            list-style: none;
+        }
+
+        .footer-column li {
+            margin-bottom: 6px;
+        }
+
+        .footer-column a {
+            color: #6e6e73;
+            text-decoration: none;
+            font-size: 12px;
+        }
+
+        .footer-column a:hover {
+            color: #1d1d1f;
+        }
+
+        .footer-legal {
+            padding: 16px 0;
+            font-size: 12px;
+            color: #6e6e73;
+        }
+
+        .footer-legal a {
+            color: #6e6e73;
+            text-decoration: none;
+        }
+
+        .footer-legal a:hover {
+            text-decoration: underline;
+        }
+
+        /* ============================================
+           RESPONSIVE
+        ============================================ */
+        @media (max-width: 1068px) {
+            .product-tiles {
+                grid-template-columns: 1fr;
+            }
+
+            .services-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .footer-directory {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .nav-links { display: none; }
+
+            .hero-content {
+                padding: 40px 20px 0;
+            }
+
+            .hero-title {
+                font-size: 64px;
+            }
+
+            .hero-cta {
+                gap: 20px;
+            }
+
+            .hero-cta a {
+                font-size: 17px;
+            }
+
+            .product-tile {
+                min-height: 480px;
+                padding: 40px 24px;
+            }
+
+            .services-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .footer-directory {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 8px;
+        }
+
+        .mobile-menu-btn svg {
+            width: 18px;
+            height: 18px;
+            fill: var(--color-text-primary);
+        }
+
+        @media (max-width: 768px) {
+            .mobile-menu-btn {
+                display: block;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav>
+        <div class="nav-container">
+            <a href="#" class="nav-logo">
+                <img src="img/timbel logo.png" alt="TIMBEL" style="height: 20px; width: auto;">
+            </a>
+            <ul class="nav-links">
+                <li><a href="https://www.apple.com/kr/shop" target="_blank">Store</a></li>
+                <li><a href="https://www.apple.com/kr/mac/" target="_blank">Mac</a></li>
+                <li><a href="https://www.apple.com/kr/ipad/" target="_blank">iPad</a></li>
+                <li><a href="https://www.apple.com/kr/iphone/" target="_blank">iPhone</a></li>
+                <li><a href="https://www.apple.com/kr/watch/" target="_blank">Watch</a></li>
+                <li><a href="https://www.apple.com/kr/apple-vision-pro/" target="_blank">Vision</a></li>
+                <li><a href="https://www.apple.com/kr/airpods/" target="_blank">AirPods</a></li>
+                <li><a href="https://www.apple.com/kr/tv-home/" target="_blank">TV 및 홈</a></li>
+                <li><a href="https://www.apple.com/kr/services/" target="_blank">엔터테인먼트</a></li>
+                <li><a href="https://www.apple.com/kr/shop/accessories/all" target="_blank">액세서리</a></li>
+                <li><a href="https://support.apple.com/ko-kr" target="_blank">지원</a></li>
+            </ul>
+            <div class="nav-icons">
+                <svg viewBox="0 0 15 15" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M14.5,13.8l-3.8-3.8c0.8-1,1.3-2.3,1.3-3.8c0-3.3-2.7-6-6-6s-6,2.7-6,6s2.7,6,6,6c1.4,0,2.7-0.5,3.8-1.3l3.8,3.8L14.5,13.8z M1.5,6.2c0-2.5,2-4.5,4.5-4.5s4.5,2,4.5,4.5s-2,4.5-4.5,4.5S1.5,8.7,1.5,6.2z"/>
+                </svg>
+                <svg viewBox="0 0 14 17" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M13,17H1c-0.6,0-1-0.4-1-1V6c0-0.6,0.4-1,1-1h1V4c0-2.2,1.8-4,4-4h2c2.2,0,4,1.8,4,4v1h1c0.6,0,1,0.4,1,1v10C14,16.6,13.6,17,13,17z M2,7v8h10V7H2z M10,5V4c0-1.1-0.9-2-2-2H6C4.9,2,4,2.9,4,4v1H10z"/>
+                </svg>
+            </div>
+            <button class="mobile-menu-btn">
+                <svg viewBox="0 0 18 14" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M0,1h18 M0,7h18 M0,13h18" stroke="currentColor" stroke-width="1.5" fill="none"/>
+                </svg>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Hero Section - MacBook Pro -->
+    <section class="hero">
+        <!-- Hero Text Content -->
+        <div class="hero-text">
+            <p class="hero-label">MacBook Pro</p>
+            <h1 class="hero-title">온종일 가는 배터리.<br>무엇에도 얽매이지 않는 작업을 위해.</h1>
+            <div class="hero-cta">
+                <div class="hero-links">
+                    <a href="https://www.apple.com/kr/shop/buy-mac/macbook-pro">더 알아보기 ›</a>
+                    <a href="https://www.apple.com/kr/shop/buy-mac/macbook-pro">구입하기 ›</a>
+                </div>
+                <p class="hero-price">₩2,390,000부터</p>
+            </div>
+        </div>
+
+        <!-- MacBook Pro Hero Image -->
+        <div class="hero-image">
+            <img src="anomaly-studio-package/img/macbook.png" alt="MacBook Pro">
+        </div>
+    </section>
+
+    <!-- Product Tiles -->
+    <section class="product-tiles">
+        <!-- iPhone 17 Pro - 흰 배경 이미지 -->
+        <div class="product-tile light">
+            <div class="tile-content">
+                <p class="tile-label">iPhone 17 Pro</p>
+                <h2 class="tile-title">강력함의 새로운 이름.</h2>
+                <p class="tile-price">₩1,550,000부터</p>
+                <div class="tile-cta">
+                    <a href="#">더 알아보기 ›</a>
+                    <a href="#">구입하기 ›</a>
+                </div>
+            </div>
+            <div class="tile-image">
+                <img src="anomaly-studio-package/img/iphone.png" alt="iPhone 17 Pro">
+            </div>
+        </div>
+
+        <!-- iPad Pro - 흰 배경 이미지 -->
+        <div class="product-tile light">
+            <div class="tile-content">
+                <p class="tile-label">iPad Pro</p>
+                <h2 class="tile-title">얇디얇은. 불가사의.</h2>
+                <p class="tile-price">₩1,499,000부터</p>
+                <div class="tile-cta">
+                    <a href="#">더 알아보기 ›</a>
+                    <a href="#">구입하기 ›</a>
+                </div>
+            </div>
+            <div class="tile-image">
+                <img src="anomaly-studio-package/img/pad.png" alt="iPad Pro">
+            </div>
+        </div>
+
+        <!-- Apple Watch - 흰 배경 -->
+        <div class="product-tile light">
+            <div class="tile-content">
+                <p class="tile-label">Apple Watch Series 10</p>
+                <h2 class="tile-title">얇아지다. 눈부시다.</h2>
+                <p class="tile-price">₩599,000부터</p>
+                <div class="tile-cta">
+                    <a href="#">더 알아보기 ›</a>
+                    <a href="#">구입하기 ›</a>
+                </div>
+            </div>
+            <div class="tile-image">
+                <img src="anomaly-studio-package/img/watch.png" alt="Apple Watch Series 10">
+            </div>
+        </div>
+
+        <!-- Vision Pro - 흰 배경 -->
+        <div class="product-tile light">
+            <div class="tile-content">
+                <p class="tile-label">Apple Vision Pro</p>
+                <h2 class="tile-title">공간 컴퓨팅의 시작.</h2>
+                <p class="tile-price">₩4,990,000부터</p>
+                <div class="tile-cta">
+                    <a href="#">더 알아보기 ›</a>
+                    <a href="#">구입하기 ›</a>
+                </div>
+            </div>
+            <div class="tile-image">
+                <img src="anomaly-studio-package/img/vision.png" alt="Vision Pro">
+            </div>
+        </div>
+
+    </section>
+
+    <!-- Promo Banner -->
+    <section class="promo-banner">
+        <div class="promo-content">
+            <div class="promo-icon">
+                <svg viewBox="0 0 56 56" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <circle cx="28" cy="28" r="24" stroke="#1d1d1f" stroke-width="2"/>
+                    <path d="M28 16V28L36 32" stroke="#1d1d1f" stroke-width="2" stroke-linecap="round"/>
+                    <path d="M20 40L28 28L36 40" stroke="#30d158" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+            </div>
+            <h2 class="promo-title">Apple Trade In</h2>
+            <p class="promo-desc">
+                사용하던 기기를 보상 판매하고 새 제품 구입 시 할인받으세요.<br>
+                본인에게도, 지구에게도 좋은 일입니다.
+            </p>
+            <a href="#" class="promo-link">보상 판매 금액 알아보기 ›</a>
+        </div>
+    </section>
+
+    <!-- Services Section -->
+    <section class="services-section">
+        <div class="services-grid">
+            <div class="service-card">
+                <div class="service-icon">
+                    <svg viewBox="0 0 56 56" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <rect x="10" y="10" width="36" height="36" rx="8" stroke="#1d1d1f" stroke-width="2"/>
+                        <path d="M20 28L26 34L36 22" stroke="#30d158" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                </div>
+                <h3 class="service-title">무료 배송</h3>
+                <p class="service-desc">전 제품 무료 배송.<br>주문 건별로 배송 날짜를<br>직접 선택할 수 있습니다.</p>
+                <a href="#" class="service-link">더 알아보기</a>
+            </div>
+
+            <div class="service-card">
+                <div class="service-icon">
+                    <svg viewBox="0 0 56 56" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <circle cx="28" cy="28" r="18" stroke="#1d1d1f" stroke-width="2"/>
+                        <path d="M28 20V28H36" stroke="#1d1d1f" stroke-width="2" stroke-linecap="round"/>
+                    </svg>
+                </div>
+                <h3 class="service-title">금융 혜택</h3>
+                <p class="service-desc">원하는 결제 방법을<br>선택하세요. 무이자<br>할부도 가능합니다.</p>
+                <a href="#" class="service-link">더 알아보기</a>
+            </div>
+
+            <div class="service-card">
+                <div class="service-icon">
+                    <svg viewBox="0 0 56 56" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M28 12L12 20V36L28 44L44 36V20L28 12Z" stroke="#1d1d1f" stroke-width="2"/>
+                        <path d="M20 28C20 23.6 23.6 20 28 20C32.4 20 36 23.6 36 28" stroke="#1d1d1f" stroke-width="2"/>
+                    </svg>
+                </div>
+                <h3 class="service-title">무료 각인</h3>
+                <p class="service-desc">AirPods, iPad에<br>나만의 메시지를<br>새겨 드립니다.</p>
+                <a href="#" class="service-link">더 알아보기</a>
+            </div>
+
+            <div class="service-card">
+                <div class="service-icon">
+                    <svg viewBox="0 0 56 56" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <circle cx="28" cy="22" r="10" stroke="#1d1d1f" stroke-width="2"/>
+                        <path d="M12 46C12 38 19.2 32 28 32C36.8 32 44 38 44 46" stroke="#1d1d1f" stroke-width="2"/>
+                    </svg>
+                </div>
+                <h3 class="service-title">스페셜리스트</h3>
+                <p class="service-desc">쇼핑 관련 궁금한 점이<br>있으시면 채팅이나 전화로<br>문의하세요.</p>
+                <a href="#" class="service-link">더 알아보기</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-container">
+            <div class="footer-directory">
+                <div class="footer-column">
+                    <h5>쇼핑 및 알아보기</h5>
+                    <ul>
+                        <li><a href="#">Store</a></li>
+                        <li><a href="#">Mac</a></li>
+                        <li><a href="#">iPad</a></li>
+                        <li><a href="#">iPhone</a></li>
+                        <li><a href="#">Watch</a></li>
+                        <li><a href="#">AirPods</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h5>Apple Store</h5>
+                    <ul>
+                        <li><a href="#">매장 찾기</a></li>
+                        <li><a href="#">Genius Bar</a></li>
+                        <li><a href="#">Today at Apple</a></li>
+                        <li><a href="#">Apple Trade In</a></li>
+                        <li><a href="#">할부 방식</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h5>엔터테인먼트</h5>
+                    <ul>
+                        <li><a href="#">Apple One</a></li>
+                        <li><a href="#">Apple TV+</a></li>
+                        <li><a href="#">Apple Music</a></li>
+                        <li><a href="#">Apple Arcade</a></li>
+                        <li><a href="#">App Store</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h5>비즈니스</h5>
+                    <ul>
+                        <li><a href="#">Apple과 비즈니스</a></li>
+                        <li><a href="#">비즈니스용 제품</a></li>
+                    </ul>
+                    <h5 style="margin-top:16px">교육</h5>
+                    <ul>
+                        <li><a href="#">Apple 그리고 교육</a></li>
+                        <li><a href="#">교육용 제품</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h5>Apple 정보</h5>
+                    <ul>
+                        <li><a href="#">Newsroom</a></li>
+                        <li><a href="#">Apple 리더십</a></li>
+                        <li><a href="#">채용 안내</a></li>
+                        <li><a href="#">투자자</a></li>
+                        <li><a href="#">Apple 연락처</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="footer-legal">
+                <p style="margin-bottom:12px">
+                    다양한 쇼핑 방법: <a href="#">Apple Store를 방문</a>하거나, <a href="#">리셀러를 찾아</a>보거나, 080-330-8877번으로 전화하세요.
+                </p>
+                <p>Copyright © 2025 Apple Inc. 모든 권리 보유. | 
+                    <a href="#">개인정보 처리방침</a> | 
+                    <a href="#">약관</a> | 
+                    <a href="#">판매 및 환불</a> | 
+                    <a href="#">사이트 맵</a> | 
+                    <a href="#">대한민국</a>
+                </p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Product Tile Animation
+        const tiles = document.querySelectorAll('.product-tile');
+        
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, { threshold: 0.1 });
+
+        tiles.forEach(tile => {
+            tile.style.opacity = '0';
+            tile.style.transform = 'translateY(30px)';
+            tile.style.transition = 'all 0.6s ease';
+            observer.observe(tile);
+        });
+    </script>
+</body>
+</html>

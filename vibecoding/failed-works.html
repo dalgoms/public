@@ -1,0 +1,815 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>실패작 아카이브 — Failed Works Collection</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Outfit:wght@400;500;600;700;800;900&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #0a0a0a;
+            --cream: #ffffff;
+            --accent: #ff3366;
+            --accent-glow: #ff6699;
+            --warning: #ff6b35;
+            --charcoal: #1a1a1a;
+            --gray: #888888;
+            --dark-gray: #333333;
+            --heading: 'Outfit', sans-serif;
+            --body: 'Plus Jakarta Sans', sans-serif;
+            --mono: 'Space Mono', monospace;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: var(--body);
+            background: var(--bg);
+            color: var(--cream);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* Header */
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            background: rgba(10, 10, 10, 0.95);
+            backdrop-filter: blur(20px);
+        }
+
+        .header-inner {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 50px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 40px;
+        }
+
+        .logo {
+            font-family: var(--heading);
+            font-size: 28px;
+            font-weight: 800;
+            color: var(--cream);
+            text-decoration: none;
+            letter-spacing: 0.02em;
+            text-transform: uppercase;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .logo-img {
+            height: 36px;
+            width: auto;
+            object-fit: contain;
+            transition: all 0.4s ease;
+            filter: brightness(1.1);
+        }
+
+        .logo:hover .logo-img {
+            filter: brightness(1.3) drop-shadow(0 0 8px var(--accent));
+            transform: scale(1.05);
+        }
+
+        .header-center {
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .header-center nav {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 100px;
+            padding: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .header-center nav a {
+            font-family: var(--body);
+            font-size: 14px;
+            font-weight: 600;
+            color: rgba(255, 255, 255, 0.6);
+            text-decoration: none;
+            padding: 12px 24px;
+            border-radius: 100px;
+            transition: all 0.3s ease;
+        }
+
+        .header-center nav a:hover {
+            color: var(--cream);
+        }
+
+        .header-center nav a.active {
+            background: var(--accent);
+            color: var(--cream);
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 30px;
+        }
+
+        .header-cta {
+            font-family: var(--mono);
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--cream);
+            text-decoration: none;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            padding: 14px 28px;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 100px;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header-cta::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: var(--accent);
+            transform: translateX(-100%);
+            transition: transform 0.4s cubic-bezier(0.77, 0, 0.175, 1);
+        }
+
+        .header-cta:hover::before {
+            transform: translateX(0);
+        }
+
+        .header-cta:hover {
+            border-color: var(--accent);
+            color: var(--cream);
+        }
+
+        .header-cta span {
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Hero */
+        .hero {
+            min-height: 60vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 160px 40px 80px;
+            position: relative;
+            text-align: center;
+            overflow: hidden;
+        }
+
+        .hero-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: 
+                radial-gradient(circle at 30% 20%, rgba(255, 51, 102, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 70% 80%, rgba(255, 107, 53, 0.1) 0%, transparent 50%);
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 1;
+            max-width: 900px;
+        }
+
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 20px;
+            background: rgba(255, 51, 102, 0.1);
+            border: 1px solid rgba(255, 51, 102, 0.3);
+            border-radius: 100px;
+            color: var(--accent);
+            font-family: var(--mono);
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            margin-bottom: 30px;
+        }
+
+        .hero-title {
+            font-family: var(--heading);
+            font-size: clamp(3rem, 8vw, 6rem);
+            font-weight: 800;
+            line-height: 1.1;
+            margin-bottom: 24px;
+            text-transform: uppercase;
+        }
+
+        .hero-title span {
+            color: var(--accent);
+        }
+
+        .hero-desc {
+            font-size: 18px;
+            color: var(--gray);
+            max-width: 600px;
+            margin: 0 auto 40px;
+            line-height: 1.8;
+        }
+
+        .hero-stats {
+            display: flex;
+            gap: 60px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-number {
+            font-family: var(--heading);
+            font-size: 48px;
+            font-weight: 800;
+            color: var(--warning);
+        }
+
+        .stat-label {
+            font-family: var(--mono);
+            font-size: 12px;
+            color: var(--gray);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+
+        /* Portfolio Grid */
+        .portfolio-section {
+            padding: 80px 40px;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 60px;
+        }
+
+        .section-title {
+            font-family: var(--heading);
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--accent);
+            text-transform: uppercase;
+            letter-spacing: 0.2em;
+            margin-bottom: 16px;
+        }
+
+        .section-subtitle {
+            font-family: var(--heading);
+            font-size: 32px;
+            font-weight: 700;
+            color: var(--cream);
+        }
+
+        .work-grid {
+            max-width: 1600px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 24px;
+        }
+
+        .work-item {
+            position: relative;
+            background: var(--charcoal);
+            border-radius: 16px;
+            overflow: hidden;
+            text-decoration: none;
+            color: var(--cream);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            aspect-ratio: 16/10;
+        }
+
+        .work-item:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 60px rgba(255, 51, 102, 0.2);
+        }
+
+        .work-number {
+            position: absolute;
+            top: 16px;
+            left: 16px;
+            z-index: 10;
+            font-family: var(--mono);
+            font-size: 12px;
+            color: var(--accent);
+            background: rgba(0, 0, 0, 0.6);
+            padding: 4px 10px;
+            border-radius: 4px;
+        }
+
+        .work-fail-badge {
+            position: absolute;
+            top: 16px;
+            right: 16px;
+            z-index: 10;
+            font-family: var(--mono);
+            font-size: 10px;
+            color: var(--warning);
+            background: rgba(255, 107, 53, 0.2);
+            border: 1px solid rgba(255, 107, 53, 0.3);
+            padding: 4px 10px;
+            border-radius: 4px;
+            text-transform: uppercase;
+        }
+
+        .work-image-wrapper {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+        }
+
+        .work-iframe-container {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .work-iframe-container iframe {
+            width: 200%;
+            height: 200%;
+            border: none;
+            transform: scale(0.5);
+            transform-origin: top left;
+            pointer-events: none;
+        }
+
+        .work-iframe-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            z-index: 5;
+        }
+
+        .work-overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            padding: 60px 24px 24px;
+            background: linear-gradient(transparent, rgba(0, 0, 0, 0.9));
+            z-index: 6;
+        }
+
+        .work-meta {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 8px;
+        }
+
+        .work-category {
+            font-family: var(--mono);
+            font-size: 10px;
+            color: var(--accent);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .work-year {
+            font-family: var(--mono);
+            font-size: 10px;
+            color: var(--gray);
+        }
+
+        .work-title {
+            font-family: var(--heading);
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+
+        .work-desc {
+            font-size: 12px;
+            color: var(--gray);
+        }
+
+        .work-arrow {
+            position: absolute;
+            bottom: 24px;
+            right: 24px;
+            width: 40px;
+            height: 40px;
+            background: var(--accent);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transform: translateY(10px);
+            transition: all 0.3s ease;
+            z-index: 7;
+        }
+
+        .work-item:hover .work-arrow {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Reason Section */
+        .reason-section {
+            padding: 100px 40px;
+            background: var(--charcoal);
+        }
+
+        .reason-content {
+            max-width: 900px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .reason-title {
+            font-family: var(--heading);
+            font-size: 32px;
+            font-weight: 800;
+            margin-bottom: 30px;
+        }
+
+        .reason-title span {
+            color: var(--accent);
+        }
+
+        .reason-text {
+            font-size: 18px;
+            color: var(--gray);
+            line-height: 2;
+            margin-bottom: 40px;
+        }
+
+        .reason-quote {
+            font-family: var(--heading);
+            font-size: 24px;
+            font-weight: 600;
+            color: var(--cream);
+            padding: 30px;
+            border-left: 4px solid var(--accent);
+            background: rgba(255, 51, 102, 0.05);
+            text-align: left;
+        }
+
+        /* Footer */
+        .footer {
+            padding: 60px 40px;
+            text-align: center;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .footer-text {
+            font-family: var(--mono);
+            font-size: 12px;
+            color: var(--gray);
+        }
+
+        .footer-link {
+            color: var(--accent);
+            text-decoration: none;
+        }
+
+        /* Responsive */
+        @media (max-width: 1200px) {
+            .work-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 1200px) {
+            .header-center {
+                position: static;
+                transform: none;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .header-inner {
+                padding: 15px 20px;
+            }
+
+            .header-center {
+                display: none;
+            }
+
+            .header-cta {
+                padding: 12px 20px;
+                font-size: 12px;
+            }
+
+            .hero {
+                padding: 120px 20px 60px;
+            }
+
+            .hero-stats {
+                gap: 30px;
+            }
+
+            .stat-number {
+                font-size: 36px;
+            }
+
+            .portfolio-section {
+                padding: 60px 20px;
+            }
+
+            .work-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .reason-section {
+                padding: 60px 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="header-inner">
+            <div class="header-left">
+                <a href="anomaly-studio.html" class="logo">
+                    <img src="img/timbel logo.png" alt="TIMBEL" class="logo-img">
+                </a>
+            </div>
+            <div class="header-center">
+                <nav>
+                    <a href="anomaly-studio.html#about">About</a>
+                    <a href="anomaly-studio.html#works">Creations</a>
+                    <a href="anomaly-studio.html#services">Process</a>
+                    <a href="#" class="active">Failed</a>
+                </nav>
+            </div>
+            <div class="header-right">
+                <a href="anomaly-studio.html" class="header-cta"><span>← Back</span></a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero -->
+    <section class="hero">
+        <div class="hero-bg"></div>
+        <div class="hero-content">
+            <div class="hero-badge">🚧 Experimental Archive</div>
+            <h1 class="hero-title">실패작 <span>아카이브</span></h1>
+            <p class="hero-desc">
+                바이브 코딩 여정에서 만난 수많은 실험작들.<br>
+                완성되지 못했거나, 방향을 잃었거나, 포기했던 프로젝트들.<br>
+                하지만 이 모든 실패가 성공의 밑거름이 되었습니다.
+            </p>
+            <div class="hero-stats">
+                <div class="stat-item">
+                    <div class="stat-number">8</div>
+                    <div class="stat-label">실패 프로젝트</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">∞</div>
+                    <div class="stat-label">배운 것들</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">0</div>
+                    <div class="stat-label">후회</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Portfolio Grid -->
+    <section class="portfolio-section">
+        <div class="section-header">
+            <div class="section-title">// Failed Projects</div>
+            <div class="section-subtitle">실패한 프로젝트들</div>
+        </div>
+
+        <div class="work-grid">
+            <!-- Work 1: Timbel Clone -->
+            <a href="timbel-clone.html" target="_blank" class="work-item">
+                <span class="work-number">#01</span>
+                <span class="work-fail-badge">Incomplete</span>
+                <div class="work-image-wrapper">
+                    <div class="work-iframe-container">
+                        <iframe src="timbel-clone.html" loading="lazy"></iframe>
+                        <div class="work-iframe-overlay"></div>
+                    </div>
+                </div>
+                <div class="work-overlay">
+                    <div class="work-meta">
+                        <span class="work-category">Corporate / Clone</span>
+                        <span class="work-year">2024</span>
+                    </div>
+                    <h3 class="work-title">TIMBEL</h3>
+                    <p class="work-desc">팀벨 기업 웹사이트 클론 - Voice into Value</p>
+                </div>
+                <div class="work-arrow">→</div>
+            </a>
+
+            <!-- Work 2: SORIZAVA -->
+            <a href="sorizava.html" target="_blank" class="work-item">
+                <span class="work-number">#02</span>
+                <span class="work-fail-badge">Abandoned</span>
+                <div class="work-image-wrapper">
+                    <div class="work-iframe-container">
+                        <iframe src="sorizava.html" loading="lazy"></iframe>
+                        <div class="work-iframe-overlay"></div>
+                    </div>
+                </div>
+                <div class="work-overlay">
+                    <div class="work-meta">
+                        <span class="work-category">Service / Landing</span>
+                        <span class="work-year">2024</span>
+                    </div>
+                    <h3 class="work-title">SORIZAVA</h3>
+                    <p class="work-desc">대한민국 NO.1 속기 전문 서비스 페이지</p>
+                </div>
+                <div class="work-arrow">→</div>
+            </a>
+
+            <!-- Work 3: HAIV -->
+            <a href="haiv.html" target="_blank" class="work-item">
+                <span class="work-number">#03</span>
+                <span class="work-fail-badge">Prototype</span>
+                <div class="work-image-wrapper">
+                    <div class="work-iframe-container">
+                        <iframe src="haiv.html" loading="lazy"></iframe>
+                        <div class="work-iframe-overlay"></div>
+                    </div>
+                </div>
+                <div class="work-overlay">
+                    <div class="work-meta">
+                        <span class="work-category">AI Engine / Product</span>
+                        <span class="work-year">2024</span>
+                    </div>
+                    <h3 class="work-title">HAIV</h3>
+                    <p class="work-desc">GS인증 1등급 AI 음성인식 엔진</p>
+                </div>
+                <div class="work-arrow">→</div>
+            </a>
+
+            <!-- Work 4: Cloud Service -->
+            <a href="cloud-service.html" target="_blank" class="work-item">
+                <span class="work-number">#04</span>
+                <span class="work-fail-badge">Draft</span>
+                <div class="work-image-wrapper">
+                    <div class="work-iframe-container">
+                        <iframe src="cloud-service.html" loading="lazy"></iframe>
+                        <div class="work-iframe-overlay"></div>
+                    </div>
+                </div>
+                <div class="work-overlay">
+                    <div class="work-meta">
+                        <span class="work-category">Cloud / Infrastructure</span>
+                        <span class="work-year">2024</span>
+                    </div>
+                    <h3 class="work-title">Cloud Service</h3>
+                    <p class="work-desc">AI를 위한 클라우드 인프라</p>
+                </div>
+                <div class="work-arrow">→</div>
+            </a>
+
+            <!-- Work 5: Blog Article -->
+            <a href="article.html" target="_blank" class="work-item">
+                <span class="work-number">#05</span>
+                <span class="work-fail-badge">Incomplete</span>
+                <div class="work-image-wrapper">
+                    <div class="work-iframe-container">
+                        <iframe src="article.html" loading="lazy"></iframe>
+                        <div class="work-iframe-overlay"></div>
+                    </div>
+                </div>
+                <div class="work-overlay">
+                    <div class="work-meta">
+                        <span class="work-category">Blog / Article</span>
+                        <span class="work-year">2024</span>
+                    </div>
+                    <h3 class="work-title">생성형 AI의 진화</h3>
+                    <p class="work-desc">비즈니스 혁신의 시작 - 블로그 아티클</p>
+                </div>
+                <div class="work-arrow">→</div>
+            </a>
+
+            <!-- Work 6: Blog -->
+            <a href="blog.html" target="_blank" class="work-item">
+                <span class="work-number">#06</span>
+                <span class="work-fail-badge">Abandoned</span>
+                <div class="work-image-wrapper">
+                    <div class="work-iframe-container">
+                        <iframe src="blog.html" loading="lazy"></iframe>
+                        <div class="work-iframe-overlay"></div>
+                    </div>
+                </div>
+                <div class="work-overlay">
+                    <div class="work-meta">
+                        <span class="work-category">Blog / News</span>
+                        <span class="work-year">2024</span>
+                    </div>
+                    <h3 class="work-title">팀벨 NEWS</h3>
+                    <p class="work-desc">AI Company 뉴스 블로그 페이지</p>
+                </div>
+                <div class="work-arrow">→</div>
+            </a>
+
+            <!-- Work 7: AI Solution -->
+            <a href="ai-solution.html" target="_blank" class="work-item">
+                <span class="work-number">#07</span>
+                <span class="work-fail-badge">Prototype</span>
+                <div class="work-image-wrapper">
+                    <div class="work-iframe-container">
+                        <iframe src="ai-solution.html" loading="lazy"></iframe>
+                        <div class="work-iframe-overlay"></div>
+                    </div>
+                </div>
+                <div class="work-overlay">
+                    <div class="work-meta">
+                        <span class="work-category">AI / Landing</span>
+                        <span class="work-year">2024</span>
+                    </div>
+                    <h3 class="work-title">AI Solution</h3>
+                    <p class="work-desc">비즈니스를 위한 맞춤형 AI 솔루션</p>
+                </div>
+                <div class="work-arrow">→</div>
+            </a>
+
+            <!-- Work 8: AI Consulting -->
+            <a href="ai-consulting.html" target="_blank" class="work-item">
+                <span class="work-number">#08</span>
+                <span class="work-fail-badge">Draft</span>
+                <div class="work-image-wrapper">
+                    <div class="work-iframe-container">
+                        <iframe src="ai-consulting.html" loading="lazy"></iframe>
+                        <div class="work-iframe-overlay"></div>
+                    </div>
+                </div>
+                <div class="work-overlay">
+                    <div class="work-meta">
+                        <span class="work-category">Consulting / Service</span>
+                        <span class="work-year">2024</span>
+                    </div>
+                    <h3 class="work-title">AI Consulting</h3>
+                    <p class="work-desc">AI 전환의 시작, 전문 컨설팅</p>
+                </div>
+                <div class="work-arrow">→</div>
+            </a>
+
+        </div>
+    </section>
+
+    <!-- Reason Section -->
+    <section class="reason-section">
+        <div class="reason-content">
+            <h2 class="reason-title">왜 <span>실패작</span>인가요?</h2>
+            <p class="reason-text">
+                이 프로젝트들은 완성되지 못했거나, 원하는 방향으로 발전하지 못했습니다.<br>
+                CSS가 깨지거나, 컨셉이 흐려지거나, 시간 부족으로 중단되었습니다.<br>
+                하지만 모든 실패는 다음 성공을 위한 연습이었습니다.
+            </p>
+            <div class="reason-quote">
+                "무엇을 만들지 명확할수록,<br>
+                같은 시간에서도 결과는 달라졌다.<br><br>
+                큰 구조가 그려진 순간,<br>
+                바이브코딩으로 구체화에만 집중할 수 있었고<br><br>
+                Cursor AI + 바이브 코딩은<br>
+                방향을 가진 사람에겐 시간을 압축해 주는 치트키였다는 것!"<br>
+                <span style="color: var(--accent); font-size: 16px; margin-top: 16px; display: block;">— 바이브 코딩 6일차의 깨달음</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <p class="footer-text">
+            정확하게 지시할 수록 엔터치는 횟수는 급감! <a href="anomaly-studio.html" class="footer-link">성공작 포트폴리오</a>로 돌아가기
+        </p>
+    </footer>
+</body>
+</html>
