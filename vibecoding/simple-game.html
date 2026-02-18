@@ -1,0 +1,1589 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Polar Bear Run 🐻‍❄️</title>
+    <style>
+        @import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: #080810;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* Animated background orbs for glassmorphism effect */
+        body::before,
+        body::after {
+            content: '';
+            position: fixed;
+            border-radius: 50%;
+            animation: float 8s ease-in-out infinite;
+        }
+
+        body::before {
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle, rgba(0, 255, 170, 0.15) 0%, transparent 70%);
+            top: -100px;
+            left: -100px;
+            animation-delay: 0s;
+        }
+
+        body::after {
+            width: 500px;
+            height: 500px;
+            background: radial-gradient(circle, rgba(255, 100, 150, 0.12) 0%, transparent 70%);
+            bottom: -150px;
+            right: -150px;
+            animation-delay: -4s;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            50% { transform: translate(30px, 20px) scale(1.1); }
+        }
+
+        /* Extra floating orbs */
+        .bg-orb {
+            position: fixed;
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        .bg-orb-1 {
+            width: 300px;
+            height: 300px;
+            background: radial-gradient(circle, rgba(100, 150, 255, 0.1) 0%, transparent 70%);
+            top: 50%;
+            left: 20%;
+            animation: float 10s ease-in-out infinite reverse;
+        }
+
+        .bg-orb-2 {
+            width: 250px;
+            height: 250px;
+            background: radial-gradient(circle, rgba(255, 200, 100, 0.08) 0%, transparent 70%);
+            top: 30%;
+            right: 10%;
+            animation: float 12s ease-in-out infinite;
+            animation-delay: -2s;
+        }
+
+        h1 {
+            color: #00ffaa;
+            font-size: 2.2rem;
+            margin-bottom: 1.5rem;
+            text-transform: uppercase;
+            letter-spacing: 0.4em;
+            text-shadow: 0 0 30px rgba(0, 255, 170, 0.5);
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Glassmorphism HUD */
+        .hud {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .hud > div {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 1rem 2rem;
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 1.1rem;
+            box-shadow: 
+                0 8px 32px rgba(0, 0, 0, 0.3),
+                inset 0 1px 0 rgba(255, 255, 255, 0.1);
+        }
+
+        .hud span {
+            color: #00ffaa;
+            font-weight: 700;
+            font-size: 1.3rem;
+            text-shadow: 0 0 10px rgba(0, 255, 170, 0.5);
+        }
+
+        /* Glassmorphism game container */
+        .game-container {
+            position: relative;
+            width: 800px;
+            height: 500px;
+            background: rgba(15, 15, 25, 0.6);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(0, 255, 170, 0.3);
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 
+                0 25px 50px rgba(0, 0, 0, 0.5),
+                0 0 0 1px rgba(255, 255, 255, 0.05),
+                inset 0 1px 0 rgba(255, 255, 255, 0.1),
+                0 0 100px rgba(0, 255, 170, 0.1);
+            z-index: 1;
+        }
+
+        /* Inner glow border effect */
+        .game-container::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border-radius: 20px;
+            padding: 2px;
+            background: linear-gradient(135deg, rgba(0, 255, 170, 0.4), transparent 50%, rgba(255, 100, 150, 0.2));
+            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor;
+            mask-composite: exclude;
+            pointer-events: none;
+        }
+
+        /* Grid lines for atmosphere */
+        .game-container::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background-image: 
+                linear-gradient(rgba(0, 255, 170, 0.02) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 255, 170, 0.02) 1px, transparent 1px);
+            background-size: 40px 40px;
+            pointer-events: none;
+        }
+
+        /* Player - Cute Polar Bear */
+        .player {
+            position: absolute;
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(180deg, #ffffff 0%, #e8e8f0 60%, #d0d0e0 100%);
+            border: none;
+            border-radius: 50% 50% 45% 45%;
+            transition: transform 0.05s ease-out;
+            z-index: 10;
+            box-shadow: 
+                /* Left ear */
+                -12px -10px 0 -2px #ffffff,
+                -12px -10px 0 0px #c0c0d0,
+                -12px -10px 0 0px #d0d0e0,
+                /* Left ear inner */
+                -11px -9px 0 -5px #ffb0c0,
+                /* Right ear */
+                12px -10px 0 -2px #ffffff,
+                12px -10px 0 0px #c0c0d0,
+                /* Right ear inner */
+                11px -9px 0 -5px #ffb0c0,
+                /* Soft glow */
+                0 4px 15px rgba(0, 0, 0, 0.2),
+                0 0 30px rgba(200, 220, 255, 0.3);
+        }
+
+        /* Eyes */
+        .player::before {
+            content: '';
+            position: absolute;
+            top: 12px;
+            left: 8px;
+            width: 7px;
+            height: 9px;
+            background: #1a1a2e;
+            border-radius: 50%;
+            box-shadow: 
+                /* Right eye */
+                17px 0 0 0 #1a1a2e,
+                /* Eye shine left */
+                2px -2px 0 -4px #ffffff,
+                /* Eye shine right */
+                19px -2px 0 -4px #ffffff;
+        }
+
+        /* Nose and blush */
+        .player::after {
+            content: '';
+            position: absolute;
+            top: 22px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 8px;
+            height: 6px;
+            background: #2a2a3e;
+            border-radius: 50% 50% 50% 50% / 40% 40% 60% 60%;
+            box-shadow: 
+                /* Mouth line */
+                0 5px 0 -3px #2a2a3e,
+                /* Left blush */
+                -10px -2px 0 -1px rgba(255, 150, 170, 0.5),
+                -10px -2px 6px 0 rgba(255, 150, 170, 0.3),
+                /* Right blush */
+                10px -2px 0 -1px rgba(255, 150, 170, 0.5),
+                10px -2px 6px 0 rgba(255, 150, 170, 0.3);
+        }
+
+        /* Hit state - blushing/upset bear */
+        .player.hit {
+            background: linear-gradient(180deg, #ffe0e0 0%, #ffd0d0 60%, #ffb0b0 100%);
+            animation: shake 0.2s ease-in-out;
+        }
+
+        .player.hit::after {
+            box-shadow: 
+                0 5px 0 -3px #2a2a3e,
+                -10px -2px 0 1px rgba(255, 100, 120, 0.7),
+                -10px -2px 8px 2px rgba(255, 100, 120, 0.4),
+                10px -2px 0 1px rgba(255, 100, 120, 0.7),
+                10px -2px 8px 2px rgba(255, 100, 120, 0.4);
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-3px) rotate(-5deg); }
+            75% { transform: translateX(3px) rotate(5deg); }
+        }
+
+        /* Obstacles - Glassmorphism style */
+        .obstacle {
+            position: absolute;
+            background: linear-gradient(135deg, rgba(255, 50, 100, 0.7) 0%, rgba(200, 30, 70, 0.6) 100%);
+            border: 1px solid rgba(255, 100, 150, 0.5);
+            border-radius: 6px;
+            box-shadow: 
+                0 0 15px rgba(255, 50, 100, 0.4),
+                inset 0 1px 2px rgba(255, 255, 255, 0.2);
+        }
+
+        .obstacle.type-1 {
+            width: 50px;
+            height: 50px;
+        }
+
+        .obstacle.type-2 {
+            width: 30px;
+            height: 80px;
+        }
+
+        .obstacle.type-3 {
+            width: 80px;
+            height: 30px;
+        }
+
+        /* Collectibles - Glassmorphism style */
+        .collectible {
+            position: absolute;
+            width: 25px;
+            height: 25px;
+            background: linear-gradient(135deg, rgba(255, 220, 80, 0.9) 0%, rgba(255, 170, 50, 0.8) 100%);
+            border: 1px solid rgba(255, 230, 100, 0.7);
+            border-radius: 6px;
+            animation: pulse 1s ease-in-out infinite alternate;
+            box-shadow: 
+                0 0 20px rgba(255, 200, 50, 0.5),
+                0 0 40px rgba(255, 200, 50, 0.2),
+                inset 0 2px 4px rgba(255, 255, 255, 0.4);
+        }
+
+        @keyframes pulse {
+            from { transform: scale(1); box-shadow: 0 0 20px rgba(255, 200, 50, 0.5), 0 0 40px rgba(255, 200, 50, 0.2); }
+            to { transform: scale(1.15); box-shadow: 0 0 30px rgba(255, 200, 50, 0.7), 0 0 60px rgba(255, 200, 50, 0.3); }
+        }
+
+        .collectible.collected {
+            animation: collect 0.3s ease-out forwards;
+        }
+
+        @keyframes collect {
+            to {
+                transform: scale(2);
+                opacity: 0;
+            }
+        }
+
+        /* Safe zone - Glassmorphism with sparkle */
+        .safe-zone {
+            position: absolute;
+            right: 0;
+            top: 0;
+            width: 80px;
+            height: 100%;
+            background: linear-gradient(90deg, transparent 0%, rgba(0, 255, 170, 0.08) 100%);
+            border-left: 2px dashed rgba(0, 255, 170, 0.4);
+            overflow: hidden;
+        }
+
+        /* Flashing light bars */
+        .safe-zone::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(
+                180deg,
+                transparent 0%,
+                rgba(0, 255, 170, 0.3) 10%,
+                transparent 20%,
+                transparent 30%,
+                rgba(255, 220, 100, 0.25) 40%,
+                transparent 50%,
+                transparent 60%,
+                rgba(0, 255, 170, 0.3) 70%,
+                transparent 80%,
+                transparent 90%,
+                rgba(255, 220, 100, 0.25) 100%
+            );
+            background-size: 100% 200%;
+            animation: goalFlash 1.5s linear infinite;
+        }
+
+        @keyframes goalFlash {
+            0% { background-position: 0% 0%; }
+            100% { background-position: 0% 200%; }
+        }
+
+        .safe-zone::after {
+            content: 'GOAL';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) rotate(-90deg);
+            color: rgba(0, 255, 170, 0.9);
+            font-size: 1.3rem;
+            font-weight: 700;
+            letter-spacing: 0.3em;
+            text-shadow: 0 0 20px rgba(0, 255, 170, 0.8);
+            animation: goalTextPulse 1s ease-in-out infinite alternate;
+            z-index: 1;
+        }
+
+        @keyframes goalTextPulse {
+            from { 
+                text-shadow: 0 0 20px rgba(0, 255, 170, 0.5);
+                opacity: 0.7;
+            }
+            to { 
+                text-shadow: 0 0 30px rgba(0, 255, 170, 1), 0 0 50px rgba(0, 255, 170, 0.5);
+                opacity: 1;
+            }
+        }
+
+        /* Sparkle particles */
+        .safe-zone .sparkle {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: #fff;
+            border-radius: 50%;
+            animation: sparkle 2s ease-in-out infinite;
+        }
+
+        .safe-zone .sparkle:nth-child(1) { top: 10%; left: 30%; animation-delay: 0s; }
+        .safe-zone .sparkle:nth-child(2) { top: 25%; left: 60%; animation-delay: 0.3s; }
+        .safe-zone .sparkle:nth-child(3) { top: 40%; left: 20%; animation-delay: 0.6s; }
+        .safe-zone .sparkle:nth-child(4) { top: 55%; left: 50%; animation-delay: 0.9s; }
+        .safe-zone .sparkle:nth-child(5) { top: 70%; left: 35%; animation-delay: 1.2s; }
+        .safe-zone .sparkle:nth-child(6) { top: 85%; left: 55%; animation-delay: 1.5s; }
+
+        @keyframes sparkle {
+            0%, 100% { 
+                transform: scale(0);
+                opacity: 0;
+            }
+            50% { 
+                transform: scale(1.5);
+                opacity: 1;
+                box-shadow: 0 0 10px #fff, 0 0 20px rgba(0, 255, 170, 0.8);
+            }
+        }
+
+        /* Game over / Win overlay - Glassmorphism */
+        .overlay {
+            position: absolute;
+            inset: 0;
+            background: rgba(10, 10, 20, 0.7);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 100;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.4s ease;
+            border-radius: 20px;
+        }
+
+        .overlay.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .overlay h2 {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 0.2em;
+            text-shadow: 0 0 40px currentColor;
+        }
+
+        .overlay.win h2 {
+            color: #00ffaa;
+        }
+
+        .overlay.lose h2 {
+            color: #ff5080;
+        }
+
+        .overlay p {
+            color: rgba(255, 255, 255, 0.6);
+            margin-bottom: 2rem;
+            font-size: 1rem;
+        }
+
+        .overlay .no-cancel {
+            display: block;
+            margin-top: 1rem;
+            color: rgba(255, 255, 255, 0.35);
+            font-size: 0.8rem;
+            font-style: italic;
+        }
+
+        /* Glassmorphism button */
+        .btn {
+            padding: 1rem 3rem;
+            font-family: 'Pretendard', sans-serif;
+            font-size: 1rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.2em;
+            background: rgba(0, 255, 170, 0.1);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(0, 255, 170, 0.4);
+            border-radius: 12px;
+            color: #00ffaa;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 
+                0 8px 32px rgba(0, 0, 0, 0.3),
+                inset 0 1px 0 rgba(255, 255, 255, 0.1);
+        }
+
+        .btn:hover {
+            background: rgba(0, 255, 170, 0.25);
+            border-color: rgba(0, 255, 170, 0.7);
+            box-shadow: 
+                0 8px 32px rgba(0, 255, 170, 0.2),
+                0 0 20px rgba(0, 255, 170, 0.3),
+                inset 0 1px 0 rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px);
+        }
+
+        /* Game info panel - Glassmorphism */
+        .game-info {
+            display: flex;
+            gap: 1.5rem;
+            margin-top: 1.5rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Controls hint - Glassmorphism */
+        .controls {
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            padding: 1.2rem 1.8rem;
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+        }
+
+        .controls h3 {
+            color: #00ffaa;
+            font-size: 0.85rem;
+            margin-bottom: 0.6rem;
+            letter-spacing: 0.15em;
+        }
+
+        .controls kbd {
+            display: inline-block;
+            padding: 0.5em 0.8em;
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 6px;
+            margin: 0 0.15em;
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 0.95rem;
+            box-shadow: 
+                0 2px 4px rgba(0, 0, 0, 0.2),
+                inset 0 1px 0 rgba(255, 255, 255, 0.1);
+        }
+
+        /* Game rules panel */
+        .rules {
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 0.85rem;
+            padding: 1.2rem 1.8rem;
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            line-height: 1.6;
+            text-align: left;
+        }
+
+        .rules h3 {
+            color: #ffaa00;
+            font-size: 0.85rem;
+            margin-bottom: 0.6rem;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+        }
+
+        .rules ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .rules li {
+            padding: 0.25rem 0;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .rules .icon {
+            display: inline-block;
+            width: 14px;
+            height: 14px;
+            border-radius: 3px;
+            flex-shrink: 0;
+        }
+
+        .rules .icon.gem {
+            background: linear-gradient(135deg, #ffcc00, #ff9900);
+            box-shadow: 0 0 8px rgba(255, 200, 50, 0.5);
+        }
+
+        .rules .icon.danger {
+            background: linear-gradient(135deg, #ff5080, #cc2050);
+            box-shadow: 0 0 8px rgba(255, 80, 100, 0.5);
+        }
+
+        .rules .icon.goal {
+            background: linear-gradient(135deg, #00ffaa, #00cc88);
+            box-shadow: 0 0 8px rgba(0, 255, 170, 0.5);
+        }
+
+        .rules .icon.heart {
+            background: linear-gradient(135deg, #ff6090, #ff3060);
+            border-radius: 50%;
+            box-shadow: 0 0 8px rgba(255, 100, 150, 0.5);
+        }
+
+        /* Level indicator */
+        .level-indicator {
+            position: absolute;
+            top: 15px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: rgba(0, 255, 170, 0.7);
+            font-size: 0.9rem;
+            letter-spacing: 0.1em;
+            padding: 0.6rem 1.2rem;
+            background: rgba(0, 255, 170, 0.08);
+            border: 1px solid rgba(0, 255, 170, 0.2);
+            border-radius: 20px;
+            backdrop-filter: blur(5px);
+            -webkit-backdrop-filter: blur(5px);
+            white-space: nowrap;
+        }
+
+        /* Fun message popup */
+        .fun-message {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(0);
+            z-index: 200;
+            padding: 1.5rem 2.5rem;
+            background: rgba(255, 220, 100, 0.15);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border: 2px solid rgba(255, 200, 50, 0.5);
+            border-radius: 20px;
+            color: #fff;
+            font-size: 1.8rem;
+            font-weight: 700;
+            text-align: center;
+            white-space: nowrap;
+            box-shadow: 
+                0 15px 40px rgba(0, 0, 0, 0.4),
+                0 0 60px rgba(255, 200, 50, 0.3),
+                inset 0 1px 0 rgba(255, 255, 255, 0.2);
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .fun-message.show {
+            animation: popMessage 2s ease-out forwards;
+        }
+
+        @keyframes popMessage {
+            0% {
+                transform: translate(-50%, -50%) scale(0) rotate(-10deg);
+                opacity: 0;
+            }
+            15% {
+                transform: translate(-50%, -50%) scale(1.2) rotate(3deg);
+                opacity: 1;
+            }
+            25% {
+                transform: translate(-50%, -50%) scale(1) rotate(0deg);
+            }
+            75% {
+                transform: translate(-50%, -50%) scale(1) rotate(0deg);
+                opacity: 1;
+            }
+            100% {
+                transform: translate(-50%, -60%) scale(0.8);
+                opacity: 0;
+            }
+        }
+
+        .fun-message .emoji {
+            display: block;
+            font-size: 3rem;
+            margin-bottom: 0.5rem;
+            animation: bounce 0.5s ease-in-out infinite alternate;
+        }
+
+        @keyframes bounce {
+            from { transform: translateY(0); }
+            to { transform: translateY(-8px); }
+        }
+
+        /* Credit */
+        .credit {
+            margin-top: 1.5rem;
+            color: rgba(255, 255, 255, 0.3);
+            font-size: 0.8rem;
+            letter-spacing: 0.1em;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Mobile touch controls */
+        .touch-controls {
+            display: none;
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 1000;
+            gap: 10px;
+        }
+
+        .touch-btn {
+            width: 60px;
+            height: 60px;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            user-select: none;
+            -webkit-user-select: none;
+            touch-action: manipulation;
+        }
+
+        .touch-btn:active {
+            background: rgba(0, 255, 170, 0.3);
+            border-color: rgba(0, 255, 170, 0.5);
+        }
+
+        .touch-dpad {
+            display: grid;
+            grid-template-columns: repeat(3, 60px);
+            grid-template-rows: repeat(3, 60px);
+            gap: 5px;
+        }
+
+        .touch-dpad .touch-btn:nth-child(1) { grid-column: 2; grid-row: 1; }
+        .touch-dpad .touch-btn:nth-child(2) { grid-column: 1; grid-row: 2; }
+        .touch-dpad .touch-btn:nth-child(3) { grid-column: 3; grid-row: 2; }
+        .touch-dpad .touch-btn:nth-child(4) { grid-column: 2; grid-row: 3; }
+
+        /* ===== RESPONSIVE STYLES ===== */
+
+        /* Tablet */
+        @media (max-width: 900px) {
+            .game-container {
+                width: 90vw;
+                max-width: 700px;
+                height: 400px;
+            }
+
+            .game-info {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .controls, .rules {
+                width: 90vw;
+                max-width: 400px;
+            }
+        }
+
+        /* Mobile */
+        @media (max-width: 600px) {
+            body {
+                padding: 10px;
+                justify-content: flex-start;
+                padding-top: 20px;
+            }
+
+            h1 {
+                font-size: 1.3rem;
+                margin-bottom: 0.8rem;
+                letter-spacing: 0.1em;
+            }
+
+            .hud {
+                flex-wrap: wrap;
+                justify-content: center;
+                gap: 0.5rem;
+                margin-bottom: 0.8rem;
+            }
+
+            .hud > div {
+                padding: 0.5rem 1rem;
+                font-size: 0.8rem;
+            }
+
+            .hud span {
+                font-size: 1rem;
+            }
+
+            .game-container {
+                width: 95vw;
+                height: 50vh;
+                min-height: 280px;
+                max-height: 350px;
+                border-radius: 15px;
+            }
+
+            .player {
+                width: 32px;
+                height: 32px;
+                box-shadow: 
+                    /* Left ear */
+                    -9px -8px 0 -2px #ffffff,
+                    -9px -8px 0 0px #c0c0d0,
+                    /* Left ear inner */
+                    -8px -7px 0 -4px #ffb0c0,
+                    /* Right ear */
+                    9px -8px 0 -2px #ffffff,
+                    9px -8px 0 0px #c0c0d0,
+                    /* Right ear inner */
+                    8px -7px 0 -4px #ffb0c0,
+                    /* Soft glow */
+                    0 3px 10px rgba(0, 0, 0, 0.2),
+                    0 0 20px rgba(200, 220, 255, 0.3);
+            }
+
+            .player::before {
+                top: 10px;
+                left: 6px;
+                width: 6px;
+                height: 7px;
+                box-shadow: 
+                    13px 0 0 0 #1a1a2e,
+                    2px -2px 0 -3px #ffffff,
+                    15px -2px 0 -3px #ffffff;
+            }
+
+            .player::after {
+                top: 18px;
+                width: 6px;
+                height: 5px;
+                box-shadow: 
+                    0 4px 0 -2px #2a2a3e,
+                    -8px -2px 0 -1px rgba(255, 150, 170, 0.5),
+                    -8px -2px 5px 0 rgba(255, 150, 170, 0.3),
+                    8px -2px 0 -1px rgba(255, 150, 170, 0.5),
+                    8px -2px 5px 0 rgba(255, 150, 170, 0.3);
+            }
+
+            .obstacle.type-1 {
+                width: 35px;
+                height: 35px;
+            }
+
+            .obstacle.type-2 {
+                width: 22px;
+                height: 55px;
+            }
+
+            .obstacle.type-3 {
+                width: 55px;
+                height: 22px;
+            }
+
+            .obstacle {
+                box-shadow: 
+                    0 0 20px rgba(255, 50, 100, 0.6),
+                    inset 0 1px 2px rgba(255, 255, 255, 0.2);
+            }
+
+            .collectible {
+                width: 20px;
+                height: 20px;
+                box-shadow: 
+                    0 0 15px rgba(255, 200, 50, 0.7),
+                    0 0 30px rgba(255, 200, 50, 0.4);
+            }
+
+            .safe-zone {
+                width: 55px;
+                background: linear-gradient(90deg, transparent 0%, rgba(0, 255, 170, 0.15) 100%);
+                border-left: 3px dashed rgba(0, 255, 170, 0.6);
+            }
+
+            .safe-zone::before {
+                background: linear-gradient(
+                    180deg,
+                    transparent 0%,
+                    rgba(0, 255, 170, 0.4) 10%,
+                    transparent 20%,
+                    transparent 30%,
+                    rgba(255, 220, 100, 0.35) 40%,
+                    transparent 50%,
+                    transparent 60%,
+                    rgba(0, 255, 170, 0.4) 70%,
+                    transparent 80%,
+                    transparent 90%,
+                    rgba(255, 220, 100, 0.35) 100%
+                );
+            }
+
+            .safe-zone::after {
+                font-size: 1rem;
+                font-weight: 800;
+                text-shadow: 0 0 15px rgba(0, 255, 170, 1), 0 0 30px rgba(0, 255, 170, 0.7);
+            }
+
+            .overlay h2 {
+                font-size: 1.8rem;
+            }
+
+            .overlay p {
+                font-size: 0.9rem;
+            }
+
+            .overlay .no-cancel {
+                font-size: 0.7rem;
+            }
+
+            .btn {
+                padding: 0.8rem 2rem;
+                font-size: 0.9rem;
+            }
+
+            .fun-message {
+                font-size: 1.2rem;
+                padding: 1rem 1.5rem;
+            }
+
+            .fun-message .emoji {
+                font-size: 2rem;
+            }
+
+            .game-info {
+                margin-top: 1rem;
+            }
+
+            .controls, .rules {
+                padding: 0.8rem 1rem;
+                font-size: 0.75rem;
+            }
+
+            .controls h3, .rules h3 {
+                font-size: 0.7rem;
+                margin-bottom: 0.4rem;
+            }
+
+            .controls kbd {
+                padding: 0.3em 0.5em;
+                font-size: 0.8rem;
+            }
+
+            .rules li {
+                font-size: 0.7rem;
+            }
+
+            .rules .icon {
+                width: 10px;
+                height: 10px;
+            }
+
+            .credit {
+                margin-top: 1rem;
+                font-size: 0.7rem;
+            }
+
+            /* Show touch controls on mobile */
+            .touch-controls {
+                display: block;
+            }
+
+            /* Hide keyboard instructions on mobile */
+            .controls {
+                display: none;
+            }
+
+            /* Add space for touch controls at bottom */
+            .credit {
+                margin-bottom: 200px;
+            }
+        }
+
+        /* Small mobile */
+        @media (max-width: 380px) {
+            h1 {
+                font-size: 1.1rem;
+            }
+
+            .game-container {
+                height: 45vh;
+                min-height: 250px;
+            }
+
+            .hud > div {
+                padding: 0.4rem 0.8rem;
+                font-size: 0.7rem;
+            }
+
+            .touch-btn {
+                width: 50px;
+                height: 50px;
+                font-size: 1.2rem;
+            }
+
+            .touch-dpad {
+                grid-template-columns: repeat(3, 50px);
+                grid-template-rows: repeat(3, 50px);
+            }
+
+            .credit {
+                margin-bottom: 180px;
+            }
+        }
+
+        /* Landscape mobile - move controls to side */
+        @media (max-height: 500px) and (orientation: landscape) {
+            .touch-controls {
+                bottom: 50%;
+                right: 20px;
+                left: auto;
+                transform: translateY(50%);
+            }
+
+            .touch-btn {
+                width: 45px;
+                height: 45px;
+                font-size: 1rem;
+            }
+
+            .touch-dpad {
+                grid-template-columns: repeat(3, 45px);
+                grid-template-rows: repeat(3, 45px);
+                gap: 3px;
+            }
+
+            .credit {
+                margin-bottom: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Background orbs for glassmorphism effect -->
+    <div class="bg-orb bg-orb-1"></div>
+    <div class="bg-orb bg-orb-2"></div>
+    
+    <h1>🐻‍❄️ Polar Bear Run</h1>
+    
+    <div class="hud">
+        <div>점수: <span id="score">0</span></div>
+        <div>단계: <span id="level">1</span></div>
+        <div>목숨: <span id="lives">3</span> ❤️</div>
+    </div>
+    
+    <div class="game-container" id="game">
+        <div class="safe-zone">
+            <div class="sparkle"></div>
+            <div class="sparkle"></div>
+            <div class="sparkle"></div>
+            <div class="sparkle"></div>
+            <div class="sparkle"></div>
+            <div class="sparkle"></div>
+        </div>
+        <div class="player" id="player"></div>
+        
+        <!-- Fun message popup -->
+        <div class="fun-message" id="funMessage">
+            <span class="emoji">🎉</span>
+            <span class="text">대박!</span>
+        </div>
+        
+        <!-- Overlays -->
+        <div class="overlay win" id="winOverlay">
+            <h2>🎉 탈출을 축하합니다!</h2>
+            <p>다음 단계로 이동하시겠습니까?</p>
+            <button class="btn" onclick="nextLevel()">시작하기</button>
+            <span class="no-cancel">(취소는 없음ㅋㅋ)</span>
+        </div>
+        
+        <div class="overlay lose" id="loseOverlay">
+            <h2>💀 게임 오버</h2>
+            <p>최종 점수: <span id="finalScore">0</span>점</p>
+            <button class="btn" onclick="restartGame()">다시 시작</button>
+        </div>
+    </div>
+    
+    <div class="game-info">
+        <div class="controls">
+            <h3>🎮 조작법</h3>
+            <kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd> 또는 <kbd>↑</kbd><kbd>←</kbd><kbd>↓</kbd><kbd>→</kbd>
+        </div>
+        <div class="rules">
+            <h3>📜 게임 규칙</h3>
+            <ul>
+                <li><span class="icon gem"></span> 모든 보석을 수집하세요</li>
+                <li><span class="icon danger"></span> 빨간 장애물을 피하세요</li>
+                <li><span class="icon goal"></span> 보석을 모은 후 GOAL로 이동!</li>
+                <li><span class="icon heart"></span> 목숨 3개 - 장애물에 닿으면 1개 감소</li>
+            </ul>
+        </div>
+    </div>
+    
+    <div class="credit">made by seyoung</div>
+
+    <!-- Mobile touch controls -->
+    <div class="touch-controls" id="touchControls">
+        <div class="touch-dpad">
+            <div class="touch-btn" data-dir="up">↑</div>
+            <div class="touch-btn" data-dir="left">←</div>
+            <div class="touch-btn" data-dir="right">→</div>
+            <div class="touch-btn" data-dir="down">↓</div>
+        </div>
+    </div>
+
+    <script>
+        // Responsive game dimensions
+        function getGameDimensions() {
+            const container = document.getElementById('game');
+            return {
+                width: container.offsetWidth,
+                height: container.offsetHeight
+            };
+        }
+
+        const dims = getGameDimensions();
+        const isMobile = window.innerWidth <= 600;
+
+        // Game state
+        const game = {
+            width: dims.width,
+            height: dims.height,
+            score: 0,
+            level: 1,
+            lives: 3,
+            isRunning: true,
+            playerSpeed: isMobile ? 4 : 5
+        };
+
+        // Player state
+        const player = {
+            x: 30,
+            y: Math.floor(dims.height / 2) - 20,
+            width: isMobile ? 32 : 40,
+            height: isMobile ? 32 : 40,
+            element: document.getElementById('player')
+        };
+
+        // Input state
+        const keys = {
+            up: false,
+            down: false,
+            left: false,
+            right: false
+        };
+
+        // Game objects
+        let obstacles = [];
+        let collectibles = [];
+
+        // DOM elements
+        const gameContainer = document.getElementById('game');
+        const scoreDisplay = document.getElementById('score');
+        const levelDisplay = document.getElementById('level');
+        const livesDisplay = document.getElementById('lives');
+        const winOverlay = document.getElementById('winOverlay');
+        const loseOverlay = document.getElementById('loseOverlay');
+        const finalScoreDisplay = document.getElementById('finalScore');
+        const funMessage = document.getElementById('funMessage');
+
+        // Fun messages for level clear - 2026년 운세 버전
+        const funMessages = [
+            { emoji: '🐍', text: '뱀띠해 대박 기운 충전!' },
+            { emoji: '💰', text: '2026 재물운 폭발 예정~' },
+            { emoji: '💕', text: '올해 연애운 활짝 열림!' },
+            { emoji: '✨', text: '행운의 별이 반짝반짝~' },
+            { emoji: '🍀', text: '네잎클로버급 행운 도착!' },
+            { emoji: '🎰', text: '로또 사도 될 것 같은 기운' },
+            { emoji: '🌟', text: '주인공 운세 발동 중!' },
+            { emoji: '🔮', text: '좋은 일만 가득할 예감!' },
+            { emoji: '🎁', text: '깜짝 선물 받을 운명!' },
+            { emoji: '🌈', text: '무지개 끝 황금 발견 임박' },
+            { emoji: '🦋', text: '인생 터닝포인트 왔다!' },
+            { emoji: '🎊', text: '승진운 상승 중~!' },
+            { emoji: '💎', text: '다이아몬드 운세 ON!' },
+            { emoji: '🚀', text: '커리어 로켓 발사 준비!' },
+            { emoji: '🌸', text: '봄바람 타고 좋은 소식~' },
+            { emoji: '⭐', text: '별들이 너를 응원해!' },
+            { emoji: '🎯', text: '원하는 거 다 이루는 해!' },
+            { emoji: '🍯', text: '달콤한 일들만 가득~' },
+            { emoji: '🦄', text: '유니콘급 행운 포착!' },
+            { emoji: '🌙', text: '달빛 아래 소원 이뤄짐!' },
+            { emoji: '🎪', text: '인생 축제가 시작됐다!' },
+            { emoji: '💫', text: '우주가 널 밀어주는 중!' },
+            { emoji: '🏆', text: '26년 MVP는 바로 너!' },
+            { emoji: '🎵', text: '신나는 BGM과 함께 인생!' },
+            { emoji: '🌻', text: '해바라기처럼 빛나는 한 해!' }
+        ];
+
+        // Show fun message
+        function showFunMessage() {
+            const msg = funMessages[Math.floor(Math.random() * funMessages.length)];
+            funMessage.querySelector('.emoji').textContent = msg.emoji;
+            funMessage.querySelector('.text').textContent = msg.text;
+            funMessage.classList.remove('show');
+            void funMessage.offsetWidth; // Force reflow
+            funMessage.classList.add('show');
+        }
+
+        // Initialize player position
+        function updatePlayerPosition() {
+            player.element.style.left = player.x + 'px';
+            player.element.style.top = player.y + 'px';
+        }
+
+        // Create obstacle element
+        // Obstacle sizes based on screen
+        const obstacleSizes = {
+            1: { width: isMobile ? 35 : 50, height: isMobile ? 35 : 50 },
+            2: { width: isMobile ? 22 : 30, height: isMobile ? 55 : 80 },
+            3: { width: isMobile ? 55 : 80, height: isMobile ? 22 : 30 }
+        };
+
+        const collectibleSize = isMobile ? 20 : 25;
+        const safeZoneWidth = isMobile ? 55 : 80;
+
+        function createObstacle(x, y, type) {
+            const obstacle = document.createElement('div');
+            obstacle.className = `obstacle type-${type}`;
+            obstacle.style.left = x + 'px';
+            obstacle.style.top = y + 'px';
+            gameContainer.appendChild(obstacle);
+            
+            const size = obstacleSizes[type];
+            
+            return {
+                x: x,
+                y: y,
+                width: size.width,
+                height: size.height,
+                element: obstacle
+            };
+        }
+
+        // Create collectible element
+        function createCollectible(x, y) {
+            const collectible = document.createElement('div');
+            collectible.className = 'collectible';
+            collectible.style.left = x + 'px';
+            collectible.style.top = y + 'px';
+            gameContainer.appendChild(collectible);
+            
+            return {
+                x: x,
+                y: y,
+                width: collectibleSize,
+                height: collectibleSize,
+                element: collectible,
+                collected: false
+            };
+        }
+
+        // Clear all game objects
+        function clearLevel() {
+            obstacles.forEach(o => o.element.remove());
+            collectibles.forEach(c => c.element.remove());
+            obstacles = [];
+            collectibles = [];
+        }
+
+        // Generate level
+        function generateLevel(levelNum) {
+            clearLevel();
+            
+            // Reset player position
+            player.x = isMobile ? 15 : 30;
+            player.y = Math.floor(game.height / 2) - (player.height / 2);
+            updatePlayerPosition();
+            
+            // Number of obstacles and collectibles based on level (fewer on mobile)
+            const numObstacles = isMobile ? (2 + levelNum) : (3 + levelNum * 2);
+            const numCollectibles = isMobile ? (1 + levelNum) : (2 + levelNum);
+            
+            // Generate obstacles
+            for (let i = 0; i < numObstacles; i++) {
+                let x, y, type;
+                let valid = false;
+                let attempts = 0;
+                
+                while (!valid && attempts < 50) {
+                    type = Math.floor(Math.random() * 3) + 1;
+                    const size = obstacleSizes[type];
+                    
+                    x = (isMobile ? 60 : 100) + Math.random() * (game.width - (isMobile ? 120 : 200) - size.width);
+                    y = Math.random() * (game.height - size.height);
+                    
+                    // Check if position is valid (not overlapping player start or goal)
+                    valid = x > (isMobile ? 50 : 80) && x < game.width - (isMobile ? 60 : 100);
+                    attempts++;
+                }
+                
+                if (valid) {
+                    obstacles.push(createObstacle(x, y, type));
+                }
+            }
+            
+            // Generate collectibles
+            for (let i = 0; i < numCollectibles; i++) {
+                let x, y;
+                let valid = false;
+                let attempts = 0;
+                
+                const minDist = isMobile ? 40 : 60;
+                const marginX = isMobile ? 60 : 100;
+                const marginY = isMobile ? 15 : 20;
+                
+                while (!valid && attempts < 50) {
+                    x = marginX + Math.random() * (game.width - marginX * 2 - safeZoneWidth);
+                    y = marginY + Math.random() * (game.height - marginY * 3);
+                    
+                    // Check distance from obstacles
+                    valid = true;
+                    for (const obs of obstacles) {
+                        const dist = Math.hypot(x - obs.x, y - obs.y);
+                        if (dist < minDist) {
+                            valid = false;
+                            break;
+                        }
+                    }
+                    attempts++;
+                }
+                
+                if (valid) {
+                    collectibles.push(createCollectible(x, y));
+                }
+            }
+        }
+
+        // AABB Collision detection
+        function checkCollision(a, b) {
+            return a.x < b.x + b.width &&
+                   a.x + a.width > b.x &&
+                   a.y < b.y + b.height &&
+                   a.y + a.height > b.y;
+        }
+
+        // Handle player hit
+        function playerHit() {
+            game.lives--;
+            livesDisplay.textContent = game.lives;
+            
+            player.element.classList.add('hit');
+            setTimeout(() => player.element.classList.remove('hit'), 200);
+            
+            // Reset player position
+            player.x = 30;
+            player.y = 230;
+            updatePlayerPosition();
+            
+            if (game.lives <= 0) {
+                gameOver();
+            }
+        }
+
+        // Check if player reached goal
+        function checkGoal() {
+            // Goal zone is the right safeZoneWidth of the game
+            if (player.x + player.width >= game.width - safeZoneWidth) {
+                // Check if all collectibles are collected
+                const allCollected = collectibles.every(c => c.collected);
+                if (allCollected) {
+                    winLevel();
+                }
+            }
+        }
+
+        // Win level
+        function winLevel() {
+            game.isRunning = false;
+            game.score += 100 * game.level;
+            scoreDisplay.textContent = game.score;
+            
+            // Show fun message
+            showFunMessage();
+            
+            // Auto proceed to next level after message
+            setTimeout(() => {
+                nextLevel();
+            }, 2000);
+        }
+
+        // Next level
+        function nextLevel() {
+            game.level++;
+            levelDisplay.textContent = game.level;
+            game.playerSpeed = 5 + game.level * 0.3;
+            winOverlay.classList.remove('active');
+            generateLevel(game.level);
+            game.isRunning = true;
+        }
+
+        // Game over
+        function gameOver() {
+            game.isRunning = false;
+            finalScoreDisplay.textContent = game.score;
+            loseOverlay.classList.add('active');
+        }
+
+        // Restart game
+        function restartGame() {
+            game.score = 0;
+            game.level = 1;
+            game.lives = 3;
+            game.playerSpeed = 5;
+            game.isRunning = true;
+            
+            scoreDisplay.textContent = game.score;
+            levelDisplay.textContent = game.level;
+            livesDisplay.textContent = game.lives;
+            
+            loseOverlay.classList.remove('active');
+            generateLevel(game.level);
+        }
+
+        // Game loop
+        function gameLoop() {
+            if (!game.isRunning) {
+                requestAnimationFrame(gameLoop);
+                return;
+            }
+
+            // Move player
+            let newX = player.x;
+            let newY = player.y;
+
+            if (keys.up) newY -= game.playerSpeed;
+            if (keys.down) newY += game.playerSpeed;
+            if (keys.left) newX -= game.playerSpeed;
+            if (keys.right) newX += game.playerSpeed;
+
+            // Boundary check
+            newX = Math.max(0, Math.min(game.width - player.width, newX));
+            newY = Math.max(0, Math.min(game.height - player.height, newY));
+
+            // Check collision with obstacles before moving
+            const newPlayerPos = { x: newX, y: newY, width: player.width, height: player.height };
+            let hitObstacle = false;
+
+            for (const obstacle of obstacles) {
+                if (checkCollision(newPlayerPos, obstacle)) {
+                    hitObstacle = true;
+                    break;
+                }
+            }
+
+            if (hitObstacle) {
+                playerHit();
+            } else {
+                player.x = newX;
+                player.y = newY;
+                updatePlayerPosition();
+            }
+
+            // Check collision with collectibles
+            for (const collectible of collectibles) {
+                if (!collectible.collected && checkCollision(player, collectible)) {
+                    collectible.collected = true;
+                    collectible.element.classList.add('collected');
+                    game.score += 10;
+                    scoreDisplay.textContent = game.score;
+                    
+                    setTimeout(() => collectible.element.remove(), 300);
+                }
+            }
+
+            // Check goal
+            checkGoal();
+
+            requestAnimationFrame(gameLoop);
+        }
+
+        // Keyboard input
+        document.addEventListener('keydown', (e) => {
+            switch(e.key) {
+                case 'ArrowUp':
+                case 'w':
+                case 'W':
+                    keys.up = true;
+                    e.preventDefault();
+                    break;
+                case 'ArrowDown':
+                case 's':
+                case 'S':
+                    keys.down = true;
+                    e.preventDefault();
+                    break;
+                case 'ArrowLeft':
+                case 'a':
+                case 'A':
+                    keys.left = true;
+                    e.preventDefault();
+                    break;
+                case 'ArrowRight':
+                case 'd':
+                case 'D':
+                    keys.right = true;
+                    e.preventDefault();
+                    break;
+            }
+        });
+
+        document.addEventListener('keyup', (e) => {
+            switch(e.key) {
+                case 'ArrowUp':
+                case 'w':
+                case 'W':
+                    keys.up = false;
+                    break;
+                case 'ArrowDown':
+                case 's':
+                case 'S':
+                    keys.down = false;
+                    break;
+                case 'ArrowLeft':
+                case 'a':
+                case 'A':
+                    keys.left = false;
+                    break;
+                case 'ArrowRight':
+                case 'd':
+                case 'D':
+                    keys.right = false;
+                    break;
+            }
+        });
+
+        // Initialize game
+        updatePlayerPosition();
+        generateLevel(game.level);
+        gameLoop();
+
+        // Touch controls for mobile
+        const touchButtons = document.querySelectorAll('.touch-btn');
+        
+        touchButtons.forEach(btn => {
+            const dir = btn.dataset.dir;
+            
+            // Touch start
+            btn.addEventListener('touchstart', (e) => {
+                e.preventDefault();
+                keys[dir] = true;
+            }, { passive: false });
+            
+            // Touch end
+            btn.addEventListener('touchend', (e) => {
+                e.preventDefault();
+                keys[dir] = false;
+            }, { passive: false });
+            
+            // Mouse events for testing on desktop
+            btn.addEventListener('mousedown', () => {
+                keys[dir] = true;
+            });
+            
+            btn.addEventListener('mouseup', () => {
+                keys[dir] = false;
+            });
+            
+            btn.addEventListener('mouseleave', () => {
+                keys[dir] = false;
+            });
+        });
+
+        // Prevent scrolling on touch
+        document.body.addEventListener('touchmove', (e) => {
+            if (e.target.closest('.touch-controls')) {
+                e.preventDefault();
+            }
+        }, { passive: false });
+
+        // Handle window resize
+        window.addEventListener('resize', () => {
+            const newDims = getGameDimensions();
+            game.width = newDims.width;
+            game.height = newDims.height;
+        });
+    </script>
+</body>
+</html>
+

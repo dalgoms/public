@@ -1,0 +1,642 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>문의하기 - AI 음성 솔루션 도입 상담 | Timbel</title>
+    <meta name="description" content="팀벨 AI 음성 솔루션 도입 상담 및 기술 문의. 전문 컨설턴트가 귀사에 맞는 최적의 솔루션을 제안해 드립니다.">
+    
+    <!-- Open Graph -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://timbel.net/contact.html">
+    <meta property="og:title" content="문의하기 - AI 음성 솔루션 도입 상담 | Timbel">
+    <meta property="og:description" content="팀벨 AI 음성 솔루션 도입 상담 및 기술 문의. 전문 컨설턴트가 귀사에 맞는 최적의 솔루션을 제안해 드립니다.">
+    <meta property="og:image" content="https://timbel.net/img/og-image.png">
+    
+    <!-- Canonical -->
+    <link rel="canonical" href="https://timbel.net/contact.html">
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;600;700;900&family=Outfit:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="timbel.css">
+    <link rel="stylesheet" href="service-page.css">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-inner">
+            <a href="timbel-brand.html" class="logo">
+                <div class="logo-text">
+                    <span class="logo-main"><span class="logo-blue">Tim</span><span class="logo-black">bel</span></span>
+                </div>
+            </a>
+            <nav class="nav">
+                <ul class="nav-list">
+                    <li class="nav-item"><a href="timbel-brand.html">홈</a></li>
+                    <li class="nav-item"><a href="technology.html">기술</a></li>
+                    <li class="nav-item"><a href="cases.html">도입 사례</a></li>
+                    <li class="nav-item"><a href="about.html">회사 소개</a></li>
+                    <li class="nav-item active"><a href="contact.html">문의</a></li>
+                </ul>
+            </nav>
+            <div class="header-actions">
+                <a href="#contact-form" class="btn-contact">문의하기</a>
+            </div>
+        </div>
+    </header>
+
+    <main class="service-page contact-page">
+        <!-- Hero Section -->
+        <section class="contact-hero">
+            <div class="container">
+                <span class="section-label">CONTACT US</span>
+                <h1 class="hero-title">무엇을 도와드릴까요?</h1>
+                <p class="hero-subtitle">
+                    AI 음성 솔루션 도입부터 기술 문의까지<br>
+                    전문 컨설턴트가 답변해 드립니다
+                </p>
+            </div>
+        </section>
+
+        <!-- Contact Options -->
+        <section class="contact-options">
+            <div class="container">
+                <div class="options-grid">
+                    <div class="option-card">
+                        <div class="option-icon">📞</div>
+                        <h3>전화 문의</h3>
+                        <p>평일 09:00 - 18:00</p>
+                        <a href="tel:02-584-8181" class="option-contact">02-584-8181</a>
+                    </div>
+                    <div class="option-card">
+                        <div class="option-icon">✉️</div>
+                        <h3>이메일 문의</h3>
+                        <p>24시간 접수 가능</p>
+                        <a href="mailto:timbel@timbel.net" class="option-contact">timbel@timbel.net</a>
+                    </div>
+                    <div class="option-card">
+                        <div class="option-icon">📍</div>
+                        <h3>방문 상담</h3>
+                        <p>사전 예약 필요</p>
+                        <span class="option-contact">서울시 서초구</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Contact Form & Info -->
+        <section class="contact-main" id="contact-form">
+            <div class="container">
+                <div class="contact-grid">
+                    <!-- Form -->
+                    <div class="form-section">
+                        <h2>문의 양식</h2>
+                        <p class="form-desc">
+                            아래 양식을 작성해 주시면 담당자가 빠른 시일 내에 연락드리겠습니다.
+                        </p>
+                        
+                        <form class="contact-form">
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="name">성함 <span class="required">*</span></label>
+                                    <input type="text" id="name" name="name" placeholder="홍길동" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="company">회사/기관명 <span class="required">*</span></label>
+                                    <input type="text" id="company" name="company" placeholder="주식회사 OOO" required>
+                                </div>
+                            </div>
+                            
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="email">이메일 <span class="required">*</span></label>
+                                    <input type="email" id="email" name="email" placeholder="example@company.com" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="phone">연락처 <span class="required">*</span></label>
+                                    <input type="tel" id="phone" name="phone" placeholder="010-0000-0000" required>
+                                </div>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="inquiry-type">문의 유형 <span class="required">*</span></label>
+                                <select id="inquiry-type" name="inquiry-type" required>
+                                    <option value="">선택해 주세요</option>
+                                    <option value="stt">음성인식(STT) 도입 문의</option>
+                                    <option value="tts">음성합성(TTS) 도입 문의</option>
+                                    <option value="stenography">속기 솔루션 문의</option>
+                                    <option value="onpremise">온프레미스 구축 문의</option>
+                                    <option value="partnership">파트너십/제휴 문의</option>
+                                    <option value="career">채용 문의</option>
+                                    <option value="other">기타 문의</option>
+                                </select>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="product">관심 제품</label>
+                                <div class="checkbox-group">
+                                    <label class="checkbox-label">
+                                        <input type="checkbox" name="product" value="sorizava">
+                                        <span>SORIZAVA</span>
+                                    </label>
+                                    <label class="checkbox-label">
+                                        <input type="checkbox" name="product" value="textar">
+                                        <span>TEXTAR</span>
+                                    </label>
+                                    <label class="checkbox-label">
+                                        <input type="checkbox" name="product" value="clipdesk">
+                                        <span>CLIPDESK</span>
+                                    </label>
+                                    <label class="checkbox-label">
+                                        <input type="checkbox" name="product" value="timblo">
+                                        <span>TIMBLO</span>
+                                    </label>
+                                    <label class="checkbox-label">
+                                        <input type="checkbox" name="product" value="haiv">
+                                        <span>HAIV</span>
+                                    </label>
+                                </div>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="message">문의 내용 <span class="required">*</span></label>
+                                <textarea id="message" name="message" rows="6" placeholder="문의 내용을 자세히 작성해 주세요." required></textarea>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label class="checkbox-label privacy">
+                                    <input type="checkbox" name="privacy" required>
+                                    <span><a href="#">개인정보처리방침</a>에 동의합니다. <span class="required">*</span></span>
+                                </label>
+                            </div>
+                            
+                            <button type="submit" class="btn-submit">문의하기</button>
+                        </form>
+                    </div>
+
+                    <!-- Info -->
+                    <div class="info-section">
+                        <div class="info-card">
+                            <h3>오시는 길</h3>
+                            <div class="map-placeholder">
+                                <div class="map-inner">
+                                    <span class="map-marker">📍</span>
+                                    <p>서울특별시 서초구<br>서초동 1685-8 산돌빌딩</p>
+                                </div>
+                            </div>
+                            <div class="address-info">
+                                <div class="address-item">
+                                    <strong>주소</strong>
+                                    <p>서울특별시 서초구 서초동 1685-8 산돌빌딩</p>
+                                </div>
+                                <div class="address-item">
+                                    <strong>지하철</strong>
+                                    <p>2호선 서초역 4번 출구 도보 5분</p>
+                                </div>
+                                <div class="address-item">
+                                    <strong>버스</strong>
+                                    <p>서초역 정류장 하차</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="info-card quick-links">
+                            <h3>빠른 링크</h3>
+                            <ul>
+                                <li><a href="cases.html">도입 사례 보기 →</a></li>
+                                <li><a href="technology.html">기술 소개 →</a></li>
+                                <li><a href="certification.html">인증 현황 →</a></li>
+                                <li><a href="about.html">회사 소개 →</a></li>
+                            </ul>
+                        </div>
+
+                        <div class="info-card contact-direct">
+                            <h3>직접 문의</h3>
+                            <div class="direct-item">
+                                <span class="direct-icon">📞</span>
+                                <div>
+                                    <strong>대표 전화</strong>
+                                    <a href="tel:02-584-8181">02-584-8181</a>
+                                </div>
+                            </div>
+                            <div class="direct-item">
+                                <span class="direct-icon">📠</span>
+                                <div>
+                                    <strong>팩스</strong>
+                                    <span>02-584-8182</span>
+                                </div>
+                            </div>
+                            <div class="direct-item">
+                                <span class="direct-icon">✉️</span>
+                                <div>
+                                    <strong>이메일</strong>
+                                    <a href="mailto:timbel@timbel.net">timbel@timbel.net</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="service-footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-logo">
+                    <span class="logo-text" style="font-family: 'Outfit', sans-serif; font-size: 24px; font-weight: 700;">
+                        <span style="color: #0066FF;">Tim</span><span style="color: #fff;">bel</span>
+                    </span>
+                </div>
+                <div class="footer-links">
+                    <a href="technology.html">기술</a>
+                    <a href="cases.html">도입 사례</a>
+                    <a href="about.html">회사 소개</a>
+                    <a href="contact.html">문의</a>
+                </div>
+                <div class="footer-contact">
+                    <p>서울특별시 서초구 서초동 1685-8 산돌빌딩</p>
+                    <p>timbel@timbel.net | 02-584-8181</p>
+                </div>
+                <p class="copyright">©2026 TIMBEL CORP. All Rights Reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <style>
+        /* Contact Page Styles */
+        .contact-page .section-label {
+            display: inline-block;
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--primary);
+            letter-spacing: 2px;
+            margin-bottom: 16px;
+        }
+
+        /* Hero */
+        .contact-hero {
+            padding: 160px 0 80px;
+            background: linear-gradient(135deg, #0A0F1C 0%, #1a2744 100%);
+            text-align: center;
+            color: var(--text-white);
+        }
+
+        .contact-hero .section-label {
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        .contact-hero .hero-title {
+            font-size: clamp(36px, 6vw, 56px);
+            font-weight: 900;
+            margin-bottom: 16px;
+            letter-spacing: -2px;
+        }
+
+        .contact-hero .hero-subtitle {
+            font-size: 18px;
+            color: rgba(255, 255, 255, 0.7);
+            line-height: 1.8;
+        }
+
+        /* Contact Options */
+        .contact-options {
+            padding: 60px 0;
+            background: var(--bg-white);
+            margin-top: -40px;
+            position: relative;
+            z-index: 10;
+        }
+
+        .options-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 24px;
+        }
+
+        .option-card {
+            padding: 40px;
+            background: var(--bg-light);
+            border-radius: 20px;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .option-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.08);
+        }
+
+        .option-icon {
+            font-size: 48px;
+            margin-bottom: 16px;
+        }
+
+        .option-card h3 {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--text-dark);
+            margin-bottom: 8px;
+        }
+
+        .option-card p {
+            font-size: 14px;
+            color: var(--text-secondary);
+            margin-bottom: 16px;
+        }
+
+        .option-contact {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--primary);
+            text-decoration: none;
+        }
+
+        .option-contact:hover {
+            text-decoration: underline;
+        }
+
+        /* Contact Main */
+        .contact-main {
+            padding: 80px 0 120px;
+            background: var(--bg-white);
+        }
+
+        .contact-grid {
+            display: grid;
+            grid-template-columns: 1.5fr 1fr;
+            gap: 60px;
+        }
+
+        /* Form Section */
+        .form-section h2 {
+            font-size: 28px;
+            font-weight: 800;
+            color: var(--text-dark);
+            margin-bottom: 12px;
+        }
+
+        .form-desc {
+            font-size: 15px;
+            color: var(--text-secondary);
+            margin-bottom: 32px;
+        }
+
+        .contact-form {
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 24px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .form-group label {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-dark);
+        }
+
+        .required {
+            color: #dc3545;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            padding: 14px 16px;
+            border: 1px solid var(--border-light);
+            border-radius: 8px;
+            font-size: 15px;
+            color: var(--text-dark);
+            background: var(--bg-white);
+            transition: border-color 0.3s;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 120px;
+        }
+
+        .checkbox-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 16px;
+        }
+
+        .checkbox-label {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+            color: var(--text-body);
+            cursor: pointer;
+        }
+
+        .checkbox-label input {
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+        }
+
+        .checkbox-label.privacy {
+            font-size: 14px;
+        }
+
+        .checkbox-label.privacy a {
+            color: var(--primary);
+            text-decoration: underline;
+        }
+
+        .btn-submit {
+            padding: 18px 48px;
+            background: var(--primary);
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: background 0.3s;
+            align-self: flex-start;
+        }
+
+        .btn-submit:hover {
+            background: #0052cc;
+        }
+
+        /* Info Section */
+        .info-section {
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
+
+        .info-card {
+            padding: 32px;
+            background: var(--bg-light);
+            border-radius: 20px;
+        }
+
+        .info-card h3 {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--text-dark);
+            margin-bottom: 20px;
+        }
+
+        .map-placeholder {
+            background: linear-gradient(135deg, #e2e8f0, #cbd5e0);
+            border-radius: 12px;
+            padding: 60px 24px;
+            text-align: center;
+            margin-bottom: 24px;
+        }
+
+        .map-inner {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .map-marker {
+            font-size: 32px;
+        }
+
+        .map-inner p {
+            font-size: 14px;
+            color: var(--text-body);
+            line-height: 1.6;
+        }
+
+        .address-info {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .address-item strong {
+            display: block;
+            font-size: 13px;
+            color: var(--text-secondary);
+            margin-bottom: 4px;
+        }
+
+        .address-item p {
+            font-size: 14px;
+            color: var(--text-dark);
+        }
+
+        .quick-links ul {
+            list-style: none;
+        }
+
+        .quick-links li {
+            padding: 12px 0;
+            border-bottom: 1px solid var(--border-light);
+        }
+
+        .quick-links li:last-child {
+            border-bottom: none;
+        }
+
+        .quick-links a {
+            font-size: 14px;
+            color: var(--text-body);
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .quick-links a:hover {
+            color: var(--primary);
+        }
+
+        .contact-direct {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .direct-item {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .direct-icon {
+            font-size: 24px;
+        }
+
+        .direct-item strong {
+            display: block;
+            font-size: 12px;
+            color: var(--text-secondary);
+            margin-bottom: 2px;
+        }
+
+        .direct-item a,
+        .direct-item span {
+            font-size: 15px;
+            color: var(--text-dark);
+            text-decoration: none;
+        }
+
+        .direct-item a:hover {
+            color: var(--primary);
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .contact-grid {
+                grid-template-columns: 1fr;
+                gap: 48px;
+            }
+
+            .options-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+
+            .contact-options {
+                margin-top: 0;
+            }
+
+            .btn-submit {
+                width: 100%;
+            }
+        }
+    </style>
+
+    <script>
+        // Form submission handling
+        document.querySelector('.contact-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            alert('문의가 접수되었습니다. 빠른 시일 내에 연락드리겠습니다.');
+        });
+    </script>
+</body>
+</html>

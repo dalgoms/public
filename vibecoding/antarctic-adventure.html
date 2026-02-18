@@ -1,0 +1,3957 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, maximum-scale=1.0">
+    <title>화염 마라톤 - Fire Run 100</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://cdn.jsdelivr.net">
+    <link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Black+Han+Sans&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+            user-select: none;
+        }
+
+        :root {
+            --sky-top: #1a1a4e;
+            --sky-bottom: #4a6fa5;
+            --ice-light: #e8f4fc;
+            --ice-mid: #b8d4e8;
+            --ice-dark: #7fb3d3;
+            --penguin-body: #2a2a3e;
+            --penguin-belly: #ffffff;
+            --penguin-beak: #ff9f43;
+            --penguin-feet: #ff9f43;
+            --flag-red: #e74c3c;
+            --flag-pole: #8b4513;
+        }
+
+        body {
+            font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: #000;
+            min-height: 100vh;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .game-container {
+            width: 100%;
+            max-width: 480px;
+            height: 100vh;
+            max-height: 800px;
+            position: relative;
+            overflow: hidden;
+            background: linear-gradient(180deg, 
+                #b8d4e8 0%, 
+                #d0e8f4 20%,
+                #e8f4fa 40%, 
+                #f0f8fc 60%,
+                #f8fcfe 80%,
+                #ffffff 100%);
+            transition: background 1s ease;
+        }
+
+        /* 불구덩이 테마 */
+        .game-container.fire-theme {
+            background: linear-gradient(180deg, 
+                #1a0500 0%, 
+                #3d0a00 15%,
+                #6b1500 30%, 
+                #8b2000 45%, 
+                #b03000 60%,
+                #d04000 75%,
+                #ff5500 90%,
+                #ff8800 100%);
+        }
+
+        /* 숲 배경 */
+        .forest-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 35%;
+            pointer-events: none;
+            overflow: hidden;
+        }
+
+        /* 원경 나무들 (뒷배경) */
+        .forest-layer-far {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 60%;
+        }
+
+        .tree-far {
+            position: absolute;
+            bottom: 0;
+        }
+
+        /* 중경 나무들 */
+        .forest-layer-mid {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 70%;
+        }
+
+        .tree-mid {
+            position: absolute;
+            bottom: 0;
+        }
+
+        /* 근경 나무들 */
+        .forest-layer-near {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 80%;
+        }
+
+        .tree-near {
+            position: absolute;
+            bottom: 0;
+        }
+
+        /* 눈 내리는 효과 */
+        .snow-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            pointer-events: none;
+            opacity: 0.6;
+        }
+
+        /* 불구덩이 테마 - 숲 숨기기 */
+        .game-container.fire-theme .forest-bg,
+        .game-container.fire-theme .snow-overlay {
+            display: none;
+        }
+
+        /* 불꽃 효과 */
+        .fire-overlay {
+            position: absolute;
+            bottom: 35%;
+            left: 0;
+            right: 0;
+            height: 30%;
+            pointer-events: none;
+            display: none;
+        }
+
+        .game-container.fire-theme .fire-overlay {
+            display: block;
+        }
+
+        .fire-glow {
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(ellipse at 20% 100%, rgba(255, 100, 0, 0.6) 0%, transparent 50%),
+                radial-gradient(ellipse at 50% 100%, rgba(255, 150, 0, 0.5) 0%, transparent 60%),
+                radial-gradient(ellipse at 80% 100%, rgba(255, 80, 0, 0.6) 0%, transparent 50%);
+            animation: fireFlicker 0.5s ease-in-out infinite alternate;
+        }
+
+        @keyframes fireFlicker {
+            0% { opacity: 0.8; transform: scaleY(1); }
+            100% { opacity: 1; transform: scaleY(1.1); }
+        }
+
+        /* 용암/불 바닥 */
+        .lava-floor {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 35%;
+            background: linear-gradient(180deg, 
+                #ff4400 0%, 
+                #ff6600 20%,
+                #ff8800 40%,
+                #ffaa00 60%,
+                #ffcc00 80%,
+                #ffdd44 100%);
+            display: none;
+        }
+
+        .game-container.fire-theme .lava-floor {
+            display: block;
+        }
+
+        .game-container.fire-theme .ice-road {
+            display: none;
+        }
+
+        /* 눈송이 */
+        .snowfall {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            pointer-events: none;
+            overflow: hidden;
+        }
+
+        .snow-particle {
+            position: absolute;
+            background: white;
+            border-radius: 50%;
+            opacity: 0.8;
+            animation: snowFall linear infinite;
+        }
+
+        @keyframes snowFall {
+            0% { transform: translateY(-10px) rotate(0deg); }
+            100% { transform: translateY(100vh) rotate(360deg); }
+        }
+
+        /* 불구덩이 테마에서 눈 숨기기 */
+        .game-container.fire-theme .snowfall {
+            display: none;
+        }
+
+        /* 불구덩이 테마에서 불씨 */
+        .ember-particles {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            pointer-events: none;
+            overflow: hidden;
+            display: none;
+        }
+
+        .game-container.fire-theme .ember-particles {
+            display: block;
+        }
+
+        .ember {
+            position: absolute;
+            background: radial-gradient(circle, #ffff00, #ff8800, #ff4400);
+            border-radius: 50%;
+            animation: emberRise linear infinite;
+        }
+
+        @keyframes emberRise {
+            0% { transform: translateY(100vh) scale(1); opacity: 1; }
+            100% { transform: translateY(-50px) scale(0.3); opacity: 0; }
+        }
+
+        /* 눈길 바닥 */
+        .snow-ground {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 35%;
+            background: linear-gradient(180deg, 
+                #e8f0f5 0%,
+                #f0f5f8 20%,
+                #f5f9fc 50%,
+                #fafcfd 80%,
+                #ffffff 100%);
+        }
+
+        .game-container.fire-theme .snow-ground {
+            display: none;
+        }
+
+
+        /* 빙판 도로 */
+        .ice-road {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 35%;
+            background: linear-gradient(180deg, 
+                rgba(160, 220, 245, 1) 0%, 
+                rgba(200, 240, 255, 1) 40%,
+                rgba(235, 250, 255, 1) 100%);
+            overflow: hidden;
+        }
+
+        /* 도로 라인 컨테이너 (비활성화) */
+        .road-lines {
+            display: none;
+        }
+
+        /* 상단 UI - 깔끔한 2행 레이아웃 */
+        .game-ui {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            padding: 0;
+            z-index: 100;
+        }
+
+        /* 헤더 배경 - 부드러운 그라데이션 */
+        .header-bg {
+            background: linear-gradient(180deg, 
+                rgba(0, 40, 100, 0.98) 0%, 
+                rgba(0, 60, 130, 0.95) 50%,
+                rgba(0, 80, 160, 0.85) 80%,
+                transparent 100%);
+            padding: 10px 12px 15px;
+        }
+
+        /* 1행: 점수, 스테이지, 라이프 */
+        .header-row-1 {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+            gap: 8px;
+        }
+
+        /* 2행: 타이머, 컨트롤, 거리 */
+        .header-row-2 {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .ui-box {
+            font-family: 'Pretendard', sans-serif;
+            background: linear-gradient(180deg, rgba(0, 100, 180, 0.9), rgba(0, 70, 140, 0.95));
+            border: 2px solid rgba(80, 180, 255, 0.5);
+            border-radius: 12px;
+            padding: 8px 12px;
+            color: #fff;
+            font-size: 14px;
+            backdrop-filter: blur(8px);
+            box-shadow: 
+                0 3px 12px rgba(0, 100, 200, 0.4), 
+                inset 0 1px 0 rgba(255,255,255,0.15);
+        }
+
+        /* 점수 박스 */
+        .score-box {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 14px;
+            flex: 1;
+            max-width: 130px;
+        }
+
+        .score-box .ui-icon {
+            width: 22px;
+            height: 22px;
+            flex-shrink: 0;
+        }
+
+        .score-info {
+            display: flex;
+            flex-direction: column;
+            gap: 1px;
+        }
+
+        .score-label {
+            font-size: 9px;
+            color: rgba(180, 220, 255, 0.9);
+            letter-spacing: 1px;
+            font-weight: 600;
+        }
+
+        .score-value {
+            font-family: 'Pretendard', sans-serif;
+            font-weight: 800;
+            font-size: 20px;
+            color: #fff;
+            text-shadow: 0 2px 8px rgba(255,255,255,0.3);
+            line-height: 1;
+        }
+
+        /* 스테이지 박스 - 중앙 강조 */
+        .stage-box {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 8px 20px;
+            background: linear-gradient(180deg, #00c8ff 0%, #0095e0 50%, #0080d0 100%);
+            border: 2px solid rgba(150, 230, 255, 0.7);
+            border-radius: 20px;
+            box-shadow: 
+                0 4px 16px rgba(0, 200, 255, 0.5),
+                inset 0 2px 0 rgba(255,255,255,0.3),
+                inset 0 -2px 0 rgba(0,0,0,0.1);
+        }
+
+        .stage-icon {
+            width: 20px;
+            height: 20px;
+            flex-shrink: 0;
+        }
+
+        .stage-text {
+            font-family: 'Pretendard', sans-serif;
+            font-weight: 800;
+            font-size: 15px;
+            color: #fff;
+            letter-spacing: 1px;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+        }
+
+        /* 라이프 박스 */
+        .lives-box {
+            display: flex;
+            gap: 4px;
+            align-items: center;
+            padding: 6px 10px;
+            flex: 1;
+            max-width: 120px;
+            justify-content: flex-end;
+        }
+
+        .life-icon {
+            width: 28px;
+            height: 28px;
+            transition: all 0.3s ease;
+            filter: drop-shadow(0 2px 3px rgba(0,0,0,0.3));
+        }
+
+        .life-icon.lost {
+            opacity: 0.2;
+            filter: grayscale(100%);
+            transform: scale(0.8);
+        }
+
+        /* 헤더 컨트롤 버튼 */
+        .header-controls {
+            display: flex;
+            gap: 6px;
+        }
+
+        .header-ctrl-btn {
+            width: 36px;
+            height: 36px;
+            border-radius: 10px;
+            border: 2px solid rgba(255,255,255,0.3);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.15s ease;
+            color: white;
+        }
+
+        .header-ctrl-btn:active {
+            transform: scale(0.9);
+        }
+
+        .header-ctrl-btn.pause-btn {
+            background: linear-gradient(180deg, #00c0ff, #0095e0);
+            box-shadow: 0 2px 8px rgba(0, 180, 255, 0.4);
+        }
+
+        .header-ctrl-btn.exit-btn {
+            background: linear-gradient(180deg, #ff7090, #ff5070);
+            box-shadow: 0 2px 8px rgba(255, 100, 130, 0.4);
+        }
+
+        .header-ctrl-btn svg {
+            width: 16px;
+            height: 16px;
+        }
+
+        /* 프로그레스 바 영역 */
+        .progress-bars {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .progress-bar-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .bar-icon {
+            width: 16px;
+            height: 16px;
+            flex-shrink: 0;
+        }
+
+        .bar-track {
+            flex: 1;
+            height: 8px;
+            background: rgba(0, 30, 80, 0.8);
+            border-radius: 4px;
+            overflow: hidden;
+            border: 1px solid rgba(80, 180, 255, 0.4);
+        }
+
+        .timer-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #00ff90, #60ffb0);
+            border-radius: 4px;
+            transition: width 0.1s linear;
+            box-shadow: 0 0 8px rgba(0, 255, 150, 0.5);
+        }
+
+        .timer-fill.warning {
+            background: linear-gradient(90deg, #ff6080, #ff90a0);
+            box-shadow: 0 0 10px rgba(255, 100, 150, 0.6);
+            animation: timerPulse 0.3s infinite;
+        }
+
+        .distance-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #00b0ff, #60d0ff);
+            border-radius: 4px;
+            transition: width 0.1s linear;
+            box-shadow: 0 0 8px rgba(0, 180, 255, 0.5);
+        }
+
+        /* 기존 바 컨테이너 숨기기 */
+        .bars-container {
+            display: none;
+        }
+
+        /* 새로운 바 스타일 - 숨김 */
+        .timer-bar-new, .distance-bar-new {
+            display: none;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .bar-label {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            min-width: 50px;
+            font-family: 'Pretendard', sans-serif;
+            font-size: 11px;
+            font-weight: 600;
+            color: rgba(200, 230, 255, 0.95);
+            letter-spacing: 1px;
+        }
+
+        .bar-track {
+            flex: 1;
+            height: 10px;
+            background: rgba(0, 40, 80, 0.8);
+            border-radius: 5px;
+            overflow: hidden;
+            border: 1px solid rgba(0, 180, 255, 0.4);
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .timer-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #00e0a0, #40ffb0, #80ffc0);
+            border-radius: 5px;
+            transition: width 0.1s linear;
+            box-shadow: 0 0 12px rgba(0, 255, 150, 0.5);
+            position: relative;
+        }
+
+        .timer-fill::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 50%;
+            background: linear-gradient(180deg, rgba(255,255,255,0.4), transparent);
+            border-radius: 5px 5px 0 0;
+        }
+
+        .timer-fill.warning {
+            background: linear-gradient(90deg, #ff5080, #ff70a0, #ff90b0);
+            box-shadow: 0 0 15px rgba(255, 100, 150, 0.7);
+            animation: timerPulse 0.3s infinite;
+        }
+
+        @keyframes timerPulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+
+        .distance-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #00a0e0, #00c4ff, #60e0ff);
+            border-radius: 5px;
+            transition: width 0.1s linear;
+            box-shadow: 0 0 15px rgba(0, 180, 255, 0.6);
+            position: relative;
+        }
+
+        .distance-fill::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 50%;
+            background: linear-gradient(180deg, rgba(255,255,255,0.4), transparent);
+            border-radius: 5px 5px 0 0;
+        }
+
+        .bar-goal {
+            display: flex;
+            align-items: center;
+        }
+
+        .bar-goal svg {
+            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));
+        }
+
+        .mini-bear {
+            filter: drop-shadow(0 1px 2px rgba(0,0,0,0.3));
+        }
+
+        /* 기존 바 숨기기 */
+        .timer-bar, .distance-bar {
+            display: none;
+        }
+
+        /* 북극곰 컨테이너 */
+        .penguin-container {
+            position: absolute;
+            bottom: 6%;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 50;
+            transition: left 0.15s ease-out;
+        }
+
+        .penguin {
+            width: 70px;
+            height: 90px;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* SVG 북극곰 스프라이트 */
+        .polar-bear-sprite {
+            width: 100%;
+            height: 100%;
+            filter: drop-shadow(2px 4px 8px rgba(0,0,0,0.3));
+            transition: transform 0.1s ease-out;
+            animation: bearWaddle 0.4s ease-in-out infinite;
+        }
+
+        @keyframes bearWaddle {
+            0%, 100% { transform: rotate(-3deg) translateX(-2px); }
+            50% { transform: rotate(3deg) translateX(2px); }
+        }
+
+        .penguin.jumping {
+            animation: penguinJump 0.5s ease-out;
+        }
+
+        .penguin.jumping .polar-bear-sprite {
+            animation: none;
+            transform: rotate(-15deg) scale(1.1);
+        }
+
+        .penguin.sliding {
+            animation: none;
+        }
+
+        .penguin.sliding .polar-bear-sprite {
+            animation: none;
+            transform: scaleY(0.5) scaleX(1.3) translateY(20px);
+        }
+
+        @keyframes penguinJump {
+            0% { transform: translateY(0); }
+            30% { transform: translateY(-100px); }
+            50% { transform: translateY(-120px); }
+            70% { transform: translateY(-100px); }
+            100% { transform: translateY(0); }
+        }
+
+        /* 하트 이펙트 */
+        .heart-effects {
+            position: absolute;
+            top: -20px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 80px;
+            pointer-events: none;
+            z-index: 100;
+        }
+
+        .heart-particle {
+            position: absolute;
+            font-size: 18px;
+            animation: heartFloat 1.5s ease-out forwards;
+            pointer-events: none;
+            filter: drop-shadow(0 0 3px rgba(255, 100, 150, 0.8));
+        }
+
+        .heart-particle svg {
+            width: 20px;
+            height: 20px;
+        }
+
+        @keyframes heartFloat {
+            0% {
+                opacity: 1;
+                transform: translateY(0) scale(0.5);
+            }
+            30% {
+                opacity: 1;
+                transform: translateY(-20px) scale(1.2);
+            }
+            60% {
+                opacity: 0.8;
+                transform: translateY(-40px) scale(1);
+            }
+            100% {
+                opacity: 0;
+                transform: translateY(-70px) scale(0.6);
+            }
+        }
+
+        /* 장애물 컨테이너 */
+        .obstacles-container {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 40%;
+            pointer-events: none;
+            z-index: 30;
+        }
+
+        /* 얼음 구멍 - 귀여운 버전 */
+        .ice-hole {
+            position: absolute;
+            width: 80px;
+            height: 40px;
+            animation: obstacleMove 2s linear forwards;
+        }
+
+        .ice-hole-outer {
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(180deg, #60b5e8 0%, #40a0d8 100%);
+            border-radius: 50%;
+            border: 4px solid #80d0ff;
+            box-shadow: 
+                inset 0 5px 15px rgba(0,80,150,0.4),
+                0 3px 10px rgba(0,150,255,0.3);
+        }
+
+        .ice-hole-inner {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 55%;
+            height: 45%;
+            background: linear-gradient(180deg, #2080c0 0%, #1060a0 100%);
+            border-radius: 50%;
+            box-shadow: inset 0 3px 8px rgba(0,0,0,0.3);
+        }
+
+        /* 물개 - 귀여운 버전 */
+        .seal {
+            position: absolute;
+            width: 70px;
+            height: 50px;
+            animation: obstacleMove 2s linear forwards;
+        }
+
+        .seal-body {
+            position: absolute;
+            bottom: 0;
+            width: 60px;
+            height: 38px;
+            background: linear-gradient(180deg, #a8d8ea 0%, #88c8e0 100%);
+            border-radius: 55% 35% 35% 55%;
+            border: 3px solid #70b8d8;
+        }
+
+        .seal-head {
+            position: absolute;
+            bottom: 20px;
+            right: -8px;
+            width: 32px;
+            height: 30px;
+            background: linear-gradient(180deg, #b8e0f0 0%, #98d0e8 100%);
+            border-radius: 50%;
+            border: 2px solid #78c0d8;
+        }
+
+        .seal-nose {
+            position: absolute;
+            top: 14px;
+            right: 4px;
+            width: 10px;
+            height: 7px;
+            background: #ff9eb5;
+            border-radius: 50%;
+            border: 1px solid #e88a9f;
+        }
+
+        .seal-eye {
+            position: absolute;
+            top: 8px;
+            right: 14px;
+            width: 8px;
+            height: 9px;
+            background: #2a2a3e;
+            border-radius: 50%;
+        }
+
+        .seal-eye::after {
+            content: '';
+            position: absolute;
+            width: 3px;
+            height: 3px;
+            background: white;
+            border-radius: 50%;
+            top: 2px;
+            left: 2px;
+        }
+
+        .seal-whiskers {
+            position: absolute;
+            top: 17px;
+            right: 10px;
+            width: 12px;
+            height: 1px;
+            background: #80b0c0;
+        }
+
+        .seal-whiskers::before,
+        .seal-whiskers::after {
+            content: '';
+            position: absolute;
+            width: 12px;
+            height: 1px;
+            background: #3a3a3a;
+            left: 0;
+        }
+
+        .seal-whiskers::before { top: -3px; transform: rotate(-10deg); }
+        .seal-whiskers::after { top: 3px; transform: rotate(10deg); }
+
+        .seal-flipper {
+            position: absolute;
+            bottom: 5px;
+            left: 5px;
+            width: 15px;
+            height: 10px;
+            background: #4a3a2a;
+            border-radius: 50%;
+            transform: rotate(-20deg);
+            animation: flipperWave 0.5s ease-in-out infinite;
+        }
+
+        @keyframes flipperWave {
+            0%, 100% { transform: rotate(-20deg); }
+            50% { transform: rotate(-10deg); }
+        }
+
+        /* 깃발 */
+        .flag {
+            position: absolute;
+            width: 40px;
+            height: 60px;
+            animation: obstacleMove 2s linear forwards;
+        }
+
+        .flag-pole {
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 5px;
+            height: 50px;
+            background: linear-gradient(90deg, #ffc080, #ffb060, #ffc080);
+            border-radius: 3px;
+            box-shadow: 0 0 5px rgba(255, 180, 100, 0.5);
+        }
+
+        .flag-cloth {
+            position: absolute;
+            top: 0;
+            left: calc(50% + 2px);
+            width: 28px;
+            height: 20px;
+            background: linear-gradient(180deg, #ff80a0 0%, #ff5080 100%);
+            clip-path: polygon(0 0, 100% 25%, 100% 75%, 0 100%);
+            animation: flagWave 0.5s ease-in-out infinite;
+            transform-origin: left center;
+            box-shadow: 0 2px 8px rgba(255, 80, 130, 0.4);
+        }
+
+        @keyframes flagWave {
+            0%, 100% { transform: scaleX(1); }
+            50% { transform: scaleX(0.9); }
+        }
+
+        /* 장애물 이동 애니메이션 */
+        @keyframes obstacleMove {
+            0% { 
+                bottom: 95%;
+                transform: scale(0.3) translateX(-50%);
+                opacity: 0.7;
+            }
+            100% { 
+                bottom: 5%;
+                transform: scale(1.2) translateX(-50%);
+                opacity: 1;
+            }
+        }
+
+        /* 물고기 아이템 */
+        .fish {
+            position: absolute;
+            width: 40px;
+            height: 25px;
+            animation: obstacleMove 2s linear forwards;
+        }
+
+        .fish-body {
+            width: 28px;
+            height: 18px;
+            background: linear-gradient(180deg, #80e0ff 0%, #40c0ff 50%, #20a0e0 100%);
+            border-radius: 60% 35% 35% 60%;
+            position: relative;
+            border: 2px solid rgba(0, 180, 255, 0.5);
+            box-shadow: 0 3px 10px rgba(0, 180, 255, 0.4);
+        }
+
+        .fish-tail {
+            position: absolute;
+            right: -10px;
+            top: 3px;
+            width: 0;
+            height: 0;
+            border-top: 7px solid transparent;
+            border-bottom: 7px solid transparent;
+            border-left: 14px solid #40c0ff;
+            filter: drop-shadow(0 2px 3px rgba(0, 180, 255, 0.3));
+        }
+
+        .fish-eye {
+            position: absolute;
+            left: 6px;
+            top: 4px;
+            width: 7px;
+            height: 7px;
+            background: #1a1a2e;
+            border-radius: 50%;
+        }
+
+        .fish-eye::after {
+            content: '';
+            position: absolute;
+            width: 2px;
+            height: 2px;
+            background: white;
+            border-radius: 50%;
+            top: 1px;
+            left: 2px;
+        }
+
+        /* 눈사람 장애물 (큰) - 점프해서 넘기 */
+        .snowman-big {
+            position: absolute;
+            width: 70px;
+            height: 90px;
+            animation: obstacleMove 2s linear forwards, snowmanWobble 0.3s ease-in-out infinite;
+            transform-origin: bottom center;
+        }
+
+        .snowman-svg {
+            width: 100%;
+            height: 100%;
+            filter: drop-shadow(2px 4px 8px rgba(0,0,0,0.2));
+            animation: snowmanArmsWave 0.4s ease-in-out infinite alternate;
+        }
+
+        /* 눈사람 흔들림 애니메이션 */
+        @keyframes snowmanWobble {
+            0%, 100% { transform: rotate(-5deg) translateY(0); }
+            25% { transform: rotate(3deg) translateY(-3px); }
+            50% { transform: rotate(-3deg) translateY(0); }
+            75% { transform: rotate(5deg) translateY(-2px); }
+        }
+
+        /* 눈사람 팔 흔들기 */
+        @keyframes snowmanArmsWave {
+            0% { transform: scaleX(1) rotate(0deg); }
+            50% { transform: scaleX(1.02) rotate(2deg); }
+            100% { transform: scaleX(1) rotate(-2deg); }
+        }
+
+        /* 눈사람 팔 그룹 애니메이션 */
+        .snowman-arm-left {
+            transform-origin: 18px 33px;
+            animation: armWaveLeft 0.3s ease-in-out infinite alternate;
+        }
+
+        .snowman-arm-right {
+            transform-origin: 42px 33px;
+            animation: armWaveRight 0.3s ease-in-out infinite alternate;
+        }
+
+        @keyframes armWaveLeft {
+            from { transform: rotate(-15deg); }
+            to { transform: rotate(15deg); }
+        }
+
+        @keyframes armWaveRight {
+            from { transform: rotate(15deg); }
+            to { transform: rotate(-15deg); }
+        }
+
+        /* 눈사람 장애물 (작은) - 슬라이드로 피하기 */
+        .snowman-small {
+            position: absolute;
+            width: 55px;
+            height: 55px;
+            animation: obstacleMove 2s linear forwards, snowmanBounce 0.25s ease-in-out infinite;
+            transform-origin: bottom center;
+        }
+
+        .snowman-svg-small {
+            width: 100%;
+            height: 100%;
+            filter: drop-shadow(2px 3px 6px rgba(0,0,0,0.15));
+            animation: snowmanSmallSpin 0.5s ease-in-out infinite alternate;
+        }
+
+        /* 작은 눈사람 통통 튀기 */
+        @keyframes snowmanBounce {
+            0%, 100% { transform: translateY(0) scale(1, 1); }
+            50% { transform: translateY(-8px) scale(0.95, 1.08); }
+        }
+
+        /* 작은 눈사람 좌우 흔들기 */
+        @keyframes snowmanSmallSpin {
+            0% { transform: rotate(-10deg); }
+            100% { transform: rotate(10deg); }
+        }
+
+        /* 녹색 괴물 장애물 - 점프해서 피하기 */
+        .green-monster {
+            position: absolute;
+            width: 80px;
+            height: 100px;
+            animation: obstacleMove 2s linear forwards;
+        }
+
+        .monster-svg {
+            width: 100%;
+            height: 100%;
+            filter: drop-shadow(3px 5px 10px rgba(0,200,0,0.5));
+            animation: monsterJump 0.35s ease-in-out infinite;
+        }
+
+        @keyframes monsterJump {
+            0% { transform: translateY(0) scaleY(1) scaleX(1); }
+            30% { transform: translateY(-25px) scaleY(1.15) scaleX(0.9); }
+            50% { transform: translateY(-30px) scaleY(1.1) scaleX(0.95); }
+            70% { transform: translateY(-25px) scaleY(1.15) scaleX(0.9); }
+            100% { transform: translateY(0) scaleY(0.9) scaleX(1.1); }
+        }
+
+        /* 괴물 눈 깜빡임 */
+        .monster-svg:hover {
+            filter: drop-shadow(3px 5px 15px rgba(0,255,0,0.7));
+        }
+
+        /* 컨트롤 버튼 - 통일된 사이즈 + 쨍한 파란색 */
+        .controls {
+            position: absolute;
+            bottom: 20px;
+            left: 0;
+            right: 0;
+            display: flex;
+            justify-content: space-between;
+            padding: 0 20px;
+            z-index: 100;
+        }
+
+        .control-btn {
+            width: 64px;
+            height: 64px;
+            border-radius: 50%;
+            border: 3px solid rgba(255,255,255,0.4);
+            background: linear-gradient(145deg, #00b4ff, #0090e0);
+            backdrop-filter: blur(10px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.15s ease;
+            box-shadow: 
+                0 6px 20px rgba(0, 150, 255, 0.5),
+                inset 0 2px 0 rgba(255,255,255,0.4),
+                inset 0 -2px 0 rgba(0,0,0,0.15);
+            color: white;
+        }
+
+        .control-btn svg {
+            filter: drop-shadow(0 1px 2px rgba(0,0,0,0.3));
+            width: 28px;
+            height: 28px;
+        }
+
+        .control-btn:active {
+            transform: scale(0.9);
+            box-shadow: 
+                0 3px 10px rgba(0, 150, 255, 0.4),
+                inset 0 2px 6px rgba(0,0,0,0.2);
+        }
+
+        .direction-controls {
+            display: flex;
+            gap: 10px;
+        }
+
+        .action-controls {
+            display: flex;
+            gap: 10px;
+        }
+
+        /* 모든 버튼 동일한 쨍한 파란색 */
+        .left-btn, .right-btn, .jump-btn, .slide-btn {
+            background: linear-gradient(145deg, #00b4ff, #0090e0);
+            box-shadow: 
+                0 6px 20px rgba(0, 150, 255, 0.5),
+                inset 0 2px 0 rgba(255,255,255,0.4);
+        }
+
+        .left-btn:hover, .right-btn:hover, .jump-btn:hover, .slide-btn:hover {
+            background: linear-gradient(145deg, #20c4ff, #00a0f0);
+            box-shadow: 
+                0 8px 25px rgba(0, 180, 255, 0.6),
+                inset 0 2px 0 rgba(255,255,255,0.5);
+            transform: translateY(-2px);
+        }
+
+        /* 점프 버튼만 약간 강조 (초록색 테두리) */
+        .jump-btn {
+            border-color: rgba(100, 255, 150, 0.6);
+        }
+
+        /* 슬라이드 버튼 (주황색 테두리) */
+        .slide-btn {
+            border-color: rgba(255, 180, 100, 0.6);
+        }
+
+        /* 튜토리얼 화면 */
+        .tutorial-screen {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(180deg, #001040 0%, #002070 30%, #0040a0 70%, #0060d0 100%);
+            z-index: 350;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+            overflow-y: auto;
+        }
+
+        .tutorial-screen.hidden {
+            display: none;
+        }
+
+        .tutorial-header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .tutorial-title {
+            font-family: 'Pretendard', sans-serif;
+            font-weight: 800;
+            font-size: 28px;
+            color: #fff;
+            text-shadow: 0 3px 10px rgba(0,0,0,0.5);
+            margin-bottom: 5px;
+        }
+
+        .tutorial-subtitle {
+            font-family: 'Pretendard', sans-serif;
+            font-size: 14px;
+            color: rgba(150, 200, 255, 0.9);
+        }
+
+        .tutorial-content {
+            width: 100%;
+            max-width: 400px;
+            flex: 1;
+        }
+
+        .tutorial-section {
+            background: rgba(0, 80, 160, 0.5);
+            border: 2px solid rgba(80, 180, 255, 0.4);
+            border-radius: 16px;
+            padding: 16px;
+            margin-bottom: 12px;
+            backdrop-filter: blur(10px);
+        }
+
+        .tutorial-section-title {
+            font-family: 'Pretendard', sans-serif;
+            font-weight: 700;
+            font-size: 16px;
+            color: #60d0ff;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .tutorial-section-title svg {
+            width: 24px;
+            height: 24px;
+        }
+
+        .tutorial-controls {
+            display: flex;
+            justify-content: space-around;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .tutorial-control-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .tutorial-control-btn {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: linear-gradient(180deg, #00b0ff, #0080d0);
+            border: 2px solid rgba(255,255,255,0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            box-shadow: 0 4px 12px rgba(0, 150, 255, 0.4);
+        }
+
+        .tutorial-control-btn svg {
+            width: 24px;
+            height: 24px;
+        }
+
+        .tutorial-control-label {
+            font-family: 'Pretendard', sans-serif;
+            font-size: 11px;
+            color: rgba(200, 230, 255, 0.9);
+            text-align: center;
+        }
+
+        .tutorial-obstacles {
+            display: flex;
+            justify-content: space-around;
+            align-items: flex-end;
+            gap: 15px;
+        }
+
+        .tutorial-obstacle-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .tutorial-obstacle-icon {
+            width: 60px;
+            height: 70px;
+        }
+
+        .tutorial-obstacle-label {
+            font-family: 'Pretendard', sans-serif;
+            font-size: 11px;
+            color: #fff;
+            text-align: center;
+        }
+
+        .tutorial-obstacle-action {
+            font-family: 'Pretendard', sans-serif;
+            font-size: 10px;
+            color: #60ff90;
+            background: rgba(0, 255, 100, 0.15);
+            padding: 3px 8px;
+            border-radius: 10px;
+            border: 1px solid rgba(100, 255, 150, 0.3);
+        }
+
+        .tutorial-tips {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .tutorial-tip {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-family: 'Pretendard', sans-serif;
+            font-size: 13px;
+            color: rgba(220, 240, 255, 0.95);
+        }
+
+        .tutorial-tip-icon {
+            width: 20px;
+            height: 20px;
+            flex-shrink: 0;
+            color: #ffd700;
+        }
+
+        .tutorial-start-btn {
+            font-family: 'Pretendard', sans-serif;
+            font-weight: 700;
+            background: linear-gradient(180deg, #00b4ff 0%, #0090e0 100%);
+            color: white;
+            font-size: 20px;
+            padding: 16px 50px;
+            border: 3px solid rgba(255,255,255,0.3);
+            border-radius: 30px;
+            cursor: pointer;
+            box-shadow: 0 6px 25px rgba(0, 180, 255, 0.5);
+            margin-top: 20px;
+            margin-bottom: 20px;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .tutorial-start-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(0, 180, 255, 0.6);
+        }
+
+        .tutorial-start-btn:active {
+            transform: scale(0.97);
+        }
+
+        .tutorial-back-btn {
+            font-family: 'Pretendard', sans-serif;
+            font-weight: 500;
+            background: transparent;
+            color: rgba(180, 210, 255, 0.8);
+            font-size: 14px;
+            padding: 10px 20px;
+            border: 1px solid rgba(100, 180, 255, 0.3);
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .tutorial-back-btn:hover {
+            background: rgba(100, 180, 255, 0.1);
+            border-color: rgba(100, 180, 255, 0.5);
+        }
+
+        /* 스플래시 화면 */
+        .splash-screen {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(180deg, #002050 0%, #004080 30%, #0060b0 60%, #0090e0 100%);
+            z-index: 300;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 30px;
+            animation: splashFadeIn 0.5s ease-out;
+        }
+
+        .splash-screen.hidden {
+            display: none;
+        }
+
+        .splash-logo {
+            position: relative;
+            margin-bottom: 20px;
+        }
+
+        .splash-character {
+            width: 160px;
+            height: 200px;
+            position: relative;
+            animation: splashBounce 2s ease-in-out infinite;
+        }
+
+        @keyframes splashBounce {
+            0%, 100% { transform: translateY(0) rotate(-2deg); }
+            25% { transform: translateY(-20px) rotate(2deg); }
+            50% { transform: translateY(0) rotate(-2deg); }
+            75% { transform: translateY(-12px) rotate(1deg); }
+        }
+
+        .splash-bear {
+            width: 100%;
+            height: 100%;
+            filter: drop-shadow(4px 8px 20px rgba(0,0,0,0.4));
+        }
+
+        /* 스플래시 타이틀 */
+        .splash-title {
+            font-family: 'Pretendard', sans-serif;
+            font-weight: 600;
+            font-size: 18px;
+            color: #60d0ff;
+            letter-spacing: 6px;
+            margin-bottom: 10px;
+            text-shadow: 0 0 20px rgba(0, 200, 255, 0.6);
+            animation: titleGlow 2s ease-in-out infinite;
+        }
+
+        @keyframes titleGlow {
+            0%, 100% { text-shadow: 0 0 20px rgba(100, 200, 255, 0.5); }
+            50% { text-shadow: 0 0 40px rgba(100, 200, 255, 0.8), 0 0 60px rgba(100, 200, 255, 0.4); }
+        }
+
+        .splash-title-kr {
+            font-family: 'Pretendard', sans-serif;
+            font-weight: 800;
+            font-size: 56px;
+            color: #fff;
+            text-shadow: 0 4px 0 #0070b0, 0 8px 20px rgba(0,0,0,0.5);
+            margin-bottom: 15px;
+            animation: titleFloat 3s ease-in-out infinite;
+        }
+
+        @keyframes titleFloat {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-8px); }
+        }
+
+        .splash-subtitle {
+            font-family: 'Pretendard', sans-serif;
+            font-weight: 500;
+            font-size: 16px;
+            color: rgba(200, 230, 255, 0.9);
+            margin-bottom: 50px;
+        }
+
+        .splash-start-btn {
+            font-family: 'Pretendard', sans-serif;
+            font-weight: 700;
+            background: linear-gradient(135deg, #00c4ff 0%, #00a0e0 50%, #0080c0 100%);
+            color: white;
+            font-size: 22px;
+            padding: 18px 50px;
+            border: 3px solid rgba(255,255,255,0.3);
+            border-radius: 50px;
+            cursor: pointer;
+            box-shadow: 
+                0 8px 30px rgba(0, 180, 255, 0.5), 
+                0 0 40px rgba(0, 200, 255, 0.3),
+                inset 0 1px 0 rgba(255,255,255,0.4);
+            transition: all 0.2s;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .splash-start-btn svg {
+            flex-shrink: 0;
+        }
+
+        .splash-start-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.25), transparent);
+            animation: btnShine 3s infinite;
+        }
+
+        @keyframes btnShine {
+            0% { left: -100%; }
+            50%, 100% { left: 100%; }
+        }
+
+        .splash-start-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 
+                0 12px 35px rgba(0, 180, 255, 0.6), 
+                0 0 50px rgba(0, 200, 255, 0.4);
+        }
+
+        .splash-start-btn:active {
+            transform: scale(0.97);
+            box-shadow: 0 4px 15px rgba(0, 180, 255, 0.5);
+        }
+
+        .splash-highscore {
+            margin-top: 30px;
+            font-family: 'Pretendard', sans-serif;
+            font-weight: 600;
+            color: #ffd700;
+            font-size: 18px;
+            text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+        }
+
+        .splash-footer {
+            position: absolute;
+            bottom: 30px;
+            font-family: 'Pretendard', sans-serif;
+            font-weight: 400;
+            color: rgba(200, 230, 255, 0.5);
+            font-size: 12px;
+            text-align: center;
+        }
+
+        /* 눈송이 장식 */
+        .splash-snowflake {
+            position: absolute;
+            color: white;
+            opacity: 0.6;
+            animation: splashSnow linear infinite;
+            pointer-events: none;
+        }
+
+        @keyframes splashSnow {
+            0% { transform: translateY(-20px) rotate(0deg); }
+            100% { transform: translateY(100vh) rotate(360deg); }
+        }
+
+        /* 메인 화면 */
+        .main-screen {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(180deg, #0a0a2e 0%, #1a3a5a 50%, #4a7a9a 100%);
+            z-index: 200;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 30px;
+        }
+
+        .main-screen.hidden {
+            display: none;
+        }
+
+        .game-title {
+            font-family: 'Black Han Sans', sans-serif;
+            font-size: 28px;
+            color: #8cf;
+            text-shadow: 0 0 20px #8cf;
+            margin-bottom: 10px;
+            text-align: center;
+            letter-spacing: 4px;
+        }
+
+        .game-title-kr {
+            font-family: 'Black Han Sans', sans-serif;
+            font-size: 48px;
+            color: #fff;
+            text-shadow: 0 0 20px #8cf, 3px 3px 0 #0a0a2e;
+            margin-bottom: 30px;
+        }
+
+        .title-penguin {
+            font-size: 80px;
+            margin-bottom: 30px;
+            animation: titleBounce 1s ease-in-out infinite;
+        }
+
+        @keyframes titleBounce {
+            0%, 100% { transform: translateY(0) rotate(-5deg); }
+            50% { transform: translateY(-15px) rotate(5deg); }
+        }
+
+        .start-btn {
+            font-family: 'Black Han Sans', sans-serif;
+            background: linear-gradient(180deg, #4f8 0%, #2a6 100%);
+            color: #000;
+            font-size: 24px;
+            padding: 18px 50px;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4), 0 0 30px rgba(100, 255, 150, 0.3);
+            transition: transform 0.1s;
+            margin-bottom: 30px;
+        }
+
+        .start-btn:active {
+            transform: scale(0.95);
+        }
+
+        .high-score-display {
+            font-family: 'Jua', sans-serif;
+            color: #8cf;
+            font-size: 16px;
+            text-shadow: 0 0 10px #8cf;
+        }
+
+        .instructions {
+            font-family: 'Jua', sans-serif;
+            position: absolute;
+            bottom: 40px;
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 12px;
+            text-align: center;
+            line-height: 1.8;
+        }
+
+        /* 게임오버 화면 */
+        .gameover-screen {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.85);
+            z-index: 200;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 30px;
+        }
+
+        .gameover-screen.hidden {
+            display: none;
+        }
+
+        .gameover-title {
+            font-family: 'Pretendard', sans-serif;
+            font-weight: 800;
+            font-size: 36px;
+            color: #ff6b8a;
+            text-shadow: 0 0 20px rgba(255, 100, 130, 0.6);
+            margin-bottom: 30px;
+        }
+
+        .gameover-stats {
+            background: rgba(0, 100, 180, 0.3);
+            border: 2px solid #00c4ff;
+            border-radius: 15px;
+            padding: 25px 40px;
+            margin-bottom: 30px;
+            text-align: center;
+            backdrop-filter: blur(10px);
+        }
+
+        .stat-row {
+            font-family: 'Pretendard', sans-serif;
+            font-weight: 500;
+            display: flex;
+            justify-content: space-between;
+            gap: 30px;
+            margin-bottom: 15px;
+            color: #80d0ff;
+            font-size: 16px;
+        }
+
+        .stat-row:last-child {
+            margin-bottom: 0;
+        }
+
+        .stat-value {
+            font-family: 'Pretendard', sans-serif;
+            font-weight: 700;
+            color: #fff;
+            font-size: 24px;
+            text-shadow: 0 0 10px rgba(255,255,255,0.5);
+        }
+
+        .retry-btn {
+            font-family: 'Pretendard', sans-serif;
+            font-weight: 700;
+            background: linear-gradient(135deg, #00c4ff 0%, #00a0e0 100%);
+            color: #fff;
+            font-size: 18px;
+            padding: 14px 35px;
+            border: 2px solid rgba(255,255,255,0.3);
+            border-radius: 30px;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(0, 180, 255, 0.5);
+            margin-bottom: 12px;
+            transition: all 0.15s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .retry-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 180, 255, 0.6);
+        }
+
+        .retry-btn:active {
+            transform: scale(0.97);
+        }
+
+        .home-btn {
+            font-family: 'Pretendard', sans-serif;
+            font-weight: 600;
+            background: rgba(0, 150, 255, 0.15);
+            color: #80d0ff;
+            font-size: 15px;
+            padding: 10px 25px;
+            border: 2px solid rgba(0, 180, 255, 0.4);
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.15s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .home-btn:hover {
+            background: rgba(0, 180, 255, 0.25);
+            border-color: rgba(0, 200, 255, 0.6);
+        }
+
+        .home-btn:active {
+            transform: scale(0.97);
+        }
+
+        /* 골 오브젝트 (콜라 캔) */
+        .goal-building {
+            position: absolute;
+            bottom: 8%;
+            left: 50%;
+            transform: translateX(-50%) scale(0.2);
+            z-index: 45;
+            opacity: 0;
+            transition: all 0.8s ease-out;
+            pointer-events: none;
+        }
+
+        .goal-building.approaching {
+            opacity: 1;
+            transform: translateX(-50%) scale(1);
+            animation: colaFloat 1s ease-in-out infinite;
+        }
+
+        @keyframes colaFloat {
+            0%, 100% { transform: translateX(-50%) scale(1) translateY(0); }
+            50% { transform: translateX(-50%) scale(1) translateY(-8px); }
+        }
+
+        .cola-goal {
+            width: 80px;
+            height: 120px;
+            filter: drop-shadow(3px 5px 10px rgba(0,0,0,0.4));
+        }
+
+        /* 기존 거리 표시 바 (숨김) */
+        .distance-bar-old {
+            display: none;
+        }
+
+        /* 스테이지 클리어 */
+        .stage-clear {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: linear-gradient(180deg, rgba(0, 80, 150, 0.95) 0%, rgba(0, 50, 110, 0.98) 100%);
+            border: 3px solid #00e0ff;
+            border-radius: 20px;
+            padding: 30px 40px;
+            text-align: center;
+            z-index: 150;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5), 0 0 40px rgba(0, 220, 255, 0.5);
+            backdrop-filter: blur(15px);
+            min-width: 280px;
+            max-width: 90%;
+        }
+
+        .stage-clear.hidden {
+            display: none;
+        }
+
+        .stage-clear-title {
+            font-family: 'Pretendard', sans-serif;
+            font-weight: 800;
+            font-size: 24px;
+            color: #00e0ff;
+            text-shadow: 0 0 20px rgba(0, 220, 255, 0.6);
+            margin-bottom: 15px;
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            line-height: 1.3;
+            white-space: nowrap;
+        }
+
+        .stage-clear-title svg {
+            flex-shrink: 0;
+            width: 32px;
+            height: 32px;
+        }
+
+        .stage-clear-bonus {
+            font-family: 'Pretendard', sans-serif;
+            font-weight: 600;
+            font-size: 18px;
+            color: #ffd700;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+
+        .stage-next {
+            font-family: 'Pretendard', sans-serif;
+            font-weight: 500;
+            font-size: 14px;
+            color: #80d0ff;
+            animation: blink 0.5s infinite;
+            text-align: center;
+        }
+
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        /* 점수 팝업 */
+        .score-popup {
+            position: absolute;
+            font-size: 24px;
+            font-weight: bold;
+            color: #ff8;
+            text-shadow: 0 0 10px #ff8, 2px 2px 0 #000;
+            pointer-events: none;
+            animation: popupFloat 1s ease-out forwards;
+            z-index: 100;
+        }
+
+        @keyframes popupFloat {
+            0% { opacity: 1; transform: translateY(0) scale(1); }
+            100% { opacity: 0; transform: translateY(-50px) scale(1.3); }
+        }
+
+        /* 충돌 효과 */
+        .collision-effect {
+            position: absolute;
+            width: 100px;
+            height: 100px;
+            pointer-events: none;
+            z-index: 100;
+        }
+
+        .collision-effect::before {
+            content: '💥';
+            font-size: 50px;
+            animation: collisionAnim 0.5s ease-out forwards;
+        }
+
+        @keyframes collisionAnim {
+            0% { transform: scale(0.5); opacity: 1; }
+            100% { transform: scale(2); opacity: 0; }
+        }
+
+        /* 눈 내리는 효과 */
+        .snowflakes {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            pointer-events: none;
+            z-index: 5;
+            overflow: hidden;
+        }
+
+        .snowflake {
+            position: absolute;
+            color: white;
+            font-size: 10px;
+            opacity: 0.8;
+            animation: snowfall linear infinite;
+        }
+
+        @keyframes snowfall {
+            0% { transform: translateY(-10px) rotate(0deg); }
+            100% { transform: translateY(100vh) rotate(360deg); }
+        }
+
+        /* 일시정지 오버레이 */
+        .pause-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 20, 0.85);
+            z-index: 180;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            backdrop-filter: blur(5px);
+        }
+
+        .pause-overlay.hidden {
+            display: none;
+        }
+
+        .pause-box {
+            background: linear-gradient(180deg, rgba(0, 80, 150, 0.95) 0%, rgba(0, 50, 110, 0.98) 100%);
+            border: 3px solid #00c4ff;
+            border-radius: 25px;
+            padding: 40px 50px;
+            text-align: center;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5), 0 0 30px rgba(0, 180, 255, 0.3);
+            backdrop-filter: blur(15px);
+        }
+
+        .pause-text {
+            font-family: 'Pretendard', sans-serif;
+            font-weight: 800;
+            font-size: 32px;
+            color: #fff;
+            margin-bottom: 15px;
+            text-shadow: 0 4px 10px rgba(0,0,0,0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .pause-text svg {
+            color: #00b4ff;
+        }
+
+        .pause-score {
+            font-family: 'Pretendard', sans-serif;
+            font-weight: 500;
+            font-size: 18px;
+            color: #80d0ff;
+            margin-bottom: 30px;
+        }
+
+        .pause-score span {
+            font-family: 'Pretendard', sans-serif;
+            font-weight: 700;
+            font-size: 24px;
+            color: #fff;
+        }
+
+        .pause-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .resume-btn {
+            font-family: 'Pretendard', sans-serif;
+            font-weight: 700;
+            background: linear-gradient(135deg, #00c4ff 0%, #00a0e0 100%);
+            color: #fff;
+            font-size: 18px;
+            padding: 14px 40px;
+            border: 2px solid rgba(255,255,255,0.3);
+            border-radius: 30px;
+            cursor: pointer;
+            box-shadow: 0 5px 20px rgba(0, 180, 255, 0.5);
+            transition: all 0.15s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .resume-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0, 180, 255, 0.6);
+        }
+
+        .resume-btn:active {
+            transform: scale(0.97);
+        }
+
+        .pause-exit-btn {
+            font-family: 'Pretendard', sans-serif;
+            font-weight: 600;
+            background: rgba(255, 100, 130, 0.15);
+            color: #ffb0c0;
+            font-size: 15px;
+            padding: 10px 25px;
+            border: 2px solid rgba(255, 100, 130, 0.4);
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.15s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .pause-exit-btn:hover {
+            border-color: #ff6b8a;
+            color: #ff6b8a;
+            background: rgba(255, 100, 130, 0.25);
+        }
+
+        /* 나가기 확인 모달 */
+        .exit-modal {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.9);
+            z-index: 250;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            backdrop-filter: blur(8px);
+        }
+
+        .exit-modal.hidden {
+            display: none;
+        }
+
+        .exit-modal-box {
+            background: linear-gradient(180deg, rgba(0, 60, 120, 0.98) 0%, rgba(0, 40, 90, 0.98) 100%);
+            border: 3px solid #ff6b8a;
+            border-radius: 20px;
+            padding: 30px;
+            text-align: center;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.6), 0 0 30px rgba(255, 100, 130, 0.2);
+            width: 100%;
+            max-width: 300px;
+            backdrop-filter: blur(15px);
+        }
+
+        .exit-modal-title {
+            font-family: 'Pretendard', sans-serif;
+            font-weight: 700;
+            font-size: 22px;
+            color: #ff6b8a;
+            margin-bottom: 15px;
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .exit-modal-title svg {
+            flex-shrink: 0;
+            width: 28px;
+            height: 28px;
+            color: #ff6b8a;
+        }
+
+        .exit-modal-text {
+            font-family: 'Pretendard', sans-serif;
+            font-weight: 500;
+            font-size: 14px;
+            color: #b0c0d0;
+            line-height: 1.6;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
+        .exit-modal-score {
+            font-family: 'Pretendard', sans-serif;
+            font-weight: 500;
+            font-size: 14px;
+            color: #80d0ff;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .exit-modal-score span {
+            font-family: 'Pretendard', sans-serif;
+            font-weight: 700;
+            font-size: 20px;
+            color: #fff;
+        }
+
+        .exit-modal-buttons {
+            display: flex;
+            flex-direction: row;
+            gap: 12px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .exit-confirm-btn {
+            font-family: 'Pretendard', sans-serif;
+            font-weight: 600;
+            background: linear-gradient(180deg, #ff6b8a 0%, #ff4d6d 100%);
+            color: #fff;
+            font-size: 14px;
+            padding: 10px 24px;
+            border: 2px solid rgba(255,255,255,0.2);
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.15s;
+            box-shadow: 0 4px 15px rgba(255, 100, 130, 0.4);
+            white-space: nowrap;
+        }
+
+        .exit-confirm-btn:hover {
+            box-shadow: 0 6px 20px rgba(255, 100, 130, 0.5);
+            transform: translateY(-2px);
+        }
+
+        .exit-confirm-btn:active {
+            transform: scale(0.95);
+        }
+
+        .exit-cancel-btn {
+            font-family: 'Pretendard', sans-serif;
+            font-weight: 600;
+            background: linear-gradient(180deg, #00c4ff 0%, #00a0e0 100%);
+            color: #fff;
+            font-size: 14px;
+            padding: 10px 24px;
+            border: 2px solid rgba(255,255,255,0.2);
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.15s;
+            box-shadow: 0 4px 15px rgba(0, 180, 255, 0.4);
+            white-space: nowrap;
+        }
+
+        .exit-cancel-btn:hover {
+            box-shadow: 0 6px 20px rgba(0, 180, 255, 0.5);
+            transform: translateY(-2px);
+        }
+
+        .exit-cancel-btn:active {
+            transform: scale(0.95);
+        }
+    </style>
+</head>
+<body>
+    <!-- SVG 아이콘 정의 -->
+    <svg style="display: none;">
+        <defs>
+            <!-- 북극곰 캐릭터 (대두 버전) -->
+            <symbol id="polar-bear" viewBox="0 0 100 130">
+                <!-- 그림자 -->
+                <ellipse cx="50" cy="125" rx="22" ry="4" fill="rgba(0,0,0,0.15)"/>
+                
+                <!-- 뒷발 (발바닥 보이게) -->
+                <ellipse cx="38" cy="118" rx="12" ry="7" fill="#f5f5f5"/>
+                <ellipse cx="38" cy="120" rx="8" ry="5" fill="#ffb6c1"/>
+                <circle cx="33" cy="116" r="2.5" fill="#ffb6c1"/>
+                <circle cx="38" cy="114" r="2.5" fill="#ffb6c1"/>
+                <circle cx="43" cy="116" r="2.5" fill="#ffb6c1"/>
+                
+                <ellipse cx="62" cy="118" rx="12" ry="7" fill="#f5f5f5"/>
+                <ellipse cx="62" cy="120" rx="8" ry="5" fill="#ffb6c1"/>
+                <circle cx="57" cy="116" r="2.5" fill="#ffb6c1"/>
+                <circle cx="62" cy="114" r="2.5" fill="#ffb6c1"/>
+                <circle cx="67" cy="116" r="2.5" fill="#ffb6c1"/>
+                
+                <!-- 몸통 (작게) -->
+                <ellipse cx="50" cy="100" rx="22" ry="25" fill="#f8f8f8"/>
+                <ellipse cx="50" cy="102" rx="18" ry="20" fill="#ffffff"/>
+                
+                <!-- 앞발 (귀여운 발바닥) -->
+                <ellipse cx="28" cy="95" rx="10" ry="12" fill="#f5f5f5"/>
+                <ellipse cx="26" cy="99" rx="6" ry="8" fill="#ffb6c1"/>
+                <circle cx="22" cy="92" r="3" fill="#ffb6c1"/>
+                <circle cx="27" cy="89" r="3" fill="#ffb6c1"/>
+                <circle cx="32" cy="92" r="3" fill="#ffb6c1"/>
+                
+                <ellipse cx="72" cy="95" rx="10" ry="12" fill="#f5f5f5"/>
+                <ellipse cx="74" cy="99" rx="6" ry="8" fill="#ffb6c1"/>
+                <circle cx="68" cy="92" r="3" fill="#ffb6c1"/>
+                <circle cx="73" cy="89" r="3" fill="#ffb6c1"/>
+                <circle cx="78" cy="92" r="3" fill="#ffb6c1"/>
+                
+                <!-- 대두 머리 (크게!) -->
+                <circle cx="50" cy="42" r="40" fill="#f8f8f8"/>
+                <circle cx="50" cy="45" r="36" fill="#ffffff"/>
+                
+                <!-- 귀 -->
+                <circle cx="18" cy="20" r="12" fill="#f5f5f5"/>
+                <circle cx="18" cy="20" r="8" fill="#ffb6c1"/>
+                <circle cx="82" cy="20" r="12" fill="#f5f5f5"/>
+                <circle cx="82" cy="20" r="8" fill="#ffb6c1"/>
+                
+                <!-- 눈 (큰 반짝이는 눈) -->
+                <ellipse cx="35" cy="42" rx="10" ry="11" fill="#1a1a2e"/>
+                <ellipse cx="65" cy="42" rx="10" ry="11" fill="#1a1a2e"/>
+                <circle cx="38" cy="38" r="4" fill="white"/>
+                <circle cx="68" cy="38" r="4" fill="white"/>
+                <circle cx="33" cy="45" r="2" fill="white" opacity="0.5"/>
+                <circle cx="63" cy="45" r="2" fill="white" opacity="0.5"/>
+                
+                <!-- 코 -->
+                <ellipse cx="50" cy="55" rx="6" ry="5" fill="#2a2a3e"/>
+                <ellipse cx="50" cy="53" rx="2.5" ry="1.5" fill="#4a4a5e"/>
+                
+                <!-- 입 -->
+                <path d="M 42 62 Q 50 70 58 62" stroke="#2a2a3e" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+                
+                <!-- 볼터치 -->
+                <ellipse cx="22" cy="52" rx="8" ry="5" fill="rgba(255,150,180,0.5)"/>
+                <ellipse cx="78" cy="52" rx="8" ry="5" fill="rgba(255,150,180,0.5)"/>
+            </symbol>
+
+            <!-- 미니 북극곰 (라이프용 - 대두) -->
+            <symbol id="polar-bear-mini" viewBox="0 0 40 40">
+                <!-- 대두 머리 -->
+                <circle cx="20" cy="18" r="16" fill="#f8f8f8"/>
+                <circle cx="20" cy="19" r="14" fill="#ffffff"/>
+                <!-- 귀 -->
+                <circle cx="6" cy="8" r="5" fill="#f5f5f5"/>
+                <circle cx="6" cy="8" r="3" fill="#ffb6c1"/>
+                <circle cx="34" cy="8" r="5" fill="#f5f5f5"/>
+                <circle cx="34" cy="8" r="3" fill="#ffb6c1"/>
+                <!-- 눈 -->
+                <circle cx="13" cy="16" r="4" fill="#1a1a2e"/>
+                <circle cx="27" cy="16" r="4" fill="#1a1a2e"/>
+                <circle cx="14" cy="14" r="1.5" fill="white"/>
+                <circle cx="28" cy="14" r="1.5" fill="white"/>
+                <!-- 코 -->
+                <ellipse cx="20" cy="22" rx="3" ry="2.5" fill="#2a2a3e"/>
+                <!-- 볼터치 -->
+                <ellipse cx="8" cy="20" rx="3" ry="2" fill="rgba(255,150,180,0.5)"/>
+                <ellipse cx="32" cy="20" rx="3" ry="2" fill="rgba(255,150,180,0.5)"/>
+                <!-- 작은 몸통 -->
+                <ellipse cx="20" cy="36" rx="8" ry="6" fill="#f5f5f5"/>
+            </symbol>
+
+            <!-- 깃발 아이콘 -->
+            <symbol id="flag-icon" viewBox="0 0 24 24">
+                <rect x="4" y="3" width="2" height="18" rx="1" fill="#8B5A2B"/>
+                <path d="M 6 4 L 20 4 L 17 9 L 20 14 L 6 14 Z" fill="#e74c3c"/>
+                <path d="M 6 4 L 20 4 L 17 9 L 20 14 L 6 14 Z" fill="url(#flagGrad)" opacity="0.3"/>
+            </symbol>
+
+            <!-- 눈송이 아이콘 -->
+            <symbol id="snowflake-icon" viewBox="0 0 24 24">
+                <line x1="12" y1="2" x2="12" y2="22" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                <line x1="2" y1="12" x2="22" y2="12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                <line x1="4.93" y1="4.93" x2="19.07" y2="19.07" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                <line x1="19.07" y1="4.93" x2="4.93" y2="19.07" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                <circle cx="12" cy="12" r="2" fill="currentColor"/>
+            </symbol>
+
+            <!-- 트로피 아이콘 -->
+            <symbol id="trophy-icon" viewBox="0 0 24 24">
+                <path d="M12 17C14.76 17 17 14.76 17 12V4H7V12C7 14.76 9.24 17 12 17Z" fill="#FFD700" stroke="#E5A000" stroke-width="1"/>
+                <rect x="10" y="17" width="4" height="3" fill="#E5A000"/>
+                <rect x="7" y="20" width="10" height="2" rx="1" fill="#CD853F"/>
+                <path d="M7 6H4C3.45 6 3 6.45 3 7V9C3 10.66 4.34 12 6 12H7" stroke="#E5A000" stroke-width="1.5" fill="none"/>
+                <path d="M17 6H20C20.55 6 21 6.45 21 7V9C21 10.66 19.66 12 18 12H17" stroke="#E5A000" stroke-width="1.5" fill="none"/>
+            </symbol>
+
+            <!-- 눈사람 (장애물) -->
+            <symbol id="snowman-obstacle" viewBox="0 0 60 80">
+                <!-- 그림자 -->
+                <ellipse cx="30" cy="78" rx="20" ry="3" fill="rgba(0,0,0,0.15)"/>
+                <!-- 몸통 (큰 눈덩이) -->
+                <circle cx="30" cy="60" r="18" fill="#f8f8f8" stroke="#e0e8f0" stroke-width="1"/>
+                <ellipse cx="30" cy="58" rx="15" ry="14" fill="#ffffff"/>
+                <!-- 가운데 (중간 눈덩이) -->
+                <circle cx="30" cy="38" r="14" fill="#f8f8f8" stroke="#e0e8f0" stroke-width="1"/>
+                <ellipse cx="30" cy="36" rx="11" ry="10" fill="#ffffff"/>
+                <!-- 버튼 -->
+                <circle cx="30" cy="35" r="2" fill="#2a2a3e"/>
+                <circle cx="30" cy="42" r="2" fill="#2a2a3e"/>
+                <circle cx="30" cy="55" r="2.5" fill="#2a2a3e"/>
+                <circle cx="30" cy="65" r="2.5" fill="#2a2a3e"/>
+                <!-- 머리 (작은 눈덩이) -->
+                <circle cx="30" cy="18" r="12" fill="#f8f8f8" stroke="#e0e8f0" stroke-width="1"/>
+                <ellipse cx="30" cy="17" rx="10" ry="9" fill="#ffffff"/>
+                <!-- 휘둥그레한 놀란 눈 -->
+                <ellipse cx="24" cy="14" rx="5" ry="6" fill="white" stroke="#1a1a2e" stroke-width="1.5"/>
+                <ellipse cx="36" cy="14" rx="5" ry="6" fill="white" stroke="#1a1a2e" stroke-width="1.5"/>
+                <!-- 눈동자 (아래 방향 - 플레이어를 보고 있음) -->
+                <circle cx="24" cy="16" r="2.5" fill="#1a1a2e"/>
+                <circle cx="36" cy="16" r="2.5" fill="#1a1a2e"/>
+                <circle cx="25" cy="15" r="1" fill="white"/>
+                <circle cx="37" cy="15" r="1" fill="white"/>
+                <!-- 놀란 눈썹 -->
+                <path d="M19 9 Q24 7 28 10" stroke="#6B4423" stroke-width="2" fill="none" stroke-linecap="round"/>
+                <path d="M32 10 Q36 7 41 9" stroke="#6B4423" stroke-width="2" fill="none" stroke-linecap="round"/>
+                <!-- 당근 코 -->
+                <polygon points="30,18 42,21 30,24" fill="#ff8c42"/>
+                <ellipse cx="32" cy="20" rx="1" ry="0.5" fill="#ffab6b"/>
+                <!-- 놀란 입 (O 모양) -->
+                <ellipse cx="30" cy="26" rx="4" ry="3" fill="#2a2a3e"/>
+                <ellipse cx="30" cy="25.5" rx="2" ry="1.5" fill="#4a2a3e"/>
+                <!-- 팔 (나뭇가지) - 흔드는 듯 -->
+                <g class="snowman-arm-left">
+                    <line x1="12" y1="36" x2="18" y2="33" stroke="#8B5A2B" stroke-width="3" stroke-linecap="round"/>
+                    <line x1="10" y1="34" x2="6" y2="28" stroke="#8B5A2B" stroke-width="2" stroke-linecap="round"/>
+                    <line x1="10" y1="34" x2="4" y2="36" stroke="#8B5A2B" stroke-width="2" stroke-linecap="round"/>
+                </g>
+                <g class="snowman-arm-right">
+                    <line x1="48" y1="36" x2="42" y2="33" stroke="#8B5A2B" stroke-width="3" stroke-linecap="round"/>
+                    <line x1="50" y1="34" x2="54" y2="28" stroke="#8B5A2B" stroke-width="2" stroke-linecap="round"/>
+                    <line x1="50" y1="34" x2="56" y2="36" stroke="#8B5A2B" stroke-width="2" stroke-linecap="round"/>
+                </g>
+                <!-- 모자 -->
+                <rect x="22" y="4" width="16" height="3" rx="1" fill="#2a2a3e"/>
+                <rect x="24" y="-2" width="12" height="7" rx="2" fill="#2a2a3e"/>
+                <rect x="24" y="0" width="12" height="2" fill="#ff4060"/>
+                <!-- 볼터치 (더 발갛게) -->
+                <ellipse cx="18" cy="19" rx="4" ry="2.5" fill="rgba(255,100,130,0.6)"/>
+                <ellipse cx="42" cy="19" rx="4" ry="2.5" fill="rgba(255,100,130,0.6)"/>
+            </symbol>
+
+            <!-- 작은 눈사람 (낮은 장애물) - 장난꾸러기 표정 -->
+            <symbol id="snowman-small" viewBox="0 0 50 50">
+                <!-- 그림자 -->
+                <ellipse cx="25" cy="48" rx="15" ry="2" fill="rgba(0,0,0,0.15)"/>
+                <!-- 몸통 -->
+                <circle cx="25" cy="38" r="12" fill="#f8f8f8" stroke="#e0e8f0" stroke-width="1"/>
+                <ellipse cx="25" cy="36" rx="10" ry="9" fill="#ffffff"/>
+                <!-- 머리 -->
+                <circle cx="25" cy="18" r="10" fill="#f8f8f8" stroke="#e0e8f0" stroke-width="1"/>
+                <ellipse cx="25" cy="17" rx="8" ry="7" fill="#ffffff"/>
+                <!-- 장난꾸러기 눈 (한쪽 찡긋) -->
+                <ellipse cx="20" cy="14" rx="4" ry="4.5" fill="white" stroke="#1a1a2e" stroke-width="1"/>
+                <!-- 왼쪽 눈동자 -->
+                <circle cx="20" cy="15" r="2" fill="#1a1a2e"/>
+                <circle cx="21" cy="14" r="0.7" fill="white"/>
+                <!-- 오른쪽 눈 (찡긋!) -->
+                <path d="M26 13 Q30 10 34 13" stroke="#1a1a2e" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+                <!-- 장난꾸러기 눈썹 -->
+                <path d="M16 10 L23 11" stroke="#6B4423" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+                <!-- 당근 코 -->
+                <polygon points="25,17 33,20 25,22" fill="#ff8c42"/>
+                <!-- 히히 웃는 입 -->
+                <path d="M 19 24 Q 25 29 31 24" stroke="#2a2a3e" stroke-width="2" fill="none" stroke-linecap="round"/>
+                <path d="M 21 24 Q 25 27 29 24" fill="#4a2a3e"/>
+                <!-- 버튼 -->
+                <circle cx="25" cy="34" r="1.5" fill="#2a2a3e"/>
+                <circle cx="25" cy="40" r="1.5" fill="#2a2a3e"/>
+                <!-- 볼터치 (더 빨갛게) -->
+                <ellipse cx="15" cy="18" rx="3" ry="2" fill="rgba(255,100,130,0.6)"/>
+                <ellipse cx="35" cy="18" rx="3" ry="2" fill="rgba(255,100,130,0.6)"/>
+                <!-- 혀 내밀기 -->
+                <ellipse cx="27" cy="26" rx="2" ry="1.5" fill="#ff6b8a"/>
+            </symbol>
+
+            <!-- 녹색 괴물 (점프하는 장애물) -->
+            <symbol id="green-monster" viewBox="0 0 70 90">
+                <!-- 그림자 -->
+                <ellipse cx="35" cy="88" rx="22" ry="3" fill="rgba(0,0,0,0.2)"/>
+                
+                <!-- 몸통 (젤리 같은 녹색) -->
+                <ellipse cx="35" cy="55" rx="28" ry="32" fill="url(#monsterGrad)"/>
+                <ellipse cx="35" cy="50" rx="24" ry="26" fill="#5dde5d"/>
+                
+                <!-- 배 -->
+                <ellipse cx="35" cy="60" rx="18" ry="18" fill="#7fff7f"/>
+                
+                <!-- 눈 (커다란 눈) -->
+                <ellipse cx="24" cy="38" rx="12" ry="14" fill="white" stroke="#3a9a3a" stroke-width="2"/>
+                <ellipse cx="46" cy="38" rx="12" ry="14" fill="white" stroke="#3a9a3a" stroke-width="2"/>
+                <!-- 눈동자 -->
+                <circle cx="26" cy="40" r="7" fill="#1a1a2e"/>
+                <circle cx="48" cy="40" r="7" fill="#1a1a2e"/>
+                <!-- 눈 반사 -->
+                <circle cx="28" cy="37" r="3" fill="white"/>
+                <circle cx="50" cy="37" r="3" fill="white"/>
+                <circle cx="24" cy="43" r="1.5" fill="white" opacity="0.5"/>
+                <circle cx="46" cy="43" r="1.5" fill="white" opacity="0.5"/>
+                
+                <!-- 입 (큰 웃는 입) -->
+                <path d="M 20 62 Q 35 78 50 62" stroke="#1a5a1a" stroke-width="3" fill="none" stroke-linecap="round"/>
+                <path d="M 25 65 Q 35 75 45 65" fill="#ff6080"/>
+                
+                <!-- 이빨 -->
+                <rect x="28" y="62" width="5" height="6" rx="1" fill="white"/>
+                <rect x="37" y="62" width="5" height="6" rx="1" fill="white"/>
+                
+                <!-- 뿔 -->
+                <ellipse cx="18" cy="18" rx="6" ry="10" fill="#3aba3a"/>
+                <ellipse cx="52" cy="18" rx="6" ry="10" fill="#3aba3a"/>
+                <ellipse cx="18" cy="15" rx="4" ry="6" fill="#5dde5d"/>
+                <ellipse cx="52" cy="15" rx="4" ry="6" fill="#5dde5d"/>
+                
+                <!-- 팔 -->
+                <ellipse cx="6" cy="55" rx="8" ry="12" fill="#4dc64d"/>
+                <ellipse cx="64" cy="55" rx="8" ry="12" fill="#4dc64d"/>
+                
+                <!-- 발 -->
+                <ellipse cx="22" cy="82" rx="10" ry="8" fill="#4dc64d"/>
+                <ellipse cx="48" cy="82" rx="10" ry="8" fill="#4dc64d"/>
+                
+                <!-- 볼터치 -->
+                <ellipse cx="14" cy="55" rx="5" ry="4" fill="rgba(255,150,200,0.4)"/>
+                <ellipse cx="56" cy="55" rx="5" ry="4" fill="rgba(255,150,200,0.4)"/>
+            </symbol>
+
+            <!-- 일시정지 아이콘 -->
+            <symbol id="pause-icon" viewBox="0 0 24 24">
+                <rect x="6" y="4" width="4" height="16" rx="1" fill="currentColor"/>
+                <rect x="14" y="4" width="4" height="16" rx="1" fill="currentColor"/>
+            </symbol>
+
+            <!-- 나가기 아이콘 -->
+            <symbol id="exit-icon" viewBox="0 0 24 24">
+                <path d="M10 3H6C4.89543 3 4 3.89543 4 5V19C4 20.1046 4.89543 21 6 21H10" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round"/>
+                <path d="M15 12H21M21 12L18 9M21 12L18 15" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+            </symbol>
+
+            <!-- 왼쪽 화살표 -->
+            <symbol id="arrow-left" viewBox="0 0 24 24">
+                <path d="M15 6L9 12L15 18" stroke="currentColor" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+            </symbol>
+
+            <!-- 오른쪽 화살표 -->
+            <symbol id="arrow-right" viewBox="0 0 24 24">
+                <path d="M9 6L15 12L9 18" stroke="currentColor" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+            </symbol>
+
+            <!-- 위 화살표 (점프) -->
+            <symbol id="arrow-up" viewBox="0 0 24 24">
+                <path d="M12 5V19M12 5L6 11M12 5L18 11" stroke="currentColor" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+            </symbol>
+
+            <!-- 아래 화살표 (슬라이드) -->
+            <symbol id="arrow-down" viewBox="0 0 24 24">
+                <path d="M12 19V5M12 19L6 13M12 19L18 13" stroke="currentColor" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+            </symbol>
+
+            <!-- 점수 아이콘 -->
+            <symbol id="score-icon" viewBox="0 0 24 24">
+                <polygon points="12,2 15,9 22,9 16,14 18,21 12,17 6,21 8,14 2,9 9,9" fill="#FFD700" stroke="#FFA500" stroke-width="1"/>
+            </symbol>
+
+            <!-- 홈 아이콘 -->
+            <symbol id="home-icon" viewBox="0 0 24 24">
+                <path d="M3 12L12 3L21 12" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M5 10V20C5 20.5523 5.44772 21 6 21H18C18.5523 21 19 20.5523 19 20V10" stroke="currentColor" stroke-width="2" fill="none"/>
+                <rect x="9" y="14" width="6" height="7" fill="currentColor" rx="1"/>
+            </symbol>
+
+            <!-- 플레이 아이콘 -->
+            <symbol id="play-icon" viewBox="0 0 24 24">
+                <polygon points="6,4 20,12 6,20" fill="currentColor"/>
+            </symbol>
+
+            <!-- 하트 아이콘 -->
+            <symbol id="heart-icon" viewBox="0 0 24 24">
+                <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" fill="#ff6b8a"/>
+            </symbol>
+
+            <!-- 거리/골 아이콘 (콜라) -->
+            <symbol id="goal-icon" viewBox="0 0 24 24">
+                <rect x="8" y="6" width="8" height="14" rx="2" fill="#e02020"/>
+                <rect x="9" y="8" width="6" height="3" fill="#ffffff"/>
+                <rect x="10" y="4" width="4" height="3" fill="#c01010"/>
+                <ellipse cx="12" cy="5" rx="3" ry="1" fill="#a00000"/>
+            </symbol>
+
+            <!-- 불꽃 아이콘 (스테이지용) -->
+            <symbol id="fire-icon" viewBox="0 0 24 24">
+                <!-- 외곽 불꽃 (주황) -->
+                <path d="M12 2C12 2 8 7 8 11C8 12.5 8.5 14 9.5 15C9 13 10 11 12 10C14 11 15 13 14.5 15C15.5 14 16 12.5 16 11C16 7 12 2 12 2Z" fill="#ff6600">
+                    <animate attributeName="d" dur="0.5s" repeatCount="indefinite" 
+                        values="M12 2C12 2 8 7 8 11C8 12.5 8.5 14 9.5 15C9 13 10 11 12 10C14 11 15 13 14.5 15C15.5 14 16 12.5 16 11C16 7 12 2 12 2Z;
+                                M12 3C12 3 7 7 7 11C7 13 8 14.5 9 15.5C8.5 13.5 9.5 11.5 12 10.5C14.5 11.5 15.5 13.5 15 15.5C16 14.5 17 13 17 11C17 7 12 3 12 3Z;
+                                M12 2C12 2 8 7 8 11C8 12.5 8.5 14 9.5 15C9 13 10 11 12 10C14 11 15 13 14.5 15C15.5 14 16 12.5 16 11C16 7 12 2 12 2Z"/>
+                </path>
+                <!-- 중간 불꽃 (빨강) -->
+                <path d="M12 5C12 5 9 9 9 12C9 13.5 10 15 11 16C10.5 14 11 12.5 12 12C13 12.5 13.5 14 13 16C14 15 15 13.5 15 12C15 9 12 5 12 5Z" fill="#ff3300">
+                    <animate attributeName="d" dur="0.4s" repeatCount="indefinite"
+                        values="M12 5C12 5 9 9 9 12C9 13.5 10 15 11 16C10.5 14 11 12.5 12 12C13 12.5 13.5 14 13 16C14 15 15 13.5 15 12C15 9 12 5 12 5Z;
+                                M12 4C12 4 8.5 8.5 8.5 12C8.5 14 9.5 15.5 10.5 16.5C10 14.5 10.5 13 12 12.5C13.5 13 14 14.5 13.5 16.5C14.5 15.5 15.5 14 15.5 12C15.5 8.5 12 4 12 4Z;
+                                M12 5C12 5 9 9 9 12C9 13.5 10 15 11 16C10.5 14 11 12.5 12 12C13 12.5 13.5 14 13 16C14 15 15 13.5 15 12C15 9 12 5 12 5Z"/>
+                </path>
+                <!-- 내부 불꽃 (노랑) -->
+                <path d="M12 9C12 9 10 11 10 13C10 14 10.5 15 11.5 16C11 14.5 11.5 13.5 12 13.5C12.5 13.5 13 14.5 12.5 16C13.5 15 14 14 14 13C14 11 12 9 12 9Z" fill="#ffcc00">
+                    <animate attributeName="d" dur="0.3s" repeatCount="indefinite"
+                        values="M12 9C12 9 10 11 10 13C10 14 10.5 15 11.5 16C11 14.5 11.5 13.5 12 13.5C12.5 13.5 13 14.5 12.5 16C13.5 15 14 14 14 13C14 11 12 9 12 9Z;
+                                M12 8C12 8 9.5 10.5 9.5 13C9.5 14.5 10 15.5 11 16.5C10.5 15 11 14 12 13.5C13 14 13.5 15 13 16.5C14 15.5 14.5 14.5 14.5 13C14.5 10.5 12 8 12 8Z;
+                                M12 9C12 9 10 11 10 13C10 14 10.5 15 11.5 16C11 14.5 11.5 13.5 12 13.5C12.5 13.5 13 14.5 12.5 16C13.5 15 14 14 14 13C14 11 12 9 12 9Z"/>
+                </path>
+                <!-- 빛나는 효과 -->
+                <ellipse cx="12" cy="20" rx="4" ry="2" fill="url(#fireGlow)" opacity="0.6">
+                    <animate attributeName="opacity" dur="0.3s" repeatCount="indefinite" values="0.4;0.8;0.4"/>
+                </ellipse>
+                <defs>
+                    <radialGradient id="fireGlow">
+                        <stop offset="0%" stop-color="#ff6600"/>
+                        <stop offset="100%" stop-color="transparent"/>
+                    </radialGradient>
+                </defs>
+            </symbol>
+
+            <!-- 콜라 캔 (골 오브젝트) -->
+            <symbol id="cola-can" viewBox="0 0 80 120">
+                <!-- 캔 그림자 -->
+                <ellipse cx="40" cy="115" rx="25" ry="5" fill="rgba(0,0,0,0.2)"/>
+                <!-- 캔 본체 -->
+                <rect x="15" y="25" width="50" height="85" rx="8" fill="url(#colaGrad)"/>
+                <!-- 캔 상단 -->
+                <ellipse cx="40" cy="25" rx="25" ry="8" fill="#c41e3a"/>
+                <ellipse cx="40" cy="25" rx="22" ry="6" fill="#d42a46"/>
+                <!-- 캔 뚜껑 -->
+                <ellipse cx="40" cy="20" rx="18" ry="5" fill="#c0c0c0"/>
+                <ellipse cx="40" cy="19" rx="15" ry="4" fill="#d8d8d8"/>
+                <!-- 탭 -->
+                <ellipse cx="40" cy="17" rx="8" ry="2.5" fill="#a0a0a0"/>
+                <ellipse cx="40" cy="16" rx="5" ry="1.5" fill="#888"/>
+                <!-- 흰색 웨이브 라인 -->
+                <path d="M 15 55 Q 25 45 40 55 Q 55 65 65 55" stroke="white" stroke-width="4" fill="none" opacity="0.9"/>
+                <path d="M 15 65 Q 25 55 40 65 Q 55 75 65 65" stroke="white" stroke-width="3" fill="none" opacity="0.7"/>
+                <!-- Coca-Cola 스타일 텍스트 영역 -->
+                <rect x="20" y="70" width="40" height="20" rx="3" fill="white" opacity="0.95"/>
+                <text x="40" y="84" text-anchor="middle" font-family="Georgia, serif" font-size="10" font-weight="bold" font-style="italic" fill="#c41e3a">Cola</text>
+                <!-- 하이라이트 -->
+                <rect x="18" y="30" width="8" height="60" rx="4" fill="rgba(255,255,255,0.2)"/>
+                <!-- 캔 하단 -->
+                <ellipse cx="40" cy="110" rx="25" ry="6" fill="#a01830"/>
+            </symbol>
+
+            <!-- 콜라 그라데이션 -->
+            <linearGradient id="colaGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+                <stop offset="0%" style="stop-color:#a01830"/>
+                <stop offset="20%" style="stop-color:#c41e3a"/>
+                <stop offset="50%" style="stop-color:#e02040"/>
+                <stop offset="80%" style="stop-color:#c41e3a"/>
+                <stop offset="100%" style="stop-color:#a01830"/>
+            </linearGradient>
+
+            <!-- 녹색 괴물 그라데이션 -->
+            <linearGradient id="monsterGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+                <stop offset="0%" style="stop-color:#7fff7f"/>
+                <stop offset="30%" style="stop-color:#5dde5d"/>
+                <stop offset="70%" style="stop-color:#4dc64d"/>
+                <stop offset="100%" style="stop-color:#3a9a3a"/>
+            </linearGradient>
+
+            <!-- 그라데이션 정의 -->
+            <linearGradient id="flagGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+                <stop offset="0%" style="stop-color:white;stop-opacity:0.5"/>
+                <stop offset="100%" style="stop-color:black;stop-opacity:0.2"/>
+            </linearGradient>
+
+            <linearGradient id="timerGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+                <stop offset="0%" style="stop-color:#4f8"/>
+                <stop offset="100%" style="stop-color:#8cf"/>
+            </linearGradient>
+
+            <linearGradient id="timerWarnGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+                <stop offset="0%" style="stop-color:#f84"/>
+                <stop offset="100%" style="stop-color:#f44"/>
+            </linearGradient>
+        </defs>
+    </svg>
+
+    <div class="game-container" id="gameContainer">
+        <!-- 숲 배경 -->
+        <div class="forest-bg" id="forestBg">
+            <!-- 원경 나무들 -->
+            <svg class="forest-layer-far" viewBox="0 0 400 200" preserveAspectRatio="xMidYMax slice">
+                <!-- 뒷배경 나무들 (연한 색) -->
+                <polygon points="30,200 45,80 60,200" fill="#a8c4d4"/>
+                <polygon points="70,200 90,60 110,200" fill="#9bb8c8"/>
+                <polygon points="130,200 150,90 170,200" fill="#a8c4d4"/>
+                <polygon points="190,200 210,50 230,200" fill="#9bb8c8"/>
+                <polygon points="250,200 270,70 290,200" fill="#a8c4d4"/>
+                <polygon points="310,200 335,85 360,200" fill="#9bb8c8"/>
+                <polygon points="370,200 390,65 410,200" fill="#a8c4d4"/>
+                <!-- 눈 쌓인 효과 -->
+                <polygon points="42,95 45,80 48,95" fill="white"/>
+                <polygon points="85,75 90,60 95,75" fill="white"/>
+                <polygon points="145,105 150,90 155,105" fill="white"/>
+                <polygon points="205,65 210,50 215,65" fill="white"/>
+                <polygon points="265,85 270,70 275,85" fill="white"/>
+                <polygon points="330,100 335,85 340,100" fill="white"/>
+            </svg>
+            
+            <!-- 중경 나무들 -->
+            <svg class="forest-layer-mid" viewBox="0 0 400 220" preserveAspectRatio="xMidYMax slice">
+                <polygon points="10,220 30,50 50,220" fill="#7a9cad"/>
+                <polygon points="80,220 105,70 130,220" fill="#6b8d9e"/>
+                <polygon points="160,220 185,40 210,220" fill="#7a9cad"/>
+                <polygon points="240,220 265,60 290,220" fill="#6b8d9e"/>
+                <polygon points="320,220 345,55 370,220" fill="#7a9cad"/>
+                <!-- 나무 기둥 -->
+                <rect x="25" y="160" width="10" height="60" fill="#5a4a3a"/>
+                <rect x="100" y="180" width="10" height="40" fill="#5a4a3a"/>
+                <rect x="180" y="170" width="10" height="50" fill="#5a4a3a"/>
+                <rect x="260" y="175" width="10" height="45" fill="#5a4a3a"/>
+                <rect x="340" y="168" width="10" height="52" fill="#5a4a3a"/>
+                <!-- 눈 -->
+                <polygon points="25,65 30,50 35,65" fill="white"/>
+                <polygon points="100,85 105,70 110,85" fill="white"/>
+                <polygon points="180,55 185,40 190,55" fill="white"/>
+                <polygon points="260,75 265,60 270,75" fill="white"/>
+                <polygon points="340,70 345,55 350,70" fill="white"/>
+            </svg>
+            
+            <!-- 근경 나무들 -->
+            <svg class="forest-layer-near" viewBox="0 0 400 250" preserveAspectRatio="xMidYMax slice">
+                <polygon points="-20,250 10,30 40,250" fill="#4a6e7a"/>
+                <polygon points="50,250 85,50 120,250" fill="#3d5f6b"/>
+                <polygon points="280,250 315,45 350,250" fill="#3d5f6b"/>
+                <polygon points="360,250 395,35 430,250" fill="#4a6e7a"/>
+                <!-- 나무 기둥 -->
+                <rect x="0" y="180" width="20" height="70" fill="#4a3a2a"/>
+                <rect x="75" y="190" width="20" height="60" fill="#4a3a2a"/>
+                <rect x="305" y="185" width="20" height="65" fill="#4a3a2a"/>
+                <rect x="385" y="175" width="20" height="75" fill="#4a3a2a"/>
+                <!-- 눈 덮인 가지 -->
+                <polygon points="5,45 10,30 15,45" fill="white"/>
+                <polygon points="80,65 85,50 90,65" fill="white"/>
+                <polygon points="310,60 315,45 320,60" fill="white"/>
+                <polygon points="390,50 395,35 400,50" fill="white"/>
+            </svg>
+        </div>
+
+        <!-- 눈 내림 -->
+        <div class="snowfall" id="snowfall"></div>
+
+        <!-- 불씨 (불구덩이 테마) -->
+        <div class="ember-particles" id="emberParticles"></div>
+
+        <!-- 불 효과 (불구덩이 테마) -->
+        <div class="fire-overlay">
+            <div class="fire-glow"></div>
+        </div>
+
+        <!-- 용암 바닥 (불구덩이 테마) -->
+        <div class="lava-floor"></div>
+
+        <!-- 눈길 바닥 -->
+        <div class="snow-ground"></div>
+
+        <!-- 눈 -->
+        <div class="snowflakes" id="snowflakes"></div>
+
+        <!-- 게임 UI - 새로운 2행 헤더 -->
+        <div class="game-ui">
+            <div class="header-bg">
+                <!-- 1행: 점수, 스테이지, 라이프 -->
+                <div class="header-row-1">
+                    <!-- 점수 -->
+                    <div class="ui-box score-box">
+                        <svg class="ui-icon" width="22" height="22"><use href="#score-icon"/></svg>
+                        <div class="score-info">
+                            <span class="score-label">SCORE</span>
+                            <span class="score-value" id="scoreValue">0</span>
+                        </div>
+                    </div>
+
+                    <!-- 스테이지 -->
+                    <div class="stage-box">
+                        <span class="stage-text" id="stageValue">STAGE 1/100</span>
+                    </div>
+
+                    <!-- 라이프 -->
+                    <div class="ui-box lives-box" id="livesDisplay">
+                        <svg class="life-icon" viewBox="0 0 40 40"><use href="#polar-bear-mini"/></svg>
+                        <svg class="life-icon" viewBox="0 0 40 40"><use href="#polar-bear-mini"/></svg>
+                        <svg class="life-icon" viewBox="0 0 40 40"><use href="#polar-bear-mini"/></svg>
+                    </div>
+                </div>
+
+                <!-- 2행: 타이머바, 컨트롤, 거리바 -->
+                <div class="header-row-2">
+                    <!-- 타이머 바 -->
+                    <div class="progress-bars">
+                        <div class="progress-bar-item">
+                            <svg class="bar-icon" viewBox="0 0 24 24" style="color: #60ff90;">
+                                <circle cx="12" cy="12" r="10" fill="none" stroke="currentColor" stroke-width="2"/>
+                                <path d="M12 6V12L16 14" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round"/>
+                            </svg>
+                            <div class="bar-track">
+                                <div class="timer-fill" id="timerFill" style="width: 100%"></div>
+                            </div>
+                        </div>
+                        <div class="progress-bar-item">
+                            <svg class="bar-icon" viewBox="0 0 40 40"><use href="#polar-bear-mini"/></svg>
+                            <div class="bar-track">
+                                <div class="distance-fill" id="distanceFill" style="width: 0%"></div>
+                            </div>
+                            <svg class="bar-icon" width="16" height="16"><use href="#goal-icon"/></svg>
+                        </div>
+                    </div>
+
+                    <!-- 컨트롤 버튼 -->
+                    <div class="header-controls">
+                        <button class="header-ctrl-btn pause-btn" id="pauseBtn" title="일시정지">
+                            <svg width="16" height="16"><use href="#pause-icon"/></svg>
+                        </button>
+                        <button class="header-ctrl-btn exit-btn" id="exitBtn" title="나가기">
+                            <svg width="16" height="16"><use href="#exit-icon"/></svg>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 바들은 이제 헤더에 통합됨 -->
+
+        <!-- 장애물 컨테이너 -->
+        <div class="obstacles-container" id="obstaclesContainer"></div>
+
+        <!-- 골 오브젝트 (콜라 캔) -->
+        <div class="goal-building" id="goalBuilding">
+            <svg class="cola-goal" viewBox="0 0 80 120">
+                <use href="#cola-can"/>
+            </svg>
+        </div>
+
+        <!-- 북극곰 캐릭터 (SVG) -->
+        <div class="penguin-container" id="penguinContainer">
+            <div class="penguin" id="penguin">
+                <!-- 하트 이펙트 컨테이너 -->
+                <div class="heart-effects" id="heartEffects"></div>
+                <svg class="polar-bear-sprite" id="penguinSprite" viewBox="0 0 100 130">
+                    <use href="#polar-bear"/>
+                </svg>
+            </div>
+        </div>
+
+        <!-- 컨트롤 -->
+        <div class="controls">
+            <div class="direction-controls">
+                <button class="control-btn left-btn" id="leftBtn">
+                    <svg width="28" height="28"><use href="#arrow-left"/></svg>
+                </button>
+                <button class="control-btn right-btn" id="rightBtn">
+                    <svg width="28" height="28"><use href="#arrow-right"/></svg>
+                </button>
+            </div>
+            <div class="action-controls">
+                <button class="control-btn slide-btn" id="slideBtn">
+                    <svg width="28" height="28"><use href="#arrow-down"/></svg>
+                </button>
+                <button class="control-btn jump-btn" id="jumpBtn">
+                    <svg width="28" height="28"><use href="#arrow-up"/></svg>
+                </button>
+            </div>
+        </div>
+
+        <!-- 튜토리얼 화면 -->
+        <div class="tutorial-screen hidden" id="tutorialScreen">
+            <div class="tutorial-header">
+                <div class="tutorial-title">게임 방법</div>
+                <div class="tutorial-subtitle">10단계마다 불구덩이! 누가 더 멀리 갈 수 있을까?</div>
+            </div>
+
+            <div class="tutorial-content">
+                <!-- 조작법 섹션 -->
+                <div class="tutorial-section">
+                    <div class="tutorial-section-title">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="10"/>
+                            <path d="M12 8v4l3 3"/>
+                        </svg>
+                        조작 방법
+                    </div>
+                    <div class="tutorial-controls">
+                        <div class="tutorial-control-item">
+                            <div class="tutorial-control-btn">
+                                <svg><use href="#arrow-left"/></svg>
+                            </div>
+                            <span class="tutorial-control-label">왼쪽 이동</span>
+                        </div>
+                        <div class="tutorial-control-item">
+                            <div class="tutorial-control-btn">
+                                <svg><use href="#arrow-right"/></svg>
+                            </div>
+                            <span class="tutorial-control-label">오른쪽 이동</span>
+                        </div>
+                        <div class="tutorial-control-item">
+                            <div class="tutorial-control-btn" style="background: linear-gradient(180deg, #60ff90, #40d070);">
+                                <svg><use href="#arrow-up"/></svg>
+                            </div>
+                            <span class="tutorial-control-label">점프</span>
+                        </div>
+                        <div class="tutorial-control-item">
+                            <div class="tutorial-control-btn" style="background: linear-gradient(180deg, #ffa060, #e08040);">
+                                <svg><use href="#arrow-down"/></svg>
+                            </div>
+                            <span class="tutorial-control-label">슬라이드</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 장애물 섹션 -->
+                <div class="tutorial-section">
+                    <div class="tutorial-section-title">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M12 9v2m0 4h.01"/>
+                            <circle cx="12" cy="12" r="10"/>
+                        </svg>
+                        장애물 피하기
+                    </div>
+                    <div class="tutorial-obstacles">
+                        <div class="tutorial-obstacle-item">
+                            <svg class="tutorial-obstacle-icon" viewBox="0 0 60 80"><use href="#snowman-obstacle"/></svg>
+                            <span class="tutorial-obstacle-label">큰 눈사람</span>
+                            <span class="tutorial-obstacle-action">점프!</span>
+                        </div>
+                        <div class="tutorial-obstacle-item">
+                            <svg class="tutorial-obstacle-icon" viewBox="0 0 70 90"><use href="#green-monster"/></svg>
+                            <span class="tutorial-obstacle-label">괴물</span>
+                            <span class="tutorial-obstacle-action">점프!</span>
+                        </div>
+                        <div class="tutorial-obstacle-item">
+                            <svg class="tutorial-obstacle-icon" viewBox="0 0 50 50" style="height: 50px;"><use href="#snowman-small"/></svg>
+                            <span class="tutorial-obstacle-label">작은 눈사람</span>
+                            <span class="tutorial-obstacle-action">슬라이드!</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 팁 섹션 -->
+                <div class="tutorial-section">
+                    <div class="tutorial-section-title">
+                        <svg viewBox="0 0 24 24" fill="currentColor">
+                            <polygon points="12,2 15,9 22,9 16,14 18,21 12,17 6,21 8,14 2,9 9,9"/>
+                        </svg>
+                        게임 팁
+                    </div>
+                    <div class="tutorial-tips">
+                        <div class="tutorial-tip">
+                            <svg class="tutorial-tip-icon" viewBox="0 0 24 24" fill="currentColor">
+                                <polygon points="12,2 15,9 22,9 16,14 18,21 12,17 6,21 8,14 2,9 9,9"/>
+                            </svg>
+                            10단계마다 불구덩이가 나타나요! 친구와 누가 더 멀리 가는지 도전해보세요!
+                        </div>
+                        <div class="tutorial-tip">
+                            <svg class="tutorial-tip-icon" viewBox="0 0 24 24" fill="currentColor">
+                                <polygon points="12,2 15,9 22,9 16,14 18,21 12,17 6,21 8,14 2,9 9,9"/>
+                            </svg>
+                            시간이 다 되기 전에 스테이지를 클리어하세요!
+                        </div>
+                        <div class="tutorial-tip">
+                            <svg class="tutorial-tip-icon" viewBox="0 0 24 24" fill="currentColor">
+                                <polygon points="12,2 15,9 22,9 16,14 18,21 12,17 6,21 8,14 2,9 9,9"/>
+                            </svg>
+                            목숨 3개를 모두 잃으면 게임오버!
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <button class="tutorial-start-btn" id="tutorialStartBtn">
+                <svg width="24" height="24"><use href="#play-icon"/></svg>
+                게임 시작!
+            </button>
+            <button class="tutorial-back-btn" id="tutorialBackBtn">뒤로가기</button>
+        </div>
+
+        <!-- 스플래시 화면 -->
+        <div class="splash-screen" id="splashScreen">
+            <svg class="splash-snowflake" style="left: 10%; width: 16px; height: 16px; animation-duration: 8s;"><use href="#snowflake-icon"/></svg>
+            <svg class="splash-snowflake" style="left: 25%; width: 10px; height: 10px; animation-duration: 12s; animation-delay: 1s;"><use href="#snowflake-icon"/></svg>
+            <svg class="splash-snowflake" style="left: 40%; width: 18px; height: 18px; animation-duration: 10s; animation-delay: 2s;"><use href="#snowflake-icon"/></svg>
+            <svg class="splash-snowflake" style="left: 60%; width: 12px; height: 12px; animation-duration: 9s; animation-delay: 0.5s;"><use href="#snowflake-icon"/></svg>
+            <svg class="splash-snowflake" style="left: 75%; width: 20px; height: 20px; animation-duration: 11s; animation-delay: 3s;"><use href="#snowflake-icon"/></svg>
+            <svg class="splash-snowflake" style="left: 90%; width: 14px; height: 14px; animation-duration: 13s; animation-delay: 1.5s;"><use href="#snowflake-icon"/></svg>
+            
+            <div class="splash-title">FIRE RUN 100</div>
+            <div class="splash-title-kr">화염 마라톤!</div>
+            <div class="splash-subtitle">10단계마다 불구덩이! 100단계까지 살아남아라!</div>
+            
+            <div class="splash-logo">
+                <div class="splash-character">
+                    <svg class="splash-bear" viewBox="0 0 100 130">
+                        <use href="#polar-bear"/>
+                    </svg>
+                </div>
+            </div>
+            
+            <button class="splash-start-btn" id="splashStartBtn">
+                <svg width="24" height="24" style="margin-right: 8px;"><use href="#play-icon"/></svg>
+                게임 시작
+            </button>
+            
+            <div class="splash-highscore">
+                <svg width="20" height="20" style="vertical-align: middle; margin-right: 5px;"><use href="#trophy-icon"/></svg>
+                최고기록: <span id="splashHighScore">0</span>점
+            </div>
+            
+            <div class="splash-footer">
+                좌우 이동 | 점프 | 슬라이드<br>
+                © 2025 Arctic Adventure
+            </div>
+        </div>
+
+        <!-- 메인 화면 (이제 사용 안 함, 스플래시로 대체) -->
+        <div class="main-screen hidden" id="mainScreen">
+            <div class="game-title">FIRE RUN 100</div>
+            <div class="game-title-kr">남극탐험</div>
+            <div class="title-penguin"></div>
+            <button class="start-btn" id="startBtn">▶ 게임 시작</button>
+            <div class="high-score-display">
+                최고기록: <span id="highScoreMain">0</span>점
+            </div>
+            <div class="instructions">
+                좌우 이동 | 점프 | 슬라이드<br>
+                얼음 구멍과 물개를 피하고 깃발을 모으세요!
+            </div>
+        </div>
+
+        <!-- 게임오버 화면 -->
+        <div class="gameover-screen hidden" id="gameoverScreen">
+            <div class="gameover-title">GAME OVER</div>
+            <div class="gameover-stats">
+                <div class="stat-row">
+                    <span>점수</span>
+                    <span class="stat-value" id="finalScore">0</span>
+                </div>
+                <div class="stat-row">
+                    <span>스테이지</span>
+                    <span class="stat-value" id="finalStage">1</span>
+                </div>
+                <div class="stat-row">
+                    <span>최고기록</span>
+                    <span class="stat-value" id="highScoreFinal">0</span>
+                </div>
+            </div>
+            <button class="retry-btn" id="retryBtn">
+                <svg width="20" height="20" style="margin-right: 8px;"><use href="#play-icon"/></svg>
+                다시하기
+            </button>
+            <button class="home-btn" id="homeBtn">
+                <svg width="18" height="18" style="margin-right: 6px;"><use href="#home-icon"/></svg>
+                메인으로
+            </button>
+        </div>
+
+        <!-- 스테이지 클리어 -->
+        <div class="stage-clear hidden" id="stageClear">
+            <div class="stage-clear-title">
+                <svg viewBox="0 0 24 24"><use href="#flag-icon"/></svg>
+                <span>STAGE CLEAR!</span>
+            </div>
+            <div class="stage-clear-bonus" id="bonusScore">TIME BONUS: +1000</div>
+            <div class="stage-next">다음 스테이지 준비중...</div>
+        </div>
+
+        <!-- 일시정지 -->
+        <div class="pause-overlay hidden" id="pauseOverlay">
+            <div class="pause-box">
+                <div class="pause-text">
+                    <svg width="32" height="32" style="margin-right: 10px;"><use href="#pause-icon"/></svg>
+                    일시정지
+                </div>
+                <div class="pause-score">현재 점수: <span id="pauseScore">0</span></div>
+                <div class="pause-buttons">
+                    <button class="resume-btn" id="resumeBtn">
+                        <svg width="18" height="18" style="margin-right: 8px;"><use href="#play-icon"/></svg>
+                        계속하기
+                    </button>
+                    <button class="pause-exit-btn" id="pauseExitBtn">
+                        <svg width="16" height="16" style="margin-right: 6px;"><use href="#home-icon"/></svg>
+                        메인으로
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 나가기 확인 모달 -->
+        <div class="exit-modal hidden" id="exitModal">
+            <div class="exit-modal-box">
+                <div class="exit-modal-title">
+                    <svg viewBox="0 0 24 24"><use href="#exit-icon"/></svg>
+                    <span>게임 종료</span>
+                </div>
+                <div class="exit-modal-text">
+                    정말 나가시겠어요?<br>
+                    현재 진행 상황이 저장되지 않습니다.
+                </div>
+                <div class="exit-modal-score">
+                    현재 점수: <span id="exitScore">0</span>
+                </div>
+                <div class="exit-modal-buttons">
+                    <button class="exit-confirm-btn" id="exitConfirmBtn">나가기</button>
+                    <button class="exit-cancel-btn" id="exitCancelBtn">계속하기</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 게임 상태
+        const game = {
+            isPlaying: false,
+            isPaused: false,
+            score: 0,
+            highScore: parseInt(localStorage.getItem('antarcticHighScore')) || 0,
+            stage: 1,
+            lives: 3,
+            timeLeft: 60,
+            maxTime: 60,
+            distance: 0,
+            maxDistance: 1000, // 스테이지 거리
+            penguinX: 50, // 퍼센트
+            isJumping: false,
+            isSliding: false,
+            obstacles: [],
+            obstacleInterval: null,
+            timerInterval: null,
+            roadLineInterval: null,
+            distanceInterval: null,
+            gameSpeed: 2000,
+            spawnRate: 1500
+        };
+
+        // DOM 요소
+        const elements = {
+            splashScreen: document.getElementById('splashScreen'),
+            splashStartBtn: document.getElementById('splashStartBtn'),
+            splashHighScore: document.getElementById('splashHighScore'),
+            tutorialScreen: document.getElementById('tutorialScreen'),
+            tutorialStartBtn: document.getElementById('tutorialStartBtn'),
+            tutorialBackBtn: document.getElementById('tutorialBackBtn'),
+            mainScreen: document.getElementById('mainScreen'),
+            gameoverScreen: document.getElementById('gameoverScreen'),
+            stageClear: document.getElementById('stageClear'),
+            pauseOverlay: document.getElementById('pauseOverlay'),
+            penguin: document.getElementById('penguin'),
+            penguinContainer: document.getElementById('penguinContainer'),
+            obstaclesContainer: document.getElementById('obstaclesContainer'),
+            goalBuilding: document.getElementById('goalBuilding'),
+            distanceFill: document.getElementById('distanceFill'),
+            roadLines: document.getElementById('roadLines'),
+            stars: document.getElementById('stars'),
+            snowflakes: document.getElementById('snowflakes'),
+            scoreValue: document.getElementById('scoreValue'),
+            stageValue: document.getElementById('stageValue'),
+            livesDisplay: document.getElementById('livesDisplay'),
+            timerFill: document.getElementById('timerFill'),
+            startBtn: document.getElementById('startBtn'),
+            retryBtn: document.getElementById('retryBtn'),
+            homeBtn: document.getElementById('homeBtn'),
+            resumeBtn: document.getElementById('resumeBtn'),
+            leftBtn: document.getElementById('leftBtn'),
+            rightBtn: document.getElementById('rightBtn'),
+            jumpBtn: document.getElementById('jumpBtn'),
+            slideBtn: document.getElementById('slideBtn'),
+            highScoreMain: document.getElementById('highScoreMain'),
+            finalScore: document.getElementById('finalScore'),
+            finalStage: document.getElementById('finalStage'),
+            highScoreFinal: document.getElementById('highScoreFinal'),
+            bonusScore: document.getElementById('bonusScore'),
+            pauseBtn: document.getElementById('pauseBtn'),
+            exitBtn: document.getElementById('exitBtn'),
+            exitModal: document.getElementById('exitModal'),
+            exitConfirmBtn: document.getElementById('exitConfirmBtn'),
+            exitCancelBtn: document.getElementById('exitCancelBtn')
+        };
+
+        // 초기화
+        function init() {
+            createSnowfall();
+            createEmbers();
+            createSnowflakes();
+            startHeartEffects();
+            elements.splashHighScore.textContent = game.highScore;
+            elements.highScoreMain.textContent = game.highScore;
+            setupEventListeners();
+        }
+
+        // 하트 이펙트 생성
+        function startHeartEffects() {
+            const heartContainer = document.getElementById('heartEffects');
+            
+            setInterval(() => {
+                if (!game.isPlaying || game.isPaused) return;
+                
+                // 랜덤하게 하트 생성 (30% 확률)
+                if (Math.random() > 0.7) {
+                    createHeartParticle(heartContainer);
+                }
+            }, 500);
+        }
+
+        function createHeartParticle(container) {
+            const heart = document.createElement('div');
+            heart.className = 'heart-particle';
+            heart.innerHTML = `<svg viewBox="0 0 24 24"><use href="#heart-icon"/></svg>`;
+            
+            // 랜덤 위치
+            const offsetX = (Math.random() - 0.5) * 60;
+            heart.style.left = `calc(50% + ${offsetX}px)`;
+            heart.style.top = '0';
+            
+            // 랜덤 색상 (핑크 계열)
+            const colors = ['#ff6b8a', '#ff8fa3', '#ffb3c1', '#ff4d6d', '#ff85a1'];
+            const color = colors[Math.floor(Math.random() * colors.length)];
+            heart.querySelector('svg use').setAttribute('fill', color);
+            
+            // 랜덤 크기
+            const size = 14 + Math.random() * 10;
+            heart.style.fontSize = `${size}px`;
+            heart.querySelector('svg').style.width = `${size}px`;
+            heart.querySelector('svg').style.height = `${size}px`;
+            
+            // 랜덤 애니메이션 시간
+            heart.style.animationDuration = `${1 + Math.random() * 0.5}s`;
+            
+            container.appendChild(heart);
+            
+            // 애니메이션 후 제거
+            setTimeout(() => heart.remove(), 1500);
+        }
+
+        // 파티클 생성
+        function createParticles() {
+            const container = document.getElementById('particles');
+            for (let i = 0; i < 20; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                particle.style.left = `${Math.random() * 100}%`;
+                particle.style.width = `${3 + Math.random() * 5}px`;
+                particle.style.height = particle.style.width;
+                particle.style.animationDuration = `${4 + Math.random() * 6}s`;
+                particle.style.animationDelay = `${Math.random() * 5}s`;
+                container.appendChild(particle);
+            }
+        }
+
+        // 스피드 라인 효과
+        function startSpeedLines() {
+            const container = document.getElementById('speedLines');
+            const rushContainer = document.getElementById('rushLines');
+            
+            // 중앙 스피드 라인
+            setInterval(() => {
+                if (!game.isPlaying || game.isPaused) return;
+                
+                // 중앙 영역에 더 많은 라인
+                for (let i = 0; i < 2; i++) {
+                    const line = document.createElement('div');
+                    line.className = 'speed-line';
+                    line.style.left = `${30 + Math.random() * 40}%`;
+                    line.style.height = `${50 + Math.random() * 80}px`;
+                    line.style.animationDuration = `${0.15 + Math.random() * 0.2}s`;
+                    container.appendChild(line);
+                    setTimeout(() => line.remove(), 400);
+                }
+            }, 50);
+
+            // 세로 스피드 라인 (전진 효과)
+            setInterval(() => {
+                if (!game.isPlaying || game.isPaused) return;
+                
+                // 중앙 근처에서 세로로 내려오는 스피드 라인
+                const verticalLine = document.createElement('div');
+                verticalLine.className = 'speed-vertical-line';
+                // 중앙 근처 랜덤 위치 (좌우 오프셋)
+                const offset = (Math.random() - 0.5) * 80;
+                verticalLine.style.left = `calc(50% + ${offset}px)`;
+                verticalLine.style.animationDuration = `${0.3 + Math.random() * 0.15}s`;
+                rushContainer.appendChild(verticalLine);
+                setTimeout(() => verticalLine.remove(), 500);
+            }, 60);
+        }
+
+        // 별 생성
+        // 눈 내림 효과 생성
+        function createSnowfall() {
+            const container = document.getElementById('snowfall');
+            for (let i = 0; i < 60; i++) {
+                const snow = document.createElement('div');
+                snow.className = 'snow-particle';
+                snow.style.left = `${Math.random() * 100}%`;
+                snow.style.width = `${2 + Math.random() * 4}px`;
+                snow.style.height = snow.style.width;
+                snow.style.animationDuration = `${4 + Math.random() * 6}s`;
+                snow.style.animationDelay = `${Math.random() * 5}s`;
+                container.appendChild(snow);
+            }
+        }
+
+        // 불씨 효과 생성
+        function createEmbers() {
+            const container = document.getElementById('emberParticles');
+            for (let i = 0; i < 30; i++) {
+                const ember = document.createElement('div');
+                ember.className = 'ember';
+                ember.style.left = `${Math.random() * 100}%`;
+                ember.style.width = `${3 + Math.random() * 5}px`;
+                ember.style.height = ember.style.width;
+                ember.style.animationDuration = `${2 + Math.random() * 4}s`;
+                ember.style.animationDelay = `${Math.random() * 3}s`;
+                container.appendChild(ember);
+            }
+        }
+
+        // 눈 생성 (SVG)
+        function createSnowflakes() {
+            for (let i = 0; i < 30; i++) {
+                const size = 6 + Math.random() * 12;
+                const snow = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+                snow.setAttribute('class', 'snowflake');
+                snow.setAttribute('width', size);
+                snow.setAttribute('height', size);
+                snow.innerHTML = '<use href="#snowflake-icon"/>';
+                snow.style.left = `${Math.random() * 100}%`;
+                snow.style.animationDuration = `${5 + Math.random() * 10}s`;
+                snow.style.animationDelay = `${Math.random() * 5}s`;
+                elements.snowflakes.appendChild(snow);
+            }
+        }
+
+        // 이벤트 리스너 설정
+        function setupEventListeners() {
+            // 스플래시 시작 버튼 -> 튜토리얼 화면으로
+            elements.splashStartBtn.addEventListener('click', () => {
+                elements.splashScreen.classList.add('hidden');
+                elements.tutorialScreen.classList.remove('hidden');
+            });
+
+            // 튜토리얼 시작 버튼 -> 게임 시작
+            elements.tutorialStartBtn.addEventListener('click', () => {
+                elements.tutorialScreen.classList.add('hidden');
+                startGame();
+            });
+
+            // 튜토리얼 뒤로가기 버튼
+            elements.tutorialBackBtn.addEventListener('click', () => {
+                elements.tutorialScreen.classList.add('hidden');
+                elements.splashScreen.classList.remove('hidden');
+            });
+
+            // 시작 버튼
+            elements.startBtn.addEventListener('click', startGame);
+            elements.retryBtn.addEventListener('click', startGame);
+            elements.homeBtn.addEventListener('click', () => {
+                elements.gameoverScreen.classList.add('hidden');
+                elements.splashScreen.classList.remove('hidden');
+            });
+            elements.resumeBtn.addEventListener('click', togglePause);
+
+            // 일시정지 버튼 (상단)
+            elements.pauseBtn.addEventListener('click', togglePause);
+
+            // 나가기 버튼 (상단)
+            elements.exitBtn.addEventListener('click', showExitModal);
+
+            // 일시정지 화면에서 메인으로 버튼
+            document.getElementById('pauseExitBtn').addEventListener('click', () => {
+                togglePause();
+                showExitModal();
+            });
+
+            // 나가기 모달 버튼들
+            elements.exitConfirmBtn.addEventListener('click', confirmExit);
+            elements.exitCancelBtn.addEventListener('click', hideExitModal);
+
+            // 컨트롤 버튼
+            elements.leftBtn.addEventListener('touchstart', (e) => { e.preventDefault(); moveLeft(); });
+            elements.rightBtn.addEventListener('touchstart', (e) => { e.preventDefault(); moveRight(); });
+            elements.jumpBtn.addEventListener('touchstart', (e) => { e.preventDefault(); jump(); });
+            elements.slideBtn.addEventListener('touchstart', (e) => { e.preventDefault(); startSlide(); });
+            elements.slideBtn.addEventListener('touchend', (e) => { e.preventDefault(); endSlide(); });
+
+            elements.leftBtn.addEventListener('click', moveLeft);
+            elements.rightBtn.addEventListener('click', moveRight);
+            elements.jumpBtn.addEventListener('click', jump);
+            elements.slideBtn.addEventListener('mousedown', startSlide);
+            elements.slideBtn.addEventListener('mouseup', endSlide);
+
+            // 키보드
+            document.addEventListener('keydown', (e) => {
+                if (!game.isPlaying) return;
+                
+                switch(e.code) {
+                    case 'ArrowLeft':
+                    case 'KeyA':
+                        e.preventDefault();
+                        moveLeft();
+                        break;
+                    case 'ArrowRight':
+                    case 'KeyD':
+                        e.preventDefault();
+                        moveRight();
+                        break;
+                    case 'ArrowUp':
+                    case 'Space':
+                    case 'KeyW':
+                        e.preventDefault();
+                        jump();
+                        break;
+                    case 'ArrowDown':
+                    case 'KeyS':
+                        e.preventDefault();
+                        startSlide();
+                        break;
+                    case 'Escape':
+                    case 'KeyP':
+                        togglePause();
+                        break;
+                }
+            });
+
+            document.addEventListener('keyup', (e) => {
+                if (e.code === 'ArrowDown' || e.code === 'KeyS') {
+                    endSlide();
+                }
+            });
+        }
+
+        // 게임 시작
+        function startGame() {
+            game.isPlaying = true;
+            game.isPaused = false;
+            game.score = 0;
+            game.stage = 1;
+            game.lives = 3;
+            game.timeLeft = game.maxTime;
+            game.distance = 0;
+            game.maxDistance = 1000;
+            game.penguinX = 50;
+            game.gameSpeed = 2000;
+            game.spawnRate = 1500;
+            game.obstacles = [];
+
+            elements.splashScreen.classList.add('hidden');
+            elements.mainScreen.classList.add('hidden');
+            elements.gameoverScreen.classList.add('hidden');
+            elements.stageClear.classList.add('hidden');
+            elements.goalBuilding.classList.remove('approaching');
+            
+            // 게임오버 및 스테이지 클리어 텍스트 초기화
+            elements.gameoverScreen.querySelector('.gameover-title').textContent = 'GAME OVER';
+            elements.stageClear.querySelector('.stage-clear-title').innerHTML = `
+                <svg viewBox="0 0 24 24"><use href="#flag-icon"/></svg>
+                <span>STAGE CLEAR!</span>
+            `;
+            elements.stageClear.querySelector('.stage-next').textContent = '다음 스테이지 준비중...';
+            
+            // 테마 초기화
+            updateTheme();
+            
+            updateUI();
+            updateDistance();
+            updatePenguinPosition();
+            clearObstacles();
+
+            // 타이머 시작
+            game.timerInterval = setInterval(updateTimer, 100);
+
+            // 거리 업데이트 시작
+            game.distanceInterval = setInterval(updateDistanceProgress, 50);
+
+            // 장애물 스폰 시작
+            spawnObstacle();
+            game.obstacleInterval = setInterval(spawnObstacle, game.spawnRate);
+        }
+
+        // 테마 업데이트 (10단계마다 불구덩이)
+        function updateTheme() {
+            const container = document.getElementById('gameContainer');
+            const isBossStage = game.stage % 10 === 0;
+            
+            if (isBossStage) {
+                container.classList.add('fire-theme');
+            } else {
+                container.classList.remove('fire-theme');
+            }
+        }
+
+        // 도로 라인 애니메이션
+        function startRoadLines() {
+            // 중앙 라인
+            game.roadLineInterval = setInterval(() => {
+                if (!game.isPlaying || game.isPaused) return;
+                
+                const line = document.createElement('div');
+                line.className = 'road-line';
+                const speed = Math.max(150, game.gameSpeed / 8);
+                line.style.animationDuration = `${speed}ms`;
+                elements.roadLines.appendChild(line);
+
+                setTimeout(() => line.remove(), speed + 50);
+            }, 80);
+
+            // 측면 마커
+            setInterval(() => {
+                if (!game.isPlaying || game.isPaused) return;
+                
+                // 왼쪽 마커
+                const leftMarker = document.createElement('div');
+                leftMarker.className = 'road-marker';
+                leftMarker.style.left = '20%';
+                leftMarker.style.animationDuration = '400ms';
+                elements.roadLines.appendChild(leftMarker);
+                setTimeout(() => leftMarker.remove(), 450);
+
+                // 오른쪽 마커
+                const rightMarker = document.createElement('div');
+                rightMarker.className = 'road-marker';
+                rightMarker.style.left = '80%';
+                rightMarker.style.animationDuration = '400ms';
+                elements.roadLines.appendChild(rightMarker);
+                setTimeout(() => rightMarker.remove(), 450);
+            }, 300);
+        }
+
+        // 펭귄 이동
+        function moveLeft() {
+            if (!game.isPlaying || game.isPaused) return;
+            game.penguinX = Math.max(15, game.penguinX - 15);
+            updatePenguinPosition();
+        }
+
+        function moveRight() {
+            if (!game.isPlaying || game.isPaused) return;
+            game.penguinX = Math.min(85, game.penguinX + 15);
+            updatePenguinPosition();
+        }
+
+        function updatePenguinPosition() {
+            elements.penguinContainer.style.left = `${game.penguinX}%`;
+        }
+
+        // 점프
+        function jump() {
+            if (!game.isPlaying || game.isPaused || game.isJumping) return;
+            
+            game.isJumping = true;
+            elements.penguin.classList.add('jumping');
+
+            if (navigator.vibrate) navigator.vibrate(30);
+
+            setTimeout(() => {
+                elements.penguin.classList.remove('jumping');
+                game.isJumping = false;
+            }, 600);
+        }
+
+        // 슬라이드
+        function startSlide() {
+            if (!game.isPlaying || game.isPaused || game.isJumping) return;
+            game.isSliding = true;
+            elements.penguin.classList.add('sliding');
+        }
+
+        function endSlide() {
+            game.isSliding = false;
+            elements.penguin.classList.remove('sliding');
+        }
+
+        // 장애물 스폰
+        function spawnObstacle() {
+            if (!game.isPlaying || game.isPaused) return;
+
+            const types = ['iceHole', 'seal', 'flag', 'fish'];
+            const weights = [35, 30, 20, 15]; // 확률 가중치
+            const type = weightedRandom(types, weights);
+
+            const obstacle = createObstacle(type);
+            
+            // 랜덤 위치 (좌, 중, 우)
+            const positions = [20, 50, 80];
+            const posX = positions[Math.floor(Math.random() * positions.length)];
+            obstacle.style.left = `${posX}%`;
+            obstacle.dataset.x = posX;
+            obstacle.dataset.type = type;
+
+            // 속도 조절
+            const speed = Math.max(1000, game.gameSpeed - (game.stage * 100));
+            obstacle.style.animationDuration = `${speed}ms`;
+
+            elements.obstaclesContainer.appendChild(obstacle);
+            game.obstacles.push(obstacle);
+
+            // 충돌 체크
+            const checkInterval = setInterval(() => {
+                if (!game.isPlaying) {
+                    clearInterval(checkInterval);
+                    return;
+                }
+                checkCollision(obstacle, type, checkInterval);
+            }, 50);
+
+            // 제거
+            setTimeout(() => {
+                if (obstacle.parentNode) {
+                    obstacle.remove();
+                    const idx = game.obstacles.indexOf(obstacle);
+                    if (idx > -1) game.obstacles.splice(idx, 1);
+                }
+                clearInterval(checkInterval);
+            }, speed + 100);
+        }
+
+        function weightedRandom(items, weights) {
+            const total = weights.reduce((a, b) => a + b, 0);
+            let random = Math.random() * total;
+            for (let i = 0; i < items.length; i++) {
+                if (random < weights[i]) return items[i];
+                random -= weights[i];
+            }
+            return items[0];
+        }
+
+        function createObstacle(type) {
+            const obstacle = document.createElement('div');
+            
+            switch(type) {
+                case 'iceHole':
+                    // 큰 눈사람 (점프해서 넘어야 함)
+                    obstacle.className = 'snowman-big';
+                    obstacle.innerHTML = `
+                        <svg class="snowman-svg" viewBox="0 0 60 80">
+                            <use href="#snowman-obstacle"/>
+                        </svg>
+                    `;
+                    break;
+                case 'seal':
+                    // 녹색 괴물 (점프해서 피해야 함)
+                    obstacle.className = 'green-monster';
+                    obstacle.innerHTML = `
+                        <svg class="monster-svg" viewBox="0 0 70 90">
+                            <use href="#green-monster"/>
+                        </svg>
+                    `;
+                    break;
+                case 'flag':
+                case 'fish':
+                    // 작은 눈사람 (슬라이드로 피해야 함)
+                    obstacle.className = 'snowman-small';
+                    obstacle.innerHTML = `
+                        <svg class="snowman-svg-small" viewBox="0 0 50 50">
+                            <use href="#snowman-small"/>
+                        </svg>
+                    `;
+                    break;
+            }
+            
+            return obstacle;
+        }
+
+        // 충돌 체크
+        function checkCollision(obstacle, type, intervalId) {
+            const obsRect = obstacle.getBoundingClientRect();
+            const penguinRect = elements.penguinContainer.getBoundingClientRect();
+
+            // 펭귄과 장애물이 같은 높이인지 확인
+            const isNearPenguin = obsRect.bottom > penguinRect.top + 20 && 
+                                  obsRect.top < penguinRect.bottom - 10;
+
+            // X축 충돌 확인
+            const isXCollision = Math.abs(parseInt(obstacle.dataset.x) - game.penguinX) < 20;
+
+            if (isNearPenguin && isXCollision) {
+                if (type === 'iceHole' || type === 'seal') {
+                    // 큰 눈사람 - 점프로 피해야 함
+                    if (!game.isJumping) {
+                        hitObstacle(obstacle);
+                        clearInterval(intervalId);
+                    }
+                } else if (type === 'flag' || type === 'fish') {
+                    // 작은 눈사람 - 슬라이드로 피해야 함
+                    if (!game.isSliding) {
+                        hitObstacle(obstacle);
+                        clearInterval(intervalId);
+                    }
+                }
+            }
+        }
+
+        // 아이템 획득
+        function collectItem(obstacle, type) {
+            const points = type === 'flag' ? 500 : 200;
+            game.score += points;
+            
+            showScorePopup(obstacle, `+${points}`);
+            obstacle.remove();
+            
+            if (navigator.vibrate) navigator.vibrate([30, 20, 30]);
+            
+            updateUI();
+        }
+
+        // 장애물 충돌
+        function hitObstacle(obstacle) {
+            game.lives--;
+            
+            showCollisionEffect(obstacle);
+            obstacle.remove();
+            
+            if (navigator.vibrate) navigator.vibrate([100, 50, 100]);
+            
+            updateLives();
+            
+            if (game.lives <= 0) {
+                gameOver();
+            }
+        }
+
+        // 점수 팝업
+        function showScorePopup(element, text) {
+            const rect = element.getBoundingClientRect();
+            const container = elements.obstaclesContainer.getBoundingClientRect();
+            
+            const popup = document.createElement('div');
+            popup.className = 'score-popup';
+            popup.textContent = text;
+            popup.style.left = `${rect.left - container.left + rect.width/2}px`;
+            popup.style.top = `${rect.top - container.top}px`;
+            
+            elements.obstaclesContainer.appendChild(popup);
+            setTimeout(() => popup.remove(), 1000);
+        }
+
+        // 충돌 효과
+        function showCollisionEffect(element) {
+            const rect = element.getBoundingClientRect();
+            const container = elements.obstaclesContainer.getBoundingClientRect();
+            
+            const effect = document.createElement('div');
+            effect.className = 'collision-effect';
+            effect.style.left = `${rect.left - container.left}px`;
+            effect.style.top = `${rect.top - container.top}px`;
+            
+            elements.obstaclesContainer.appendChild(effect);
+            setTimeout(() => effect.remove(), 500);
+        }
+
+        // 타이머 업데이트
+        function updateTimer() {
+            if (game.isPaused) return;
+            
+            game.timeLeft -= 0.1;
+            const percent = (game.timeLeft / game.maxTime) * 100;
+            elements.timerFill.style.width = `${percent}%`;
+            
+            if (percent < 20) {
+                elements.timerFill.classList.add('warning');
+            } else {
+                elements.timerFill.classList.remove('warning');
+            }
+            
+            // 시간 경과에 따른 점수
+            game.score += 1;
+            updateUI();
+            
+            // 시간 초과시 게임오버
+            if (game.timeLeft <= 0) {
+                gameOver();
+            }
+        }
+
+        // 거리 진행 업데이트
+        function updateDistanceProgress() {
+            if (game.isPaused || !game.isPlaying) return;
+            
+            // 거리 증가 (스테이지가 높을수록 빠르게)
+            const speedMultiplier = 1 + (game.stage * 0.05);
+            game.distance += 2 * speedMultiplier;
+            
+            updateDistance();
+            
+            // 골 콜라 나타나기 (100단계 + 80% 이상 진행시)
+            if (game.stage === 100 && game.distance >= game.maxDistance * 0.8) {
+                elements.goalBuilding.classList.add('approaching');
+            }
+            
+            // 스테이지 클리어
+            if (game.distance >= game.maxDistance) {
+                if (game.stage === 100) {
+                    // 100단계 클리어 - 게임 완료!
+                    gameComplete();
+                } else {
+                    stageClear();
+                }
+            }
+        }
+
+        // 거리 UI 업데이트
+        function updateDistance() {
+            const percent = Math.min(100, (game.distance / game.maxDistance) * 100);
+            elements.distanceFill.style.width = `${percent}%`;
+        }
+
+        // 스테이지 클리어
+        function stageClear() {
+            game.isPaused = true;
+            clearIntervals();
+            
+            const isBossStage = game.stage % 10 === 0;
+            const timeBonus = Math.floor(game.timeLeft * 100);
+            const stageBonus = isBossStage ? game.stage * 1000 : game.stage * 500; // 보스 스테이지는 보너스 2배
+            const totalBonus = timeBonus + stageBonus;
+            
+            game.score += totalBonus;
+            
+            // 보스 스테이지 클리어시 특별 메시지
+            if (isBossStage) {
+                elements.bonusScore.textContent = `FIRE BOSS CLEAR! +${totalBonus}`;
+                elements.stageClear.querySelector('.stage-clear-title').innerHTML = `
+                    <svg viewBox="0 0 32 32"><circle cx="16" cy="16" r="14" fill="#ff6600"/><path d="M16 6 Q20 14 16 22 Q12 14 16 6" fill="#ffaa00"/></svg>
+                    <span>FIRE STAGE CLEAR!</span>
+                `;
+                elements.stageClear.querySelector('.stage-next').textContent = '불구덩이 탈출 성공!';
+            } else {
+                elements.bonusScore.textContent = `STAGE BONUS: +${totalBonus}`;
+                elements.stageClear.querySelector('.stage-clear-title').innerHTML = `
+                    <svg viewBox="0 0 24 24"><use href="#flag-icon"/></svg>
+                    <span>STAGE CLEAR!</span>
+                `;
+                elements.stageClear.querySelector('.stage-next').textContent = '다음 스테이지 준비중...';
+            }
+            
+            elements.stageClear.classList.remove('hidden');
+            
+            // 진동 피드백
+            if (navigator.vibrate) navigator.vibrate(isBossStage ? [100, 50, 100, 50, 100] : [50, 30, 50, 30, 100]);
+            
+            setTimeout(() => {
+                elements.stageClear.classList.add('hidden');
+                nextStage();
+            }, 3000);
+        }
+
+        // 게임 완료 (100단계 클리어!)
+        function gameComplete() {
+            game.isPlaying = false;
+            game.isPaused = true;
+            clearIntervals();
+            
+            const timeBonus = Math.floor(game.timeLeft * 100);
+            const stageBonus = 50000; // 완료 보너스
+            const totalBonus = timeBonus + stageBonus;
+            
+            game.score += totalBonus;
+            
+            // 최고 기록 갱신
+            if (game.score > game.highScore) {
+                game.highScore = game.score;
+                localStorage.setItem('antarcticHighScore', game.highScore);
+            }
+            
+            // 진동 피드백 (축하!)
+            if (navigator.vibrate) navigator.vibrate([100, 50, 100, 50, 100, 50, 200]);
+            
+            // 게임 완료 화면 표시
+            elements.bonusScore.textContent = `CLEAR BONUS: +${totalBonus}`;
+            elements.stageClear.querySelector('.stage-clear-title').innerHTML = `
+                <svg viewBox="0 0 24 24"><use href="#cola-can"/></svg>
+                <span>CONGRATULATIONS!</span>
+            `;
+            elements.stageClear.querySelector('.stage-next').textContent = '콜라를 찾았습니다!';
+            elements.stageClear.classList.remove('hidden');
+            
+            setTimeout(() => {
+                elements.stageClear.classList.add('hidden');
+                elements.finalScore.textContent = game.score;
+                elements.finalStage.textContent = game.stage;
+                elements.highScoreFinal.textContent = game.highScore;
+                elements.gameoverScreen.classList.remove('hidden');
+                elements.gameoverScreen.querySelector('.gameover-title').textContent = 'GAME COMPLETE!';
+            }, 4000);
+        }
+
+        // 다음 스테이지
+        function nextStage() {
+            game.stage++;
+            game.timeLeft = game.maxTime;
+            game.distance = 0;
+            game.maxDistance = 1000 + (game.stage * 50); // 스테이지마다 거리 증가 (완만하게)
+            game.gameSpeed = Math.max(600, game.gameSpeed - 15); // 속도 증가 완만하게
+            game.spawnRate = Math.max(600, game.spawnRate - 10); // 스폰 속도 완만하게
+            
+            const isBossStage = game.stage % 10 === 0;
+            
+            // 테마 업데이트 (10단계마다 불구덩이)
+            updateTheme();
+            
+            clearObstacles();
+            elements.goalBuilding.classList.remove('approaching');
+            updateUI();
+            updateDistance();
+            
+            // 보스 스테이지 진입 시 경고 표시
+            if (isBossStage) {
+                game.isPaused = true;
+                elements.stageClear.querySelector('.stage-clear-title').innerHTML = `
+                    <svg viewBox="0 0 32 32"><circle cx="16" cy="16" r="14" fill="#ff3300"/><path d="M16 6 Q22 14 16 24 Q10 14 16 6" fill="#ff8800"/></svg>
+                    <span>FIRE STAGE!</span>
+                `;
+                elements.stageClear.querySelector('.stage-next').textContent = '불구덩이로 진입합니다!';
+                elements.bonusScore.textContent = `STAGE ${game.stage} - 보스 스테이지`;
+                elements.stageClear.classList.remove('hidden');
+                
+                if (navigator.vibrate) navigator.vibrate([200, 100, 200]);
+                
+                setTimeout(() => {
+                    elements.stageClear.classList.add('hidden');
+                    game.isPaused = false;
+                    // 인터벌 시작
+                    game.timerInterval = setInterval(updateTimer, 100);
+                    game.distanceInterval = setInterval(updateDistanceProgress, 50);
+                    game.obstacleInterval = setInterval(spawnObstacle, game.spawnRate);
+                }, 2000);
+            } else {
+                game.isPaused = false;
+                // 인터벌 재시작
+                game.timerInterval = setInterval(updateTimer, 100);
+                game.distanceInterval = setInterval(updateDistanceProgress, 50);
+                game.obstacleInterval = setInterval(spawnObstacle, game.spawnRate);
+            }
+        }
+
+        // UI 업데이트
+        function updateUI() {
+            elements.scoreValue.textContent = game.score;
+            elements.stageValue.textContent = `STAGE ${game.stage}/100`;
+        }
+
+        // 라이프 업데이트
+        function updateLives() {
+            const icons = elements.livesDisplay.querySelectorAll('.life-icon');
+            icons.forEach((icon, idx) => {
+                if (idx >= game.lives) {
+                    icon.classList.add('lost');
+                } else {
+                    icon.classList.remove('lost');
+                }
+            });
+        }
+
+        // 점프시 GIF 회전 효과
+        function updatePenguinVisual() {
+            const sprite = document.getElementById('penguinSprite');
+            if (game.isJumping) {
+                sprite.style.transform = 'rotate(-15deg)';
+            } else if (game.isSliding) {
+                sprite.style.transform = 'scaleY(0.6) rotate(10deg)';
+            } else {
+                sprite.style.transform = 'rotate(0deg)';
+            }
+        }
+
+        // 일시정지
+        function togglePause() {
+            if (!game.isPlaying) return;
+            
+            game.isPaused = !game.isPaused;
+            
+            if (game.isPaused) {
+                document.getElementById('pauseScore').textContent = game.score;
+                elements.pauseOverlay.classList.remove('hidden');
+            } else {
+                elements.pauseOverlay.classList.add('hidden');
+            }
+        }
+
+        // 나가기 모달 표시
+        function showExitModal() {
+            if (!game.isPlaying) return;
+            
+            game.isPaused = true;
+            document.getElementById('exitScore').textContent = game.score;
+            elements.pauseOverlay.classList.add('hidden');
+            elements.exitModal.classList.remove('hidden');
+        }
+
+        // 나가기 모달 숨기기
+        function hideExitModal() {
+            elements.exitModal.classList.add('hidden');
+            game.isPaused = false;
+        }
+
+        // 나가기 확정
+        function confirmExit() {
+            game.isPlaying = false;
+            clearIntervals();
+            clearObstacles();
+            
+            // 최고기록 갱신 확인
+            if (game.score > game.highScore) {
+                game.highScore = game.score;
+                localStorage.setItem('antarcticHighScore', game.highScore);
+            }
+            
+            elements.exitModal.classList.add('hidden');
+            elements.goalBuilding.classList.remove('approaching');
+            elements.splashScreen.classList.remove('hidden');
+            elements.splashHighScore.textContent = game.highScore;
+        }
+
+        // 게임오버
+        function gameOver() {
+            game.isPlaying = false;
+            clearIntervals();
+            
+            // 최고기록 갱신
+            if (game.score > game.highScore) {
+                game.highScore = game.score;
+                localStorage.setItem('antarcticHighScore', game.highScore);
+            }
+            
+            elements.finalScore.textContent = game.score;
+            elements.finalStage.textContent = game.stage;
+            elements.highScoreFinal.textContent = game.highScore;
+            elements.highScoreMain.textContent = game.highScore;
+            elements.splashHighScore.textContent = game.highScore;
+            
+            setTimeout(() => {
+                elements.gameoverScreen.classList.remove('hidden');
+            }, 500);
+        }
+
+        // 인터벌 정리
+        function clearIntervals() {
+            clearInterval(game.timerInterval);
+            clearInterval(game.obstacleInterval);
+            clearInterval(game.roadLineInterval);
+            clearInterval(game.distanceInterval);
+        }
+
+        // 장애물 정리
+        function clearObstacles() {
+            game.obstacles.forEach(obs => obs.remove());
+            game.obstacles = [];
+        }
+
+        // 게임 시작
+        init();
+    </script>
+</body>
+</html>
+
