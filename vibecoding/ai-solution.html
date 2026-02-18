@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI 솔루션 - 팀벨</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;600;700;800&family=Pretendard:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="landing.css">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-container">
+            <a href="index.html" class="logo">
+                <span class="logo-text">팀벨</span>
+            </a>
+            <nav class="nav">
+                <ul class="nav-list">
+                    <li class="nav-item has-dropdown">
+                        <a href="index.html#company">Company <span class="nav-arrow">▼</span></a>
+                        <div class="dropdown-menu">
+                            <a href="#" class="dropdown-item">기업 개요</a>
+                            <a href="#" class="dropdown-item">CEO 인사말</a>
+                            <a href="#" class="dropdown-item">연혁</a>
+                            <a href="#" class="dropdown-item">글로벌 네트워크</a>
+                        </div>
+                    </li>
+                    <li class="nav-item has-dropdown active">
+                        <a href="index.html#business">Business <span class="nav-arrow">▼</span></a>
+                        <div class="dropdown-menu">
+                            <a href="#" class="dropdown-item">AI 솔루션</a>
+                            <a href="#" class="dropdown-item">생성형 AI</a>
+                            <a href="#" class="dropdown-item">데이터 분석</a>
+                            <a href="#" class="dropdown-item">AI 컨설팅</a>
+                            <a href="#" class="dropdown-item">클라우드 서비스</a>
+                        </div>
+                    </li>
+                    <li class="nav-item has-dropdown">
+                        <a href="index.html#sustainability">Sustainability <span class="nav-arrow">▼</span></a>
+                        <div class="dropdown-menu">
+                            <a href="#" class="dropdown-item">환경경영</a>
+                            <a href="#" class="dropdown-item">사회적 가치</a>
+                            <a href="#" class="dropdown-item">지배구조</a>
+                        </div>
+                    </li>
+                    <li class="nav-item">
+                        <a href="blog.html">News</a>
+                    </li>
+                </ul>
+            </nav>
+            <div class="header-actions">
+                <a href="#" class="contact-btn">문의하기</a>
+            </div>
+            <button class="mobile-menu-btn">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+        </div>
+    </header>
+
+    <!-- Landing Hero -->
+    <section class="landing-hero">
+        <div class="landing-hero-bg">
+            <div class="gradient-orb orb-1"></div>
+            <div class="gradient-orb orb-2"></div>
+            <div class="grid-pattern"></div>
+        </div>
+        <div class="container">
+            <div class="landing-hero-content">
+                <span class="landing-badge">AI Solution</span>
+                <h1 class="landing-title">비즈니스를 위한<br><span class="gradient-text">맞춤형 AI 솔루션</span></h1>
+                <p class="landing-subtitle">기업의 니즈에 맞는 최적화된 AI 솔루션을 제공합니다.<br>복잡한 비즈니스 문제를 AI로 해결하세요.</p>
+                <div class="landing-cta">
+                    <a href="#contact" class="btn-primary">도입 문의</a>
+                    <a href="#features" class="btn-secondary">자세히 보기</a>
+                </div>
+            </div>
+            <div class="landing-hero-visual">
+                <div class="visual-card card-1">
+                    <svg viewBox="0 0 80 80" fill="none">
+                        <circle cx="40" cy="40" r="35" fill="url(#grad1)" opacity="0.2"/>
+                        <circle cx="40" cy="40" r="20" fill="url(#grad1)" opacity="0.4"/>
+                        <circle cx="40" cy="40" r="8" fill="#3b82f6"/>
+                        <circle cx="40" cy="15" r="4" fill="#60a5fa"/>
+                        <circle cx="65" cy="40" r="4" fill="#60a5fa"/>
+                        <circle cx="40" cy="65" r="4" fill="#60a5fa"/>
+                        <circle cx="15" cy="40" r="4" fill="#60a5fa"/>
+                        <line x1="40" y1="20" x2="40" y2="32" stroke="#60a5fa" stroke-width="2"/>
+                        <line x1="48" y1="40" x2="60" y2="40" stroke="#60a5fa" stroke-width="2"/>
+                        <line x1="40" y1="48" x2="40" y2="60" stroke="#60a5fa" stroke-width="2"/>
+                        <line x1="32" y1="40" x2="20" y2="40" stroke="#60a5fa" stroke-width="2"/>
+                        <defs>
+                            <linearGradient id="grad1" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" style="stop-color:#3b82f6"/>
+                                <stop offset="100%" style="stop-color:#8b5cf6"/>
+                            </linearGradient>
+                        </defs>
+                    </svg>
+                </div>
+                <div class="visual-card card-2">
+                    <div class="stat-number">98%</div>
+                    <div class="stat-label">정확도</div>
+                </div>
+                <div class="visual-card card-3">
+                    <div class="stat-number">3x</div>
+                    <div class="stat-label">업무 효율</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="landing-features" id="features">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-badge">Features</span>
+                <h2 class="section-title">AI 솔루션의 핵심 기능</h2>
+                <p class="section-desc">팀벨의 AI 솔루션은 기업 환경에 최적화된 다양한 기능을 제공합니다.</p>
+            </div>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <svg viewBox="0 0 48 48" fill="none">
+                            <rect x="8" y="8" width="32" height="32" rx="8" fill="#3b82f6" opacity="0.1"/>
+                            <path d="M24 16v16M16 24h16" stroke="#3b82f6" stroke-width="2" stroke-linecap="round"/>
+                        </svg>
+                    </div>
+                    <h3>자동화 프로세스</h3>
+                    <p>반복적인 업무를 AI가 자동으로 처리하여 인력과 시간을 절약합니다.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <svg viewBox="0 0 48 48" fill="none">
+                            <circle cx="24" cy="24" r="16" fill="#8b5cf6" opacity="0.1"/>
+                            <path d="M24 14v10l6 6" stroke="#8b5cf6" stroke-width="2" stroke-linecap="round"/>
+                        </svg>
+                    </div>
+                    <h3>실시간 분석</h3>
+                    <p>데이터를 실시간으로 분석하여 즉각적인 인사이트를 제공합니다.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <svg viewBox="0 0 48 48" fill="none">
+                            <rect x="10" y="14" width="28" height="20" rx="4" fill="#06b6d4" opacity="0.1"/>
+                            <path d="M18 24h12M18 28h8" stroke="#06b6d4" stroke-width="2" stroke-linecap="round"/>
+                        </svg>
+                    </div>
+                    <h3>맞춤형 대시보드</h3>
+                    <p>기업 맞춤형 대시보드로 핵심 지표를 한눈에 파악할 수 있습니다.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <svg viewBox="0 0 48 48" fill="none">
+                            <path d="M12 36l8-8 6 6 10-14" stroke="#10b981" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            <circle cx="12" cy="36" r="3" fill="#10b981"/>
+                            <circle cx="20" cy="28" r="3" fill="#10b981"/>
+                            <circle cx="26" cy="34" r="3" fill="#10b981"/>
+                            <circle cx="36" cy="20" r="3" fill="#10b981"/>
+                        </svg>
+                    </div>
+                    <h3>예측 분석</h3>
+                    <p>머신러닝 기반 예측으로 미래 트렌드를 선제적으로 파악합니다.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <svg viewBox="0 0 48 48" fill="none">
+                            <rect x="8" y="20" width="12" height="16" rx="2" fill="#f59e0b" opacity="0.2"/>
+                            <rect x="24" y="12" width="16" height="24" rx="2" fill="#f59e0b" opacity="0.1"/>
+                            <path d="M14 26v6M32 18v12" stroke="#f59e0b" stroke-width="2" stroke-linecap="round"/>
+                        </svg>
+                    </div>
+                    <h3>멀티 디바이스</h3>
+                    <p>PC, 태블릿, 모바일 등 다양한 기기에서 동일한 경험을 제공합니다.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <svg viewBox="0 0 48 48" fill="none">
+                            <circle cx="24" cy="24" r="14" fill="#ef4444" opacity="0.1"/>
+                            <path d="M24 18v6l4 2" stroke="#ef4444" stroke-width="2" stroke-linecap="round"/>
+                            <path d="M18 30l-4 4M30 30l4 4" stroke="#ef4444" stroke-width="2" stroke-linecap="round"/>
+                        </svg>
+                    </div>
+                    <h3>24/7 지원</h3>
+                    <p>전담 기술팀이 24시간 모니터링하며 문제 발생 시 즉시 대응합니다.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Use Cases Section -->
+    <section class="landing-usecases">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-badge">Use Cases</span>
+                <h2 class="section-title">다양한 산업에서의 활용</h2>
+            </div>
+            <div class="usecases-grid">
+                <div class="usecase-card">
+                    <div class="usecase-image">
+                        <div class="usecase-icon">🏭</div>
+                    </div>
+                    <div class="usecase-content">
+                        <h3>제조업</h3>
+                        <p>품질 검사 자동화, 설비 예지보전, 생산 최적화</p>
+                    </div>
+                </div>
+                <div class="usecase-card">
+                    <div class="usecase-image">
+                        <div class="usecase-icon">🏥</div>
+                    </div>
+                    <div class="usecase-content">
+                        <h3>헬스케어</h3>
+                        <p>의료 영상 분석, 환자 데이터 관리, 진단 보조</p>
+                    </div>
+                </div>
+                <div class="usecase-card">
+                    <div class="usecase-image">
+                        <div class="usecase-icon">🏦</div>
+                    </div>
+                    <div class="usecase-content">
+                        <h3>금융</h3>
+                        <p>사기 탐지, 리스크 분석, 고객 서비스 자동화</p>
+                    </div>
+                </div>
+                <div class="usecase-card">
+                    <div class="usecase-image">
+                        <div class="usecase-icon">🛒</div>
+                    </div>
+                    <div class="usecase-content">
+                        <h3>리테일</h3>
+                        <p>수요 예측, 재고 최적화, 개인화 추천</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="landing-cta-section" id="contact">
+        <div class="container">
+            <div class="cta-content">
+                <h2>AI 솔루션 도입을 고민하고 계신가요?</h2>
+                <p>전문 컨설턴트가 귀사에 최적화된 솔루션을 제안해 드립니다.</p>
+                <a href="#" class="btn-primary btn-large">무료 상담 신청</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer - KakaoBank Style -->
+    <footer class="footer-kakao">
+        <!-- Footer Links Bar -->
+        <div class="footer-links-bar">
+            <div class="container">
+                <ul class="footer-policy-links">
+                    <li><a href="#">이용약관</a></li>
+                    <li><a href="#" class="highlight">개인정보처리방침</a></li>
+                    <li><a href="#">신용정보활용체제</a></li>
+                    <li><a href="#">경영공시</a></li>
+                    <li><a href="#">고객센터</a></li>
+                </ul>
+            </div>
+        </div>
+        
+        <!-- Footer Main -->
+        <div class="footer-kakao-main">
+            <div class="container">
+                <div class="footer-kakao-content">
+                    <!-- Company Info -->
+                    <div class="footer-kakao-info">
+                        <div class="footer-kakao-logo">
+                            <span class="logo-icon">T</span>
+                            <span class="logo-text">팀벨</span>
+                        </div>
+                        <div class="footer-kakao-details">
+                            <p>
+                                <span class="label">(주)팀벨</span>
+                                <span class="divider">|</span>
+                                <span>대표 홍길동</span>
+                                <span class="divider">|</span>
+                                <span>사업자번호 206-81-58545</span>
+                            </p>
+                            <p>
+                                <span>서울 강남구 테헤란로 13길 16 덕원빌딩 2층</span>
+                            </p>
+                            <p class="contact-info">
+                                <span class="phone">02-584-8181</span>
+                                <span class="phone-sub">(해외 +82-2-584-8181)</span>
+                            </p>
+                        </div>
+                    </div>
+                    
+                    <!-- Certifications -->
+                    <div class="footer-kakao-certs">
+                        <div class="cert-badge">
+                            <span class="cert-icon">✓</span>
+                            <span class="cert-text">웹 접근성<br>인증</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Copyright -->
+                <div class="footer-kakao-copyright">
+                    <p>© TIMBELL Corp.</p>
+                </div>
+            </div>
+        </div>
+        
+        <button class="scroll-top" id="scrollTop">Top</button>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
+
