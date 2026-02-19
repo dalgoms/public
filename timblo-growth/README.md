@@ -78,22 +78,20 @@
 ---
 
 ## 레포 구조
-<pre>
+```
 timblo-growth/
 ├── README.md
 ├── docs/
-│ ├── hybrid-marketing-system.html
-│ ├── public-sharing-formats.md
-│ ├── timblo_팀_배너.html ← 블로그 하단 배너 시안
-│ └── 팀블로_마케팅채널_IA_설계서.html
+│   ├── hybrid-marketing-system.html
+│   └── public-sharing-formats.md
 ├── logs/
-│ ├── template.md
-│ └── YYYY-MM-DD.md
+│   ├── _template.md
+│   └── YYYY-MM-DD.md
 ├── automation/
-│ └── architecture.md
+│   └── architecture.md
 └── operations/
-└── weekly-plan.md
-<pre>.
+    └── weekly-plan.md
+```
 
 ---
 
@@ -112,6 +110,7 @@ timblo-growth/
 - [공개 공유 포맷](docs/public-sharing-formats.md)
 - [블로그 배너 시안](docs/timblo_팀_배너.html)
 - [성장 로그](logs/)
+
 
 
 
