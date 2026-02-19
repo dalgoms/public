@@ -93,7 +93,7 @@ timblo-growth/
 │ └── architecture.md
 └── operations/
 └── weekly-plan.md
-<pre>
+<pre>.
 
 ---
 
@@ -112,6 +112,7 @@ timblo-growth/
 - [공개 공유 포맷](docs/public-sharing-formats.md)
 - [블로그 배너 시안](docs/timblo_팀_배너.html)
 - [성장 로그](logs/)
+
 
 
 
