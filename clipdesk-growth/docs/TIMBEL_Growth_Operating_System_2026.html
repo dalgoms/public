@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TIMBEL Growth Operating System 2026</title>
+    <link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css" rel="stylesheet">
+    <style>
+        :root {
+            --toss-blue: #3182f6;
+            --toss-blue-light: #e8f3ff;
+            --toss-black: #191f28;
+            --toss-gray-900: #333d4b;
+            --toss-gray-700: #4e5968;
+            --toss-gray-600: #6b7684;
+            --toss-gray-500: #8b95a1;
+            --toss-gray-200: #e5e8eb;
+            --toss-gray-100: #f2f4f6;
+            --toss-gray-50: #f9fafb;
+            --toss-white: #ffffff;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui, sans-serif; background: var(--toss-gray-50); color: var(--toss-gray-900); line-height: 1.6; -webkit-font-smoothing: antialiased; }
+        .header { background: var(--toss-white); border-bottom: 1px solid var(--toss-gray-200); position: sticky; top: 0; z-index: 100; }
+        .header-inner { max-width: 1200px; margin: 0 auto; padding: 20px 24px; display: flex; justify-content: space-between; align-items: center; }
+        .logo { font-size: 20px; font-weight: 700; color: var(--toss-blue); }
+        .doc-badge { background: var(--toss-blue-light); color: var(--toss-blue); padding: 6px 12px; border-radius: 6px; font-size: 13px; font-weight: 600; }
+        .hero { background: var(--toss-blue); color: var(--toss-white); padding: 48px 24px; text-align: center; }
+        .hero-badge { display: inline-block; background: rgba(255,255,255,0.15); padding: 8px 20px; border-radius: 20px; font-size: 14px; margin-bottom: 16px; }
+        .hero h1 { font-size: 32px; font-weight: 700; margin-bottom: 8px; }
+        .hero-subtitle { font-size: 16px; opacity: 0.9; }
+        .container { max-width: 1000px; margin: 0 auto; padding: 40px 24px; }
+        .section { background: var(--toss-white); border-radius: 16px; padding: 32px; margin-bottom: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.04); }
+        .section-number { display: inline-flex; align-items: center; justify-content: center; width: 28px; height: 28px; background: var(--toss-blue); color: white; border-radius: 6px; font-size: 13px; font-weight: 700; margin-bottom: 12px; }
+        .section h2 { font-size: 20px; font-weight: 700; color: var(--toss-black); margin-bottom: 16px; }
+        .section h3 { font-size: 15px; font-weight: 600; margin: 20px 0 8px; }
+        .section p, .section li { color: var(--toss-gray-700); font-size: 14px; margin-bottom: 8px; }
+        .section ul { margin: 6px 0 12px 20px; }
+        table { width: 100%; border-collapse: collapse; font-size: 13px; }
+        th { background: var(--toss-gray-100); color: var(--toss-gray-700); font-weight: 600; padding: 10px 12px; text-align: left; border-bottom: 2px solid var(--toss-gray-200); }
+        td { padding: 10px 12px; border-bottom: 1px solid var(--toss-gray-200); color: var(--toss-gray-700); }
+        tr:hover td { background: var(--toss-gray-50); }
+        .table-wrapper { overflow-x: auto; margin: 12px 0; border-radius: 10px; overflow: hidden; border: 1px solid var(--toss-gray-200); }
+        .executive-summary { background: var(--toss-blue-light); border: 1px solid var(--toss-blue); }
+        .executive-summary h2 { color: var(--toss-blue); }
+        .code-block { background: var(--toss-gray-900); color: #e5e8eb; padding: 16px 20px; border-radius: 10px; font-family: 'Consolas', 'Monaco', monospace; font-size: 13px; line-height: 1.6; margin: 12px 0; white-space: pre; }
+        .toc { background: var(--toss-gray-100); border-radius: 10px; padding: 16px; margin-bottom: 20px; }
+        .toc h3 { margin: 0 0 10px; font-size: 14px; }
+        .toc ul { list-style: none; margin: 0; padding: 0; }
+        .toc li { padding: 4px 0; }
+        .toc a { color: var(--toss-blue); text-decoration: none; font-weight: 500; font-size: 14px; }
+        .toc a:hover { text-decoration: underline; }
+        .one-page { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+        .one-page .col { min-width: 0; }
+        .one-page table { font-size: 12px; }
+        .one-page th, .one-page td { padding: 8px 10px; }
+        @media (max-width: 768px) { .hero h1 { font-size: 26px; } .section { padding: 24px 20px; } .one-page { grid-template-columns: 1fr; } }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="header-inner">
+            <span class="logo">TIMBEL Growth Operating System 2026</span>
+            <div class="doc-badge">회사 전체 운영 설계서</div>
+        </div>
+    </header>
+
+    <section class="hero">
+        <div class="hero-badge">3개 프로젝트 병행 · Owner Model</div>
+        <h1>TIMBEL Growth Operating System 2026</h1>
+        <p class="hero-subtitle">상반기~하반기 · TIMBEL · timblo · Clipdesk</p>
+    </section>
+
+    <div class="container">
+        <section class="section executive-summary" id="section-1">
+            <div class="section-number">1</div>
+            <h2>Executive Overview (30초 요약)</h2>
+            <table style="border:none; background:transparent;">
+                <tr><td style="width:100px; border:none; padding:6px 0; vertical-align:top;"><strong>구조</strong></td><td style="border:none; padding:6px 0;">TIMBEL 홈페이지(연중) + timblo(상반기) + Clipdesk(하반기)</td></tr>
+                <tr><td style="border:none; padding:6px 0; vertical-align:top;"><strong>TIMBEL</strong></td><td style="border:none; padding:6px 0;">브랜드 허브 · 모든 서비스 진입점</td></tr>
+                <tr><td style="border:none; padding:6px 0; vertical-align:top;"><strong>timblo</strong></td><td style="border:none; padding:6px 0;">상반기 Revenue Engine · 데모→미팅→계약</td></tr>
+                <tr><td style="border:none; padding:6px 0; vertical-align:top;"><strong>Clipdesk</strong></td><td style="border:none; padding:6px 0;">하반기 콘텐츠 자동화 확장 + KOBA 런치</td></tr>
+                <tr><td style="border:none; padding:6px 0; vertical-align:top;"><strong>조직</strong></td><td style="border:none; padding:6px 0;">Growth Owner 1 / Designer 1 / Edit 1 / Transcription 1 / Caption 1</td></tr>
+                <tr><td style="border:none; padding:6px 0; vertical-align:top;"><strong>철학</strong></td><td style="border:none; padding:6px 0;">총괄=전략·구조·KPI·퍼널만 / 사업부=전문 채널 직접 운영 / 홍보팀=시스템 오너(실행 아님)</td></tr>
+            </table>
+        </section>
+
+        <nav class="toc">
+            <h3>목차</h3>
+            <ul>
+                <li><a href="#section-1">1. Executive Overview</a></li>
+                <li><a href="#section-2">2. 연간 병렬 구조 다이어그램</a></li>
+                <li><a href="#section-3">3. 각 프로젝트 목적</a></li>
+                <li><a href="#section-4">4. 역할 분리 구조 (Owner Model)</a></li>
+                <li><a href="#section-5">5. 채널 IA</a></li>
+                <li><a href="#section-6">6. 주간 운영 리듬</a></li>
+                <li><a href="#section-7">7. KOBA D-60 타임라인</a></li>
+                <li><a href="#section-8">8. 리드 흐름</a></li>
+                <li><a href="#section-9">9. One Page Summary (회의용)</a></li>
+            </ul>
+        </nav>
+
+        <section class="section" id="section-2">
+            <div class="section-number">2</div>
+            <h2>연간 병렬 구조 다이어그램</h2>
+            <div class="code-block">TIMBEL 홈페이지 (연중 · 3월 완료 목표)
+    ├── timblo (상반기 집중)
+    │   └── Revenue OS (채널 + 리드 + 계약)
+    │
+    └── Clipdesk (하반기 집중)
+        └── Channel OS + KOBA 전시</div>
+        </section>
+
+        <section class="section" id="section-3">
+            <div class="section-number">3</div>
+            <h2>각 프로젝트 목적</h2>
+            <div class="table-wrapper">
+                <table>
+                    <thead><tr><th>프로젝트</th><th>목적</th></tr></thead>
+                    <tbody>
+                        <tr><td><strong>TIMBEL 홈페이지</strong></td><td>브랜드 허브 · 모든 서비스 진입점</td></tr>
+                        <tr><td><strong>timblo</strong></td><td>데모 → 미팅 → 계약 퍼널 안정화</td></tr>
+                        <tr><td><strong>Clipdesk</strong></td><td>AI 콘텐츠 자동화 플랫폼 포지셔닝 · KOBA 기반 신규 리드 생성</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <section class="section" id="section-4">
+            <div class="section-number">4</div>
+            <h2>역할 분리 구조 (Owner Model)</h2>
+            <div class="table-wrapper">
+                <table>
+                    <thead><tr><th>역할</th><th>담당</th><th>책임 범위</th></tr></thead>
+                    <tbody>
+                        <tr><td>Growth Owner</td><td>1명</td><td>메시지 · IA · KPI · 퍼널 · 자동화</td></tr>
+                        <tr><td>Designer</td><td>1명</td><td>시각물 전담 (Hero / 썸네일 / 리플렛 / 랜딩 UI)</td></tr>
+                        <tr><td>Edit</td><td>1명</td><td>영상 · YouTube · Naver TV</td></tr>
+                        <tr><td>Transcription</td><td>1명</td><td>글로벌 사례 · LinkedIn India</td></tr>
+                        <tr><td>Caption</td><td>1명</td><td>국내 자막 Before/After · 샘플 제공자</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <section class="section" id="section-5">
+            <div class="section-number">5</div>
+            <h2>채널 IA (공통 프레임)</h2>
+            <h3>timblo</h3>
+            <div class="table-wrapper">
+                <table>
+                    <thead><tr><th>유형</th><th>채널</th><th>목적</th><th>담당</th><th>주간 리듬</th><th>KPI</th></tr></thead>
+                    <tbody>
+                        <tr><td>Paid</td><td>검색 광고</td><td>데모 리드</td><td>Growth Owner</td><td>-</td><td>데모당 비용</td></tr>
+                        <tr><td>Owned</td><td>Landing</td><td>미팅 전환</td><td>Growth Owner</td><td>-</td><td>폼 전환</td></tr>
+                        <tr><td>Owned</td><td>Blog</td><td>검색·인지</td><td>Growth Owner</td><td>주 1</td><td>유입</td></tr>
+                        <tr><td>SNS</td><td>LinkedIn</td><td>B2B 리드</td><td>Growth Owner</td><td>주 2</td><td>DM, 미팅</td></tr>
+                    </tbody>
+                </table>
+            </div>
+            <h3>Clipdesk</h3>
+            <div class="table-wrapper">
+                <table>
+                    <thead><tr><th>유형</th><th>채널</th><th>목적</th><th>담당</th><th>주간 리듬</th><th>KPI</th></tr></thead>
+                    <tbody>
+                        <tr><td>Paid</td><td>검색/KOBA 광고</td><td>리드</td><td>Growth Owner</td><td>KOBA 전 4주</td><td>클릭·문의</td></tr>
+                        <tr><td>Owned</td><td>Clipdesk 홈, 블로그</td><td>폼 전환</td><td>Growth Owner / Caption / Transcription</td><td>주 1 / 2주 1</td><td>폼, 유입</td></tr>
+                        <tr><td>Earned</td><td>언론·파트너</td><td>인지</td><td>Growth Owner / 각 사업부</td><td>-</td><td>기사·링크</td></tr>
+                        <tr><td>SNS</td><td>LinkedIn (한국)</td><td>KOBA·B2B</td><td>Edit / Growth Owner</td><td>주 2</td><td>DM, 미팅</td></tr>
+                        <tr><td>SNS</td><td>LinkedIn (India)</td><td>글로벌 Use Case</td><td>Transcription</td><td>주 1</td><td>조회, 링크</td></tr>
+                        <tr><td>SNS</td><td>YouTube</td><td>데모·사례</td><td>Caption / Edit</td><td>2주 1</td><td>시청, 링크</td></tr>
+                        <tr><td>SNS</td><td>Naver TV</td><td>국내 영상</td><td>Caption</td><td>2주 1</td><td>시청</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <section class="section" id="section-6">
+            <div class="section-number">6</div>
+            <h2>주간 운영 리듬 (총괄 기준)</h2>
+            <div class="table-wrapper">
+                <table>
+                    <thead><tr><th>요일</th><th>내용</th></tr></thead>
+                    <tbody>
+                        <tr><td>월/화</td><td>전략 & IA</td></tr>
+                        <tr><td>수/목</td><td>사업부 연결 + 콘텐츠 취합</td></tr>
+                        <tr><td>금</td><td>KPI 리뷰 + 다음 주 계획</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <section class="section" id="section-7">
+            <div class="section-number">7</div>
+            <h2>KOBA D-60 타임라인 (Clipdesk)</h2>
+            <div class="table-wrapper">
+                <table>
+                    <thead><tr><th>주</th><th>Phase</th><th>담당</th><th>산출물</th><th>마감</th></tr></thead>
+                    <tbody>
+                        <tr><td>Week 1</td><td>브랜드 정렬</td><td>Growth Owner</td><td>메시지 1줄, KPI 시트, KOBA 계약</td><td>금</td></tr>
+                        <tr><td></td><td></td><td>Edit / Transcription / Caption</td><td>Use Case 1줄 each</td><td>수</td></tr>
+                        <tr><td>Week 2</td><td>콘텐츠 준비</td><td>Growth Owner</td><td>랜딩 IA, 초대 리스트 1차</td><td>금</td></tr>
+                        <tr><td></td><td></td><td>각 사업부</td><td>랜딩 소재 (텍스트·이미지)</td><td>목</td></tr>
+                        <tr><td>Week 3</td><td>사전 홍보</td><td>Growth Owner</td><td>랜딩·사전등록 오픈, QR 폼 확정</td><td>수/금</td></tr>
+                        <tr><td></td><td></td><td>각 사업부</td><td>LinkedIn 1편, 블로그 KOBA 프리뷰</td><td>목</td></tr>
+                        <tr><td>Week 4</td><td>콘텐츠 준비</td><td>Growth Owner</td><td>부스·인쇄물 발주, 초대 메일 1차</td><td>수/금</td></tr>
+                        <tr><td></td><td></td><td>각 사업부</td><td>부스 데모 샘플 (영상·시나리오)</td><td>목</td></tr>
+                        <tr><td>Week 5</td><td>사전 홍보</td><td>Growth Owner</td><td>QR 폼 연동, 스탭 배치·교육</td><td>화/목</td></tr>
+                        <tr><td></td><td></td><td>각 사업부</td><td>LinkedIn 2편, Threads 2편, 초대 2차</td><td>금</td></tr>
+                        <tr><td>Week 6</td><td>전시 운영 준비</td><td>Growth Owner</td><td>부스 설치·최종 점검</td><td>D-1</td></tr>
+                        <tr><td></td><td></td><td>각 사업부</td><td>감사 메일·스크립트, 리드 후속 리허설, 명함·소모품</td><td>수/금</td></tr>
+                        <tr><td>D-day~D+2</td><td>48h Follow-up</td><td>Transcription</td><td>리드 이관</td><td>D-day</td></tr>
+                        <tr><td></td><td></td><td>Growth Owner</td><td>우선순위 분류</td><td>D+1</td></tr>
+                        <tr><td></td><td></td><td>Edit / Caption / Transcription</td><td>감사 메일 + 1차 전화 100%</td><td>D+2</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <section class="section" id="section-8">
+            <div class="section-number">8</div>
+            <h2>리드 흐름</h2>
+            <div class="code-block">온라인 콘텐츠
+    ↓
+랜딩 / QR
+    ↓
+Form
+    ↓
+DB
+    ↓
+알림
+    ↓
+48시간 Follow-up</div>
+        </section>
+
+        <section class="section" id="section-9">
+            <div class="section-number">9</div>
+            <h2>One Page Summary (회의용)</h2>
+            <div class="one-page">
+                <div class="col">
+                    <h3>3개 프로젝트</h3>
+                    <table>
+                        <tr><td>TIMBEL 홈</td><td>3월 완료 · 브랜드 허브</td></tr>
+                        <tr><td>timblo</td><td>상반기 Revenue OS</td></tr>
+                        <tr><td>Clipdesk</td><td>하반기 Channel OS + KOBA</td></tr>
+                    </table>
+                    <h3>역할표</h3>
+                    <table>
+                        <tr><td>Growth Owner</td><td>메시지·IA·KPI·퍼널·자동화</td></tr>
+                        <tr><td>Designer</td><td>시각물 (Hero/썸네일/리플렛/UI)</td></tr>
+                        <tr><td>Edit</td><td>영상·YouTube·Naver TV</td></tr>
+                        <tr><td>Transcription</td><td>글로벌·LinkedIn India</td></tr>
+                        <tr><td>Caption</td><td>국내 자막 Before/After</td></tr>
+                    </table>
+                </div>
+                <div class="col">
+                    <h3>채널 표 (요약)</h3>
+                    <table>
+                        <tr><td>timblo</td><td>LinkedIn, Blog, Landing</td></tr>
+                        <tr><td>Clipdesk</td><td>LinkedIn, Blog, YouTube, Naver TV, KOBA</td></tr>
+                    </table>
+                    <h3>KPI</h3>
+                    <table>
+                        <tr><td>timblo</td><td>데모 수, 미팅 수, 계약 수</td></tr>
+                        <tr><td>Clipdesk KOBA</td><td>사전 미팅 10–20, 현장 리드 50+, 48h 후속률</td></tr>
+                        <tr><td>주간</td><td>콘텐츠 게시 수, 유입, DM·미팅</td></tr>
+                    </table>
+                </div>
+            </div>
+        </section>
+    </div>
+</body>
+</html>
