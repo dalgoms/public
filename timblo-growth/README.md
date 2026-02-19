@@ -27,10 +27,6 @@
 
 ## North Star
 
-```
-데모 요청 → 미팅 → 계약
-```
-
 모든 활동이 이 루프에 연결됩니다.
 
 ---
@@ -66,22 +62,37 @@
 
 ---
 
-## 레포 구조
+## 블로그 배너 브랜딩
 
-```
+**자사 블로그 포스팅용 배너 시안**입니다. 포스트 하단에 팀 소개 배너를 삽입할 때 사용합니다.
+
+| 항목 | 내용 |
+|------|------|
+| **메인** | 실무자가 직접 만드는 AI 솔루션 timblo |
+| **서브** | 자사 블로그 포스팅용 배너 시안 브랜딩 |
+
+**팀 카드 순서**: 이세영(Head of Growth) → 박한주(Business Consultant) → 서동숙(Visual Designer) → 길은진(UX/UI Designer)
+
+→ [배너 시안 보기](docs/timblo_팀_배너.html)
+
+---
+
+## 레포 구조
 timblo-growth/
 ├── README.md
 ├── docs/
-│   ├── hybrid-marketing-system.html
-│   └── public-sharing-formats.md
+│ ├── hybrid-marketing-system.html
+│ ├── public-sharing-formats.md
+│ ├── timblo_팀_배너.html ← 블로그 하단 배너 시안
+│ └── 팀블로_마케팅채널_IA_설계서.html
 ├── logs/
-│   ├── _template.md
-│   └── YYYY-MM-DD.md
+│ ├── template.md
+│ └── YYYY-MM-DD.md
 ├── automation/
-│   └── architecture.md
+│ └── architecture.md
 └── operations/
-    └── weekly-plan.md
-```
+└── weekly-plan.md
+
 
 ---
 
@@ -98,4 +109,7 @@ timblo-growth/
 - [전체 시스템 설계](docs/hybrid-marketing-system.html)
 - [자동화 아키텍처](automation/architecture.md)
 - [공개 공유 포맷](docs/public-sharing-formats.md)
+- [블로그 배너 시안](docs/timblo_팀_배너.html)
 - [성장 로그](logs/)
+
+
