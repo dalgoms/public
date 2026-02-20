@@ -6,11 +6,19 @@
 
 | 폴더 | 설명 |
 |------|------|
+<<<<<<< Updated upstream
 | **[content-factory/](./AI%20tool%2Bmake-automation-public/content-factory/)** |
 | [scenarios/](./AI%20tool%2Bmake-automation-public/scenarios/) |
 | [docs/](./AI%20tool%2Bmake-automation-public/docs/) |
 | [templates/](./AI%20tool%2Bmake-automation-public/templates/) |
 | [vibecoding/](./vibecoding/) |  ← 추가!
+=======
+| **[content-factory/](./AI%20tool%2Bmake-automation-public/content-factory/)** | AI 기반 콘텐츠 자동화 + 인바운드 영업 Revenue Support System |
+| [scenarios/](./AI%20tool%2Bmake-automation-public/scenarios/) | Make 시나리오 설계/이슈 대응 문서 |
+| [docs/](./AI%20tool%2Bmake-automation-public/docs/) | 공통 문서 |
+| [templates/](./AI%20tool%2Bmake-automation-public/templates/) | 템플릿 |
+| [vibecoding/](./vibecoding/) | Vibe Coding 포트폴리오 (Origin Project) |
+>>>>>>> Stashed changes
 
 ## 📋 프로젝트 개요
 
