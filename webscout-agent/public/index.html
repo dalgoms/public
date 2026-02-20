@@ -16,11 +16,33 @@
     </button>
   </div>
 
+  <!-- Top Header - Theme & Language -->
+  <header class="top-header">
+    <div class="container">
+      <div class="top-header-content">
+        <div class="top-header-left"></div>
+        <div class="top-header-right">
+          <div class="header-controls">
+            <button id="themeToggle" class="header-btn" aria-label="Toggle theme">
+              <span class="theme-icon-light" id="themeIconLight">☀️</span>
+              <span class="theme-icon-dark" id="themeIconDark" style="display:none;">🌙</span>
+            </button>
+            <div class="language-selector">
+              <button id="langToggle" class="header-btn" aria-label="Toggle language">
+                <span id="langText">한글</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
   <div class="container">
     <!-- Hero Search Section -->
     <section class="hero">
       <h1 class="hero-title">WebScout Agent</h1>
-      <p class="hero-subtitle">AI-powered website discovery for Figma-ready design</p>
+      <p class="hero-subtitle">AI 웹에이전트가 자동으로 발견하고 분석하는 웹사이트 인텔리전스 플랫폼</p>
       <div class="hero-flow">
         <span>Discover</span>
         <span>→</span>
@@ -107,17 +129,25 @@
     <!-- Insights Section -->
     <section id="insightsSection" class="card" style="display:none;" role="region" aria-label="Website Insights">
       <div class="insights-header">
-        <h2 class="insights-title">Insights</h2>
-        <div class="insights-tabs" role="tablist">
-          <button class="insight-tab active" data-tab="sitemap" role="tab" aria-selected="true">Sitemap View</button>
-          <button class="insight-tab" data-tab="types" role="tab" aria-selected="false">Page Types</button>
-          <button class="insight-tab" data-tab="figma" role="tab" aria-selected="false">Figma Ready</button>
-          <button class="insight-tab" data-tab="importance" role="tab" aria-selected="false">Importance</button>
+        <div class="insights-header-top">
+          <h2 class="insights-title">Insights</h2>
+        </div>
+        <div class="insights-header-bottom">
+          <div class="insights-tabs" role="tablist">
+            <button class="insight-tab active" data-tab="ai" role="tab" aria-selected="true">AI Insights</button>
+            <button class="insight-tab" data-tab="sitemap" role="tab" aria-selected="false">Sitemap View</button>
+            <button class="insight-tab" data-tab="types" role="tab" aria-selected="false">Page Types</button>
+            <button class="insight-tab" data-tab="figma" role="tab" aria-selected="false">Figma Ready</button>
+            <button class="insight-tab" data-tab="importance" role="tab" aria-selected="false">Importance</button>
+          </div>
         </div>
       </div>
 
+      <!-- AI Insights Tab -->
+      <div id="insightAi" class="insight-content active" role="tabpanel">
+        
       <!-- Sitemap View Tab -->
-      <div id="insightSitemap" class="insight-content active" role="tabpanel">
+      <div id="insightSitemap" class="insight-content" role="tabpanel" style="display:none;">
         <div id="sitemapTree" class="sitemap-tree"></div>
       </div>
 
@@ -135,6 +165,127 @@
       <div id="insightImportance" class="insight-content" role="tabpanel" style="display:none;">
         <div id="importanceList" class="importance-list"></div>
       </div>
+        <div id="aiInsightsContent" class="ai-insights-content">
+          <!-- AI Insights (Enhanced) - Moved to top -->
+          <!-- Site Summary -->
+          <div id="aiSiteSummary" class="ai-section" style="display:none;">
+            <h3 class="ai-section-title">Site Summary</h3>
+            <div id="aiSiteSummaryContent" class="ai-summary-grid"></div>
+          </div>
+
+          <!-- Funnel Guess -->
+          <div id="aiFunnel" class="ai-section" style="display:none;">
+            <h3 class="ai-section-title">Funnel Guess</h3>
+            <div id="aiFunnelContent" class="ai-funnel-content"></div>
+          </div>
+
+          <!-- AI Summary -->
+          <div id="aiSummary" class="ai-section" style="display:none;">
+            <h3 class="ai-section-title">AI Summary</h3>
+            <div id="aiSummaryContent" class="ai-summary-text"></div>
+          </div>
+
+          <!-- Gaps -->
+          <div id="aiGaps" class="ai-section" style="display:none;">
+            <h3 class="ai-section-title">Missing Elements</h3>
+            <ul id="aiGapsList" class="ai-list"></ul>
+          </div>
+
+          <!-- Recommendations -->
+          <div id="aiRecommendations" class="ai-section" style="display:none;">
+            <h3 class="ai-section-title">Top Recommendations</h3>
+            <div id="aiRecommendationsList" class="ai-recommendations-grid"></div>
+          </div>
+
+          <!-- Content Ideas -->
+          <div id="aiContentIdeas" class="ai-section" style="display:none;">
+            <h3 class="ai-section-title">Content Strategy Ideas</h3>
+            <ul id="aiContentIdeasList" class="ai-list"></ul>
+          </div>
+
+          <!-- Strategist-Oriented Sections -->
+          <div class="strategist-insights">
+            <!-- Funnel Health -->
+            <div id="strategistFunnelHealth" class="strategist-section">
+              <div class="strategist-section-header">
+                <h3 class="strategist-section-title">Funnel Health</h3>
+                <div class="strategist-score" id="funnelHealthScore">-</div>
+              </div>
+              <div class="strategist-funnel-viz" id="funnelHealthViz"></div>
+              <ul class="strategist-insights-list" id="funnelHealthInsights"></ul>
+              <div class="strategist-recommendation" id="funnelHealthRecommendation"></div>
+            </div>
+
+            <!-- Design Debt -->
+            <div id="strategistDesignDebt" class="strategist-section">
+              <div class="strategist-section-header">
+                <h3 class="strategist-section-title">Design Debt</h3>
+                <div class="strategist-score" id="designDebtScore">-</div>
+              </div>
+              <ul class="strategist-insights-list" id="designDebtInsights"></ul>
+              <div class="strategist-recommendation" id="designDebtRecommendation"></div>
+            </div>
+
+            <!-- Content Coverage -->
+            <div id="strategistContentCoverage" class="strategist-section">
+              <div class="strategist-section-header">
+                <h3 class="strategist-section-title">Content Coverage</h3>
+                <div class="strategist-score" id="contentCoverageScore">-</div>
+              </div>
+              <ul class="strategist-insights-list" id="contentCoverageInsights"></ul>
+              <div class="strategist-recommendation" id="contentCoverageRecommendation"></div>
+            </div>
+
+            <!-- Conversion Readiness -->
+            <div id="strategistConversionReadiness" class="strategist-section">
+              <div class="strategist-section-header">
+                <h3 class="strategist-section-title">Conversion Readiness</h3>
+                <div class="strategist-score" id="conversionReadinessScore">-</div>
+              </div>
+              <ul class="strategist-insights-list" id="conversionReadinessInsights"></ul>
+              <div class="strategist-recommendation" id="conversionReadinessRecommendation"></div>
+            </div>
+          </div>
+
+          <!-- Content Strategy Recommended Pages -->
+          <div id="aiContentStrategy" class="ai-section" style="display:none;">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:var(--space-md);">
+              <h3 class="ai-section-title">Recommended Pages</h3>
+              <button id="btnGenerateContentStrategy" class="btn btn-sm">Generate Content Strategy</button>
+            </div>
+            <div id="aiContentStrategyList" class="ai-content-strategy-list"></div>
+          </div>
+
+          <!-- Landing Page Insights -->
+          <div id="aiLandingInsights" class="ai-section" style="display:none;">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:var(--space-md);">
+              <h3 class="ai-section-title">Landing Page Feedback</h3>
+              <button id="btnGenerateLandingInsights" class="btn btn-sm">Analyze Landing Pages</button>
+            </div>
+            <div id="aiLandingInsightsContent" class="ai-landing-insights"></div>
+          </div>
+
+          <!-- QA Monitor -->
+          <div id="aiQAMonitor" class="ai-section" style="display:none;">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:var(--space-md);">
+              <h3 class="ai-section-title">QA Status</h3>
+              <button id="btnRunQA" class="btn btn-sm">Run QA Check</button>
+            </div>
+            <div id="aiQAContent" class="ai-qa-content"></div>
+          </div>
+
+          <!-- Loading State -->
+          <div id="aiLoading" class="ai-loading" style="display:none;">
+            <div class="progress-spinner"></div>
+            <p id="aiLoadingText">Generating AI insights...</p>
+          </div>
+
+          <!-- Error State -->
+          <div id="aiError" class="ai-error" style="display:none;">
+            <p id="aiErrorMessage"></p>
+          </div>
+        </div>
+      </div>
     </section>
 
     <!-- URL Table Section -->
@@ -146,6 +297,7 @@
           <span class="selection-info" id="selectionInfo" style="display:none;"></span>
         </div>
         <div class="table-actions">
+          <button id="btnAutoSelectDesign" class="btn btn-sm">Auto-select Design Pages</button>
           <button id="btnSelectAll" class="btn btn-sm">Select All</button>
           <button id="btnClearSelection" class="btn btn-sm" style="display:none;">Clear</button>
           <button id="btnTxt" class="btn btn-sm">

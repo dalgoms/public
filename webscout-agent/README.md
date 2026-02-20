@@ -1,10 +1,11 @@
 # WebScout Agent
-https://webscout-agent.vercel.app/
 
 **AI-powered website discovery agent for Figma-ready design.**
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Node.js Version](https://img.shields.io/badge/node-%3E%3D18-brightgreen)](https://nodejs.org/)
+
+[🇰🇷 한국어](README.ko.md) | [🇺🇸 English](README.md)
 
 ---
 
@@ -72,6 +73,14 @@ For detailed flow diagram, see [docs/agent-flow.md](./docs/agent-flow.md)
 - ✅ **Export formats** - urls.txt (one per line) and urls.csv
 - ✅ **Insights tabs** - Sitemap view, page types, Figma readiness, importance
 
+### AI-Powered Intelligence
+- ✅ **AI Insights** - Generate marketing and design insights using GPT-4
+- ✅ **Competitor Analysis Mode** - Analyze competitor sites with strengths/weaknesses
+- ✅ **Content Strategy Agent** - Suggest missing content pages
+- ✅ **Landing Page Analysis** - Conversion optimization feedback
+- ✅ **Auto-select Design Pages** - Automatically select top 10 pages by importance
+- ✅ **QA Monitor** - Basic quality checks for URLs
+
 ---
 
 ## Quick Start
@@ -90,7 +99,13 @@ cd webscout-agent
 
 # Install dependencies
 npm install
+
+# Set up OpenAI API key (optional, for AI features)
+# Create a .env file in the root directory:
+echo "OPENAI_API_KEY=your-api-key-here" > .env
 ```
+
+**Note**: AI features require an OpenAI API key. Without it, core URL collection features still work.
 
 ### Run Web UI
 
@@ -100,7 +115,7 @@ npm start
 
 Open your browser: **http://localhost:3001**
 
-The server automatically finds an available port between 3001-3010.
+> **Note**: The server automatically finds an available port between 3001-3010. Check the console output for the actual port number if 3001 is already in use. The URL should be `http://localhost:3001` (no hash or trailing slash needed).
 
 ---
 
@@ -115,12 +130,47 @@ The server automatically finds an available port between 3001-3010.
    - **Exclude**: Comma-separated paths to exclude (e.g., `/admin,/api`)
 3. **Click "Collect URLs"** - Watch real-time progress
 4. **Review Results** - Check KPI cards and URL table
-5. **Export** - Download `urls.txt` or `urls.csv`
-6. **Import to Figma** - Use [html.to.design](https://html.to.design) to import URLs
+5. **Explore Insights** - View sitemap tree, page types, Figma readiness, and importance
+6. **Generate AI Insights** (requires OpenAI API key):
+   - Click **"AI Insights"** tab
+   - Toggle **"Analyze as Competitor"** for competitor analysis
+   - Click **"Generate AI Insights"** for marketing/design recommendations
+   - Use **"Generate Content Strategy"** for content suggestions
+   - Use **"Analyze Landing Pages"** for conversion feedback
+7. **Auto-select Design Pages** - Click **"Auto-select Design Pages"** to automatically select top 10 pages by importance
+8. **Export** - Download `urls.txt` or `urls.csv`
+9. **Import to Figma** - Use [html.to.design](https://html.to.design) to import URLs
 
 ### Demo Site
 
 Click **"Use Demo Site"** to test with `https://webscout-demo.pages.dev`
+
+### AI Features
+
+**AI Insights Tab** provides:
+- **Site Summary**: Page distribution (Product/Content/Conversion/Company)
+- **Funnel Analysis**: Landing → Product → Conversion flow
+- **Missing Elements**: Gaps in site structure
+- **Recommendations**: Top 5 improvement suggestions
+- **Content Ideas**: Content strategy suggestions
+
+**Competitor Mode** (toggle enabled):
+- **Strengths**: What competitor does well
+- **Weaknesses**: Gaps or issues
+- **Opportunities**: Areas to differentiate
+
+**Content Strategy Agent**:
+- Suggests missing pages (comparison, use cases, pricing explainers, case studies)
+
+**Landing Page Analysis**:
+- CTA visibility issues
+- Pricing page clarity
+- Contact form depth
+- Conversion flow optimization
+
+**QA Monitor**:
+- Basic quality checks (query params, path depth, URL length)
+- Marks pages as Healthy or Review Needed
 
 ---
 
@@ -193,7 +243,8 @@ None required for basic operation.
 
 ```
 webscout-agent/
-├── README.md                 # This file
+├── README.md                 # This file (English)
+├── README.ko.md             # Korean version
 ├── CHANGELOG.md              # Version history
 ├── LICENSE                   # MIT License
 ├── package.json              # Dependencies & scripts

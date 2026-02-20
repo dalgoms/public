@@ -1,3 +1,208 @@
+// Theme & Language Management
+const themeToggle = document.getElementById("themeToggle");
+const themeIconLight = document.getElementById("themeIconLight");
+const themeIconDark = document.getElementById("themeIconDark");
+const langToggle = document.getElementById("langToggle");
+const langText = document.getElementById("langText");
+
+// Load saved preferences
+const savedTheme = localStorage.getItem('theme') || 'light';
+const savedLang = localStorage.getItem('language') || 'ko';
+
+// Apply theme
+function applyTheme(theme) {
+  document.documentElement.setAttribute('data-theme', theme);
+  localStorage.setItem('theme', theme);
+  
+  if (theme === 'dark') {
+    themeIconLight.style.display = 'none';
+    themeIconDark.style.display = 'inline-block';
+  } else {
+    themeIconLight.style.display = 'inline-block';
+    themeIconDark.style.display = 'none';
+  }
+}
+
+// Apply language
+function applyLanguage(lang) {
+  document.documentElement.setAttribute('lang', lang);
+  localStorage.setItem('language', lang);
+  
+  if (lang === 'en') {
+    langText.textContent = 'EN';
+    updateUITexts('en');
+  } else {
+    langText.textContent = '한글';
+    updateUITexts('ko');
+  }
+}
+
+// Update UI texts based on language
+function updateUITexts(lang) {
+  const texts = {
+    ko: {
+      heroTitle: 'WebScout Agent',
+      heroSubtitle: 'AI 웹에이전트가 자동으로 발견하고 분석하는 웹사이트 인텔리전스 플랫폼',
+      heroFlow: ['발견', '정규화', '구조화', '내보내기'],
+      placeholder: '예: https://webscout.demo (링크를 입력해주세요)',
+      btnCollect: 'URL 수집',
+      btnDemo: '데모 사이트 사용',
+      btnCollecting: '수집 중…',
+      emptyTitle: '웹사이트를 탐색할 준비가 되셨나요?',
+      emptyText: '도메인을 붙여넣으면 WebScout Agent가 모든 페이지를 자동으로 매핑합니다.',
+      toastLinkRequired: '링크를 입력해주세요',
+      toastCollected: 'URL 수집 완료',
+      insights: '인사이트',
+      generateAI: 'AI 인사이트 생성',
+      generating: '생성 중…',
+      siteSummary: '사이트 요약',
+      funnelGuess: '퍼널 추정',
+      aiSummary: 'AI 요약',
+      missingElements: '누락된 요소',
+      topRecommendations: '상위 제안',
+      contentStrategyIdeas: '콘텐츠 전략 아이디어',
+      recommendedPages: '추천 페이지',
+      landingPageFeedback: '랜딩 페이지 피드백',
+      qaStatus: 'QA 상태',
+      generateContentStrategy: '콘텐츠 전략 생성',
+      analyzeLandingPages: '랜딩 페이지 분석',
+      runQACheck: 'QA 체크 실행',
+      // Add more translations as needed
+    },
+    en: {
+      heroTitle: 'WebScout Agent',
+      heroSubtitle: 'AI web agent that automatically discovers and analyzes websites',
+      heroFlow: ['Discover', 'Normalize', 'Structure', 'Export'],
+      placeholder: 'e.g., https://webscout.demo (Enter a link)',
+      btnCollect: 'Collect URLs',
+      btnDemo: 'Use Demo Site',
+      btnCollecting: 'Collecting…',
+      emptyTitle: 'Ready to scout your website?',
+      emptyText: 'Paste any domain and WebScout Agent will map every page automatically.',
+      toastLinkRequired: 'Please enter a link',
+      toastCollected: 'URLs collected',
+      insights: 'Insights',
+      generateAI: 'Generate AI Insights',
+      generating: 'Generating...',
+      siteSummary: 'Site Summary',
+      funnelGuess: 'Funnel Guess',
+      aiSummary: 'AI Summary',
+      missingElements: 'Missing Elements',
+      topRecommendations: 'Top Recommendations',
+      contentStrategyIdeas: 'Content Strategy Ideas',
+      recommendedPages: 'Recommended Pages',
+      landingPageFeedback: 'Landing Page Feedback',
+      qaStatus: 'QA Status',
+      generateContentStrategy: 'Generate Content Strategy',
+      analyzeLandingPages: 'Analyze Landing Pages',
+      runQACheck: 'Run QA Check',
+      // Add more translations as needed
+    }
+  };
+  
+  const t = texts[lang] || texts.en;
+  
+  // Store current language globally for use in other functions
+  window.currentLang = lang;
+  
+  // Update key UI elements
+  const heroTitle = document.querySelector('.hero-title');
+  const heroSubtitle = document.querySelector('.hero-subtitle');
+  const heroFlow = document.querySelectorAll('.hero-flow span');
+  const baseInput = document.getElementById('base');
+  const btnStartText = document.getElementById('btnStartText');
+  const btnDemoEl = document.getElementById('btnDemo');
+  const emptyStateTitle = document.querySelector('.empty-state-title');
+  const emptyStateText = document.querySelector('.empty-state-text');
+  const insightsTitle = document.querySelector('.insights-title');
+  if (heroTitle) heroTitle.textContent = t.heroTitle;
+  if (heroSubtitle) heroSubtitle.textContent = t.heroSubtitle;
+  if (baseInput) baseInput.placeholder = t.placeholder;
+  if (btnStartText && btnStartText.textContent !== 'Collecting…' && btnStartText.textContent !== '수집 중…') {
+    btnStartText.textContent = t.btnCollect;
+  }
+  if (btnDemoEl) btnDemoEl.textContent = t.btnDemo;
+  if (emptyStateTitle) emptyStateTitle.textContent = t.emptyTitle;
+  if (emptyStateText) emptyStateText.textContent = t.emptyText;
+  if (insightsTitle) insightsTitle.textContent = t.insights;
+  
+  // Update AI section titles
+  const aiSiteSummaryTitle = document.querySelector('#aiSiteSummary .ai-section-title');
+  const aiFunnelTitle = document.querySelector('#aiFunnel .ai-section-title');
+  const aiSummaryTitle = document.querySelector('#aiSummary .ai-section-title');
+  const aiGapsTitle = document.querySelector('#aiGaps .ai-section-title');
+  const aiRecommendationsTitle = document.querySelector('#aiRecommendations .ai-section-title');
+  const aiContentIdeasTitle = document.querySelector('#aiContentIdeas .ai-section-title');
+  const aiContentStrategyTitle = document.querySelector('#aiContentStrategy .ai-section-title');
+  const aiLandingInsightsTitle = document.querySelector('#aiLandingInsights .ai-section-title');
+  const aiQAMonitorTitle = document.querySelector('#aiQAMonitor .ai-section-title');
+  const btnGenerateContentStrategyEl = document.getElementById('btnGenerateContentStrategy');
+  const btnGenerateLandingInsightsEl = document.getElementById('btnGenerateLandingInsights');
+  const btnRunQAEl = document.getElementById('btnRunQA');
+  
+  if (aiSiteSummaryTitle) aiSiteSummaryTitle.textContent = t.siteSummary;
+  if (aiFunnelTitle) aiFunnelTitle.textContent = t.funnelGuess;
+  if (aiSummaryTitle) aiSummaryTitle.textContent = t.aiSummary;
+  if (aiGapsTitle) aiGapsTitle.textContent = t.missingElements;
+  if (aiRecommendationsTitle) aiRecommendationsTitle.textContent = t.topRecommendations;
+  if (aiContentIdeasTitle) aiContentIdeasTitle.textContent = t.contentStrategyIdeas;
+  if (aiContentStrategyTitle) aiContentStrategyTitle.textContent = t.recommendedPages;
+  if (aiLandingInsightsTitle) aiLandingInsightsTitle.textContent = t.landingPageFeedback;
+  if (aiQAMonitorTitle) aiQAMonitorTitle.textContent = t.qaStatus;
+  if (btnGenerateContentStrategyEl) btnGenerateContentStrategyEl.textContent = t.generateContentStrategy;
+  if (btnGenerateLandingInsightsEl) btnGenerateLandingInsightsEl.textContent = t.analyzeLandingPages;
+  if (btnRunQAEl) btnRunQAEl.textContent = t.runQACheck;
+  
+  // Update hero flow
+  if (heroFlow.length >= 4 && t.heroFlow) {
+    heroFlow[0].textContent = t.heroFlow[0];
+    heroFlow[2].textContent = t.heroFlow[1];
+    heroFlow[4].textContent = t.heroFlow[2];
+    heroFlow[6].textContent = t.heroFlow[3];
+  }
+}
+
+// Get translated text helper
+function t(key) {
+  const lang = window.currentLang || 'ko';
+  const texts = {
+    ko: {
+      linkRequired: '링크를 입력해주세요',
+      collecting: '수집 중…',
+      collected: 'URL 수집 완료',
+      collectingUrls: 'Collecting…',
+    },
+    en: {
+      linkRequired: 'Please enter a link',
+      collecting: 'Collecting…',
+      collected: 'URLs collected',
+      collectingUrls: 'Collecting…',
+    }
+  };
+  return (texts[lang] || texts.en)[key] || key;
+}
+
+// Theme toggle
+themeToggle.addEventListener('click', () => {
+  const currentTheme = document.documentElement.getAttribute('data-theme') || 'light';
+  const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+  applyTheme(newTheme);
+});
+
+// Language toggle
+langToggle.addEventListener('click', () => {
+  const currentLang = document.documentElement.getAttribute('lang') || 'ko';
+  const newLang = currentLang === 'ko' ? 'en' : 'ko';
+  applyLanguage(newLang);
+});
+
+// Initialize
+applyTheme(savedTheme);
+applyLanguage(savedLang);
+
+// Set initial HTML lang attribute
+document.documentElement.setAttribute('lang', savedLang);
+
 // DOM Elements
 const baseEl = document.getElementById("base");
 const depthEl = document.getElementById("depth");
@@ -49,6 +254,15 @@ const sitemapTree = document.getElementById("sitemapTree");
 const pageTypesList = document.getElementById("pageTypesList");
 const figmaReadiness = document.getElementById("figmaReadiness");
 const importanceList = document.getElementById("importanceList");
+const aiInsightsContent = document.getElementById("aiInsightsContent");
+const aiLoading = document.getElementById("aiLoading");
+const aiLoadingText = document.getElementById("aiLoadingText");
+const aiError = document.getElementById("aiError");
+const aiErrorMessage = document.getElementById("aiErrorMessage");
+const btnAutoSelectDesign = document.getElementById("btnAutoSelectDesign");
+const btnGenerateContentStrategy = document.getElementById("btnGenerateContentStrategy");
+const btnGenerateLandingInsights = document.getElementById("btnGenerateLandingInsights");
+const btnRunQA = document.getElementById("btnRunQA");
 
 // State
 let rawUrls = [];
@@ -59,6 +273,8 @@ let currentPage = 1;
 let startTime = null;
 let excludedCount = 0;
 let urlMetadata = {}; // { url: { links: [], type, figmaScore, linkCount } }
+let currentDomain = null;
+let aiInsights = null;
 const itemsPerPage = 20;
 
 // Toast Notification
@@ -434,8 +650,10 @@ document.addEventListener('keydown', (e) => {
 btnStart.addEventListener("click", async () => {
   const base = baseEl.value?.trim();
   if (!base) {
-    showToast("링크를 입력해주세요", "error");
-    inputHelper.textContent = "웹사이트 링크를 입력해주세요.";
+    const lang = window.currentLang || 'ko';
+    const msg = lang === 'ko' ? '링크를 입력해주세요' : 'Please enter a link';
+    showToast(msg, "error");
+    inputHelper.textContent = lang === 'ko' ? '웹사이트 링크를 입력해주세요.' : 'Please enter a website link.';
     inputHelper.style.display = 'inline';
     inputHelper.style.color = '#EF4444';
     baseEl.focus();
@@ -449,7 +667,8 @@ btnStart.addEventListener("click", async () => {
 
   btnStart.disabled = true;
   btnStartSpinner.style.display = 'inline-block';
-  btnStartText.textContent = 'Collecting…';
+  const lang = window.currentLang || 'ko';
+  btnStartText.textContent = lang === 'ko' ? '수집 중…' : 'Collecting…';
   updateProgressStatus("Discovering sitemap…");
   tableSection.style.display = "none";
   insightsSection.style.display = "none";
@@ -501,6 +720,7 @@ btnStart.addEventListener("click", async () => {
             rawUrls = obj.urls || [];
             currentSource = obj.source || null;
             urlMetadata = obj.metadata || {};
+            currentDomain = baseEl.value?.trim() || null;
             updateProgressStatus(null);
             applyFilters();
             updateKPI();
@@ -528,6 +748,7 @@ btnStart.addEventListener("click", async () => {
           rawUrls = obj.urls || [];
           currentSource = obj.source || null;
           urlMetadata = obj.metadata || {};
+          currentDomain = baseEl.value?.trim() || null;
           updateProgressStatus(null);
           applyFilters();
           updateKPI();
@@ -544,13 +765,27 @@ btnStart.addEventListener("click", async () => {
   } catch (err) {
     updateProgressStatus(null);
     errorTitle.textContent = "Discovery failed";
-    errorMessage.textContent = err.message;
+    
+    // More detailed error messages
+    let errorMsg = err.message || "Unknown error";
+    if (err.message === "Failed to fetch" || err.name === "TypeError") {
+      errorMsg = "서버에 연결할 수 없습니다. 서버가 실행 중인지 확인해주세요. (Server connection failed - please check if server is running)";
+    } else if (err.message.includes("NetworkError") || err.message.includes("network")) {
+      errorMsg = "네트워크 오류가 발생했습니다. 인터넷 연결을 확인해주세요. (Network error - please check your internet connection)";
+    } else if (err.message.includes("CORS")) {
+      errorMsg = "CORS 오류가 발생했습니다. 서버 설정을 확인해주세요. (CORS error - please check server configuration)";
+    }
+    
+    errorMessage.textContent = errorMsg;
     errorState.style.display = "block";
-    showToast("Discovery failed: " + err.message, "error");
+    showToast("Discovery failed: " + errorMsg, "error");
+    
+    console.error("Discovery error:", err);
   } finally {
     btnStart.disabled = false;
     btnStartSpinner.style.display = 'none';
-    btnStartText.textContent = 'Collect URLs';
+    const lang = window.currentLang || 'ko';
+    btnStartText.textContent = lang === 'ko' ? 'URL 수집' : 'Collect URLs';
   }
 });
 
@@ -603,6 +838,33 @@ insightTabs.forEach(tab => {
     if (targetContent) {
       targetContent.classList.add('active');
       targetContent.style.display = 'block';
+      
+      // Special handling for AI Insights tab
+      if (tabName === 'ai') {
+        // Ensure AI Insights content container is visible
+        const aiContent = document.getElementById('aiInsightsContent');
+        if (aiContent) {
+          aiContent.style.display = 'block';
+          aiContent.style.width = '100%';
+          aiContent.style.overflow = 'visible';
+        }
+        
+        // Ensure loading/error states are properly hidden initially
+        const aiLoading = document.getElementById('aiLoading');
+        const aiError = document.getElementById('aiError');
+        if (aiLoading) aiLoading.style.display = 'none';
+        if (aiError) aiError.style.display = 'none';
+        
+        // Render strategist insights when AI tab is opened
+        if (rawUrls.length > 0) {
+          renderStrategistInsights();
+        }
+      }
+    }
+    
+    // Force reflow to prevent layout issues
+    if (targetContent) {
+      void targetContent.offsetHeight;
     }
   });
 });
@@ -611,10 +873,447 @@ insightTabs.forEach(tab => {
 function updateInsights() {
   if (!rawUrls.length) return;
   
+  // Strategist-oriented insights
+  renderStrategistInsights();
+  
+  // Developer views (in Advanced section)
   renderSitemapTree();
   renderPageTypes();
   renderFigmaReadiness();
   renderImportance();
+}
+
+// Strategist-Oriented Insights
+function renderStrategistInsights() {
+  const isKorean = window.currentLang === 'ko';
+  
+  // Calculate metrics
+  const funnelHealth = calculateFunnelHealth(isKorean);
+  const designDebt = calculateDesignDebt(isKorean);
+  const contentCoverage = calculateContentCoverage(isKorean);
+  const conversionReadiness = calculateConversionReadiness(isKorean);
+  
+  // Render each section
+  renderFunnelHealth(funnelHealth, isKorean);
+  renderDesignDebt(designDebt, isKorean);
+  renderContentCoverage(contentCoverage, isKorean);
+  renderConversionReadiness(conversionReadiness, isKorean);
+}
+
+function calculateFunnelHealth(isKorean) {
+  const urlStrings = rawUrls.map(u => typeof u === 'string' ? u : u.url);
+  
+  // Classify URLs
+  const landing = urlStrings.filter(url => {
+    const path = new URL(url).pathname.toLowerCase();
+    return path === '/' || path === '/index' || path === '/home';
+  });
+  
+  const product = urlStrings.filter(url => {
+    const path = new URL(url).pathname.toLowerCase();
+    return path.includes('/product') || path.includes('/app') || path.includes('/feature') || 
+           path.includes('/solution') || path.includes('/dashboard');
+  });
+  
+  const conversion = urlStrings.filter(url => {
+    const path = new URL(url).pathname.toLowerCase();
+    return path.includes('/pricing') || path.includes('/contact') || path.includes('/demo') ||
+           path.includes('/signup') || path.includes('/trial') || path.includes('/buy');
+  });
+  
+  // Calculate completeness score (0-10)
+  let score = 0;
+  if (landing.length > 0) score += 3;
+  if (product.length > 0) score += 3;
+  if (conversion.length > 0) score += 4;
+  
+  // Generate insights
+  const insights = [];
+  if (landing.length === 0) {
+    insights.push(isKorean ? '랜딩 페이지가 없습니다' : 'No landing page found');
+  } else {
+    insights.push(isKorean ? `${landing.length}개의 랜딩 페이지 발견` : `${landing.length} landing page(s) found`);
+  }
+  
+  if (product.length === 0) {
+    insights.push(isKorean ? '제품 페이지가 없습니다' : 'No product pages found');
+  } else {
+    insights.push(isKorean ? `${product.length}개의 제품 페이지` : `${product.length} product pages`);
+  }
+  
+  if (conversion.length === 0) {
+    insights.push(isKorean ? '전환 페이지가 없습니다' : 'No conversion pages found');
+  } else {
+    insights.push(isKorean ? `${conversion.length}개의 전환 페이지` : `${conversion.length} conversion pages`);
+  }
+  
+  // Recommendation
+  let recommendation = '';
+  if (score < 7) {
+    recommendation = isKorean 
+      ? '랜딩 → 제품 → 전환 경로를 명확히 구축하세요. 각 단계별로 최소 1개 이상의 페이지가 필요합니다.'
+      : 'Build a clear Landing → Product → Conversion path. Each stage needs at least one page.';
+  } else {
+    recommendation = isKorean
+      ? '퍼널 구조가 양호합니다. 각 단계 간 연결성을 강화하여 전환율을 높이세요.'
+      : 'Funnel structure is good. Strengthen connections between stages to improve conversion.';
+  }
+  
+  return {
+    score,
+    landing: landing.length,
+    product: product.length,
+    conversion: conversion.length,
+    insights,
+    recommendation
+  };
+}
+
+function calculateDesignDebt(isKorean) {
+  const urlStrings = rawUrls.map(u => typeof u === 'string' ? u : u.url);
+  
+  // Calculate Figma readiness
+  const scores = urlStrings.map(url => {
+    const metadata = urlMetadata[url] || {};
+    return calculateFigmaScore(url, metadata);
+  });
+  
+  const avgScore = scores.length > 0 
+    ? Math.round(scores.reduce((a, b) => a + b, 0) / scores.length) 
+    : 0;
+  
+  // Calculate layout consistency (depth variance)
+  const depths = urlStrings.map(url => {
+    try {
+      return new URL(url).pathname.split('/').filter(Boolean).length;
+    } catch {
+      return 0;
+    }
+  });
+  
+  const avgDepth = depths.length > 0 
+    ? depths.reduce((a, b) => a + b, 0) / depths.length 
+    : 0;
+  
+  const depthVariance = depths.length > 0
+    ? depths.reduce((sum, d) => sum + Math.pow(d - avgDepth, 2), 0) / depths.length
+    : 0;
+  
+  // Score (0-10): Higher score = less debt
+  let score = Math.round((avgScore / 100) * 7); // 70% weight on Figma readiness
+  if (depthVariance < 2) score += 2; // Low variance = consistent
+  else if (depthVariance < 5) score += 1;
+  score = Math.min(10, score);
+  
+  // Insights
+  const insights = [];
+  insights.push(isKorean 
+    ? `Figma 준비도: ${avgScore}%`
+    : `Figma readiness: ${avgScore}%`);
+  
+  const consistency = depthVariance < 2 ? (isKorean ? '일관적' : 'Consistent') :
+                      depthVariance < 5 ? (isKorean ? '보통' : 'Moderate') :
+                      (isKorean ? '불일치' : 'Inconsistent');
+  insights.push(isKorean 
+    ? `레이아웃 일관성: ${consistency}`
+    : `Layout consistency: ${consistency}`);
+  
+  if (depthVariance > 0) {
+    insights.push(isKorean
+      ? `평균 경로 깊이: ${avgDepth.toFixed(1)}`
+      : `Average path depth: ${avgDepth.toFixed(1)}`);
+  }
+  
+  // Recommendation
+  let recommendation = '';
+  if (score < 6) {
+    recommendation = isKorean
+      ? 'URL 구조를 단순화하고 일관된 경로 깊이를 유지하세요. 쿼리 파라미터와 해시를 제거하면 Figma 준비도가 향상됩니다.'
+      : 'Simplify URL structure and maintain consistent path depth. Remove query parameters and hashes to improve Figma readiness.';
+  } else {
+    recommendation = isKorean
+      ? '디자인 부채가 낮습니다. 현재 구조를 유지하면서 점진적으로 개선하세요.'
+      : 'Design debt is low. Maintain current structure while making incremental improvements.';
+  }
+  
+  return {
+    score,
+    figmaReadiness: avgScore,
+    depthVariance: depthVariance.toFixed(2),
+    avgDepth: avgDepth.toFixed(1),
+    insights,
+    recommendation
+  };
+}
+
+function calculateContentCoverage(isKorean) {
+  const urlStrings = rawUrls.map(u => typeof u === 'string' ? u : u.url);
+  
+  // Classify content types
+  const blog = urlStrings.filter(url => {
+    const path = new URL(url).pathname.toLowerCase();
+    return path.includes('/blog') || path.includes('/post') || path.includes('/article') ||
+           path.includes('/news');
+  });
+  
+  const product = urlStrings.filter(url => {
+    const path = new URL(url).pathname.toLowerCase();
+    return path.includes('/product') || path.includes('/feature') || path.includes('/solution');
+  });
+  
+  const caseStudy = urlStrings.filter(url => {
+    const path = new URL(url).pathname.toLowerCase();
+    return path.includes('/case') || path.includes('/study') || path.includes('/success') ||
+           path.includes('/customer');
+  });
+  
+  // Score (0-10)
+  let score = 0;
+  if (blog.length > 0) score += 3;
+  if (product.length > 0) score += 4;
+  if (caseStudy.length > 0) score += 3;
+  
+  // Missing content types
+  const missing = [];
+  if (blog.length === 0) missing.push(isKorean ? '블로그' : 'Blog');
+  if (product.length === 0) missing.push(isKorean ? '제품 페이지' : 'Product pages');
+  if (caseStudy.length === 0) missing.push(isKorean ? '사례 연구' : 'Case studies');
+  
+  // Insights
+  const insights = [];
+  insights.push(isKorean 
+    ? `블로그: ${blog.length}개, 제품: ${product.length}개, 사례: ${caseStudy.length}개`
+    : `Blog: ${blog.length}, Product: ${product.length}, Case studies: ${caseStudy.length}`);
+  
+  if (missing.length > 0) {
+    insights.push(isKorean
+      ? `누락된 콘텐츠 유형: ${missing.join(', ')}`
+      : `Missing content types: ${missing.join(', ')}`);
+  } else {
+    insights.push(isKorean
+      ? '주요 콘텐츠 유형이 모두 포함되어 있습니다'
+      : 'All major content types are present');
+  }
+  
+  const totalContent = blog.length + product.length + caseStudy.length;
+  const contentRatio = rawUrls.length > 0 ? (totalContent / rawUrls.length * 100).toFixed(0) : 0;
+  insights.push(isKorean
+    ? `콘텐츠 비율: ${contentRatio}%`
+    : `Content ratio: ${contentRatio}%`);
+  
+  // Recommendation
+  let recommendation = '';
+  if (score < 7) {
+    recommendation = isKorean
+      ? `${missing.join(', ')} 콘텐츠를 추가하여 고객 여정을 지원하세요. 블로그는 SEO와 교육에, 사례 연구는 신뢰 구축에 도움이 됩니다.`
+      : `Add ${missing.join(', ')} content to support customer journey. Blog helps with SEO and education, case studies build trust.`;
+  } else {
+    recommendation = isKorean
+      ? '콘텐츠 커버리지가 양호합니다. 각 유형의 품질과 깊이를 높여 가치를 증대하세요.'
+      : 'Content coverage is good. Increase quality and depth of each type to add value.';
+  }
+  
+  return {
+    score,
+    blog: blog.length,
+    product: product.length,
+    caseStudy: caseStudy.length,
+    missing,
+    insights,
+    recommendation
+  };
+}
+
+function calculateConversionReadiness(isKorean) {
+  const urlStrings = rawUrls.map(u => typeof u === 'string' ? u : u.url);
+  
+  // Check for pricing
+  const hasPricing = urlStrings.some(url => {
+    const path = new URL(url).pathname.toLowerCase();
+    return path.includes('/pricing') || path.includes('/price') || path.includes('/plan');
+  });
+  
+  // Check CTA depth (average depth of conversion pages)
+  const conversionPages = urlStrings.filter(url => {
+    const path = new URL(url).pathname.toLowerCase();
+    return path.includes('/contact') || path.includes('/demo') || path.includes('/signup') ||
+           path.includes('/trial') || path.includes('/buy') || path.includes('/pricing');
+  });
+  
+  const ctaDepths = conversionPages.map(url => {
+    try {
+      return new URL(url).pathname.split('/').filter(Boolean).length;
+    } catch {
+      return 0;
+    }
+  });
+  
+  const avgCTADepth = ctaDepths.length > 0
+    ? ctaDepths.reduce((a, b) => a + b, 0) / ctaDepths.length
+    : 0;
+  
+  // Check contact accessibility (shallow depth = more accessible)
+  const contactPages = urlStrings.filter(url => {
+    const path = new URL(url).pathname.toLowerCase();
+    return path.includes('/contact') || path.includes('/support');
+  });
+  
+  const contactDepths = contactPages.map(url => {
+    try {
+      return new URL(url).pathname.split('/').filter(Boolean).length;
+    } catch {
+      return 0;
+    }
+  });
+  
+  const avgContactDepth = contactDepths.length > 0
+    ? contactDepths.reduce((a, b) => a + b, 0) / contactDepths.length
+    : 0;
+  
+  // Score (0-10)
+  let score = 0;
+  if (hasPricing) score += 4;
+  if (avgCTADepth <= 2) score += 3;
+  else if (avgCTADepth <= 3) score += 2;
+  else score += 1;
+  if (avgContactDepth <= 2) score += 3;
+  else if (avgContactDepth <= 3) score += 2;
+  else score += 1;
+  
+  // Insights
+  const insights = [];
+  insights.push(isKorean
+    ? `가격 페이지: ${hasPricing ? '있음' : '없음'}`
+    : `Pricing page: ${hasPricing ? 'Yes' : 'No'}`);
+  
+  if (conversionPages.length > 0) {
+    insights.push(isKorean
+      ? `CTA 평균 깊이: ${avgCTADepth.toFixed(1)} (${conversionPages.length}개 페이지)`
+      : `Average CTA depth: ${avgCTADepth.toFixed(1)} (${conversionPages.length} pages)`);
+  } else {
+    insights.push(isKorean
+      ? '전환 페이지가 없습니다'
+      : 'No conversion pages found');
+  }
+  
+  if (contactPages.length > 0) {
+    insights.push(isKorean
+      ? `연락처 접근성: ${avgContactDepth <= 2 ? '우수' : avgContactDepth <= 3 ? '양호' : '개선 필요'} (깊이 ${avgContactDepth.toFixed(1)})`
+      : `Contact accessibility: ${avgContactDepth <= 2 ? 'Excellent' : avgContactDepth <= 3 ? 'Good' : 'Needs improvement'} (depth ${avgContactDepth.toFixed(1)})`);
+  } else {
+    insights.push(isKorean
+      ? '연락처 페이지가 없습니다'
+      : 'No contact page found');
+  }
+  
+  // Recommendation
+  let recommendation = '';
+  if (!hasPricing) {
+    recommendation = isKorean
+      ? '가격 페이지를 추가하세요. 명확한 가격 정보는 전환율을 크게 향상시킵니다.'
+      : 'Add a pricing page. Clear pricing information significantly improves conversion rates.';
+  } else if (avgCTADepth > 3) {
+    recommendation = isKorean
+      ? 'CTA 페이지를 더 얕은 깊이로 이동하세요. 사용자가 2-3클릭 내에 도달할 수 있어야 합니다.'
+      : 'Move CTA pages to shallower depth. Users should reach them within 2-3 clicks.';
+  } else {
+    recommendation = isKorean
+      ? '전환 준비도가 양호합니다. A/B 테스트를 통해 CTA 효과를 최적화하세요.'
+      : 'Conversion readiness is good. Optimize CTA effectiveness through A/B testing.';
+  }
+  
+  return {
+    score,
+    hasPricing,
+    avgCTADepth: avgCTADepth.toFixed(1),
+    avgContactDepth: avgContactDepth.toFixed(1),
+    conversionPages: conversionPages.length,
+    contactPages: contactPages.length,
+    insights,
+    recommendation
+  };
+}
+
+function renderFunnelHealth(data, isKorean) {
+  const section = document.getElementById('strategistFunnelHealth');
+  const scoreEl = document.getElementById('funnelHealthScore');
+  const vizEl = document.getElementById('funnelHealthViz');
+  const insightsEl = document.getElementById('funnelHealthInsights');
+  const recEl = document.getElementById('funnelHealthRecommendation');
+  
+  scoreEl.textContent = `${data.score}/10`;
+  scoreEl.className = `strategist-score ${data.score >= 7 ? 'good' : data.score >= 4 ? 'moderate' : 'poor'}`;
+  
+  // Funnel visualization
+  vizEl.innerHTML = `
+    <div class="funnel-stage">
+      <div class="funnel-stage-label">${isKorean ? '랜딩' : 'Landing'}</div>
+      <div class="funnel-stage-bar ${data.landing > 0 ? 'active' : ''}" style="width: ${data.landing > 0 ? 100 : 0}%"></div>
+      <div class="funnel-stage-count">${data.landing}</div>
+    </div>
+    <div class="funnel-arrow">→</div>
+    <div class="funnel-stage">
+      <div class="funnel-stage-label">${isKorean ? '제품' : 'Product'}</div>
+      <div class="funnel-stage-bar ${data.product > 0 ? 'active' : ''}" style="width: ${data.product > 0 ? 100 : 0}%"></div>
+      <div class="funnel-stage-count">${data.product}</div>
+    </div>
+    <div class="funnel-arrow">→</div>
+    <div class="funnel-stage">
+      <div class="funnel-stage-label">${isKorean ? '전환' : 'Conversion'}</div>
+      <div class="funnel-stage-bar ${data.conversion > 0 ? 'active' : ''}" style="width: ${data.conversion > 0 ? 100 : 0}%"></div>
+      <div class="funnel-stage-count">${data.conversion}</div>
+    </div>
+  `;
+  
+  insightsEl.innerHTML = data.insights.map(insight => `<li>${escapeHtml(insight)}</li>`).join('');
+  recEl.innerHTML = `<strong>${isKorean ? '권장사항:' : 'Recommendation:'}</strong> ${escapeHtml(data.recommendation)}`;
+  
+  section.style.display = 'block';
+}
+
+function renderDesignDebt(data, isKorean) {
+  const section = document.getElementById('strategistDesignDebt');
+  const scoreEl = document.getElementById('designDebtScore');
+  const insightsEl = document.getElementById('designDebtInsights');
+  const recEl = document.getElementById('designDebtRecommendation');
+  
+  scoreEl.textContent = `${data.score}/10`;
+  scoreEl.className = `strategist-score ${data.score >= 7 ? 'good' : data.score >= 4 ? 'moderate' : 'poor'}`;
+  
+  insightsEl.innerHTML = data.insights.map(insight => `<li>${escapeHtml(insight)}</li>`).join('');
+  recEl.innerHTML = `<strong>${isKorean ? '권장사항:' : 'Recommendation:'}</strong> ${escapeHtml(data.recommendation)}`;
+  
+  section.style.display = 'block';
+}
+
+function renderContentCoverage(data, isKorean) {
+  const section = document.getElementById('strategistContentCoverage');
+  const scoreEl = document.getElementById('contentCoverageScore');
+  const insightsEl = document.getElementById('contentCoverageInsights');
+  const recEl = document.getElementById('contentCoverageRecommendation');
+  
+  scoreEl.textContent = `${data.score}/10`;
+  scoreEl.className = `strategist-score ${data.score >= 7 ? 'good' : data.score >= 4 ? 'moderate' : 'poor'}`;
+  
+  insightsEl.innerHTML = data.insights.map(insight => `<li>${escapeHtml(insight)}</li>`).join('');
+  recEl.innerHTML = `<strong>${isKorean ? '권장사항:' : 'Recommendation:'}</strong> ${escapeHtml(data.recommendation)}`;
+  
+  section.style.display = 'block';
+}
+
+function renderConversionReadiness(data, isKorean) {
+  const section = document.getElementById('strategistConversionReadiness');
+  const scoreEl = document.getElementById('conversionReadinessScore');
+  const insightsEl = document.getElementById('conversionReadinessInsights');
+  const recEl = document.getElementById('conversionReadinessRecommendation');
+  
+  scoreEl.textContent = `${data.score}/10`;
+  scoreEl.className = `strategist-score ${data.score >= 7 ? 'good' : data.score >= 4 ? 'moderate' : 'poor'}`;
+  
+  insightsEl.innerHTML = data.insights.map(insight => `<li>${escapeHtml(insight)}</li>`).join('');
+  recEl.innerHTML = `<strong>${isKorean ? '권장사항:' : 'Recommendation:'}</strong> ${escapeHtml(data.recommendation)}`;
+  
+  section.style.display = 'block';
 }
 
 function renderSitemapTree() {
@@ -941,6 +1640,378 @@ function renderImportance() {
     importanceList.appendChild(div);
   });
 }
+
+// AI Insights Generation - Removed button, insights are auto-generated when URLs are collected
+
+function renderAIInsights(insights, isCompetitor, lang = 'ko') {
+  const isKorean = lang === 'ko';
+  
+  // Site Summary
+  if (insights.pageDistribution) {
+    const summaryGrid = document.getElementById('aiSiteSummaryContent');
+    summaryGrid.innerHTML = `
+      <div class="ai-summary-item">
+        <div class="ai-summary-label">${isKorean ? '제품 페이지' : 'Product Pages'}</div>
+        <div class="ai-summary-value">${insights.pageDistribution.product || 0}</div>
+      </div>
+      <div class="ai-summary-item">
+        <div class="ai-summary-label">${isKorean ? '콘텐츠 페이지' : 'Content Pages'}</div>
+        <div class="ai-summary-value">${insights.pageDistribution.content || 0}</div>
+      </div>
+      <div class="ai-summary-item">
+        <div class="ai-summary-label">${isKorean ? '전환 페이지' : 'Conversion Pages'}</div>
+        <div class="ai-summary-value">${insights.pageDistribution.conversion || 0}</div>
+      </div>
+      <div class="ai-summary-item">
+        <div class="ai-summary-label">${isKorean ? '회사 페이지' : 'Company Pages'}</div>
+        <div class="ai-summary-value">${insights.pageDistribution.company || 0}</div>
+      </div>
+    `;
+    document.getElementById('aiSiteSummary').style.display = 'block';
+  }
+
+  // Show funnel, gaps, recommendations, content ideas
+  if (insights.funnel) {
+    document.getElementById('aiFunnelContent').textContent = insights.funnel;
+    document.getElementById('aiFunnel').style.display = 'block';
+  }
+
+  if (insights.summary) {
+    document.getElementById('aiSummaryContent').textContent = insights.summary;
+    document.getElementById('aiSummary').style.display = 'block';
+  }
+
+  if (insights.gaps && insights.gaps.length > 0) {
+    const list = document.getElementById('aiGapsList');
+    list.innerHTML = insights.gaps.map(g => `<li>${escapeHtml(g)}</li>`).join('');
+    document.getElementById('aiGaps').style.display = 'block';
+  }
+
+  if (insights.recommendations && insights.recommendations.length > 0) {
+    const grid = document.getElementById('aiRecommendationsList');
+    grid.innerHTML = insights.recommendations.slice(0, 5).map(rec => `
+      <div class="ai-recommendation-card">
+        <div class="ai-recommendation-title">${escapeHtml(rec.title || rec)}</div>
+        ${rec.description ? `<div class="ai-recommendation-desc">${escapeHtml(rec.description)}</div>` : ''}
+      </div>
+    `).join('');
+    document.getElementById('aiRecommendations').style.display = 'block';
+  }
+
+  if (insights.contentIdeas && insights.contentIdeas.length > 0) {
+    const list = document.getElementById('aiContentIdeasList');
+    list.innerHTML = insights.contentIdeas.map(idea => `<li>${escapeHtml(idea)}</li>`).join('');
+    document.getElementById('aiContentIdeas').style.display = 'block';
+  }
+}
+
+// Auto-select Design Pages
+btnAutoSelectDesign.addEventListener('click', () => {
+  if (!rawUrls.length) {
+    const lang = window.currentLang || 'ko';
+    const msg = lang === 'ko' ? '선택할 URL이 없습니다' : 'No URLs to select';
+    showToast(msg, "error");
+    return;
+  }
+
+  // Sort by importance (linkCount) descending
+  const sorted = [...rawUrls].map(u => ({
+    url: typeof u === 'string' ? u : u.url,
+    importance: urlMetadata[u.url]?.linkCount || 0,
+    figmaScore: calculateFigmaScore(typeof u === 'string' ? u : u.url, urlMetadata[u.url] || {})
+  })).sort((a, b) => {
+    // Prioritize by importance, then figma score
+    if (b.importance !== a.importance) return b.importance - a.importance;
+    return b.figmaScore - a.figmaScore;
+  });
+
+  // Select top 10
+  const top10 = sorted.slice(0, 10).map(u => u.url);
+  
+  // Clear all selections first
+  document.querySelectorAll('.row-check').forEach(cb => cb.checked = false);
+  
+  // Select top 10
+  top10.forEach(url => {
+    const checkbox = document.querySelector(`.row-check[data-url="${escapeAttr(url)}"]`);
+    if (checkbox) checkbox.checked = true;
+  });
+
+  updateCheckAll();
+  updateSelectionInfo();
+  const lang = window.currentLang || 'ko';
+  const toastMsg = lang === 'ko' 
+    ? `상위 ${top10.length}개 디자인 페이지 선택됨` 
+    : `Selected top ${top10.length} design pages`;
+  showToast(toastMsg, "success");
+  
+  // Scroll to table
+  tableSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+});
+
+// Generate Content Strategy
+btnGenerateContentStrategy.addEventListener('click', async () => {
+  if (!rawUrls.length || !currentDomain) {
+    const lang = window.currentLang || 'ko';
+    const msg = lang === 'ko' ? '먼저 URL을 수집해주세요' : 'Please collect URLs first';
+    showToast(msg, "error");
+    return;
+  }
+
+  const lang = window.currentLang || 'ko';
+  btnGenerateContentStrategy.disabled = true;
+  const generatingText = lang === 'ko' ? '생성 중…' : 'Generating...';
+  btnGenerateContentStrategy.textContent = generatingText;
+
+  try {
+    const response = await fetch('/api/content-strategy', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        domain: currentDomain,
+        urls: rawUrls,
+        language: lang
+      })
+    });
+
+    if (!response.ok) {
+      const error = await response.json();
+      throw new Error(error.error || 'Failed to generate content strategy');
+    }
+
+    const strategy = await response.json();
+    renderContentStrategy(strategy);
+    document.getElementById('aiContentStrategy').style.display = 'block';
+    const successMsg = lang === 'ko' ? '콘텐츠 전략 생성 완료' : 'Content strategy generated';
+    showToast(successMsg, "success");
+  } catch (err) {
+    const lang = window.currentLang || 'ko';
+    const errorMsg = lang === 'ko' ? '콘텐츠 전략 생성 실패: ' : 'Failed to generate content strategy: ';
+    showToast(errorMsg + err.message, "error");
+  } finally {
+    const lang = window.currentLang || 'ko';
+    const btnText = lang === 'ko' ? '콘텐츠 전략 생성' : 'Generate Content Strategy';
+    btnGenerateContentStrategy.disabled = false;
+    btnGenerateContentStrategy.textContent = btnText;
+  }
+});
+
+function renderContentStrategy(strategy) {
+  const list = document.getElementById('aiContentStrategyList');
+  if (strategy.recommendedPages && strategy.recommendedPages.length > 0) {
+    list.innerHTML = strategy.recommendedPages.map(page => `
+      <div class="ai-content-strategy-item">
+        <div class="ai-content-strategy-header">
+          <span class="ai-content-strategy-title">${escapeHtml(page.title || 'Untitled')}</span>
+          <span class="ai-content-strategy-type">${escapeHtml(page.type || 'page')}</span>
+        </div>
+        <div class="ai-content-strategy-reason">${escapeHtml(page.reason || '')}</div>
+      </div>
+    `).join('');
+  } else {
+    list.innerHTML = '<p style="color:var(--text-muted);">No recommendations available.</p>';
+  }
+}
+
+// Generate Landing Page Insights
+btnGenerateLandingInsights.addEventListener('click', async () => {
+  if (!rawUrls.length) {
+    const lang = window.currentLang || 'ko';
+    const msg = lang === 'ko' ? '먼저 URL을 수집해주세요' : 'Please collect URLs first';
+    showToast(msg, "error");
+    return;
+  }
+
+  const lang = window.currentLang || 'ko';
+  btnGenerateLandingInsights.disabled = true;
+  const analyzingText = lang === 'ko' ? '분석 중…' : 'Analyzing...';
+  btnGenerateLandingInsights.textContent = analyzingText;
+
+  try {
+    const response = await fetch('/api/landing-insights', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        urls: rawUrls,
+        language: lang
+      })
+    });
+
+    if (!response.ok) {
+      const error = await response.json();
+      throw new Error(error.error || 'Failed to analyze landing pages');
+    }
+
+    const insights = await response.json();
+    renderLandingInsights(insights);
+    document.getElementById('aiLandingInsights').style.display = 'block';
+    const successMsg = lang === 'ko' ? '랜딩 페이지 분석 완료' : 'Landing page analysis complete';
+    showToast(successMsg, "success");
+  } catch (err) {
+    const lang = window.currentLang || 'ko';
+    const errorMsg = lang === 'ko' ? '랜딩 페이지 분석 실패: ' : 'Failed to analyze landing pages: ';
+    showToast(errorMsg + err.message, "error");
+  } finally {
+    const lang = window.currentLang || 'ko';
+    const btnText = lang === 'ko' ? '랜딩 페이지 분석' : 'Analyze Landing Pages';
+    btnGenerateLandingInsights.disabled = false;
+    btnGenerateLandingInsights.textContent = btnText;
+  }
+});
+
+function renderLandingInsights(insights) {
+  const content = document.getElementById('aiLandingInsightsContent');
+  const lang = window.currentLang || 'ko';
+  const isKorean = lang === 'ko';
+  let html = '';
+
+  if (insights.ctaIssues && insights.ctaIssues.length > 0) {
+    html += `
+      <div class="ai-landing-section">
+        <h4>${isKorean ? 'CTA 문제점' : 'CTA Issues'}</h4>
+        <ul class="ai-list">
+          ${insights.ctaIssues.map(issue => `<li>${escapeHtml(issue)}</li>`).join('')}
+        </ul>
+      </div>
+    `;
+  }
+
+  if (insights.pricingVisibility) {
+    html += `
+      <div class="ai-landing-section">
+        <h4>${isKorean ? '가격 가시성' : 'Pricing Visibility'}</h4>
+        <p>${escapeHtml(insights.pricingVisibility)}</p>
+      </div>
+    `;
+  }
+
+  if (insights.contactDepth) {
+    html += `
+      <div class="ai-landing-section">
+        <h4>${isKorean ? '연락처 깊이' : 'Contact Depth'}</h4>
+        <p>${escapeHtml(insights.contactDepth)}</p>
+      </div>
+    `;
+  }
+
+  if (insights.suggestions && insights.suggestions.length > 0) {
+    html += `
+      <div class="ai-landing-section">
+        <h4>${isKorean ? '제안사항' : 'Suggestions'}</h4>
+        <ul class="ai-list">
+          ${insights.suggestions.map(s => `<li>${escapeHtml(s)}</li>`).join('')}
+        </ul>
+      </div>
+    `;
+  }
+
+  const noInsightsMsg = isKorean ? '인사이트가 없습니다.' : 'No insights available.';
+  content.innerHTML = html || `<p style="color:var(--text-muted);">${noInsightsMsg}</p>`;
+}
+
+// Run QA Check
+btnRunQA.addEventListener('click', async () => {
+  if (!rawUrls.length) {
+    showToast("Please collect URLs first", "error");
+    return;
+  }
+
+  btnRunQA.disabled = true;
+  btnRunQA.textContent = 'Checking...';
+
+  // Simulate QA check (basic validation)
+  setTimeout(() => {
+    const qaResults = runQACheck();
+    renderQAResults(qaResults);
+    document.getElementById('aiQAMonitor').style.display = 'block';
+    showToast("QA check complete", "success");
+    btnRunQA.disabled = false;
+    btnRunQA.textContent = 'Run QA Check';
+  }, 500);
+});
+
+function runQACheck() {
+  const urlStrings = rawUrls.map(u => typeof u === 'string' ? u : u.url);
+  const results = {
+    healthy: [],
+    review: [],
+    heavy: []
+  };
+
+  urlStrings.forEach(url => {
+    try {
+      const urlObj = new URL(url);
+      const metadata = urlMetadata[url] || {};
+      
+      // Check for query parameters (potential issues)
+      const hasQuery = !!urlObj.search;
+      
+      // Check path depth (deep paths might need review)
+      const pathDepth = urlObj.pathname.split('/').filter(Boolean).length;
+      
+      // Check if URL is too long
+      const isLong = url.length > 100;
+      
+      // Basic heuristics
+      if (hasQuery || pathDepth > 4 || isLong) {
+        results.review.push({
+          url,
+          issues: [
+            hasQuery ? 'Has query parameters' : null,
+            pathDepth > 4 ? `Deep path (${pathDepth} levels)` : null,
+            isLong ? 'Long URL' : null
+          ].filter(Boolean)
+        });
+      } else {
+        results.healthy.push({ url });
+      }
+    } catch (e) {
+      results.review.push({ url, issues: ['Invalid URL format'] });
+    }
+  });
+
+  return results;
+}
+
+function renderQAResults(results) {
+  const content = document.getElementById('aiQAContent');
+  let html = '';
+
+  html += `
+    <div class="ai-qa-summary">
+      <div class="ai-qa-stat">
+        <div class="ai-qa-stat-label">Healthy</div>
+        <div class="ai-qa-stat-value healthy">${results.healthy.length}</div>
+      </div>
+      <div class="ai-qa-stat">
+        <div class="ai-qa-stat-label">Review Needed</div>
+        <div class="ai-qa-stat-value review">${results.review.length}</div>
+      </div>
+    </div>
+  `;
+
+  if (results.review.length > 0) {
+    html += `
+      <div class="ai-qa-review-list">
+        <h4>Pages Needing Review</h4>
+        ${results.review.slice(0, 20).map(item => `
+          <div class="ai-qa-item">
+            <a href="${escapeHtml(item.url)}" target="_blank" class="ai-qa-url">${escapeHtml(item.url)}</a>
+            <div class="ai-qa-issues">
+              ${item.issues.map(issue => `<span class="ai-qa-issue">${escapeHtml(issue)}</span>`).join('')}
+            </div>
+          </div>
+        `).join('')}
+        ${results.review.length > 20 ? `<p style="color:var(--text-muted);margin-top:var(--space-md);">+ ${results.review.length - 20} more...</p>` : ''}
+      </div>
+    `;
+  }
+
+  content.innerHTML = html;
+}
+
+// Note: Content strategy and QA sections are shown when their respective buttons are clicked
+// They are hidden by default and only shown when content is generated
 
 // Initial empty state
 if (!rawUrls.length) {
