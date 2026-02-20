@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>WebScout Agent</title>
+  <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" />
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <!-- Toast Notification -->
+  <div id="toast" class="toast" role="alert" aria-live="polite">
+    <div id="toastIcon" class="toast-icon"></div>
+    <p id="toastMessage" class="toast-message"></p>
+    <button id="toastClose" class="toast-close" aria-label="닫기">
+    </button>
+  </div>
+
+  <div class="container">
+    <!-- Hero Search Section -->
+    <section class="hero">
+      <h1 class="hero-title">WebScout Agent</h1>
+      <p class="hero-subtitle">AI-powered website discovery for Figma-ready design</p>
+      <div class="hero-flow">
+        <span>Discover</span>
+        <span>→</span>
+        <span>Normalize</span>
+        <span>→</span>
+        <span>Structure</span>
+        <span>→</span>
+        <span>Export</span>
+      </div>
+      <div class="hero-search">
+        <div style="width:100%;display:flex;flex-direction:column;gap:var(--space-sm);">
+          <div style="display:flex;gap:var(--space-md);width:100%;">
+            <input id="base" type="url" class="hero-input" placeholder="예: https://webscout.demo (링크를 입력해주세요)" aria-label="Website URL">
+            <button id="btnStart" class="hero-btn" aria-label="Collect URLs">
+              <span id="btnStartSpinner" class="progress-spinner" style="display:none;width:16px;height:16px;border-width:2px;margin:0;"></span>
+              <span id="btnStartText">Collect URLs</span>
+            </button>
+          </div>
+          <div style="display:flex;align-items:center;gap:var(--space-sm);">
+            <button id="btnDemo" class="demo-btn" type="button">
+              Use Demo Site
+            </button>
+            <span id="inputHelper" class="input-helper" style="display:none;"></span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Progress Status -->
+    <div id="progressStatus" class="progress-status" style="display:none;">
+      <div class="progress-spinner"></div>
+      <div class="progress-text" id="progressText">Discovering sitemap…</div>
+    </div>
+
+    <!-- Filter Bar -->
+    <div class="filter-bar">
+      <div class="filter-chip" id="depthChip">
+        <span>Depth</span>
+        <input id="depth" type="number" class="filter-chip-input" min="1" max="10" value="3" aria-label="Depth">
+      </div>
+      <div class="filter-chip" id="maxChip">
+        <span>Max URLs</span>
+        <input id="max" type="number" class="filter-chip-input" min="1" max="50000" value="5000" aria-label="Max URLs">
+      </div>
+      <label class="filter-chip" id="queryChip">
+        <input type="checkbox" id="stripQuery" aria-label="Strip query">
+        <span>Query Strip</span>
+      </label>
+      <label class="filter-chip active" id="wwwChip">
+        <input type="checkbox" id="allowWwwAlias" checked aria-label="www/non-www alias">
+        <span>www/non-www</span>
+      </label>
+      <div class="filter-chip" id="excludeChip">
+        <span>Exclude</span>
+        <input id="excludePaths" type="text" class="filter-chip-input filter-chip-text-input" placeholder="/admin,/api" aria-label="Exclude paths">
+      </div>
+    </div>
+
+    <!-- KPI Summary -->
+    <div id="kpiSection" style="display:none;">
+      <h2 class="kpi-section-title">Results for today:</h2>
+      <div class="kpi-grid">
+        <div class="kpi-card accent fade-in">
+          <div class="kpi-label">Total URLs</div>
+          <div class="kpi-value" id="kpiTotal" aria-live="polite">0</div>
+        </div>
+        <div class="kpi-card fade-in">
+          <div class="kpi-label">Source</div>
+          <div class="kpi-value" id="kpiSource" aria-live="polite">-</div>
+        </div>
+        <div class="kpi-card fade-in">
+          <div style="display:flex;align-items:center;gap:var(--space-sm);">
+            <div class="kpi-label">Max Depth</div>
+          </div>
+          <div class="kpi-value" id="kpiDepth" aria-live="polite">-</div>
+        </div>
+        <div class="kpi-card fade-in">
+          <div class="kpi-label">Excluded</div>
+          <div class="kpi-value" id="kpiExcluded" aria-live="polite">0</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Insights Section -->
+    <section id="insightsSection" class="card" style="display:none;" role="region" aria-label="Website Insights">
+      <div class="insights-header">
+        <h2 class="insights-title">Insights</h2>
+        <div class="insights-tabs" role="tablist">
+          <button class="insight-tab active" data-tab="sitemap" role="tab" aria-selected="true">Sitemap View</button>
+          <button class="insight-tab" data-tab="types" role="tab" aria-selected="false">Page Types</button>
+          <button class="insight-tab" data-tab="figma" role="tab" aria-selected="false">Figma Ready</button>
+          <button class="insight-tab" data-tab="importance" role="tab" aria-selected="false">Importance</button>
+        </div>
+      </div>
+
+      <!-- Sitemap View Tab -->
+      <div id="insightSitemap" class="insight-content active" role="tabpanel">
+        <div id="sitemapTree" class="sitemap-tree"></div>
+      </div>
+
+      <!-- Page Types Tab -->
+      <div id="insightTypes" class="insight-content" role="tabpanel" style="display:none;">
+        <div id="pageTypesList" class="page-types-list"></div>
+      </div>
+
+      <!-- Figma Readiness Tab -->
+      <div id="insightFigma" class="insight-content" role="tabpanel" style="display:none;">
+        <div id="figmaReadiness" class="figma-readiness"></div>
+      </div>
+
+      <!-- Importance Tab -->
+      <div id="insightImportance" class="insight-content" role="tabpanel" style="display:none;">
+        <div id="importanceList" class="importance-list"></div>
+      </div>
+    </section>
+
+    <!-- URL Table Section -->
+    <section id="tableSection" class="card" style="display:none;" role="region" aria-label="URL 목록">
+      <div class="table-header">
+        <div class="table-title">
+          <span>URL List</span>
+          <span class="table-count" id="urlCount">(0)</span>
+          <span class="selection-info" id="selectionInfo" style="display:none;"></span>
+        </div>
+        <div class="table-actions">
+          <button id="btnSelectAll" class="btn btn-sm">Select All</button>
+          <button id="btnClearSelection" class="btn btn-sm" style="display:none;">Clear</button>
+          <button id="btnTxt" class="btn btn-sm">
+            <span>urls.txt</span>
+          </button>
+          <button id="btnCsv" class="btn btn-sm">
+            <span>urls.csv</span>
+          </button>
+        </div>
+      </div>
+      <div class="table-search">
+        <div class="table-search-wrapper">
+          <input id="search" type="text" class="table-search-input" placeholder="Search URLs…" aria-label="Search URLs">
+          <span id="searchCount" class="search-count" style="position:absolute;right:var(--space-md);top:50%;transform:translateY(-50%);font-size:var(--text-xs);color:var(--text-muted);display:none;"></span>
+        </div>
+      </div>
+      <div class="table-wrapper">
+        <table role="table" aria-label="Discovered URLs">
+          <thead>
+            <tr>
+              <th>
+                <input type="checkbox" id="checkAll" title="Select all" aria-label="Select all URLs">
+              </th>
+              <th class="sortable" data-sort="url">
+                URL
+              </th>
+              <th class="sortable" data-sort="depth" style="text-align:right;">
+                Path Depth
+              </th>
+              <th>Query</th>
+              <th>External</th>
+            </tr>
+          </thead>
+          <tbody id="tableBody"></tbody>
+        </table>
+      </div>
+      <div id="pagination" class="pagination" style="display:none;">
+        <div class="pagination-info" id="paginationInfo">1-20 / 0</div>
+        <div class="pagination-controls">
+          <button id="prevPage" class="btn btn-sm">Previous</button>
+          <button id="nextPage" class="btn btn-sm">Next</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Empty State -->
+    <div id="emptyState" class="card empty-state" style="display:none;">
+      <svg class="empty-state-icon" viewBox="0 0 64 64" aria-hidden="true" style="width: 64px; height: 64px;">
+        <defs>
+          <linearGradient id="gradient-search-bot" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" style="stop-color:#2563EB;stop-opacity:1" />
+            <stop offset="50%" style="stop-color:#3B82F6;stop-opacity:1" />
+            <stop offset="100%" style="stop-color:#06B6D4;stop-opacity:1" />
+          </linearGradient>
+          <radialGradient id="bot-glow" cx="50%" cy="50%">
+            <stop offset="0%" style="stop-color:#2563EB;stop-opacity:0.2" />
+            <stop offset="100%" style="stop-color:#2563EB;stop-opacity:0" />
+          </radialGradient>
+        </defs>
+        <!-- Glow effect -->
+        <circle cx="32" cy="32" r="28" fill="url(#bot-glow)"/>
+        <!-- Search magnifying glass with animation -->
+        <g class="magnifying-glass">
+          <circle cx="24" cy="24" r="10" fill="none" stroke="url(#gradient-search-bot)" stroke-width="3" stroke-linecap="round">
+            <animateTransform attributeName="transform" type="translate" values="0,0; 2,0; 0,0; -2,0; 0,0" dur="3s" repeatCount="indefinite"/>
+          </circle>
+          <path d="M32 32 L40 40" stroke="url(#gradient-search-bot)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+            <animateTransform attributeName="transform" type="translate" values="0,0; 2,0; 0,0; -2,0; 0,0" dur="3s" repeatCount="indefinite"/>
+          </path>
+        </g>
+        <!-- Bot/AI sparkles with enhanced animation -->
+        <circle cx="48" cy="20" r="2" fill="#06B6D4" opacity="0.8">
+          <animate attributeName="opacity" values="0.8;0.2;0.8" dur="1.5s" repeatCount="indefinite"/>
+          <animateTransform attributeName="transform" type="translate" values="0,0; 1,-1; 0,0" dur="2s" repeatCount="indefinite"/>
+        </circle>
+        <circle cx="52" cy="28" r="1.5" fill="#3B82F6" opacity="0.6">
+          <animate attributeName="opacity" values="0.6;0.1;0.6" dur="1.2s" repeatCount="indefinite"/>
+          <animateTransform attributeName="transform" type="translate" values="0,0; -1,1; 0,0" dur="1.8s" repeatCount="indefinite"/>
+        </circle>
+        <circle cx="46" cy="36" r="1.5" fill="#06B6D4" opacity="0.7">
+          <animate attributeName="opacity" values="0.7;0.15;0.7" dur="1.6s" repeatCount="indefinite"/>
+          <animateTransform attributeName="transform" type="translate" values="0,0; 1.5,0; 0,0" dur="2.2s" repeatCount="indefinite"/>
+        </circle>
+      </svg>
+      <div class="empty-state-title">Ready to scout your website?</div>
+      <div class="empty-state-text">Paste any domain and WebScout Agent will map every page automatically.</div>
+    </div>
+
+    <!-- Error State -->
+    <div id="errorState" class="card" style="display:none;">
+      <div class="error-box">
+        <div class="error-content">
+          <div class="error-title" id="errorTitle">Discovery failed</div>
+          <div class="error-message" id="errorMessage"></div>
+          <button id="errorRetry" class="btn btn-sm" style="margin-top:var(--space-sm);">Retry</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Footer -->
+  <footer class="app-footer">
+    <div class="container">
+      <div class="footer-content">
+        <p class="footer-text">
+          <span class="footer-brand">WebScout Agent</span>
+          <span class="footer-separator">•</span>
+          <span>Built by <span class="footer-name">Seyoung Lee</span></span>
+        </p>
+        <a href="#" class="footer-github" aria-label="GitHub">
+        </a>
+      </div>
+    </div>
+  </footer>
+  
+  <script src="app.js"></script>
+</body>
+</html>

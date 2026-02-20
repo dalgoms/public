@@ -1,0 +1,11 @@
+url,pathDepth,hasQuery,external
+https://example.com,0,false,false
+https://example.com/about,1,false,false
+https://example.com/blog,1,false,false
+https://example.com/blog/post-1,2,false,false
+https://example.com/blog/post-2,2,false,false
+https://example.com/contact,1,false,false
+https://example.com/pricing,1,false,false
+https://example.com/features,1,false,false
+https://example.com/docs,1,false,false
+https://example.com/docs/getting-started,2,false,false

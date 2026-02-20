@@ -1,0 +1,37 @@
+{
+  "name": "webscout-agent",
+  "version": "0.1.0",
+  "description": "AI-powered website discovery agent for Figma-ready design",
+  "type": "module",
+  "main": "server.js",
+  "engines": {
+    "node": ">=18"
+  },
+  "scripts": {
+    "start": "node server.js",
+    "collect": "node collect-urls.mjs",
+    "verify": "powershell -ExecutionPolicy Bypass -File verify-urls.ps1"
+  },
+  "keywords": [
+    "url-collector",
+    "sitemap",
+    "crawler",
+    "figma",
+    "web-scout",
+    "ai-agent",
+    "website-discovery"
+  ],
+  "author": "Seyoung Lee",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.21.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/yourusername/webscout-agent.git"
+  },
+  "bugs": {
+    "url": "https://github.com/yourusername/webscout-agent/issues"
+  },
+  "homepage": "https://github.com/yourusername/webscout-agent#readme"
+}
