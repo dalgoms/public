@@ -1,0 +1,904 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Meta 광고 소재 생성기</title>
+    <link href="https://cdn.jsdelivr.net/npm/pretendard@1.3.9/dist/web/static/pretendard.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Noto+Sans+KR:wght@300;400;500;600;700&family=Space+Grotesk:wght@300;400;500;600;700&family=Syne:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
+</head>
+<body>
+    <!-- 인트로 스플래시 화면 -->
+    <div class="intro-splash" id="intro-splash">
+        <div class="intro-content">
+            <div class="intro-tagline">Build high-converting creatives with AI.</div>
+            <img src="assets/Mefimake-logo (1).png" alt="MEFIMAKE" class="intro-logo-img">
+            <div class="intro-loader">
+                <span class="loader-dot"></span>
+                <span class="loader-dot"></span>
+                <span class="loader-dot"></span>
+            </div>
+        </div>
+        <div class="intro-credit">2026 made by SEYOUNG LEE</div>
+    </div>
+
+    <!-- 컨트롤 패널 -->
+    <aside class="control-panel">
+        <!-- 로고 헤더 -->
+        <div class="panel-header">
+            <img src="assets/Mefimake-logo (1).png" alt="MEFIMAKE" class="panel-logo-img">
+            <span class="header-badge">AI Studio</span>
+        </div>
+
+        <!-- 3탭 네비게이션: 기획 → 디자인 → 내보내기 -->
+        <nav class="panel-tabs">
+            <button class="panel-tab active" data-panel="plan">
+                <span class="panel-tab-icon">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/>
+                        <polyline points="14 2 14 8 20 8"/>
+                        <line x1="16" y1="13" x2="8" y2="13"/>
+                        <line x1="16" y1="17" x2="8" y2="17"/>
+                        <line x1="10" y1="9" x2="8" y2="9"/>
+                    </svg>
+                </span>
+                <span>기획</span>
+            </button>
+            <button class="panel-tab" data-panel="design">
+                <span class="panel-tab-icon">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M12 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+                        <path d="M18.375 2.625a2.121 2.121 0 1 1 3 3L12 15l-4 1 1-4 9.375-9.375z"/>
+                    </svg>
+                </span>
+                <span>디자인</span>
+            </button>
+            <button class="panel-tab" data-panel="export">
+                <span class="panel-tab-icon">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                        <polyline points="7 10 12 15 17 10"/>
+                        <line x1="12" y1="15" x2="12" y2="3"/>
+                    </svg>
+                </span>
+                <span>내보내기</span>
+            </button>
+        </nav>
+
+        <!-- 패널 콘텐츠 -->
+        <div class="panel-content">
+
+            <!-- ============================================
+                 기획 (Plan) 패널
+                 ============================================ -->
+            <div id="panel-plan" class="panel-group">
+
+                <!-- STEP 1: Canvas Size -->
+                <section class="plan-step" id="step-platform">
+                    <div class="step-header">
+                        <span class="step-number">1</span>
+                        <span class="step-title">캔버스 사이즈</span>
+                    </div>
+                    <div class="step-content">
+                        <div class="size-card-grid" id="size-selector">
+                            <div class="size-card active" data-size="1:1" data-width="1080" data-height="1080">
+                                <div class="size-card-preview square">
+                                    <img src="assets/size-square.png" alt="Square">
+                                </div>
+                                <div class="size-card-info">
+                                    <span class="size-card-label">Square</span>
+                                    <span class="size-card-dimension">1080 × 1080</span>
+                                </div>
+                            </div>
+                            <div class="size-card" data-size="16:9" data-width="1280" data-height="720">
+                                <div class="size-card-preview landscape">
+                                    <img src="assets/size-landscape.png" alt="Landscape">
+                                </div>
+                                <div class="size-card-info">
+                                    <span class="size-card-label">Landscape</span>
+                                    <span class="size-card-dimension">1280 × 720</span>
+                                </div>
+                            </div>
+                            <div class="size-card" data-size="9:16" data-width="1080" data-height="1920">
+                                <div class="size-card-preview portrait">
+                                    <img src="assets/size-portrait.png" alt="Portrait">
+                                </div>
+                                <div class="size-card-info">
+                                    <span class="size-card-label">Story</span>
+                                    <span class="size-card-dimension">1080 × 1920</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- STEP 2: Content Editor + AI Generate -->
+                <section class="plan-step" id="step-template">
+                    <div class="step-header">
+                        <span class="step-number">2</span>
+                        <span class="step-title">콘텐츠 제작</span>
+                    </div>
+                    <div class="step-content">
+                        <!-- AI 초안 문구 생성 -->
+                        <div class="editor-field">
+                            <label class="editor-label">AI 초안 문구 생성</label>
+                            <div class="message-with-btn">
+                                <input type="text" 
+                                       id="message-input" 
+                                       class="message-input-inline"
+                                       placeholder="예: 생산성 향상 · 비용 절감 · AI 자동화" 
+                                       value="">
+                                <button class="btn-ai-inline" id="ai-generate-btn">
+                                    <span class="btn-text">생성</span>
+                                    <span class="btn-loading" style="display: none;">
+                                        <svg class="spinner" width="14" height="14" viewBox="0 0 24 24">
+                                            <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="3" fill="none" stroke-dasharray="31.4" stroke-linecap="round"/>
+                                        </svg>
+                                    </span>
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <div class="content-editor" id="content-editor">
+                            <!-- Headline -->
+                            <div class="editor-field">
+                                <label class="editor-label">헤드라인</label>
+                                <textarea id="edit-headline" class="editor-textarea" rows="2" placeholder="메인 헤드라인을 입력하세요">비전공자인데도 가능할까요?
+실무부터 취업까지</textarea>
+                            </div>
+                            
+                            <!-- Subtext -->
+                            <div class="editor-field">
+                                <label class="editor-label">서브 텍스트</label>
+                                <input type="text" id="edit-subtext" class="editor-input" placeholder="서브 텍스트" value="3개월 완성">
+                            </div>
+                            
+                            <!-- CTA Button -->
+                            <div class="editor-field">
+                                <label class="editor-label">CTA 버튼</label>
+                                <input type="text" id="edit-cta" class="editor-input" placeholder="CTA 버튼 텍스트" value="무료 지원 받고 취업하기">
+                            </div>
+                            
+                            <!-- Background Image -->
+                            <div class="editor-field">
+                                <label class="editor-label">배경 이미지</label>
+                                <div class="editor-file-row">
+                                    <input type="file" id="edit-bg-image" class="editor-file" accept="image/*">
+                                    <button type="button" id="edit-bg-clear" class="editor-btn-clear">초기화</button>
+                                </div>
+                            </div>
+                            
+                            <!-- Icon/Element Add -->
+                            <div class="editor-field">
+                                <label class="editor-label">아이콘/요소 추가</label>
+                                <div class="editor-file-row">
+                                    <input type="file" id="edit-add-icon" class="editor-file" accept="image/*" multiple>
+                                    <button type="button" id="edit-icon-clear" class="editor-btn-clear">전체 삭제</button>
+                                </div>
+                                <div class="added-icons-preview" id="added-icons-preview">
+                                    <!-- 추가된 아이콘 미리보기 -->
+                                </div>
+                            </div>
+                            
+                            <!-- Apply Button -->
+                            <button type="button" id="apply-content-btn" class="btn-apply-content">
+                                전체 적용하기
+                            </button>
+                        </div>
+                    </div>
+                </section>
+
+            </div>
+
+            <!-- ============================================
+                 디자인 (Design) 패널
+                 ============================================ -->
+            <div id="panel-design" class="panel-group" style="display: none;">
+                
+                <!-- 선택 요소 헤더 -->
+                <div class="design-header" id="design-header">
+                    <div class="selection-info">
+                        <span class="selection-icon" id="selection-icon">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <rect x="3" y="3" width="18" height="18" rx="2"/>
+                            </svg>
+                        </span>
+                        <span class="selection-name" id="selection-name">선택된 요소 없음</span>
+                    </div>
+                </div>
+
+                <!-- Position 섹션 (피그마 스타일) -->
+                <section class="panel-section figma-section open" id="section-position">
+                    <div class="section-header" onclick="this.parentElement.classList.toggle('open')">
+                        <div class="section-title">Position</div>
+                        <span class="section-chevron">
+                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <polyline points="6 9 12 15 18 9"/>
+                            </svg>
+                        </span>
+                    </div>
+                    <div class="section-content">
+                        <!-- X/Y Position -->
+                        <div class="figma-prop-row two-col">
+                            <div class="figma-input-group">
+                                <label class="figma-mini-label">X</label>
+                                <input type="number" id="position-x" value="0" class="figma-num-input" step="1">
+                            </div>
+                            <div class="figma-input-group">
+                                <label class="figma-mini-label">Y</label>
+                                <input type="number" id="position-y" value="0" class="figma-num-input" step="1">
+                            </div>
+                        </div>
+                        <!-- Width/Height -->
+                        <div class="figma-prop-row two-col">
+                            <div class="figma-input-group">
+                                <label class="figma-mini-label">W</label>
+                                <input type="number" id="position-width" value="0" class="figma-num-input" min="10" step="1">
+                            </div>
+                            <div class="figma-input-group">
+                                <label class="figma-mini-label">H</label>
+                                <input type="number" id="position-height" value="0" class="figma-num-input" min="10" step="1">
+                            </div>
+                        </div>
+                        <!-- Rotation -->
+                        <div class="figma-prop-row two-col">
+                            <div class="figma-input-group">
+                                <label class="figma-mini-label">회전</label>
+                                <input type="number" id="position-rotation" value="0" min="-360" max="360" class="figma-num-input" step="1">
+                            </div>
+                            <div class="figma-input-group">
+                                <span class="figma-mini-label"></span>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Typography 섹션 (피그마 스타일) - 순서 1 -->
+                <section class="panel-section figma-section open" id="section-typography">
+                    <div class="section-header" onclick="this.parentElement.classList.toggle('open')">
+                        <div class="section-title">Typography</div>
+                        <span class="section-chevron">
+                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <polyline points="6 9 12 15 18 9"/>
+                            </svg>
+                        </span>
+                    </div>
+                    <div class="section-content">
+                        <!-- Font Family -->
+                        <div class="figma-prop-row">
+                            <select id="font-family" class="figma-select full">
+                                <option value="Inter" selected>Inter</option>
+                                <option value="Noto Sans KR">Noto Sans KR</option>
+                                <option value="Pretendard">Pretendard</option>
+                                <option value="Spoqa Han Sans">Spoqa Han Sans</option>
+                            </select>
+                        </div>
+                        <!-- Weight -->
+                        <div class="figma-prop-row">
+                            <select id="font-weight" class="figma-select full">
+                                <option value="300">Light</option>
+                                <option value="400" selected>Regular</option>
+                                <option value="500">Medium</option>
+                                <option value="600">SemiBold</option>
+                                <option value="700">Bold</option>
+                            </select>
+                        </div>
+                        <!-- Size & Letter Spacing -->
+                        <div class="figma-prop-row two-col">
+                            <div class="figma-input-group">
+                                <span class="figma-label">크기</span>
+                                <input type="number" id="font-size" value="50" min="8" max="200" class="figma-num-input" title="폰트 크기">
+                            </div>
+                            <div class="figma-input-group">
+                                <span class="figma-label">자간</span>
+                                <input type="number" id="letter-spacing" value="0" min="-50" max="100" class="figma-num-input" title="자간 (px)">
+                            </div>
+                        </div>
+                        <!-- Text Align & Line Height -->
+                        <div class="figma-prop-row" style="gap: 12px;">
+                            <div class="figma-btn-group">
+                                <button class="figma-icon-btn active" data-align="left" title="왼쪽">
+                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="15" y2="12"/><line x1="3" y1="18" x2="18" y2="18"/>
+                                    </svg>
+                                </button>
+                                <button class="figma-icon-btn" data-align="center" title="가운데">
+                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <line x1="3" y1="6" x2="21" y2="6"/><line x1="6" y1="12" x2="18" y2="12"/><line x1="4" y1="18" x2="20" y2="18"/>
+                                    </svg>
+                                </button>
+                                <button class="figma-icon-btn" data-align="right" title="오른쪽">
+                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <line x1="3" y1="6" x2="21" y2="6"/><line x1="9" y1="12" x2="21" y2="12"/><line x1="6" y1="18" x2="21" y2="18"/>
+                                    </svg>
+                                </button>
+                            </div>
+                            <div class="figma-input-group" style="flex: 1;">
+                                <span class="figma-label" title="행간">
+                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/>
+                                        <line x1="12" y1="3" x2="12" y2="9"/><line x1="12" y1="15" x2="12" y2="21"/>
+                                    </svg>
+                                </span>
+                                <input type="number" id="line-height" value="130" min="80" max="300" step="10" class="figma-num-input" title="행간 (%)">
+                                <span class="figma-unit">%</span>
+                            </div>
+                        </div>
+                        <!-- Text Color -->
+                        <div class="figma-prop-row">
+                            <span class="figma-label">Color</span>
+                            <input type="color" id="text-color" value="#ffffff" class="figma-color-swatch small">
+                            <input type="text" id="text-color-hex" value="FFFFFF" class="figma-hex-input" maxlength="6">
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Fill 섹션 (피그마 스타일) - 순서 2 -->
+                <section class="panel-section figma-section open" id="section-fill">
+                    <div class="section-header" onclick="this.parentElement.classList.toggle('open')">
+                        <div class="section-title">Background</div>
+                        <span class="section-chevron">
+                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <polyline points="6 9 12 15 18 9"/>
+                            </svg>
+                        </span>
+                    </div>
+                    <div class="section-content">
+                        <!-- Fill Type Tabs -->
+                        <div class="fill-type-tabs">
+                            <button class="fill-tab active" data-fill-type="solid">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><rect x="4" y="4" width="16" height="16" rx="2"/></svg>
+                            </button>
+                            <button class="fill-tab" data-fill-type="gradient">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <rect x="4" y="4" width="16" height="16" rx="2"/>
+                                    <path d="M4 20L20 4"/>
+                                </svg>
+                            </button>
+                            <button class="fill-tab" data-fill-type="image">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <rect x="3" y="3" width="18" height="18" rx="2"/>
+                                    <circle cx="8.5" cy="8.5" r="1.5"/>
+                                    <path d="M21 15l-5-5L5 21"/>
+                                </svg>
+                            </button>
+                        </div>
+
+                        <!-- Solid Color -->
+                        <div class="fill-editor" id="fill-solid-editor">
+                            <div class="figma-color-row">
+                                <input type="color" id="fill-color" value="#00298A" class="figma-color-swatch">
+                                <input type="text" id="fill-color-hex" value="00298A" class="figma-hex-input" maxlength="6">
+                                <input type="number" id="fill-opacity" value="100" min="0" max="100" class="figma-opacity-input">
+                                <span class="figma-unit">%</span>
+                            </div>
+                        </div>
+
+                        <!-- Gradient -->
+                        <div class="fill-editor" id="fill-gradient-editor" style="display: none;">
+                            <div class="figma-gradient-bar" id="gradient-bar">
+                                <div class="gradient-stop start" data-position="0"></div>
+                                <div class="gradient-stop end" data-position="100"></div>
+                            </div>
+                            <div class="figma-color-row">
+                                <input type="color" id="gradient-start-color" value="#001D61" class="figma-color-swatch">
+                                <input type="text" id="gradient-start-hex" value="001D61" class="figma-hex-input" maxlength="6">
+                                <span class="figma-label">→</span>
+                                <input type="color" id="gradient-end-color" value="#003C8A" class="figma-color-swatch">
+                                <input type="text" id="gradient-end-hex" value="003C8A" class="figma-hex-input" maxlength="6">
+                            </div>
+                            <div class="figma-prop-row">
+                                <span class="figma-label">Angle</span>
+                                <input type="number" id="gradient-angle" value="135" min="0" max="360" class="figma-num-input">
+                                <span class="figma-unit">°</span>
+                            </div>
+                        </div>
+
+                        <!-- Image -->
+                        <div class="fill-editor" id="fill-image-editor" style="display: none;">
+                            <div class="figma-image-upload" id="fill-image-upload">
+                                <input type="file" id="fill-image-input" accept="image/*" hidden>
+                                <div class="upload-zone" id="fill-upload-zone">
+                                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                                        <polyline points="17 8 12 3 7 8"/>
+                                        <line x1="12" y1="3" x2="12" y2="15"/>
+                                    </svg>
+                                    <span>이미지 선택</span>
+                                </div>
+                                <div class="image-preview-mini" id="fill-image-preview" style="display: none;">
+                                    <img id="fill-preview-img" src="" alt="">
+                                    <button class="remove-btn" id="fill-remove-image">×</button>
+                                </div>
+                            </div>
+                            <div class="figma-prop-row">
+                                <span class="figma-label">Fit</span>
+                                <select id="fill-image-fit" class="figma-select">
+                                    <option value="cover">Cover</option>
+                                    <option value="contain">Contain</option>
+                                    <option value="fill">Fill</option>
+                                </select>
+                            </div>
+                            <div class="figma-prop-row two-col">
+                                <div class="figma-input-group">
+                                    <span class="figma-label">어둡게</span>
+                                    <input type="number" id="fill-overlay" value="0" min="0" max="100" class="figma-num-input">
+                                    <span class="figma-unit">%</span>
+                                </div>
+                                <div class="figma-input-group">
+                                    <span class="figma-label">블러</span>
+                                    <input type="number" id="fill-blur" value="0" min="0" max="50" class="figma-num-input">
+                                    <span class="figma-unit">px</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Layers 섹션 (피그마 스타일) - 순서 4 -->
+                <section class="panel-section figma-section open" id="section-layers">
+                    <div class="section-header" onclick="this.parentElement.classList.toggle('open')">
+                        <div class="section-title">Layers</div>
+                        <span class="section-chevron">
+                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <polyline points="6 9 12 15 18 9"/>
+                            </svg>
+                        </span>
+                    </div>
+                    <div class="section-content">
+                        <div class="figma-layers-list" id="layers-list">
+                            <!-- 동적으로 생성 -->
+                        </div>
+                        <div class="layers-empty" id="layers-empty">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                                <polygon points="12 2 2 7 12 12 22 7 12 2"/>
+                                <polyline points="2 17 12 22 22 17"/>
+                                <polyline points="2 12 12 17 22 12"/>
+                            </svg>
+                            <span>레이어가 없습니다</span>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 저장 버튼 섹션 -->
+                <div class="design-save-section">
+                    <button class="save-work-btn" id="save-work-btn">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/>
+                            <polyline points="17 21 17 13 7 13 7 21"/>
+                            <polyline points="7 3 7 8 15 8"/>
+                        </svg>
+                        <span>작업 저장</span>
+                    </button>
+                </div>
+
+            </div>
+
+
+            <!-- 내보내기 패널 -->
+            <div id="panel-export" class="panel-group" style="display: none;">
+                <!-- 저장된 작업 히스토리 -->
+                <section class="panel-section figma-section open">
+                    <div class="section-header">
+                        <div class="section-title">저장된 작업</div>
+                        <span class="history-count" id="history-count">0</span>
+                    </div>
+                    <div class="section-content">
+                        <div class="history-grid" id="history-grid">
+                            <!-- 히스토리 아이템들이 여기에 동적으로 추가됨 -->
+                        </div>
+                        <div class="history-empty" id="history-empty">
+                            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                                <rect x="3" y="3" width="18" height="18" rx="2"/>
+                                <line x1="12" y1="8" x2="12" y2="16"/>
+                                <line x1="8" y1="12" x2="16" y2="12"/>
+                            </svg>
+                            <span>저장된 작업이 없습니다</span>
+                            <span class="history-empty-hint">디자인 탭에서 "작업 저장" 버튼을 눌러주세요</span>
+                        </div>
+                    </div>
+                </section>
+                
+                <!-- 내보내기 옵션 -->
+                <section class="panel-section figma-section open">
+                    <div class="section-header">
+                        <div class="section-title">내보내기 옵션</div>
+                    </div>
+                    <div class="section-content">
+                        <div class="figma-prop-row two-col">
+                            <div class="figma-input-group">
+                                <span class="figma-label">품질</span>
+                                <select id="export-scale" class="figma-select">
+                                    <option value="1">1x</option>
+                                    <option value="2" selected>2x</option>
+                                    <option value="3">3x</option>
+                                </select>
+                            </div>
+                            <div class="figma-input-group">
+                                <span class="figma-label">포맷</span>
+                                <select id="export-format" class="figma-select">
+                                    <option value="png" selected>PNG</option>
+                                    <option value="jpeg">JPEG</option>
+                                    <option value="webp">WebP</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+                
+                <!-- 다운로드 액션 -->
+                <section class="panel-section figma-section open">
+                    <div class="section-header">
+                        <div class="section-title">다운로드</div>
+                    </div>
+                    <div class="section-content">
+                        <div class="export-buttons-new">
+                            <!-- 현재 이미지 -->
+                            <button class="export-btn-card" id="export-single-btn">
+                                <div class="export-btn-icon">
+                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <rect x="3" y="3" width="18" height="18" rx="2"/>
+                                        <circle cx="8.5" cy="8.5" r="1.5"/>
+                                        <path d="M21 15l-5-5L5 21"/>
+                                    </svg>
+                                </div>
+                                <div class="export-btn-content">
+                                    <span class="export-btn-title">현재 이미지</span>
+                                    <span class="export-btn-desc" id="export-single-size">1080 × 1080</span>
+                                </div>
+                                <span class="export-btn-count">1</span>
+                            </button>
+                            
+                            <!-- 사이즈 세트 미리보기 -->
+                            <button class="export-btn-card" id="export-set-preview-btn">
+                                <div class="export-btn-icon">
+                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <rect x="2" y="6" width="8" height="8" rx="1"/>
+                                        <rect x="14" y="2" width="8" height="6" rx="1"/>
+                                        <rect x="14" y="12" width="6" height="10" rx="1"/>
+                                    </svg>
+                                </div>
+                                <div class="export-btn-content">
+                                    <span class="export-btn-title">사이즈 세트</span>
+                                    <span class="export-btn-desc">미리보기 후 다운로드</span>
+                                </div>
+                                <span class="export-btn-count">3</span>
+                            </button>
+                            
+                            <!-- 선택 다운로드 -->
+                            <button class="export-btn-card" id="export-selected-btn" disabled>
+                                <div class="export-btn-icon">
+                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                                        <polyline points="7 10 12 15 17 10"/>
+                                        <line x1="12" y1="15" x2="12" y2="3"/>
+                                    </svg>
+                                </div>
+                                <div class="export-btn-content">
+                                    <span class="export-btn-title">선택 다운로드</span>
+                                    <span class="export-btn-desc" id="export-selected-desc">히스토리에서 선택하세요</span>
+                                </div>
+                                <span class="export-btn-count" id="export-selected-count">0</span>
+                            </button>
+                        </div>
+                        
+                        <!-- 진행 상태 표시 -->
+                        <div class="export-progress" id="export-progress" style="display: none;">
+                            <div class="export-progress-bar">
+                                <div class="export-progress-fill" id="export-progress-fill"></div>
+                            </div>
+                            <div class="export-progress-text" id="export-progress-text">준비 중...</div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+            
+            <!-- 사이즈 세트 미리보기 모달 -->
+            <div class="size-set-modal" id="size-set-modal" style="display: none;">
+                <div class="size-set-modal-content">
+                    <div class="size-set-modal-header">
+                        <h3>사이즈 세트 미리보기</h3>
+                        <button class="size-set-modal-close" id="size-set-modal-close">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <line x1="18" y1="6" x2="6" y2="18"/>
+                                <line x1="6" y1="6" x2="18" y2="18"/>
+                            </svg>
+                        </button>
+                    </div>
+                    <div class="size-set-grid">
+                        <div class="size-set-item" data-ratio="1:1">
+                            <div class="size-set-preview" id="size-preview-1x1">
+                                <div class="size-preview-loading">로딩 중...</div>
+                            </div>
+                            <div class="size-set-info">
+                                <span class="size-set-label">Square</span>
+                                <span class="size-set-dim">1080 × 1080</span>
+                            </div>
+                            <label class="size-set-checkbox">
+                                <input type="checkbox" id="size-check-1x1" checked>
+                                <span class="checkmark"></span>
+                            </label>
+                        </div>
+                        <div class="size-set-item" data-ratio="16:9">
+                            <div class="size-set-preview" id="size-preview-16x9">
+                                <div class="size-preview-loading">로딩 중...</div>
+                            </div>
+                            <div class="size-set-info">
+                                <span class="size-set-label">Landscape</span>
+                                <span class="size-set-dim">1920 × 1080</span>
+                            </div>
+                            <label class="size-set-checkbox">
+                                <input type="checkbox" id="size-check-16x9" checked>
+                                <span class="checkmark"></span>
+                            </label>
+                        </div>
+                        <div class="size-set-item" data-ratio="9:16">
+                            <div class="size-set-preview" id="size-preview-9x16">
+                                <div class="size-preview-loading">로딩 중...</div>
+                            </div>
+                            <div class="size-set-info">
+                                <span class="size-set-label">Story</span>
+                                <span class="size-set-dim">1080 × 1920</span>
+                            </div>
+                            <label class="size-set-checkbox">
+                                <input type="checkbox" id="size-check-9x16" checked>
+                                <span class="checkmark"></span>
+                            </label>
+                        </div>
+                    </div>
+                    <div class="size-set-modal-footer">
+                        <button class="size-set-download-btn" id="size-set-download-btn">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                                <polyline points="7 10 12 15 17 10"/>
+                                <line x1="12" y1="15" x2="12" y2="3"/>
+                            </svg>
+                            선택한 사이즈 다운로드
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 크레딧 -->
+        <div class="panel-footer">
+            <span class="credit">made by SEYOUNG LEE</span>
+        </div>
+    </aside>
+
+    <!-- 메인 미리보기 영역 -->
+    <main class="preview-area">
+        <div class="preview-header">
+            <h2>Canvas</h2>
+            <div class="preview-controls">
+                <button class="safe-zone-btn" id="toggle-safe-zone" title="안전영역 가이드 표시">
+                    <span class="safe-icon">▣</span> Safe Zone
+                </button>
+                <button class="safe-zone-btn" id="open-meta-library" title="Meta 광고 라이브러리">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/>
+                    </svg>
+                    Meta Library
+                </button>
+                <button class="market-research-btn" id="open-webscout" title="경쟁사 사이트 분석">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="11" cy="11" r="8"/>
+                        <path d="M21 21l-4.35-4.35"/>
+                    </svg>
+                    WebScout Agent
+                </button>
+            </div>
+        </div>
+
+        <div class="preview-container">
+            <!-- 피그마 스타일 플로팅 툴바 -->
+            <div class="floating-toolbar" id="floating-toolbar">
+                <div class="toolbar-group main-tools">
+                    <button class="tool-btn active" data-tool="select" title="선택 도구 (V)">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M3 3l7.07 16.97 2.51-7.39 7.39-2.51L3 3z"/>
+                            <path d="M13 13l6 6"/>
+                        </svg>
+                    </button>
+                </div>
+                <div class="toolbar-divider"></div>
+                <div class="toolbar-group content-tools">
+                    <button class="tool-btn" data-tool="text" title="텍스트 (T)">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M4 7V4h16v3"/>
+                            <path d="M12 4v16"/>
+                            <path d="M8 20h8"/>
+                        </svg>
+                    </button>
+                </div>
+                <div class="toolbar-spacer"></div>
+                <div class="toolbar-group action-tools">
+                    <button class="tool-btn icon-only" data-action="zoom-out" title="축소 (-)">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="11" cy="11" r="8"/>
+                            <path d="M21 21l-4.35-4.35"/>
+                            <path d="M8 11h6"/>
+                        </svg>
+                    </button>
+                    <span class="zoom-level" id="zoom-level">100%</span>
+                    <button class="tool-btn icon-only" data-action="zoom-in" title="확대 (+)">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="11" cy="11" r="8"/>
+                            <path d="M21 21l-4.35-4.35"/>
+                            <path d="M11 8v6"/>
+                            <path d="M8 11h6"/>
+                        </svg>
+                    </button>
+                    <button class="tool-btn icon-only" data-action="fit" title="화면에 맞추기">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M8 3H5a2 2 0 0 0-2 2v3"/>
+                            <path d="M21 8V5a2 2 0 0 0-2-2h-3"/>
+                            <path d="M3 16v3a2 2 0 0 0 2 2h3"/>
+                            <path d="M16 21h3a2 2 0 0 0 2-2v-3"/>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+
+            <!-- 광고 미리보기 캔버스 -->
+            <div class="ad-canvas tool-select" id="ad-canvas" tabindex="0">
+                <!-- 배경 이미지 레이어 -->
+                <div class="ad-bg-image" id="ad-bg-image"></div>
+                <!-- 오버레이 -->
+                <div class="ad-overlay" id="ad-overlay"></div>
+                
+                <!-- 추가된 이미지 요소들 (텍스트 뒤) -->
+                <div class="ad-elements-back" id="ad-elements-back">
+                    <!-- 동적 생성 -->
+                </div>
+                
+                <!-- 추가된 이미지 요소들 (텍스트 앞) -->
+                <div class="ad-elements" id="ad-elements">
+                    <!-- 동적 생성 -->
+                </div>
+
+                <!-- 콘텐츠 -->
+                <div class="ad-content" id="ad-content">
+                    <h2 class="ad-headline" id="ad-headline" data-layer="headline"></h2>
+                    <p class="ad-subtext" id="ad-subtext" data-layer="subtext"></p>
+                    <div class="ad-cta" id="ad-cta" data-layer="cta"></div>
+                </div>
+                <div class="ad-footer">
+                    <span class="ad-brand">Timbel</span>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- 간소화된 하단 상태바 -->
+        <div class="status-bar" id="status-bar">
+            <div class="status-left">
+                <span class="status-item" id="status-selection">선택 없음</span>
+                <span class="status-divider">|</span>
+                <span class="status-item" id="status-canvas-size">1080 × 1080</span>
+            </div>
+            <div class="status-center">
+                <kbd>Ctrl+K</kbd> 빠른 명령
+            </div>
+            <div class="status-right">
+                <span class="status-zoom-value" id="status-zoom">100%</span>
+            </div>
+        </div>
+    </main>
+
+    <!-- 배치 생성 모달 -->
+    <div class="modal" id="batch-modal">
+        <div class="modal-content">
+            <h2>배치 생성 중...</h2>
+            <div class="progress-bar">
+                <div class="progress-fill" id="progress-fill"></div>
+            </div>
+            <p class="progress-text" id="progress-text">0 / 20 생성 완료</p>
+            <div class="batch-preview" id="batch-preview"></div>
+        </div>
+    </div>
+
+    <!-- 이미지 요소 편집 모달 -->
+    <div class="modal" id="element-modal">
+        <div class="modal-content element-editor">
+            <h2>이미지 편집</h2>
+            <div class="element-edit-form">
+                <div class="form-group">
+                    <label>크기 <span id="element-size-value">100</span>%</label>
+                    <input type="range" id="element-size" min="10" max="200" value="100" class="slider">
+                </div>
+                <div class="form-group">
+                    <label>회전 <span id="element-rotation-value">0</span>°</label>
+                    <input type="range" id="element-rotation" min="-180" max="180" value="0" class="slider">
+                </div>
+                <div class="form-group">
+                    <label>투명도 <span id="element-opacity-value">100</span>%</label>
+                    <input type="range" id="element-opacity" min="0" max="100" value="100" class="slider">
+                </div>
+                <div class="element-actions">
+                    <button class="btn-delete-element" id="delete-element">삭제</button>
+                    <button class="btn-close-modal" id="close-element-modal">완료</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Command Palette (Ctrl+K) -->
+    <div class="command-palette-overlay" id="command-palette-overlay">
+        <div class="command-palette" id="command-palette">
+            <div class="command-palette-header">
+                <div class="command-search-wrapper">
+                    <svg class="command-search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/>
+                    </svg>
+                    <input type="text" class="command-search" id="command-search" placeholder="명령어 검색..." autocomplete="off">
+                    <span class="command-shortcut">⌘K</span>
+                </div>
+            </div>
+            <div class="command-context" id="command-context">
+                <!-- 선택된 요소 표시 -->
+            </div>
+            <div class="command-list" id="command-list">
+                <!-- 동적 생성 -->
+            </div>
+            <div class="command-footer">
+                <span class="command-hint"><kbd>↑↓</kbd> 탐색</span>
+                <span class="command-hint"><kbd>Enter</kbd> 실행</span>
+                <span class="command-hint"><kbd>Esc</kbd> 닫기</span>
+            </div>
+        </div>
+    </div>
+
+    <script src="editor-state.js"></script>
+    <script src="creative-engine.js"></script>
+    <script src="platform-presets.js"></script>
+    <script src="layout-presets.js"></script>
+    <script src="strategy-templates.js"></script>
+    <script src="content-matrix.js"></script>
+    <script src="app.js"></script>
+    <script src="toolbar.js"></script>
+    <script src="figma-panel.js"></script>
+    <script src="command-palette.js"></script>
+    <script>
+        // Safe Zone 가이드 토글
+        const safeZoneBtn = document.getElementById('toggle-safe-zone');
+        const adCanvas = document.getElementById('ad-canvas');
+        
+        safeZoneBtn?.addEventListener('click', () => {
+            safeZoneBtn.classList.toggle('active');
+            adCanvas.classList.toggle('show-safe-zone');
+        });
+
+        // 시장조사 (WebScout) 버튼
+        const webscoutBtn = document.getElementById('open-webscout');
+        webscoutBtn?.addEventListener('click', () => {
+            window.open('https://webscout-agent.vercel.app/', '_blank');
+        });
+
+        // Meta 광고 라이브러리 버튼
+        const metaLibraryBtn = document.getElementById('open-meta-library');
+        metaLibraryBtn?.addEventListener('click', () => {
+            // 현재 키워드 가져오기
+            const keyword = document.getElementById('message-input')?.value || '';
+            const encodedKeyword = encodeURIComponent(keyword);
+            const metaLibraryUrl = `https://www.facebook.com/ads/library/?active_status=active&ad_type=all&country=KR&is_targeted_country=false&media_type=all&q=${encodedKeyword}&search_type=keyword_unordered&sort_data[direction]=desc&sort_data[mode]=total_impressions`;
+            window.open(metaLibraryUrl, '_blank');
+        });
+
+        // 인트로 스플래시 화면
+        const introSplash = document.getElementById('intro-splash');
+        if (introSplash) {
+            setTimeout(() => {
+                introSplash.classList.add('fade-out');
+                setTimeout(() => {
+                    introSplash.classList.add('hidden');
+                }, 600);
+            }, 2800);
+        }
+    </script>
+</body>
+</html>
