@@ -238,16 +238,6 @@ WebScout Agent는 다음으로 구성됩니다:
 
 ---
 
-## 스크린샷
-
-![WebScout Agent 대시보드](docs/screenshots/dashboard.png)
-*실시간 KPI 대시보드와 인사이트*
-
-![URL 수집](docs/screenshots/collection.png)
-*검색 및 내보내기 기능이 있는 인터랙티브 URL 테이블*
-
----
-
 ## 로드맵
 
 ### ✅ 완료됨 (v0.1)
