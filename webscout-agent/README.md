@@ -83,6 +83,22 @@ For detailed flow diagram, see [docs/agent-flow.md](./docs/agent-flow.md)
 
 ---
 
+## Why WebScout Agent?
+
+- **Non-developer friendly**: Designers, marketers, and PMs can map an entire site and export clean URL lists without writing any code.
+- **Figma-ready workflows**: URLs are normalized and exported (txt/csv) to plug directly into tools like html.to.design and Figma rebuild workflows.
+- **Production-grade security**: SSRF-safe base URL validation, strict CORS allowlist, in-memory/Redis rate limiting, payload validation, and CI self-checks.
+- **Insight-oriented UI**: Tabs for sitemap, page types, Figma readiness, and importance help you quickly decide what to redesign, migrate, or test first.
+
+## What insights can you get?
+
+- **Funnel & structure**: Landing → Product → Conversion page coverage, depth analysis, and identification of hub pages that drive most internal traffic.
+- **Content & SEO**: Category coverage (blog/docs/use-cases/case studies), query/parameter patterns, and potential thin/duplicate content candidates.
+- **UX & conversion**: Where conversion pages live (shallow vs deep paths), URLs with heavy query usage, and structural bottlenecks in user flows.
+- **Design & redesign planning**: Template/layout families, plus priority queues based on importance and readiness for Figma-driven redesign.
+
+---
+
 ## Quick Start
 
 ### Prerequisites
@@ -118,6 +134,12 @@ npm start
 Open your browser: **http://localhost:3001**
 
 > **Note**: The server automatically finds an available port between 3001-3010. Check the console output for the actual port number if 3001 is already in use. The URL should be `http://localhost:3001` (no hash or trailing slash needed).
+
+### Security (summary)
+
+- **SSRF**: Base URL is validated before any fetch (scheme http/https only, no userinfo, private/metadata IPs and DNS rebinding blocked, port 80/443 only). Redirects during collection are validated per hop.
+- **CORS**: `Access-Control-Allow-Origin` is set only for origins listed in `CORS_ALLOWED_ORIGINS` (no reflection of arbitrary origins).
+- **Rate limiting**: `/api/collect` 10 req/min, AI routes 20 req/min (keyed by IP + User-Agent + Origin). 429 responses include `Retry-After`. Store is in-memory by default; set `REDIS_URL` (and install optional `redis` package) for persistence and multi-instance support.
 
 ---
 
@@ -219,9 +241,27 @@ To verify `validateBaseUrl` (allow/block list, userinfo, ports, DNS rebinding):
 node scripts/validate-url-selfcheck.mjs
 ```
 
+### API smoke test (server must be running)
+
+**Runtime:** The smoke test targets the **Express/Node server** (e.g. `npm start`). CI runs the same Node server and then executes this script; it does not run against Vercel serverless.
+
+Checks `/health` → 200 and invalid baseUrl → 400. Optional `--429` verifies rate limit when the server is started with a low limit (e.g. `RATE_LIMIT_COLLECT=2`):
+
+```bash
+npm start
+# In another terminal:
+node scripts/smoke-api.mjs http://127.0.0.1:3001
+
+# Optional 429 check (start server with low limit first):
+# RATE_LIMIT_COLLECT=2 npm start &
+# node scripts/smoke-api.mjs http://127.0.0.1:3001 --429
+```
+
 ---
 
 ## Deployment (Vercel)
+
+**Deployment form:** This app runs as a standalone **Express server** (Node.js) when you use `npm start`. On Vercel it is deployed as **Serverless Functions** (see `vercel.json`).
 
 ### Step 1: Push to GitHub
 
@@ -245,7 +285,8 @@ Vercel automatically detects the configuration from `vercel.json`.
 
 ### Environment Variables
 
-None required for basic operation.
+- **Production**: Set `CORS_ALLOWED_ORIGINS` to your app origin(s) (e.g. `https://your-app.vercel.app`). Copy `.env.example` to `.env` and adjust.
+- **Optional – Redis**: Set `REDIS_URL` (e.g. `redis://...`) and add the `redis` package for rate-limit persistence and multi-instance support.
 
 ---
 
@@ -392,4 +433,4 @@ Built with ❤️ for designers and developers who hate manual URL collection.
 
 ---
 
-[**Ready to scout your website?** Start collecting URLs in seconds! 🚀](https://github.com/dalgoms/public/tree/main/webscout-agent)
+**Ready to scout your website?** Start collecting URLs in seconds! 🚀
