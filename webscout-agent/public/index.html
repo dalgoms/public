@@ -4,16 +4,26 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>WebScout Agent</title>
+  <meta name="description" content="AI 웹 에이전트가 자동으로 웹사이트를 발견하고 분석하는 인텔리전스 플랫폼. Discover, Normalize, Structure, Export.">
+  <meta property="og:title" content="WebScout Agent">
+  <meta property="og:description" content="AI 웹 에이전트가 자동으로 웹사이트를 발견하고 분석하는 인텔리전스 플랫폼">
+  <meta property="og:type" content="website">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='6' fill='%232563eb'/><path fill='%23fff' d='M16 8l-6 8h4v8h4v-8h4L16 8z'/></svg>">
+  <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
   <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" />
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
+  <a id="skipToContent" href="#main-content" class="skip-link">본문으로 건너뛰기</a>
   <!-- Toast Notification -->
   <div id="toast" class="toast" role="alert" aria-live="polite">
     <div id="toastIcon" class="toast-icon"></div>
     <p id="toastMessage" class="toast-message"></p>
-    <button id="toastClose" class="toast-close" aria-label="닫기">
-    </button>
+    <button id="toastClose" class="toast-close" aria-label="닫기" title="닫기">×</button>
+  </div>
+  <div id="aiLoadingOverlay" class="ai-loading-overlay" aria-live="polite" aria-busy="true" hidden>
+    <div class="ai-loading-spinner"></div>
+    <p class="ai-loading-text" id="aiLoadingText">Generating…</p>
   </div>
 
   <!-- Top Header - Theme & Language -->
@@ -24,8 +34,8 @@
         <div class="top-header-right">
           <div class="header-controls">
             <button id="themeToggle" class="header-btn" aria-label="Toggle theme">
-              <span class="theme-icon-light" id="themeIconLight">☀️</span>
-              <span class="theme-icon-dark" id="themeIconDark" style="display:none;">🌙</span>
+              <span class="theme-icon-light" id="themeIconLight" aria-hidden="true">☀️</span>
+              <span class="theme-icon-dark" id="themeIconDark" style="display:none;" aria-hidden="true">🌙</span>
             </button>
             <div class="language-selector">
               <button id="langToggle" class="header-btn" aria-label="Toggle language">
@@ -38,7 +48,7 @@
     </div>
   </header>
 
-  <div class="container">
+  <main id="main-content" class="container" tabindex="-1">
     <!-- Hero Search Section -->
     <section class="hero">
       <h1 class="hero-title">WebScout Agent</h1>
@@ -67,6 +77,9 @@
             </button>
             <span id="inputHelper" class="input-helper" style="display:none;"></span>
           </div>
+          <p class="privacy-notice" id="privacyNotice">
+            수집된 URL은 분석 목적으로만 사용되며, 서버에 저장되지 않습니다. (Collected URLs are used only for analysis and are not stored on the server.)
+          </p>
         </div>
       </div>
     </section>
@@ -75,6 +88,7 @@
     <div id="progressStatus" class="progress-status" style="display:none;">
       <div class="progress-spinner"></div>
       <div class="progress-text" id="progressText">Discovering sitemap…</div>
+      <button type="button" id="btnCancelCollect" class="progress-cancel-btn" aria-label="Cancel collection">Cancel</button>
     </div>
 
     <!-- Filter Bar -->
@@ -396,7 +410,7 @@
         </div>
       </div>
     </div>
-  </div>
+  </main>
   
   <!-- Footer -->
   <footer class="app-footer">
@@ -407,7 +421,7 @@
           <span class="footer-separator">•</span>
           <span>Built by <span class="footer-name">Seyoung Lee</span></span>
         </p>
-        <a href="#" class="footer-github" aria-label="GitHub">
+        <a href="https://github.com/dalgoms/public/tree/main/webscout-agent" class="footer-github" aria-label="GitHub" target="_blank" rel="noopener noreferrer">
         </a>
       </div>
     </div>

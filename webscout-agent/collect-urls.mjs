@@ -8,6 +8,7 @@
 import fs from "fs";
 import path from "path";
 import { URL } from "url";
+import { validateBaseUrl } from "./lib/validate-url.js";
 
 const delayMs = 150;
 const sleep = (ms) => new Promise(r => setTimeout(r, ms));
@@ -54,15 +55,39 @@ function createContext(base, opts = {}) {
   return { baseNorm, baseUrl, isSameSite, isExcludedScheme, normalizeUrl };
 }
 
-async function fetchText(url) {
-  const res = await fetch(url, {
-    headers: {
-      "User-Agent": "URLCollector/1.0 (+local script)",
-      "Accept": "text/html,application/xml;q=0.9,*/*;q=0.8",
+async function fetchText(url, opts = {}) {
+  const maxRedirects = opts.maxRedirects ?? 1;
+  let currentUrl = url;
+  let followCount = 0;
+
+  while (true) {
+    const res = await fetch(currentUrl, {
+      redirect: "manual",
+      headers: {
+        "User-Agent": "URLCollector/1.0 (+local script)",
+        "Accept": "text/html,application/xml;q=0.9,*/*;q=0.8",
+      },
+    });
+
+    if (res.status >= 200 && res.status < 300) {
+      return await res.text();
     }
-  });
-  if (!res.ok) throw new Error(`Fetch failed ${res.status} ${url}`);
-  return await res.text();
+    if (res.status >= 300 && res.status < 400 && followCount < maxRedirects) {
+      const location = res.headers.get("location");
+      if (!location) throw new Error(`Redirect without Location: ${res.status} ${currentUrl}`);
+      try {
+        const absoluteRedirect = new URL(location, currentUrl).toString();
+        const check = await validateBaseUrl(absoluteRedirect);
+        if (!check.ok) throw new Error("Invalid redirect URL");
+        currentUrl = absoluteRedirect;
+        followCount++;
+        continue;
+      } catch (e) {
+        throw new Error("Invalid redirect URL");
+      }
+    }
+    throw new Error(`Fetch failed ${res.status} ${currentUrl}`);
+  }
 }
 
 function extractLocFromSitemap(xmlText) {

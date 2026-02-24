@@ -1,3 +1,84 @@
+// Single source of truth for i18n
+const TEXTS = {
+  ko: {
+    heroTitle: 'WebScout Agent', heroSubtitle: 'AI 웹에이전트가 자동으로 발견하고 분석하는 웹사이트 인텔리전스 플랫폼',
+    heroFlow: ['발견', '정규화', '구조화', '내보내기'],
+    placeholder: '예: https://webscout.demo (링크를 입력해주세요)', btnCollect: 'URL 수집', btnDemo: '데모 사이트 사용', btnCollecting: '수집 중…',
+    emptyTitle: '웹사이트를 탐색할 준비가 되셨나요?', emptyText: '도메인을 붙여넣으면 WebScout Agent가 모든 페이지를 자동으로 매핑합니다.',
+    toastLinkRequired: '링크를 입력해주세요', toastCollected: 'URL 수집 완료', toastCopied: '클립보드에 복사됨', toastCopyFailed: '복사 실패',
+    toastNoUrlsSelected: '선택된 URL이 없습니다', toastNoUrlsToExport: '내보낼 URL이 없습니다',
+    toastUrlsDownloaded: (n) => `${n}개 URL 다운로드됨`, toastCollectedCount: (n) => `${n}개 URL 수집 완료`,
+    toastDiscoveryError: '탐색 오류가 발생했습니다', toastStreamParseError: '스트림 데이터 오류', toastCollectCancelled: '수집이 취소되었습니다', toastQaComplete: 'QA 검사 완료', toastCollectFirst: '먼저 URL을 수집해주세요', inputHelperText: '웹사이트 링크를 입력해주세요.', noUrlsToSelect: '선택할 URL이 없습니다', cancelCollect: '취소', ariaCancelCollect: '수집 취소',
+    selectionInfo: (n) => `${n}개 URL 선택됨`, searchResults: (n) => `${n}개 결과`, moreItems: (n) => `+ ${n}개 더…`,
+    linkRequired: '링크를 입력해주세요', collecting: '수집 중…', collected: 'URL 수집 완료',
+    progressDiscovering: '사이트맵 탐색 중…', progressCrawling: '내부 링크 크롤링 중…', discoveryFailed: '탐색 실패',
+    sitemap: '사이트맵', crawl: '크롤링',
+    insights: '인사이트', generating: '생성 중…', siteSummary: '사이트 요약', funnelGuess: '퍼널 추정', aiSummary: 'AI 요약',
+    missingElements: '누락된 요소', topRecommendations: '상위 제안', contentStrategyIdeas: '콘텐츠 전략 아이디어',
+    recommendedPages: '추천 페이지', landingPageFeedback: '랜딩 페이지 피드백', qaStatus: 'QA 상태',
+    generateContentStrategy: '콘텐츠 전략 생성', analyzeLandingPages: '랜딩 페이지 분석', runQACheck: 'QA 체크 실행',
+    checking: '검사 중…', healthy: '양호', reviewNeeded: '검토 필요', pagesNeedingReview: '검토가 필요한 페이지',
+    qaIssueQuery: '쿼리 파라미터 있음', qaIssueDeepPath: (n) => `깊은 경로 (${n}단계)`, qaIssueLongUrl: '긴 URL', qaIssueInvalidUrl: '잘못된 URL 형식',
+    noRecommendations: '추천 항목이 없습니다.', recommendation: '권장사항:',
+    kpiTitle: '마지막 실행 결과:', kpiTotalUrls: '총 URL 수', kpiSource: '소스', kpiMaxDepth: '최대 깊이', kpiExcluded: '제외됨',
+    filterDepth: '깊이', filterMaxUrls: '최대 URL', filterQueryStrip: '쿼리 제거', filterWww: 'www/non-www', filterExclude: '제외 경로', filterExcludePlaceholder: '/admin,/api',
+    tabAiInsights: 'AI 인사이트', tabSitemapView: '사이트맵 뷰', tabPageTypes: '페이지 유형', tabFigmaReady: 'Figma 준비', tabImportance: '중요도',
+    strategistFunnelHealth: '퍼널 헬스', strategistDesignDebt: '디자인 부채', strategistContentCoverage: '콘텐츠 커버리지', strategistConversionReadiness: '전환 준비도',
+    urlList: 'URL 목록', autoSelectDesign: '디자인 페이지 자동 선택', selectAll: '전체 선택', clear: '지우기', urlsTxt: 'urls.txt', urlsCsv: 'urls.csv',
+    searchUrls: 'URL 검색…', pathDepth: '경로 깊이', query: '쿼리', external: '외부', selectAllUrls: '전체 선택', ariaLabelSelect: '선택', ariaLabelCopy: '복사', copyToClipboard: '클립보드에 복사',
+    previous: '이전', next: '다음', retry: '재시도', figmaReady: '준비됨', figmaPartial: '부분적', figmaNeedsWork: '개선 필요',
+    ariaThemeToggle: '테마 전환', ariaLangToggle: '언어 전환', ariaToastClose: '닫기',
+    ariaLabelUrlList: 'URL 목록', ariaLabelInsights: '웹사이트 인사이트', ariaLabelDiscoveredUrls: '발견된 URL',
+    ariaLabelDepth: '깊이', ariaLabelMaxUrls: '최대 URL 수', ariaLabelStripQuery: '쿼리 제거', ariaLabelWww: 'www/non-www 별칭', ariaLabelExclude: '제외 경로',
+    pagesSuffix: ' 페이지', pageCount: (n) => n === 1 ? '1 페이지' : `${n} 페이지`, skipToContent: '본문으로 건너뛰기',
+    emptyTabHint: 'URL을 수집하면 여기에 표시됩니다.', yes: '예',
+    contentStrategySuccess: '콘텐츠 전략 생성 완료', contentStrategyError: '콘텐츠 전략 생성 실패: ',
+    landingSuccess: '랜딩 페이지 분석 완료', landingError: '랜딩 페이지 분석 실패: ', analyzing: '분석 중…',
+  },
+  en: {
+    heroTitle: 'WebScout Agent', heroSubtitle: 'AI web agent that automatically discovers and analyzes websites',
+    heroFlow: ['Discover', 'Normalize', 'Structure', 'Export'],
+    placeholder: 'e.g., https://webscout.demo (Enter a link)', btnCollect: 'Collect URLs', btnDemo: 'Use Demo Site', btnCollecting: 'Collecting…',
+    emptyTitle: 'Ready to scout your website?', emptyText: 'Paste any domain and WebScout Agent will map every page automatically.',
+    toastLinkRequired: 'Please enter a link', toastCollected: 'URLs collected', toastCopied: 'Copied to clipboard', toastCopyFailed: 'Copy failed',
+    toastNoUrlsSelected: 'No URLs selected', toastNoUrlsToExport: 'No URLs to export',
+    toastUrlsDownloaded: (n) => `${n} URLs downloaded`, toastCollectedCount: (n) => `${n} URL${n === 1 ? '' : 's'} collected`,
+    toastDiscoveryError: 'Discovery error occurred', toastStreamParseError: 'Stream data error', toastCollectCancelled: 'Collection cancelled', toastQaComplete: 'QA check complete', toastCollectFirst: 'Please collect URLs first', inputHelperText: 'Please enter a website link.', noUrlsToSelect: 'No URLs to select', cancelCollect: 'Cancel', ariaCancelCollect: 'Cancel collection',
+    selectionInfo: (n) => `${n} URL${n === 1 ? '' : 's'} selected`, searchResults: (n) => `${n} results`, moreItems: (n) => `+ ${n} more...`,
+    linkRequired: 'Please enter a link', collecting: 'Collecting…', collected: 'URLs collected',
+    progressDiscovering: 'Discovering sitemap…', progressCrawling: 'Crawling internal links…', discoveryFailed: 'Discovery failed',
+    sitemap: 'Sitemap', crawl: 'Crawl',
+    insights: 'Insights', generating: 'Generating...', siteSummary: 'Site Summary', funnelGuess: 'Funnel Guess', aiSummary: 'AI Summary',
+    missingElements: 'Missing Elements', topRecommendations: 'Top Recommendations', contentStrategyIdeas: 'Content Strategy Ideas',
+    recommendedPages: 'Recommended Pages', landingPageFeedback: 'Landing Page Feedback', qaStatus: 'QA Status',
+    generateContentStrategy: 'Generate Content Strategy', analyzeLandingPages: 'Analyze Landing Pages', runQACheck: 'Run QA Check',
+    checking: 'Checking...', healthy: 'Healthy', reviewNeeded: 'Review Needed', pagesNeedingReview: 'Pages Needing Review',
+    qaIssueQuery: 'Has query parameters', qaIssueDeepPath: (n) => `Deep path (${n} levels)`, qaIssueLongUrl: 'Long URL', qaIssueInvalidUrl: 'Invalid URL format',
+    noRecommendations: 'No recommendations available.', recommendation: 'Recommendation:',
+    kpiTitle: 'Last run results:', kpiTotalUrls: 'Total URLs', kpiSource: 'Source', kpiMaxDepth: 'Max Depth', kpiExcluded: 'Excluded',
+    filterDepth: 'Depth', filterMaxUrls: 'Max URLs', filterQueryStrip: 'Query Strip', filterWww: 'www/non-www', filterExclude: 'Exclude', filterExcludePlaceholder: '/admin,/api',
+    tabAiInsights: 'AI Insights', tabSitemapView: 'Sitemap View', tabPageTypes: 'Page Types', tabFigmaReady: 'Figma Ready', tabImportance: 'Importance',
+    strategistFunnelHealth: 'Funnel Health', strategistDesignDebt: 'Design Debt', strategistContentCoverage: 'Content Coverage', strategistConversionReadiness: 'Conversion Readiness',
+    urlList: 'URL List', autoSelectDesign: 'Auto-select Design Pages', selectAll: 'Select All', clear: 'Clear', urlsTxt: 'urls.txt', urlsCsv: 'urls.csv',
+    searchUrls: 'Search URLs…', pathDepth: 'Path Depth', query: 'Query', external: 'External', selectAllUrls: 'Select all URLs', ariaLabelSelect: 'Select', ariaLabelCopy: 'Copy', copyToClipboard: 'Copy to clipboard',
+    previous: 'Previous', next: 'Next', retry: 'Retry', figmaReady: 'Ready', figmaPartial: 'Partial', figmaNeedsWork: 'Needs Work',
+    ariaThemeToggle: 'Toggle theme', ariaLangToggle: 'Toggle language', ariaToastClose: 'Close',
+    ariaLabelUrlList: 'URL List', ariaLabelInsights: 'Website Insights', ariaLabelDiscoveredUrls: 'Discovered URLs',
+    ariaLabelDepth: 'Depth', ariaLabelMaxUrls: 'Max URLs', ariaLabelStripQuery: 'Strip query', ariaLabelWww: 'www/non-www alias', ariaLabelExclude: 'Exclude paths',
+    pagesSuffix: ' Pages', pageCount: (n) => `${n} page${n === 1 ? '' : 's'}`, skipToContent: 'Skip to main content',
+    emptyTabHint: 'Content will appear here after collecting URLs.', yes: 'Yes',
+    contentStrategySuccess: 'Content strategy generated', contentStrategyError: 'Failed to generate content strategy: ',
+    landingSuccess: 'Landing page analysis complete', landingError: 'Failed to analyze landing pages: ', analyzing: 'Analyzing...',
+  }
+};
+
+function t(key, ...args) {
+  const lang = window.currentLang || 'ko';
+  const val = (TEXTS[lang] || TEXTS.en)[key];
+  if (val === undefined) return key;
+  return typeof val === 'function' ? val(...args) : val;
+}
+
 // Theme & Language Management
 const themeToggle = document.getElementById("themeToggle");
 const themeIconLight = document.getElementById("themeIconLight");
@@ -39,72 +120,9 @@ function applyLanguage(lang) {
 
 // Update UI texts based on language
 function updateUITexts(lang) {
-  const texts = {
-    ko: {
-      heroTitle: 'WebScout Agent',
-      heroSubtitle: 'AI 웹에이전트가 자동으로 발견하고 분석하는 웹사이트 인텔리전스 플랫폼',
-      heroFlow: ['발견', '정규화', '구조화', '내보내기'],
-      placeholder: '예: https://webscout.demo (링크를 입력해주세요)',
-      btnCollect: 'URL 수집',
-      btnDemo: '데모 사이트 사용',
-      btnCollecting: '수집 중…',
-      emptyTitle: '웹사이트를 탐색할 준비가 되셨나요?',
-      emptyText: '도메인을 붙여넣으면 WebScout Agent가 모든 페이지를 자동으로 매핑합니다.',
-      toastLinkRequired: '링크를 입력해주세요',
-      toastCollected: 'URL 수집 완료',
-      insights: '인사이트',
-      generateAI: 'AI 인사이트 생성',
-      generating: '생성 중…',
-      siteSummary: '사이트 요약',
-      funnelGuess: '퍼널 추정',
-      aiSummary: 'AI 요약',
-      missingElements: '누락된 요소',
-      topRecommendations: '상위 제안',
-      contentStrategyIdeas: '콘텐츠 전략 아이디어',
-      recommendedPages: '추천 페이지',
-      landingPageFeedback: '랜딩 페이지 피드백',
-      qaStatus: 'QA 상태',
-      generateContentStrategy: '콘텐츠 전략 생성',
-      analyzeLandingPages: '랜딩 페이지 분석',
-      runQACheck: 'QA 체크 실행',
-      // Add more translations as needed
-    },
-    en: {
-      heroTitle: 'WebScout Agent',
-      heroSubtitle: 'AI web agent that automatically discovers and analyzes websites',
-      heroFlow: ['Discover', 'Normalize', 'Structure', 'Export'],
-      placeholder: 'e.g., https://webscout.demo (Enter a link)',
-      btnCollect: 'Collect URLs',
-      btnDemo: 'Use Demo Site',
-      btnCollecting: 'Collecting…',
-      emptyTitle: 'Ready to scout your website?',
-      emptyText: 'Paste any domain and WebScout Agent will map every page automatically.',
-      toastLinkRequired: 'Please enter a link',
-      toastCollected: 'URLs collected',
-      insights: 'Insights',
-      generateAI: 'Generate AI Insights',
-      generating: 'Generating...',
-      siteSummary: 'Site Summary',
-      funnelGuess: 'Funnel Guess',
-      aiSummary: 'AI Summary',
-      missingElements: 'Missing Elements',
-      topRecommendations: 'Top Recommendations',
-      contentStrategyIdeas: 'Content Strategy Ideas',
-      recommendedPages: 'Recommended Pages',
-      landingPageFeedback: 'Landing Page Feedback',
-      qaStatus: 'QA Status',
-      generateContentStrategy: 'Generate Content Strategy',
-      analyzeLandingPages: 'Analyze Landing Pages',
-      runQACheck: 'Run QA Check',
-      // Add more translations as needed
-    }
-  };
-  
-  const t = texts[lang] || texts.en;
-  
-  // Store current language globally for use in other functions
   window.currentLang = lang;
-  
+  const tx = TEXTS[lang] || TEXTS.en;
+
   // Update key UI elements
   const heroTitle = document.querySelector('.hero-title');
   const heroSubtitle = document.querySelector('.hero-subtitle');
@@ -115,16 +133,14 @@ function updateUITexts(lang) {
   const emptyStateTitle = document.querySelector('.empty-state-title');
   const emptyStateText = document.querySelector('.empty-state-text');
   const insightsTitle = document.querySelector('.insights-title');
-  if (heroTitle) heroTitle.textContent = t.heroTitle;
-  if (heroSubtitle) heroSubtitle.textContent = t.heroSubtitle;
-  if (baseInput) baseInput.placeholder = t.placeholder;
-  if (btnStartText && btnStartText.textContent !== 'Collecting…' && btnStartText.textContent !== '수집 중…') {
-    btnStartText.textContent = t.btnCollect;
-  }
-  if (btnDemoEl) btnDemoEl.textContent = t.btnDemo;
-  if (emptyStateTitle) emptyStateTitle.textContent = t.emptyTitle;
-  if (emptyStateText) emptyStateText.textContent = t.emptyText;
-  if (insightsTitle) insightsTitle.textContent = t.insights;
+  if (heroTitle) heroTitle.textContent = tx.heroTitle;
+  if (heroSubtitle) heroSubtitle.textContent = tx.heroSubtitle;
+  if (baseInput) baseInput.placeholder = tx.placeholder;
+  if (btnStartText && btnStartText.textContent !== tx.btnCollecting) btnStartText.textContent = tx.btnCollect;
+  if (btnDemoEl) btnDemoEl.textContent = tx.btnDemo;
+  if (emptyStateTitle) emptyStateTitle.textContent = tx.emptyTitle;
+  if (emptyStateText) emptyStateText.textContent = tx.emptyText;
+  if (insightsTitle) insightsTitle.textContent = tx.insights;
   
   // Update AI section titles
   const aiSiteSummaryTitle = document.querySelector('#aiSiteSummary .ai-section-title');
@@ -140,46 +156,122 @@ function updateUITexts(lang) {
   const btnGenerateLandingInsightsEl = document.getElementById('btnGenerateLandingInsights');
   const btnRunQAEl = document.getElementById('btnRunQA');
   
-  if (aiSiteSummaryTitle) aiSiteSummaryTitle.textContent = t.siteSummary;
-  if (aiFunnelTitle) aiFunnelTitle.textContent = t.funnelGuess;
-  if (aiSummaryTitle) aiSummaryTitle.textContent = t.aiSummary;
-  if (aiGapsTitle) aiGapsTitle.textContent = t.missingElements;
-  if (aiRecommendationsTitle) aiRecommendationsTitle.textContent = t.topRecommendations;
-  if (aiContentIdeasTitle) aiContentIdeasTitle.textContent = t.contentStrategyIdeas;
-  if (aiContentStrategyTitle) aiContentStrategyTitle.textContent = t.recommendedPages;
-  if (aiLandingInsightsTitle) aiLandingInsightsTitle.textContent = t.landingPageFeedback;
-  if (aiQAMonitorTitle) aiQAMonitorTitle.textContent = t.qaStatus;
-  if (btnGenerateContentStrategyEl) btnGenerateContentStrategyEl.textContent = t.generateContentStrategy;
-  if (btnGenerateLandingInsightsEl) btnGenerateLandingInsightsEl.textContent = t.analyzeLandingPages;
-  if (btnRunQAEl) btnRunQAEl.textContent = t.runQACheck;
+  if (aiSiteSummaryTitle) aiSiteSummaryTitle.textContent = tx.siteSummary;
+  if (aiFunnelTitle) aiFunnelTitle.textContent = tx.funnelGuess;
+  if (aiSummaryTitle) aiSummaryTitle.textContent = tx.aiSummary;
+  if (aiGapsTitle) aiGapsTitle.textContent = tx.missingElements;
+  if (aiRecommendationsTitle) aiRecommendationsTitle.textContent = tx.topRecommendations;
+  if (aiContentIdeasTitle) aiContentIdeasTitle.textContent = tx.contentStrategyIdeas;
+  if (aiContentStrategyTitle) aiContentStrategyTitle.textContent = tx.recommendedPages;
+  if (aiLandingInsightsTitle) aiLandingInsightsTitle.textContent = tx.landingPageFeedback;
+  if (aiQAMonitorTitle) aiQAMonitorTitle.textContent = tx.qaStatus;
+  if (btnGenerateContentStrategyEl) btnGenerateContentStrategyEl.textContent = tx.generateContentStrategy;
+  if (btnGenerateLandingInsightsEl) btnGenerateLandingInsightsEl.textContent = tx.analyzeLandingPages;
+  if (btnRunQAEl) btnRunQAEl.textContent = tx.runQACheck;
   
-  // Update hero flow
-  if (heroFlow.length >= 4 && t.heroFlow) {
-    heroFlow[0].textContent = t.heroFlow[0];
-    heroFlow[2].textContent = t.heroFlow[1];
-    heroFlow[4].textContent = t.heroFlow[2];
-    heroFlow[6].textContent = t.heroFlow[3];
+  if (heroFlow.length >= 4 && tx.heroFlow) {
+    heroFlow[0].textContent = tx.heroFlow[0];
+    heroFlow[2].textContent = tx.heroFlow[1];
+    heroFlow[4].textContent = tx.heroFlow[2];
+    heroFlow[6].textContent = tx.heroFlow[3];
   }
-}
 
-// Get translated text helper
-function t(key) {
-  const lang = window.currentLang || 'ko';
-  const texts = {
-    ko: {
-      linkRequired: '링크를 입력해주세요',
-      collecting: '수집 중…',
-      collected: 'URL 수집 완료',
-      collectingUrls: 'Collecting…',
-    },
-    en: {
-      linkRequired: 'Please enter a link',
-      collecting: 'Collecting…',
-      collected: 'URLs collected',
-      collectingUrls: 'Collecting…',
-    }
-  };
-  return (texts[lang] || texts.en)[key] || key;
+  const kpiTitleEl = document.querySelector('.kpi-section-title');
+  const kpiLabels = document.querySelectorAll('.kpi-label');
+  if (kpiTitleEl) kpiTitleEl.textContent = tx.kpiTitle;
+  kpiLabels.forEach((el, i) => {
+    const labels = [tx.kpiTotalUrls, tx.kpiSource, tx.kpiMaxDepth, tx.kpiExcluded];
+    if (labels[i]) el.textContent = labels[i];
+  });
+
+  // Filter bar
+  const depthLabel = document.querySelector('#depthChip span');
+  const maxLabel = document.querySelector('#maxChip span');
+  const queryLabel = document.querySelector('#queryChip span');
+  const wwwLabel = document.querySelector('#wwwChip span');
+  const excludeLabel = document.querySelector('#excludeChip span');
+  if (depthLabel) depthLabel.textContent = tx.filterDepth;
+  if (maxLabel) maxLabel.textContent = tx.filterMaxUrls;
+  if (queryLabel) queryLabel.textContent = tx.filterQueryStrip;
+  if (wwwLabel) wwwLabel.textContent = tx.filterWww;
+  if (excludeLabel) excludeLabel.textContent = tx.filterExclude;
+  const excludeInput = document.getElementById('excludePaths');
+  if (excludeInput) excludeInput.placeholder = tx.filterExcludePlaceholder;
+  [document.getElementById('depth'), document.getElementById('max'), document.getElementById('stripQuery'), document.getElementById('allowWwwAlias'), document.getElementById('excludePaths')].forEach((el, i) => {
+    if (el) el.setAttribute('aria-label', [tx.ariaLabelDepth, tx.ariaLabelMaxUrls, tx.ariaLabelStripQuery, tx.ariaLabelWww, tx.ariaLabelExclude][i]);
+  });
+
+  const tabs = document.querySelectorAll('.insight-tab');
+  const tabKeys = ['tabAiInsights', 'tabSitemapView', 'tabPageTypes', 'tabFigmaReady', 'tabImportance'];
+  tabs.forEach((tab, i) => { if (tx[tabKeys[i]]) tab.textContent = tx[tabKeys[i]]; });
+
+  const strategistTitles = document.querySelectorAll('.strategist-section-title');
+  const strategistKeys = ['strategistFunnelHealth', 'strategistDesignDebt', 'strategistContentCoverage', 'strategistConversionReadiness'];
+  strategistTitles.forEach((el, i) => { if (tx[strategistKeys[i]]) el.textContent = tx[strategistKeys[i]]; });
+
+  const tableTitleSpan = document.querySelector('.table-title span:first-child');
+  if (tableTitleSpan) tableTitleSpan.textContent = tx.urlList;
+  const btnAutoSelect = document.getElementById('btnAutoSelectDesign');
+  const btnSelectAllEl = document.getElementById('btnSelectAll');
+  const btnClearEl = document.getElementById('btnClearSelection');
+  const btnTxtEl = document.getElementById('btnTxt');
+  const btnCsvEl = document.getElementById('btnCsv');
+  const searchInput = document.getElementById('search');
+  if (btnAutoSelect) btnAutoSelect.textContent = tx.autoSelectDesign;
+  if (btnSelectAllEl) btnSelectAllEl.textContent = tx.selectAll;
+  if (btnClearEl) btnClearEl.textContent = tx.clear;
+  if (btnTxtEl?.querySelector('span')) btnTxtEl.querySelector('span').textContent = tx.urlsTxt;
+  if (btnCsvEl?.querySelector('span')) btnCsvEl.querySelector('span').textContent = tx.urlsCsv;
+  if (searchInput) searchInput.placeholder = tx.searchUrls;
+
+  const pathDepthTh = document.querySelector('th.sortable[data-sort="depth"]');
+  const queryTh = document.querySelector('thead tr th:nth-child(4)');
+  const externalTh = document.querySelector('thead tr th:nth-child(5)');
+  if (pathDepthTh) pathDepthTh.textContent = tx.pathDepth;
+  if (queryTh) queryTh.textContent = tx.query;
+  if (externalTh) externalTh.textContent = tx.external;
+  const checkAllInput = document.getElementById('checkAll');
+  if (checkAllInput) {
+    checkAllInput.setAttribute('aria-label', tx.selectAllUrls);
+    checkAllInput.setAttribute('title', tx.selectAllUrls);
+  }
+  const prevBtn = document.getElementById('prevPage');
+  const nextBtn = document.getElementById('nextPage');
+  if (prevBtn) prevBtn.textContent = tx.previous;
+  if (nextBtn) nextBtn.textContent = tx.next;
+
+  const errorTitleEl = document.getElementById('errorTitle');
+  const errorRetryBtn = document.getElementById('errorRetry');
+  if (errorTitleEl) errorTitleEl.textContent = tx.discoveryFailed;
+  if (errorRetryBtn) errorRetryBtn.textContent = tx.retry;
+
+  const aiLoadingTextEl = document.getElementById('aiLoadingText');
+  if (aiLoadingTextEl) aiLoadingTextEl.textContent = tx.generating;
+
+  const themeToggleBtn = document.getElementById('themeToggle');
+  const langToggleBtn = document.getElementById('langToggle');
+  const toastCloseBtn = document.getElementById('toastClose');
+  if (themeToggleBtn) themeToggleBtn.setAttribute('aria-label', tx.ariaThemeToggle);
+  if (langToggleBtn) langToggleBtn.setAttribute('aria-label', tx.ariaLangToggle);
+  if (toastCloseBtn) {
+    toastCloseBtn.setAttribute('aria-label', tx.ariaToastClose);
+    toastCloseBtn.setAttribute('title', tx.ariaToastClose);
+  }
+  const cancelCollectBtn = document.getElementById('btnCancelCollect');
+  if (cancelCollectBtn) {
+    cancelCollectBtn.textContent = tx.cancelCollect;
+    cancelCollectBtn.setAttribute('aria-label', tx.ariaCancelCollect);
+  }
+
+  const tableSectionEl = document.getElementById('tableSection');
+  const insightsSectionEl = document.getElementById('insightsSection');
+  const tableEl = document.querySelector('table[aria-label]');
+  if (tableSectionEl) tableSectionEl.setAttribute('aria-label', tx.ariaLabelUrlList);
+  if (insightsSectionEl) insightsSectionEl.setAttribute('aria-label', tx.ariaLabelInsights);
+  if (tableEl) tableEl.setAttribute('aria-label', tx.ariaLabelDiscoveredUrls);
+
+  const skipLink = document.getElementById('skipToContent');
+  if (skipLink) skipLink.textContent = tx.skipToContent;
 }
 
 // Theme toggle
@@ -194,14 +286,11 @@ langToggle.addEventListener('click', () => {
   const currentLang = document.documentElement.getAttribute('lang') || 'ko';
   const newLang = currentLang === 'ko' ? 'en' : 'ko';
   applyLanguage(newLang);
+  if (rawUrls.length > 0) updateKPI();
 });
 
-// Initialize
 applyTheme(savedTheme);
 applyLanguage(savedLang);
-
-// Set initial HTML lang attribute
-document.documentElement.setAttribute('lang', savedLang);
 
 // DOM Elements
 const baseEl = document.getElementById("base");
@@ -212,7 +301,10 @@ const btnStartSpinner = document.getElementById("btnStartSpinner");
 const btnStartText = document.getElementById("btnStartText");
 const progressStatus = document.getElementById("progressStatus");
 const progressText = document.getElementById("progressText");
-const filterSection = document.getElementById("filterSection");
+const btnCancelCollect = document.getElementById("btnCancelCollect");
+const COLLECT_TIMEOUT_MS = 5 * 60 * 1000;
+let collectAbortController = null;
+let collectTimeoutId = null;
 const tableSection = document.getElementById("tableSection");
 const tableBody = document.getElementById("tableBody");
 const urlCountEl = document.getElementById("urlCount");
@@ -331,7 +423,7 @@ function applyFilters() {
   excludedCount = rawUrls.length - filteredUrls.length;
   
   if (q) {
-    searchCount.textContent = `${filteredUrls.length} results`;
+    searchCount.textContent = t('searchResults', filteredUrls.length);
     searchCount.style.display = 'block';
   } else {
     searchCount.style.display = 'none';
@@ -365,7 +457,7 @@ function sortUrls(field) {
 
 function updateKPI() {
   kpiTotal.textContent = rawUrls.length.toLocaleString();
-  kpiSource.textContent = currentSource === "sitemap" ? "Sitemap" : currentSource === "crawl" ? "Crawl" : "-";
+  kpiSource.textContent = currentSource === "sitemap" ? t('sitemap') : currentSource === "crawl" ? t('crawl') : "-";
   kpiDepth.textContent = depthEl.value || "-";
   kpiExcluded.textContent = excludedCount.toLocaleString();
   kpiSection.style.display = "block";
@@ -381,7 +473,7 @@ function updateKPI() {
 function updateSelectionInfo() {
   const selected = document.querySelectorAll(".row-check:checked").length;
   if (selected > 0) {
-    selectionInfo.textContent = `${selected} URL${selected === 1 ? '' : 's'} selected`;
+    selectionInfo.textContent = t('selectionInfo', selected);
     selectionInfo.style.display = 'inline';
     btnClearSelection.style.display = 'inline-flex';
   } else {
@@ -392,9 +484,9 @@ function updateSelectionInfo() {
 
 function copyToClipboard(text) {
   navigator.clipboard.writeText(text).then(() => {
-    showToast("Copied to clipboard", "success");
+    showToast(t('toastCopied'), "success");
   }).catch(() => {
-    showToast("Copy failed", "error");
+    showToast(t('toastCopyFailed'), "error");
   });
 }
 
@@ -436,13 +528,17 @@ function renderTable() {
     pagination.style.display = 'none';
   }
   
+  const yesLabel = t('yes');
+  const selLabel = t('ariaLabelSelect');
+  const copyLabel = t('ariaLabelCopy');
+  const copyTitle = t('copyToClipboard');
   tableBody.innerHTML = paginated.map((r) => {
     return `<tr tabindex="0" role="row">
-      <td><input type="checkbox" class="row-check" data-url="${escapeAttr(r.url)}" aria-label="Select"></td>
+      <td><input type="checkbox" class="row-check" data-url="${escapeAttr(r.url)}" aria-label="${escapeAttr(selLabel)}"></td>
       <td class="url-cell">
-        <a href="${escapeHtml(r.url)}" target="_blank" rel="noopener" class="url-link" title="${escapeAttr(r.url)}">
+        <a href="${escapeAttr(safeHref(r.url))}" target="_blank" rel="noopener noreferrer" class="url-link" title="${escapeAttr(r.url)}">
           <span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap;flex:1;">${escapeHtml(r.url)}</span>
-          <button class="copy-btn" data-url="${escapeAttr(r.url)}" aria-label="Copy" title="Copy to clipboard">
+          <button class="copy-btn" data-url="${escapeAttr(r.url)}" aria-label="${escapeAttr(copyLabel)}" title="${escapeAttr(copyTitle)}">
             <svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path>
             </svg>
@@ -450,8 +546,8 @@ function renderTable() {
         </a>
       </td>
       <td style="text-align:right;"><span class="depth-badge">${r.pathDepth}</span></td>
-      <td>${r.hasQuery ? '<span style="color:#10B981;font-weight:500;">Yes</span>' : '<span style="color:#9CA3AF;">-</span>'}</td>
-      <td>${r.external ? '<span style="color:#EF4444;font-weight:500;">Yes</span>' : '<span style="color:#9CA3AF;">-</span>'}</td>
+      <td>${r.hasQuery ? `<span style="color:#10B981;font-weight:500;">${escapeHtml(yesLabel)}</span>` : '<span style="color:#9CA3AF;">-</span>'}</td>
+      <td>${r.external ? `<span style="color:#EF4444;font-weight:500;">${escapeHtml(yesLabel)}</span>` : '<span style="color:#9CA3AF;">-</span>'}</td>
     </tr>`;
   }).join("");
 
@@ -500,6 +596,14 @@ function escapeHtml(s) {
 
 function escapeAttr(s) {
   return String(s).replace(/&/g, "&amp;").replace(/"/g, "&quot;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+}
+
+/** Only allow http/https for href to prevent XSS; otherwise use "#". */
+function safeHref(urlStr) {
+  if (!urlStr || typeof urlStr !== "string") return "#";
+  const s = urlStr.trim().toLowerCase();
+  if (s.startsWith("http://") || s.startsWith("https://")) return urlStr.trim();
+  return "#";
 }
 
 function updateCheckAll() {
@@ -650,10 +754,8 @@ document.addEventListener('keydown', (e) => {
 btnStart.addEventListener("click", async () => {
   const base = baseEl.value?.trim();
   if (!base) {
-    const lang = window.currentLang || 'ko';
-    const msg = lang === 'ko' ? '링크를 입력해주세요' : 'Please enter a link';
-    showToast(msg, "error");
-    inputHelper.textContent = lang === 'ko' ? '웹사이트 링크를 입력해주세요.' : 'Please enter a website link.';
+    showToast(t('linkRequired'), "error");
+    inputHelper.textContent = t('inputHelperText');
     inputHelper.style.display = 'inline';
     inputHelper.style.color = '#EF4444';
     baseEl.focus();
@@ -667,9 +769,8 @@ btnStart.addEventListener("click", async () => {
 
   btnStart.disabled = true;
   btnStartSpinner.style.display = 'inline-block';
-  const lang = window.currentLang || 'ko';
-  btnStartText.textContent = lang === 'ko' ? '수집 중…' : 'Collecting…';
-  updateProgressStatus("Discovering sitemap…");
+  btnStartText.textContent = t('btnCollecting');
+  updateProgressStatus(t('progressDiscovering'));
   tableSection.style.display = "none";
   insightsSection.style.display = "none";
   kpiSection.style.display = "none";
@@ -680,6 +781,9 @@ btnStart.addEventListener("click", async () => {
   currentSort = { field: null, direction: 'asc' };
   excludedCount = 0;
   startTime = Date.now();
+
+  collectAbortController = new AbortController();
+  collectTimeoutId = setTimeout(() => collectAbortController?.abort(), COLLECT_TIMEOUT_MS);
 
   try {
     const res = await fetch("/api/collect", {
@@ -694,6 +798,7 @@ btnStart.addEventListener("click", async () => {
         allowWwwAlias: allowWwwAliasEl.checked,
         excludePaths: (excludePathsEl.value || "").split(",").map(s => s.trim()).filter(Boolean),
       }),
+      signal: collectAbortController.signal,
     });
     if (!res.ok) throw new Error(res.statusText);
 
@@ -712,9 +817,9 @@ btnStart.addEventListener("click", async () => {
           const obj = JSON.parse(line);
           if (obj.type === "log") {
             if (obj.msg.includes("sitemap")) {
-              updateProgressStatus("Discovering sitemap…");
+              updateProgressStatus(t('progressDiscovering'));
             } else if (obj.msg.includes("crawl") || obj.msg.includes("Fallback")) {
-              updateProgressStatus("Crawling internal links…");
+              updateProgressStatus(t('progressCrawling'));
             }
           } else if (obj.type === "done") {
             rawUrls = obj.urls || [];
@@ -730,15 +835,18 @@ btnStart.addEventListener("click", async () => {
             if (rawUrls.length === 0) {
               emptyState.style.display = "block";
             }
-            showToast(`${rawUrls.length} URL${rawUrls.length === 1 ? '' : 's'} collected`, "success");
+            showToast(t('toastCollectedCount', rawUrls.length), "success");
           } else if (obj.type === "error") {
             updateProgressStatus(null);
-            errorTitle.textContent = "Discovery failed";
+            errorTitle.textContent = t('discoveryFailed');
             errorMessage.textContent = obj.msg;
             errorState.style.display = "block";
-            showToast("Discovery error occurred", "error");
+            showToast(t('toastDiscoveryError'), "error");
+            setTimeout(() => errorRetry.focus(), 100);
           }
-        } catch {}
+        } catch (parseErr) {
+          showToast(t('toastStreamParseError'), "error");
+        }
       }
     }
     if (buf.trim()) {
@@ -758,56 +866,68 @@ btnStart.addEventListener("click", async () => {
           if (rawUrls.length === 0) {
             emptyState.style.display = "block";
           }
-          showToast(`${rawUrls.length} URLs discovered`, "success");
+          showToast(t('toastCollectedCount', rawUrls.length), "success");
         }
-      } catch {}
+      } catch (parseErr) {
+        showToast(t('toastStreamParseError'), "error");
+      }
     }
   } catch (err) {
     updateProgressStatus(null);
-    errorTitle.textContent = "Discovery failed";
-    
-    // More detailed error messages
-    let errorMsg = err.message || "Unknown error";
-    if (err.message === "Failed to fetch" || err.name === "TypeError") {
-      errorMsg = "서버에 연결할 수 없습니다. 서버가 실행 중인지 확인해주세요. (Server connection failed - please check if server is running)";
-    } else if (err.message.includes("NetworkError") || err.message.includes("network")) {
-      errorMsg = "네트워크 오류가 발생했습니다. 인터넷 연결을 확인해주세요. (Network error - please check your internet connection)";
-    } else if (err.message.includes("CORS")) {
-      errorMsg = "CORS 오류가 발생했습니다. 서버 설정을 확인해주세요. (CORS error - please check server configuration)";
+    if (err.name === "AbortError") {
+      showToast(t('toastCollectCancelled'), "info");
+    } else {
+      errorTitle.textContent = t('discoveryFailed');
+      let errorMsg = err.message || "Unknown error";
+      if (err.message === "Failed to fetch" || err.name === "TypeError") {
+        errorMsg = "서버에 연결할 수 없습니다. 서버가 실행 중인지 확인해주세요. (Server connection failed - please check if server is running)";
+      } else if (err.message.includes("NetworkError") || err.message.includes("network")) {
+        errorMsg = "네트워크 오류가 발생했습니다. 인터넷 연결을 확인해주세요. (Network error - please check your internet connection)";
+      } else if (err.message.includes("CORS")) {
+        errorMsg = "CORS 오류가 발생했습니다. 서버 설정을 확인해주세요. (CORS error - please check server configuration)";
+      }
+      errorMessage.textContent = errorMsg;
+      errorState.style.display = "block";
+      showToast(t('toastDiscoveryError'), "error");
+      setTimeout(() => errorRetry.focus(), 100);
+      console.error("Discovery error:", err);
     }
-    
-    errorMessage.textContent = errorMsg;
-    errorState.style.display = "block";
-    showToast("Discovery failed: " + errorMsg, "error");
-    
-    console.error("Discovery error:", err);
   } finally {
+    if (collectTimeoutId) clearTimeout(collectTimeoutId);
+    collectTimeoutId = null;
+    collectAbortController = null;
+    progressStatus.style.display = 'none';
     btnStart.disabled = false;
     btnStartSpinner.style.display = 'none';
-    const lang = window.currentLang || 'ko';
-    btnStartText.textContent = lang === 'ko' ? 'URL 수집' : 'Collect URLs';
+    btnStartText.textContent = t('btnCollect');
   }
 });
+
+if (btnCancelCollect) {
+  btnCancelCollect.addEventListener('click', () => {
+    if (collectAbortController) collectAbortController.abort();
+  });
+}
 
 btnTxt.addEventListener("click", () => {
   const urls = getSelectedUrls();
   if (!urls.length) {
-    showToast("No URLs selected", "error");
+    showToast(t('toastNoUrlsSelected'), "error");
     return;
   }
   download(urls.join("\n") + "\n", "urls.txt");
-  showToast(`${urls.length} URLs downloaded`, "success");
+  showToast(t('toastUrlsDownloaded', urls.length), "success");
 });
 
 btnCsv.addEventListener("click", () => {
   const urls = getDisplayUrls();
   if (!urls.length) {
-    showToast("No URLs to export", "error");
+    showToast(t('toastNoUrlsToExport'), "error");
     return;
   }
   const csv = "url\n" + urls.map(u => `"${u.replace(/"/g, '""')}"`).join("\n") + "\n";
   download(csv, "urls.csv");
-  showToast(`${urls.length} URLs downloaded`, "success");
+  showToast(t('toastUrlsDownloaded', urls.length), "success");
 });
 
 // Initialize filter chip states
@@ -815,59 +935,69 @@ if (allowWwwAliasEl.checked) {
   document.getElementById('wwwChip').classList.add('active');
 }
 
-// Tab switching
-insightTabs.forEach(tab => {
-  tab.addEventListener('click', () => {
-    const tabName = tab.dataset.tab;
-    
-    // Update active states
-    insightTabs.forEach(t => {
-      t.classList.remove('active');
-      t.setAttribute('aria-selected', 'false');
-    });
-    tab.classList.add('active');
-    tab.setAttribute('aria-selected', 'true');
-    
-    // Show/hide content
-    insightContents.forEach(content => {
-      content.classList.remove('active');
-      content.style.display = 'none';
-    });
-    
-    const targetContent = document.getElementById(`insight${tabName.charAt(0).toUpperCase() + tabName.slice(1)}`);
-    if (targetContent) {
-      targetContent.classList.add('active');
-      targetContent.style.display = 'block';
-      
-      // Special handling for AI Insights tab
-      if (tabName === 'ai') {
-        // Ensure AI Insights content container is visible
-        const aiContent = document.getElementById('aiInsightsContent');
-        if (aiContent) {
-          aiContent.style.display = 'block';
-          aiContent.style.width = '100%';
-          aiContent.style.overflow = 'visible';
-        }
-        
-        // Ensure loading/error states are properly hidden initially
-        const aiLoading = document.getElementById('aiLoading');
-        const aiError = document.getElementById('aiError');
-        if (aiLoading) aiLoading.style.display = 'none';
-        if (aiError) aiError.style.display = 'none';
-        
-        // Render strategist insights when AI tab is opened
-        if (rawUrls.length > 0) {
-          renderStrategistInsights();
-        }
+// Tab switching - shared logic for click and keyboard
+function switchToInsightTab(tab) {
+  const tabName = tab.dataset.tab;
+  insightTabs.forEach(t => {
+    t.classList.remove('active');
+    t.setAttribute('aria-selected', 'false');
+  });
+  tab.classList.add('active');
+  tab.setAttribute('aria-selected', 'true');
+  insightContents.forEach(content => {
+    content.classList.remove('active');
+    content.style.display = 'none';
+  });
+  const targetContent = document.getElementById(`insight${tabName.charAt(0).toUpperCase() + tabName.slice(1)}`);
+  if (targetContent) {
+    targetContent.classList.add('active');
+    targetContent.style.display = 'block';
+    if (tabName === 'ai') {
+      const aiContent = document.getElementById('aiInsightsContent');
+      if (aiContent) {
+        aiContent.style.display = 'block';
+        aiContent.style.width = '100%';
+        aiContent.style.overflow = 'visible';
       }
+      const aiLoading = document.getElementById('aiLoading');
+      const aiError = document.getElementById('aiError');
+      if (aiLoading) aiLoading.style.display = 'none';
+      if (aiError) aiError.style.display = 'none';
+      if (rawUrls.length > 0) renderStrategistInsights();
     }
-    
-    // Force reflow to prevent layout issues
-    if (targetContent) {
-      void targetContent.offsetHeight;
+    void targetContent.offsetHeight;
+    targetContent.setAttribute('tabindex', '-1');
+    targetContent.focus({ preventScroll: false });
+  }
+}
+
+insightTabs.forEach(tab => {
+  tab.addEventListener('click', () => switchToInsightTab(tab));
+});
+
+// Keyboard navigation: Arrow Left/Right, Home, End for insight tabs
+const tablistEl = document.querySelector('.insights-tabs[role="tablist"]');
+if (tablistEl) {
+  tablistEl.addEventListener('keydown', (e) => {
+    const tabs = [...insightTabs];
+    const idx = tabs.indexOf(document.activeElement);
+    if (idx === -1) return;
+    if (e.key === 'ArrowLeft' || e.key === 'ArrowRight') {
+      e.preventDefault();
+      const nextIdx = e.key === 'ArrowLeft' ? (idx - 1 + tabs.length) % tabs.length : (idx + 1) % tabs.length;
+      tabs[nextIdx].focus();
+      switchToInsightTab(tabs[nextIdx]);
+    } else if (e.key === 'Home') {
+      e.preventDefault();
+      tabs[0].focus();
+      switchToInsightTab(tabs[0]);
+    } else if (e.key === 'End') {
+      e.preventDefault();
+      tabs[tabs.length - 1].focus();
+      switchToInsightTab(tabs[tabs.length - 1]);
     }
   });
-});
+}
 
 // Insights rendering functions
 function updateInsights() {
@@ -1266,7 +1396,7 @@ function renderFunnelHealth(data, isKorean) {
   `;
   
   insightsEl.innerHTML = data.insights.map(insight => `<li>${escapeHtml(insight)}</li>`).join('');
-  recEl.innerHTML = `<strong>${isKorean ? '권장사항:' : 'Recommendation:'}</strong> ${escapeHtml(data.recommendation)}`;
+  recEl.innerHTML = `<strong>${t('recommendation')}</strong> ${escapeHtml(data.recommendation)}`;
   
   section.style.display = 'block';
 }
@@ -1281,7 +1411,7 @@ function renderDesignDebt(data, isKorean) {
   scoreEl.className = `strategist-score ${data.score >= 7 ? 'good' : data.score >= 4 ? 'moderate' : 'poor'}`;
   
   insightsEl.innerHTML = data.insights.map(insight => `<li>${escapeHtml(insight)}</li>`).join('');
-  recEl.innerHTML = `<strong>${isKorean ? '권장사항:' : 'Recommendation:'}</strong> ${escapeHtml(data.recommendation)}`;
+  recEl.innerHTML = `<strong>${t('recommendation')}</strong> ${escapeHtml(data.recommendation)}`;
   
   section.style.display = 'block';
 }
@@ -1296,7 +1426,7 @@ function renderContentCoverage(data, isKorean) {
   scoreEl.className = `strategist-score ${data.score >= 7 ? 'good' : data.score >= 4 ? 'moderate' : 'poor'}`;
   
   insightsEl.innerHTML = data.insights.map(insight => `<li>${escapeHtml(insight)}</li>`).join('');
-  recEl.innerHTML = `<strong>${isKorean ? '권장사항:' : 'Recommendation:'}</strong> ${escapeHtml(data.recommendation)}`;
+  recEl.innerHTML = `<strong>${t('recommendation')}</strong> ${escapeHtml(data.recommendation)}`;
   
   section.style.display = 'block';
 }
@@ -1311,12 +1441,16 @@ function renderConversionReadiness(data, isKorean) {
   scoreEl.className = `strategist-score ${data.score >= 7 ? 'good' : data.score >= 4 ? 'moderate' : 'poor'}`;
   
   insightsEl.innerHTML = data.insights.map(insight => `<li>${escapeHtml(insight)}</li>`).join('');
-  recEl.innerHTML = `<strong>${isKorean ? '권장사항:' : 'Recommendation:'}</strong> ${escapeHtml(data.recommendation)}`;
+  recEl.innerHTML = `<strong>${t('recommendation')}</strong> ${escapeHtml(data.recommendation)}`;
   
   section.style.display = 'block';
 }
 
 function renderSitemapTree() {
+  if (!rawUrls.length) {
+    sitemapTree.innerHTML = `<p class="empty-tab-hint">${t('emptyTabHint')}</p>`;
+    return;
+  }
   const urlStrings = rawUrls.map(u => typeof u === 'string' ? u : u.url);
   const tree = buildUrlTree(urlStrings);
   sitemapTree.innerHTML = '';
@@ -1340,8 +1474,9 @@ function renderSitemapTree() {
     
     const urlLink = document.createElement('a');
     urlLink.className = 'tree-url';
-    urlLink.href = node.url;
+    urlLink.href = safeHref(node.url);
     urlLink.target = '_blank';
+    urlLink.rel = 'noopener noreferrer';
     urlLink.textContent = node.path || node.url;
     
     const count = document.createElement('span');
@@ -1400,6 +1535,10 @@ function buildUrlTree(urls) {
 }
 
 function renderPageTypes() {
+  if (!rawUrls.length) {
+    pageTypesList.innerHTML = `<p class="empty-tab-hint">${t('emptyTabHint')}</p>`;
+    return;
+  }
   const types = {
     marketing: [],
     product: [],
@@ -1430,11 +1569,11 @@ function renderPageTypes() {
     badge.className = `type-badge ${type}`;
     badge.textContent = type;
     label.appendChild(badge);
-    label.appendChild(document.createTextNode(' Pages'));
+    label.appendChild(document.createTextNode(t('pagesSuffix')));
     
     const count = document.createElement('span');
     count.className = 'type-count';
-    count.textContent = `${urls.length} page${urls.length === 1 ? '' : 's'}`;
+    count.textContent = t('pageCount', urls.length);
     
     header.appendChild(label);
     header.appendChild(count);
@@ -1448,8 +1587,9 @@ function renderPageTypes() {
       
       const urlLink = document.createElement('a');
       urlLink.className = 'type-item-url';
-      urlLink.href = url;
+      urlLink.href = safeHref(url);
       urlLink.target = '_blank';
+      urlLink.rel = 'noopener noreferrer';
       urlLink.textContent = url;
       
       item.appendChild(urlLink);
@@ -1461,7 +1601,7 @@ function renderPageTypes() {
       more.className = 'type-item';
       more.style.color = 'var(--text-muted)';
       more.style.fontSize = '12px';
-      more.textContent = `+ ${urls.length - 20} more...`;
+      more.textContent = t('moreItems', urls.length - 20);
       items.appendChild(more);
     }
     
@@ -1496,6 +1636,10 @@ function classifyPageType(url) {
 }
 
 function renderFigmaReadiness() {
+  if (!rawUrls.length) {
+    figmaReadiness.innerHTML = `<p class="empty-tab-hint">${t('emptyTabHint')}</p>`;
+    return;
+  }
   const urlStrings = rawUrls.map(u => typeof u === 'string' ? u : u.url);
   const scores = urlStrings.map(url => {
     const metadata = urlMetadata[url] || {};
@@ -1519,7 +1663,7 @@ function renderFigmaReadiness() {
     
     const label = document.createElement('div');
     label.className = 'readiness-stat-label';
-    label.textContent = type === 'ready' ? 'Ready' : type === 'partial' ? 'Partial' : 'Needs Work';
+    label.textContent = type === 'ready' ? t('figmaReady') : type === 'partial' ? t('figmaPartial') : t('figmaNeedsWork');
     
     const value = document.createElement('div');
     value.className = 'readiness-stat-value';
@@ -1545,8 +1689,9 @@ function renderFigmaReadiness() {
     
     const urlLink = document.createElement('a');
     urlLink.className = 'readiness-url';
-    urlLink.href = url;
+    urlLink.href = safeHref(url);
     urlLink.target = '_blank';
+    urlLink.rel = 'noopener noreferrer';
     urlLink.textContent = url;
     
     const scoreEl = document.createElement('span');
@@ -1591,6 +1736,10 @@ function calculateFigmaScore(url, metadata) {
 }
 
 function renderImportance() {
+  if (!rawUrls.length) {
+    importanceList.innerHTML = `<p class="empty-tab-hint">${t('emptyTabHint')}</p>`;
+    return;
+  }
   const urlStrings = rawUrls.map(u => typeof u === 'string' ? u : u.url);
   const importances = urlStrings.map(url => {
     const metadata = urlMetadata[url] || {};
@@ -1625,8 +1774,9 @@ function renderImportance() {
     
     const urlLink = document.createElement('a');
     urlLink.className = 'importance-url';
-    urlLink.href = item.url;
+    urlLink.href = safeHref(item.url);
     urlLink.target = '_blank';
+    urlLink.rel = 'noopener noreferrer';
     urlLink.textContent = item.url;
     
     const count = document.createElement('span');
@@ -1708,9 +1858,7 @@ function renderAIInsights(insights, isCompetitor, lang = 'ko') {
 // Auto-select Design Pages
 btnAutoSelectDesign.addEventListener('click', () => {
   if (!rawUrls.length) {
-    const lang = window.currentLang || 'ko';
-    const msg = lang === 'ko' ? '선택할 URL이 없습니다' : 'No URLs to select';
-    showToast(msg, "error");
+    showToast(t('noUrlsToSelect'), "error");
     return;
   }
 
@@ -1752,16 +1900,17 @@ btnAutoSelectDesign.addEventListener('click', () => {
 // Generate Content Strategy
 btnGenerateContentStrategy.addEventListener('click', async () => {
   if (!rawUrls.length || !currentDomain) {
-    const lang = window.currentLang || 'ko';
-    const msg = lang === 'ko' ? '먼저 URL을 수집해주세요' : 'Please collect URLs first';
-    showToast(msg, "error");
+    showToast(t('toastCollectFirst'), "error");
     return;
   }
-
   const lang = window.currentLang || 'ko';
   btnGenerateContentStrategy.disabled = true;
-  const generatingText = lang === 'ko' ? '생성 중…' : 'Generating...';
-  btnGenerateContentStrategy.textContent = generatingText;
+  btnGenerateContentStrategy.textContent = t('generating');
+  const aiOverlay = document.getElementById('aiLoadingOverlay');
+  if (aiOverlay) {
+    aiOverlay.removeAttribute('hidden');
+    aiOverlay.setAttribute('aria-busy', 'true');
+  }
 
   try {
     const response = await fetch('/api/content-strategy', {
@@ -1782,17 +1931,16 @@ btnGenerateContentStrategy.addEventListener('click', async () => {
     const strategy = await response.json();
     renderContentStrategy(strategy);
     document.getElementById('aiContentStrategy').style.display = 'block';
-    const successMsg = lang === 'ko' ? '콘텐츠 전략 생성 완료' : 'Content strategy generated';
-    showToast(successMsg, "success");
+    showToast(t('contentStrategySuccess'), "success");
   } catch (err) {
-    const lang = window.currentLang || 'ko';
-    const errorMsg = lang === 'ko' ? '콘텐츠 전략 생성 실패: ' : 'Failed to generate content strategy: ';
-    showToast(errorMsg + err.message, "error");
+    showToast(t('contentStrategyError') + (err.message || ''), "error");
   } finally {
-    const lang = window.currentLang || 'ko';
-    const btnText = lang === 'ko' ? '콘텐츠 전략 생성' : 'Generate Content Strategy';
+    if (aiOverlay) {
+      aiOverlay.setAttribute('hidden', '');
+      aiOverlay.setAttribute('aria-busy', 'false');
+    }
     btnGenerateContentStrategy.disabled = false;
-    btnGenerateContentStrategy.textContent = btnText;
+    btnGenerateContentStrategy.textContent = t('generateContentStrategy');
   }
 });
 
@@ -1809,23 +1957,24 @@ function renderContentStrategy(strategy) {
       </div>
     `).join('');
   } else {
-    list.innerHTML = '<p style="color:var(--text-muted);">No recommendations available.</p>';
+    list.innerHTML = `<p style="color:var(--text-muted);">${t('noRecommendations')}</p>`;
   }
 }
 
 // Generate Landing Page Insights
 btnGenerateLandingInsights.addEventListener('click', async () => {
   if (!rawUrls.length) {
-    const lang = window.currentLang || 'ko';
-    const msg = lang === 'ko' ? '먼저 URL을 수집해주세요' : 'Please collect URLs first';
-    showToast(msg, "error");
+    showToast(t('toastCollectFirst'), "error");
     return;
   }
-
   const lang = window.currentLang || 'ko';
   btnGenerateLandingInsights.disabled = true;
-  const analyzingText = lang === 'ko' ? '분석 중…' : 'Analyzing...';
-  btnGenerateLandingInsights.textContent = analyzingText;
+  btnGenerateLandingInsights.textContent = t('analyzing');
+  const aiOverlayLanding = document.getElementById('aiLoadingOverlay');
+  if (aiOverlayLanding) {
+    aiOverlayLanding.removeAttribute('hidden');
+    aiOverlayLanding.setAttribute('aria-busy', 'true');
+  }
 
   try {
     const response = await fetch('/api/landing-insights', {
@@ -1845,17 +1994,16 @@ btnGenerateLandingInsights.addEventListener('click', async () => {
     const insights = await response.json();
     renderLandingInsights(insights);
     document.getElementById('aiLandingInsights').style.display = 'block';
-    const successMsg = lang === 'ko' ? '랜딩 페이지 분석 완료' : 'Landing page analysis complete';
-    showToast(successMsg, "success");
+    showToast(t('landingSuccess'), "success");
   } catch (err) {
-    const lang = window.currentLang || 'ko';
-    const errorMsg = lang === 'ko' ? '랜딩 페이지 분석 실패: ' : 'Failed to analyze landing pages: ';
-    showToast(errorMsg + err.message, "error");
+    showToast(t('landingError') + (err.message || ''), "error");
   } finally {
-    const lang = window.currentLang || 'ko';
-    const btnText = lang === 'ko' ? '랜딩 페이지 분석' : 'Analyze Landing Pages';
+    if (aiOverlayLanding) {
+      aiOverlayLanding.setAttribute('hidden', '');
+      aiOverlayLanding.setAttribute('aria-busy', 'false');
+    }
     btnGenerateLandingInsights.disabled = false;
-    btnGenerateLandingInsights.textContent = btnText;
+    btnGenerateLandingInsights.textContent = t('analyzeLandingPages');
   }
 });
 
@@ -1909,104 +2057,81 @@ function renderLandingInsights(insights) {
   content.innerHTML = html || `<p style="color:var(--text-muted);">${noInsightsMsg}</p>`;
 }
 
-// Run QA Check
-btnRunQA.addEventListener('click', async () => {
+btnRunQA.addEventListener('click', () => {
   if (!rawUrls.length) {
-    showToast("Please collect URLs first", "error");
+    showToast(t('toastCollectFirst'), "error");
     return;
   }
-
   btnRunQA.disabled = true;
-  btnRunQA.textContent = 'Checking...';
-
-  // Simulate QA check (basic validation)
+  btnRunQA.textContent = t('checking');
   setTimeout(() => {
     const qaResults = runQACheck();
     renderQAResults(qaResults);
     document.getElementById('aiQAMonitor').style.display = 'block';
-    showToast("QA check complete", "success");
+    showToast(t('toastQaComplete'), "success");
     btnRunQA.disabled = false;
-    btnRunQA.textContent = 'Run QA Check';
+    btnRunQA.textContent = t('runQACheck');
   }, 500);
 });
 
 function runQACheck() {
   const urlStrings = rawUrls.map(u => typeof u === 'string' ? u : u.url);
-  const results = {
-    healthy: [],
-    review: [],
-    heavy: []
-  };
-
+  const results = { healthy: [], review: [] };
   urlStrings.forEach(url => {
     try {
       const urlObj = new URL(url);
-      const metadata = urlMetadata[url] || {};
-      
-      // Check for query parameters (potential issues)
       const hasQuery = !!urlObj.search;
-      
-      // Check path depth (deep paths might need review)
       const pathDepth = urlObj.pathname.split('/').filter(Boolean).length;
-      
-      // Check if URL is too long
       const isLong = url.length > 100;
-      
-      // Basic heuristics
       if (hasQuery || pathDepth > 4 || isLong) {
         results.review.push({
           url,
           issues: [
-            hasQuery ? 'Has query parameters' : null,
-            pathDepth > 4 ? `Deep path (${pathDepth} levels)` : null,
-            isLong ? 'Long URL' : null
+            hasQuery ? t('qaIssueQuery') : null,
+            pathDepth > 4 ? t('qaIssueDeepPath', pathDepth) : null,
+            isLong ? t('qaIssueLongUrl') : null
           ].filter(Boolean)
         });
       } else {
         results.healthy.push({ url });
       }
     } catch (e) {
-      results.review.push({ url, issues: ['Invalid URL format'] });
+      results.review.push({ url, issues: [t('qaIssueInvalidUrl')] });
     }
   });
-
   return results;
 }
 
 function renderQAResults(results) {
   const content = document.getElementById('aiQAContent');
-  let html = '';
-
-  html += `
+  let html = `
     <div class="ai-qa-summary">
       <div class="ai-qa-stat">
-        <div class="ai-qa-stat-label">Healthy</div>
+        <div class="ai-qa-stat-label">${t('healthy')}</div>
         <div class="ai-qa-stat-value healthy">${results.healthy.length}</div>
       </div>
       <div class="ai-qa-stat">
-        <div class="ai-qa-stat-label">Review Needed</div>
+        <div class="ai-qa-stat-label">${t('reviewNeeded')}</div>
         <div class="ai-qa-stat-value review">${results.review.length}</div>
       </div>
     </div>
   `;
-
   if (results.review.length > 0) {
     html += `
       <div class="ai-qa-review-list">
-        <h4>Pages Needing Review</h4>
+        <h4>${t('pagesNeedingReview')}</h4>
         ${results.review.slice(0, 20).map(item => `
           <div class="ai-qa-item">
-            <a href="${escapeHtml(item.url)}" target="_blank" class="ai-qa-url">${escapeHtml(item.url)}</a>
+            <a href="${escapeAttr(safeHref(item.url))}" target="_blank" rel="noopener noreferrer" class="ai-qa-url">${escapeHtml(item.url)}</a>
             <div class="ai-qa-issues">
               ${item.issues.map(issue => `<span class="ai-qa-issue">${escapeHtml(issue)}</span>`).join('')}
             </div>
           </div>
         `).join('')}
-        ${results.review.length > 20 ? `<p style="color:var(--text-muted);margin-top:var(--space-md);">+ ${results.review.length - 20} more...</p>` : ''}
+        ${results.review.length > 20 ? `<p style="color:var(--text-muted);margin-top:var(--space-md);">${t('moreItems', results.review.length - 20)}</p>` : ''}
       </div>
     `;
   }
-
   content.innerHTML = html;
 }
 
@@ -2016,4 +2141,9 @@ function renderQAResults(results) {
 // Initial empty state
 if (!rawUrls.length) {
   emptyState.style.display = "block";
+}
+
+// Service Worker registration for offline support
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('sw.js', { scope: './' }).catch(() => {});
 }

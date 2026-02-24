@@ -107,6 +107,8 @@ echo "OPENAI_API_KEY=your-api-key-here" > .env
 
 **Note**: AI features require an OpenAI API key. Without it, core URL collection features still work.
 
+**CORS / Security**: Allowed origins for CORS are controlled by `CORS_ALLOWED_ORIGINS` (comma-separated). Default includes `http://localhost:3001`, `http://127.0.0.1:3001`. For production, set this to your app origin(s) only.
+
 ### Run Web UI
 
 ```bash
@@ -208,6 +210,14 @@ This validates:
 - ✅ Hash removal
 - ✅ Query string handling
 - ✅ www/non-www normalization
+
+### URL validation self-check (SSRF)
+
+To verify `validateBaseUrl` (allow/block list, userinfo, ports, DNS rebinding):
+
+```bash
+node scripts/validate-url-selfcheck.mjs
+```
 
 ---
 

@@ -4,6 +4,7 @@ import { fileURLToPath } from "url";
 import { createServer } from "http";
 import { collectUrls } from "./collect-urls.mjs";
 import { generateInsights, generateLandingPageInsights, generateContentStrategy } from "./services/ai.js";
+import { validateBaseUrl } from "./lib/validate-url.js";
 
 // Load environment variables from .env file
 // Note: dotenv package is required for local development
@@ -26,10 +27,76 @@ import { generateInsights, generateLandingPageInsights, generateContentStrategy 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const app = express();
 
-app.use(express.json());
+const MAX_JSON_BODY = "1mb";
+const MAX_URLS_AI = 500;
+const MAX_URL_LENGTH = 2000;
+const RATE_LIMIT_WINDOW_MS = 60 * 1000;
+const RATE_LIMIT_COLLECT = 10;
+const RATE_LIMIT_AI = 20;
+
+const CORS_ALLOWED_ORIGINS = (process.env.CORS_ALLOWED_ORIGINS || "http://localhost:3001,http://127.0.0.1:3001,http://localhost:3000,http://127.0.0.1:3000")
+  .split(",")
+  .map((o) => o.trim())
+  .filter(Boolean);
+
+function normalizeExcludePath(p) {
+  if (typeof p !== "string") return null;
+  const s = p.trim();
+  if (s === "" || !s.startsWith("/") || s.includes("..")) return null;
+  return s;
+}
+
+function filterAndLimitUrls(urls) {
+  const seen = new Set();
+  const out = [];
+  for (const u of urls) {
+    const urlStr = typeof u === "string" ? u : (u && u.url) ? u.url : "";
+    if (!urlStr || urlStr.length > MAX_URL_LENGTH) continue;
+    if (seen.has(urlStr)) continue;
+    seen.add(urlStr);
+    out.push(urlStr);
+    if (out.length >= MAX_URLS_AI) break;
+  }
+  return out;
+}
+
+app.use(express.json({ limit: MAX_JSON_BODY }));
 app.use(express.static(path.join(__dirname, "public")));
 
-// In-memory data store (for demo - use database in production)
+app.use((req, res, next) => {
+  res.setHeader("X-Content-Type-Options", "nosniff");
+  const origin = req.headers.origin;
+  if (origin && CORS_ALLOWED_ORIGINS.includes(origin)) {
+    res.setHeader("Access-Control-Allow-Origin", origin);
+  }
+  res.setHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
+  res.setHeader("Access-Control-Allow-Headers", "Content-Type");
+  if (req.method === "OPTIONS") return res.sendStatus(204);
+  next();
+});
+
+const rateLimit = (windowMs, max, routeName) => {
+  const hits = new Map();
+  setInterval(() => hits.clear(), windowMs);
+  return (req, res, next) => {
+    const ip = req.ip || req.socket?.remoteAddress || "unknown";
+    const ua = (req.headers["user-agent"] || "").slice(0, 64);
+    const origin = (req.headers.origin || "").slice(0, 128);
+    const key = `${routeName}:${ip}:${ua}:${origin}`;
+    const n = (hits.get(key) || 0) + 1;
+    hits.set(key, n);
+    if (n > max) {
+      res.setHeader("Retry-After", String(Math.ceil(windowMs / 1000)));
+      return res.status(429).json({ error: "Too many requests" });
+    }
+    next();
+  };
+};
+app.use("/api/collect", rateLimit(RATE_LIMIT_WINDOW_MS, RATE_LIMIT_COLLECT, "collect"));
+app.use("/api/ai-insight", rateLimit(RATE_LIMIT_WINDOW_MS, RATE_LIMIT_AI, "ai"));
+app.use("/api/landing-insights", rateLimit(RATE_LIMIT_WINDOW_MS, RATE_LIMIT_AI, "landing"));
+app.use("/api/content-strategy", rateLimit(RATE_LIMIT_WINDOW_MS, RATE_LIMIT_AI, "content"));
+
 let collectedData = null;
 
 app.get("/health", (req, res) => {
@@ -39,17 +106,26 @@ app.get("/health", (req, res) => {
 app.post("/api/collect", async (req, res) => {
   const body = req.body || {};
   const baseUrl = body.baseUrl || body.base;
-  const depth = Number(body.depth) || 3;
-  const max = Number(body.max) || 5000;
+  let depth = Number(body.depth) || 3;
+  let max = Number(body.max) || 5000;
   const stripQuery = !!body.stripQuery;
   const allowWwwAlias = body.allowWwwAlias !== false;
-  const excludePaths = Array.isArray(body.excludePaths)
+  let excludePathsRaw = Array.isArray(body.excludePaths)
     ? body.excludePaths
     : (typeof body.excludePaths === "string" ? body.excludePaths.split(",").map(s => s.trim()).filter(Boolean) : []);
 
-  if (!baseUrl || typeof baseUrl !== "string") {
-    return res.status(400).json({ error: "baseUrl required" });
+  const urlCheck = await validateBaseUrl(baseUrl);
+  if (!urlCheck.ok) {
+    return res.status(400).json({ error: "Invalid base URL" });
   }
+  const depthNum = Number(body.depth);
+  const maxNum = Number(body.max);
+  depth = Number.isNaN(depthNum) ? 3 : Math.min(10, Math.max(1, Math.floor(depthNum)));
+  max = Number.isNaN(maxNum) ? 5000 : Math.min(50000, Math.max(1, Math.floor(maxNum)));
+  const excludePaths = excludePathsRaw
+    .map(normalizeExcludePath)
+    .filter(Boolean)
+    .slice(0, 50);
 
   res.setHeader("Content-Type", "application/x-ndjson");
   res.setHeader("Cache-Control", "no-cache");
@@ -83,68 +159,58 @@ app.post("/api/collect", async (req, res) => {
     send({ type: "done", ...result });
   } catch (err) {
     console.error("Collection error:", err);
-    send({ type: "error", msg: String(err.message || "Unknown error occurred") });
+    send({ type: "error", msg: "Collection failed. Please try again." });
   } finally {
     res.end();
   }
 });
 
-// Get collected data
 app.get("/api/data", (req, res) => {
-  if (!collectedData) {
-    return res.status(404).json({ error: "No data collected yet" });
-  }
-  res.json(collectedData);
+  res.status(410).json({ error: "This endpoint is disabled" });
 });
 
-// AI Insight endpoint
 app.post("/api/ai-insight", async (req, res) => {
   try {
     const { domain, urls, language = 'en' } = req.body;
-    
     if (!domain || !urls || !Array.isArray(urls)) {
       return res.status(400).json({ error: "domain and urls array required" });
     }
-    
-    const insights = await generateInsights({ domain, urls, language });
+    const limited = filterAndLimitUrls(urls);
+    const insights = await generateInsights({ domain, urls: limited, language });
     res.json(insights);
   } catch (err) {
     console.error("AI insight error:", err);
-    res.status(500).json({ error: err.message || "Failed to generate insights" });
+    res.status(500).json({ error: "Failed to generate insights" });
   }
 });
 
-// Landing page improvement endpoint
 app.post("/api/landing-insights", async (req, res) => {
   try {
     const { urls, language = 'en' } = req.body;
-    
     if (!urls || !Array.isArray(urls)) {
       return res.status(400).json({ error: "urls array required" });
     }
-    
-    const insights = await generateLandingPageInsights({ urls, language });
+    const limited = filterAndLimitUrls(urls);
+    const insights = await generateLandingPageInsights({ urls: limited, language });
     res.json(insights);
   } catch (err) {
     console.error("Landing page insight error:", err);
-    res.status(500).json({ error: err.message || "Failed to generate landing insights" });
+    res.status(500).json({ error: "Failed to analyze landing pages" });
   }
 });
 
-// Content strategy endpoint
 app.post("/api/content-strategy", async (req, res) => {
   try {
     const { urls, domain, language = 'en' } = req.body;
-    
     if (!domain || !urls || !Array.isArray(urls)) {
       return res.status(400).json({ error: "domain and urls array required" });
     }
-    
-    const strategy = await generateContentStrategy({ urls, domain, language });
+    const limited = filterAndLimitUrls(urls);
+    const strategy = await generateContentStrategy({ urls: limited, domain, language });
     res.json(strategy);
   } catch (err) {
     console.error("Content strategy error:", err);
-    res.status(500).json({ error: err.message || "Failed to generate content strategy" });
+    res.status(500).json({ error: "Failed to generate content strategy" });
   }
 });
 
