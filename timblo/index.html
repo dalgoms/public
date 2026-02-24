@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="refresh" content="0; url=teamblo-toss-style.html">
+  <title>TIMBLO - AI 회의록</title>
+  <meta name="description" content="AI 기반 회의록 자동 생성 서비스. 보안 + LLM + 화자분리 기술.">
+  <link rel="icon" type="image/png" href="./assets/images/timblo-logo.png">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, sans-serif;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      background: linear-gradient(135deg, #EFF6FF 0%, #DBEAFE 100%);
+    }
+    .loading {
+      text-align: center;
+      padding: 40px;
+      background: white;
+      border-radius: 24px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.1);
+    }
+    .logo { width: 80px; margin-bottom: 20px; }
+    h1 { font-size: 24px; color: #111827; margin-bottom: 8px; }
+    p { color: #6B7280; font-size: 14px; }
+    a { color: #3B82F6; text-decoration: none; }
+    .spinner {
+      width: 40px; height: 40px;
+      border: 3px solid #E5E7EB;
+      border-top-color: #3B82F6;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      margin: 20px auto;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+  </style>
+</head>
+<body>
+  <div class="loading">
+    <img src="./assets/images/timblo-logo.png" alt="TIMBLO" class="logo">
+    <h1>TIMBLO</h1>
+    <p>AI 회의록 서비스</p>
+    <div class="spinner"></div>
+    <p><a href="teamblo-toss-style.html">클릭하여 이동</a></p>
+  </div>
+</body>
+</html>
+

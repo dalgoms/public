@@ -392,4 +392,4 @@ Built with ❤️ for designers and developers who hate manual URL collection.
 
 ---
 
-**Ready to scout your website?** Start collecting URLs in seconds! 🚀
+[**Ready to scout your website?** Start collecting URLs in seconds! 🚀](https://github.com/dalgoms/public/tree/main/webscout-agent)
