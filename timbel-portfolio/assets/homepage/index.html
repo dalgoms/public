@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>회사개요 - 팀벨 | AI 솔루션 플랫폼 전문 기업</title>
+    <meta name="description" content="팀벨은 LLM·RAG 지식 AI, AICC, 회의록, 자막·속기까지 기업에 필요한 AI 솔루션을 직접 개발하고 운영하는 전문 기업입니다.">
+    <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable.min.css" />
+    <style>
+        :root {
+            --black: #000000;
+            --gray-900: #111111;
+            --gray-800: #1a1a1a;
+            --gray-700: #2a2a2a;
+            --gray-600: #444444;
+            --gray-500: #666666;
+            --gray-400: #888888;
+            --gray-300: #aaaaaa;
+            --gray-200: #cccccc;
+            --gray-100: #eeeeee;
+            --gray-50: #f7f7f7;
+            --white: #ffffff;
+            --accent: #0066FF;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+        body { 
+            font-family: 'Pretendard Variable', Pretendard, -apple-system, sans-serif; 
+            background: var(--white); color: var(--black); 
+            line-height: 1.6; -webkit-font-smoothing: antialiased;
+        }
+        .container { max-width: 1200px; margin: 0 auto; padding: 0 40px; }
+        @media (max-width: 768px) { .container { padding: 0 24px; } }
+
+        /* ===== HERO / MISSION ===== */
+        .hero {
+            min-height: 100vh;
+            display: flex; align-items: center;
+            padding: 180px 0 120px;
+            position: relative;
+            background: var(--black);
+            overflow: hidden;
+        }
+        .hero::before {
+            content: '';
+            position: absolute; inset: 0;
+            background-image: url('../img/bk01.png');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            opacity: 0.7;
+            z-index: 1;
+        }
+        .hero::after {
+            content: '';
+            position: absolute; inset: 0;
+            background: linear-gradient(180deg, rgba(0,0,0,0.2) 0%, rgba(0,0,0,0.5) 100%);
+            z-index: 2;
+        }
+        .hero .container { position: relative; z-index: 5; }
+        .hero-content { max-width: 900px; margin: 0 auto; text-align: center; }
+        .hero-title {
+            font-size: clamp(48px, 8vw, 80px);
+            font-weight: 800; line-height: 1.2;
+            letter-spacing: -2px; margin-bottom: 32px;
+            color: var(--white);
+        }
+        .hero-title-en {
+            font-size: clamp(15px, 2vw, 18px);
+            font-weight: 400; line-height: 1.8;
+            color: rgba(255,255,255,0.6);
+        }
+
+        /* ===== SECTION ===== */
+        .section { padding: 140px 0; }
+        .section-dark { background: var(--gray-900); color: var(--white); }
+        .section-light { background: var(--gray-50); }
+        
+        .section-label {
+            font-size: 14px; font-weight: 600;
+            color: var(--gray-400); letter-spacing: 1px;
+            margin-bottom: 48px;
+        }
+        .section-dark .section-label { color: var(--gray-500); }
+
+        /* ===== EVOLUTION TIMELINE ===== */
+        .evolution { background: var(--black); color: var(--white); }
+        .evolution-header {
+            display: flex; justify-content: space-between;
+            align-items: flex-end; margin-bottom: 80px;
+            border-bottom: 1px solid var(--gray-700);
+            padding-bottom: 24px;
+        }
+        .evolution-title {
+            font-size: 14px; font-weight: 600;
+            color: var(--gray-400); letter-spacing: 2px;
+        }
+        .evolution-list { display: flex; flex-direction: column; }
+        .evolution-item {
+            display: grid; grid-template-columns: 140px 1fr;
+            gap: 60px; padding: 48px 0;
+            border-bottom: 1px solid var(--gray-800);
+        }
+        .evolution-item:last-child { border-bottom: none; }
+        .evolution-year {
+            font-size: 48px; font-weight: 700;
+            color: var(--white); line-height: 1;
+        }
+        .evolution-content h3 {
+            font-size: 22px; font-weight: 600;
+            margin-bottom: 12px; color: var(--white);
+        }
+        .evolution-content p {
+            font-size: 16px; color: var(--gray-400);
+            line-height: 1.8;
+        }
+
+        /* ===== ABOUT GRID ===== */
+        .about-grid {
+            display: grid; grid-template-columns: 1fr 1fr;
+            gap: 120px;
+        }
+        .about-title {
+            font-size: clamp(28px, 4vw, 40px);
+            font-weight: 700; line-height: 1.4;
+            letter-spacing: -0.5px;
+        }
+        .about-text {
+            font-size: 17px; color: var(--gray-600);
+            line-height: 2;
+        }
+        .about-text p { margin-bottom: 24px; }
+        .about-text p:last-child { margin-bottom: 0; }
+
+        /* ===== STATS ===== */
+        .stats {
+            display: grid; grid-template-columns: repeat(4, 1fr);
+            gap: 40px; margin-top: 80px;
+            padding-top: 80px; border-top: 1px solid var(--gray-200);
+        }
+        .stat-item {}
+        .stat-value {
+            font-size: 36px; font-weight: 700;
+            color: var(--black); margin-bottom: 8px;
+        }
+        .stat-label {
+            font-size: 14px; color: var(--gray-500);
+        }
+
+        /* ===== CAPABILITIES ===== */
+        .cap-header {
+            margin-bottom: 64px;
+        }
+        .cap-title {
+            font-size: clamp(28px, 4vw, 40px);
+            font-weight: 700; line-height: 1.4;
+            margin-bottom: 16px;
+        }
+        .cap-desc {
+            font-size: 17px; color: var(--gray-500);
+            max-width: 560px;
+        }
+        .cap-grid {
+            display: grid; grid-template-columns: repeat(3, 1fr);
+            gap: 1px; background: var(--gray-200);
+            border: 1px solid var(--gray-200);
+        }
+        .cap-card {
+            padding: 48px 36px; background: var(--white);
+            transition: background 0.2s;
+        }
+        .cap-card:hover { background: var(--gray-50); }
+        .cap-num {
+            font-size: 12px; font-weight: 600;
+            color: var(--gray-400); letter-spacing: 1px;
+            margin-bottom: 24px;
+        }
+        .cap-card h3 {
+            font-size: 20px; font-weight: 600;
+            margin-bottom: 12px;
+        }
+        .cap-card p {
+            font-size: 15px; color: var(--gray-500);
+            line-height: 1.7;
+        }
+
+        /* ===== REFERENCES ===== */
+        .ref-grid {
+            display: grid; grid-template-columns: repeat(4, 1fr);
+            gap: 24px;
+        }
+        .ref-card {
+            padding: 40px 28px;
+            background: var(--gray-800);
+            border-radius: 16px;
+            transition: all 0.2s;
+        }
+        .ref-card:hover {
+            background: var(--gray-700);
+            transform: translateY(-4px);
+        }
+        .ref-card h4 {
+            font-size: 18px; font-weight: 600;
+            margin-bottom: 16px; color: var(--white);
+        }
+        .ref-card p {
+            font-size: 14px; color: var(--gray-400);
+            line-height: 1.7;
+        }
+
+        /* ===== VISION ===== */
+        .vision {
+            background: var(--accent); color: var(--white);
+            text-align: center;
+        }
+        .vision-label {
+            font-size: 14px; font-weight: 600;
+            opacity: 0.7; letter-spacing: 2px;
+            margin-bottom: 32px;
+        }
+        .vision-title {
+            font-size: clamp(28px, 5vw, 44px);
+            font-weight: 700; line-height: 1.5;
+            margin-bottom: 24px;
+        }
+        .vision-desc {
+            font-size: 17px; opacity: 0.85;
+            line-height: 1.9; max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 1024px) {
+            .section { padding: 100px 0; }
+            .about-grid { grid-template-columns: 1fr; gap: 48px; }
+            .evolution-item { grid-template-columns: 100px 1fr; gap: 32px; }
+            .evolution-year { font-size: 36px; }
+            .cap-grid { grid-template-columns: 1fr; }
+            .ref-grid { grid-template-columns: repeat(2, 1fr); }
+            .stats { grid-template-columns: repeat(2, 1fr); }
+        }
+        @media (max-width: 640px) {
+            .hero { padding: 140px 0 80px; }
+            .evolution-item { grid-template-columns: 1fr; gap: 16px; }
+            .evolution-year { font-size: 32px; }
+            .ref-grid { grid-template-columns: 1fr; }
+            .stats { grid-template-columns: 1fr; gap: 32px; }
+        }
+    </style>
+</head>
+<body>
+    <div id="header-placeholder"></div>
+
+    <!-- HERO / MISSION -->
+    <section class="hero">
+        <div class="container">
+            <div class="hero-content">
+                <h1 class="hero-title">
+                    LLM·RAG 기반<br>
+                    지식 AI 플랫폼 전문기업, 팀벨
+                </h1>
+                <p class="hero-title-en">
+                    기업의 커뮤니케이션 데이터를 지식으로 전환해<br>
+                    연결과 협업의 방식을 바꿉니다.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- EVOLUTION -->
+    <section class="section evolution">
+        <div class="container">
+            <div class="evolution-header">
+                <div class="evolution-title">OUR EVOLUTION</div>
+            </div>
+            <div class="evolution-list">
+                <div class="evolution-item">
+                    <div class="evolution-year">2025</div>
+                    <div class="evolution-content">
+                        <h3>LLM · RAG 기반 지식 AI 플랫폼 확장</h3>
+                        <p>AICC, 지식 AI, AI 에이전트 등 기업용 AI 솔루션 전 영역으로 사업을 확장하고 있습니다.</p>
+                    </div>
+                </div>
+                <div class="evolution-item">
+                    <div class="evolution-year">2023</div>
+                    <div class="evolution-content">
+                        <h3>팀벨로 사명 변경, 인도 법인 설립</h3>
+                        <p>소리자바에서 팀벨로 사명을 변경하고, 글로벌 시장 진출을 위해 인도 법인을 설립했습니다.</p>
+                    </div>
+                </div>
+                <div class="evolution-item">
+                    <div class="evolution-year">2020</div>
+                    <div class="evolution-content">
+                        <h3>전국 교육지원청 AI 회의록 시스템 구축</h3>
+                        <p>61개 교육지원청에 AI 음성인식 회의지원시스템을 구축하며 공공 시장을 본격 확대했습니다.</p>
+                    </div>
+                </div>
+                <div class="evolution-item">
+                    <div class="evolution-year">2017</div>
+                    <div class="evolution-content">
+                        <h3>인공지능 속기 시스템 상용화</h3>
+                        <p>MBC 실시간 자막방송 송출을 시작으로 AI 음성인식 기술을 본격 상용화했습니다.</p>
+                    </div>
+                </div>
+                <div class="evolution-item">
+                    <div class="evolution-year">2001</div>
+                    <div class="evolution-content">
+                        <h3>소리자바 법인 설립, 음성인식 개발 시작</h3>
+                        <p>디지털 속기 시스템과 음성인식 기술 개발을 시작하며 국내 AI 속기 시스템의 기반을 마련했습니다.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ABOUT -->
+    <section class="section section-light">
+        <div class="container">
+            <div class="section-label">ABOUT</div>
+            <div class="about-grid">
+                <h2 class="about-title">
+                    핵심 기술을 직접 만들고<br>
+                    직접 운영합니다
+                </h2>
+                <div class="about-text">
+                    <p>
+                        팀벨은 2001년부터 음성인식, 자연어처리, 기록 시스템을 
+                        개발해온 AI 솔루션 전문 기업입니다.
+                    </p>
+                    <p>
+                        국회, 법원, 금융기관, 방송사 등 고정밀이 요구되는 환경에서 
+                        20년 이상 기술을 축적했습니다.
+                    </p>
+                    <p>
+                        LLM · RAG 기반 지식 AI, AICC 콜봇·챗봇, AI 회의록, 
+                        자막·속기 시스템까지 전 영역을 자체 기술로 개발합니다.
+                    </p>
+                </div>
+            </div>
+            <div class="stats">
+                <div class="stat-item">
+                    <div class="stat-value">Since 2001</div>
+                    <div class="stat-label">법인 설립</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value">점유율 1위</div>
+                    <div class="stat-label">AI 음성인식 회의록</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value">100,000시간+</div>
+                    <div class="stat-label">학습 데이터</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value">300+</div>
+                    <div class="stat-label">운영 기관</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CAPABILITIES -->
+    <section class="section">
+        <div class="container">
+            <div class="cap-header">
+                <div class="section-label">CAPABILITIES</div>
+                <h2 class="cap-title">핵심 기술 역량</h2>
+                <p class="cap-desc">
+                    외부 엔진에 의존하지 않습니다. 
+                    모든 핵심 기술을 자체 개발하고 실환경에서 검증합니다.
+                </p>
+            </div>
+            <div class="cap-grid">
+                <div class="cap-card">
+                    <div class="cap-num">01</div>
+                    <h3>음성·언어 AI</h3>
+                    <p>STT, TTS, 화자 분리, 다국어 처리. AICC 환경 정확도 95%.</p>
+                </div>
+                <div class="cap-card">
+                    <div class="cap-num">02</div>
+                    <h3>AI 회의록</h3>
+                    <p>다자간 회의 최적화. 국회, 법원, 금융기관 실운영.</p>
+                </div>
+                <div class="cap-card">
+                    <div class="cap-num">03</div>
+                    <h3>LLM · RAG</h3>
+                    <p>Document AI, RAG 기반 환각 최소화, 근거 기반 답변.</p>
+                </div>
+                <div class="cap-card">
+                    <div class="cap-num">04</div>
+                    <h3>AICC 솔루션</h3>
+                    <p>콜봇, 챗봇, 상담 어드바이저, TA/QA 품질 분석.</p>
+                </div>
+                <div class="cap-card">
+                    <div class="cap-num">05</div>
+                    <h3>자막·속기</h3>
+                    <p>실시간 자막, 방송 송출, 전문 속기 시스템.</p>
+                </div>
+                <div class="cap-card">
+                    <div class="cap-num">06</div>
+                    <h3>학습 데이터</h3>
+                    <p>100,000시간+ 고품질 라벨링. 도메인 특화 모델.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- REFERENCES -->
+    <section class="section section-dark">
+        <div class="container">
+            <div class="section-label">REFERENCES</div>
+            <h2 class="cap-title" style="color: var(--white); margin-bottom: 48px;">검증된 운영 환경</h2>
+            <div class="ref-grid">
+                <div class="ref-card">
+                    <h4>정부·공공</h4>
+                    <p>국회, 법원, 지자체 회의록 시스템</p>
+                </div>
+                <div class="ref-card">
+                    <h4>금융</h4>
+                    <p>상담 녹취, 컴플라이언스, 불완전판매 분석</p>
+                </div>
+                <div class="ref-card">
+                    <h4>방송</h4>
+                    <p>실시간 자막 송출, OTT VOD 자막</p>
+                </div>
+                <div class="ref-card">
+                    <h4>AICC</h4>
+                    <p>콜센터 자동화, 콜봇·챗봇 운영</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- VISION -->
+    <section class="section vision">
+        <div class="container">
+            <div class="vision-label">VISION 2030</div>
+            <h2 class="vision-title">
+                기록을 넘어,<br>
+                지식이 흐르는 커뮤니케이션
+            </h2>
+            <p class="vision-desc">
+                LLM · RAG 기반 지식 AI를 고도화하고,
+                AI 에이전트의 적용 범위를 확장하여
+                기업의 소통 방식을 근본적으로 바꿉니다.
+            </p>
+        </div>
+    </section>
+
+    <div id="footer-placeholder"></div>
+    <script src="../js/common.js"></script>
+</body>
+</html>
