@@ -1,3 +1,10 @@
+### WebScout Next — Live demo / 라이브 데모
+
+- Vercel deployment / 배포 주소:  
+  `https://webscout-six.vercel.app/`
+
+---
+
 ### WebScout Next — Collect API configuration
 
 This app proxies crawl requests through the existing Express backend used by the original WebScout Agent.
@@ -17,3 +24,5 @@ This app proxies crawl requests through the existing Express backend used by the
       → **프로덕션**에서 `COLLECT_API_URL`이 설정되어 있지 않으면 HTTP 500을 반환합니다.
     - In **development**: also return HTTP 500 with a clear message if missing, instead of silently falling back to `localhost`.  
       → **개발 환경**에서도 더 이상 자동으로 `localhost`로 떨어지지 않고, 환경 변수가 없으면 명확한 에러 메시지와 함께 HTTP 500을 반환합니다.
+
+
