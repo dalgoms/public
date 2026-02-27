@@ -1,0 +1,79 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  body {
+    caret-color: #d4d4d8; /* neutral-300 for generic text caret */
+  }
+
+  /* Utility: hide caret completely (for loading screens, etc.) */
+  .no-caret {
+    caret-color: transparent !important;
+  }
+
+  /* Softer caret color for inputs/textareas */
+  input,
+  textarea,
+  [contenteditable="true"] {
+    caret-color: #d4d4d8; /* neutral-300 */
+  }
+
+  /* Light, subtle scrollbars for white theme */
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: #e5e7eb transparent; /* neutral-200 */
+  }
+
+  *::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+
+  *::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  *::-webkit-scrollbar-thumb {
+    background-color: #e5e7eb; /* neutral-200 */
+    border-radius: 999px;
+    border: 2px solid transparent;
+    background-clip: padding-box;
+  }
+}
+
+@layer components {
+  /* Main hero search box: Toss-like soft focus glow */
+  .hero-prompt-shell {
+    border-radius: 1rem; /* match rounded-2xl */
+    transition: box-shadow 200ms ease-out, transform 200ms ease-out,
+      background-color 200ms ease-out;
+  }
+
+  .hero-prompt-inner {
+    border-radius: inherit;
+    background: rgba(248, 250, 252, 0.98);
+    border: 1px solid rgba(148, 163, 184, 0.35);
+    transition: border-color 200ms ease-out, background-color 200ms ease-out;
+  }
+
+  .hero-prompt-shell:hover,
+  .hero-prompt-shell:focus-within {
+    box-shadow:
+      0 0 0 1px rgba(0, 140, 255, 0.7),
+      0 20px 55px rgba(15, 23, 42, 0.18);
+    transform: translateY(-1px);
+    background-color: rgba(255, 255, 255, 0.9);
+  }
+
+  .hero-prompt-shell:hover .hero-prompt-inner,
+  .hero-prompt-shell:focus-within .hero-prompt-inner {
+    border-color: rgba(148, 163, 184, 0.4);
+    background: radial-gradient(circle at top left, #f5fbff, #ffffff);
+  }
+}
