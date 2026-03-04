@@ -10,6 +10,7 @@ const jakarta = Plus_Jakarta_Sans({
 });
 
 const siteUrl = "https://webscout-six.vercel.app";
+const ogImageUrl = `${siteUrl}/icons/webscoutimg.png`;
 
 export const metadata: Metadata = {
   title: "WebScout Agent – Website structure analyzer",
@@ -21,12 +22,21 @@ export const metadata: Metadata = {
       "Start with a URL and see your structure clearly. Benchmark competitor IA and export clean sitemaps.",
     url: siteUrl,
     siteName: "WebScout Agent",
+    images: [
+      {
+        url: ogImageUrl,
+        width: 1200,
+        height: 630,
+        alt: "WebScout – Search Website Perfect.",
+      },
+    ],
     type: "website",
   },
   twitter: {
     card: "summary_large_image",
     title: "WebScout Agent – Website structure analyzer",
     description: "Start with a URL and see your structure clearly.",
+    images: [ogImageUrl],
   },
 };
 
