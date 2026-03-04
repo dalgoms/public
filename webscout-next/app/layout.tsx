@@ -1,4 +1,5 @@
 import "./globals.css";
+import type { Metadata } from "next";
 import Image from "next/image";
 import { Plus_Jakarta_Sans } from "next/font/google";
 
@@ -7,6 +8,27 @@ const jakarta = Plus_Jakarta_Sans({
   variable: "--font-sans",
   display: "swap",
 });
+
+const siteUrl = "https://webscout-six.vercel.app";
+
+export const metadata: Metadata = {
+  title: "WebScout Agent – Website structure analyzer",
+  description:
+    "Start with a URL and see your site structure clearly. Bookmark, score, and export your sitemap in seconds.",
+  openGraph: {
+    title: "WebScout Agent – Website structure analyzer",
+    description:
+      "Start with a URL and see your structure clearly. Benchmark competitor IA and export clean sitemaps.",
+    url: siteUrl,
+    siteName: "WebScout Agent",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "WebScout Agent – Website structure analyzer",
+    description: "Start with a URL and see your structure clearly.",
+  },
+};
 
 export default function RootLayout({
   children,
