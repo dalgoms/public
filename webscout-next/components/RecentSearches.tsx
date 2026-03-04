@@ -37,11 +37,11 @@ export default function RecentSearches({ onSelect }: RecentSearchesProps) {
   if (!items.length) return null;
 
   return (
-    <section className="mx-auto mt-8 w-full max-w-[1280px] px-6">
-      <div className="flex flex-wrap items-center gap-2 text-xs text-neutral-500 mb-2">
+    <section className="mx-auto mt-10 w-full max-w-[960px] px-6 text-center">
+      <div className="mb-2 text-xs text-neutral-500">
         <span className="font-medium text-neutral-700">Recent</span>
       </div>
-      <div className="flex flex-wrap gap-2">
+      <div className="flex flex-wrap justify-center gap-2">
         {items.map((item) => (
           <button
             key={item.url}

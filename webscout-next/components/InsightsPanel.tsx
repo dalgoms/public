@@ -17,6 +17,9 @@ type InsightsPanelProps = {
   insightScore?: number | null;
   breakdown?: { seo?: number; ux?: number; structure?: number } | null;
   priorityFixes?: { page: string; reason: string }[] | null;
+  onResetFilters?: () => void;
+  onApplySeoFilter?: () => void;
+  onApplyUxFilter?: () => void;
 };
 
 const KEY_PAGE_PATTERNS = [
@@ -136,6 +139,9 @@ export default function InsightsPanel({
   insightScore,
   breakdown,
   priorityFixes,
+  onResetFilters,
+  onApplySeoFilter,
+  onApplyUxFilter,
 }: InsightsPanelProps) {
   const [showTips, setShowTips] = useState(false);
   const score = insightScore ?? computeInsightScore(urls, maxDepth);
@@ -179,7 +185,11 @@ export default function InsightsPanel({
 
       <div className="grid gap-4 sm:grid-cols-3">
         {/* Overall Score */}
-        <div className="rounded-2xl border border-neutral-200 bg-white p-4">
+        <button
+          type="button"
+          onClick={onResetFilters}
+          className="text-left rounded-2xl border border-neutral-200 bg-white p-4 cursor-pointer hover:bg-neutral-50 active:scale-[0.99] transition"
+        >
           <div className="text-xs uppercase tracking-wide text-neutral-500 mb-1">
             Insight Score
           </div>
@@ -190,10 +200,14 @@ export default function InsightsPanel({
           <p className="mt-1 text-xs text-neutral-500">
             Based on key pages & shallow depth
           </p>
-        </div>
+        </button>
 
         {/* Breakdown cards */}
-        <div className="rounded-2xl border border-neutral-200 bg-white p-4">
+        <button
+          type="button"
+          onClick={onApplySeoFilter}
+          className="text-left rounded-2xl border border-neutral-200 bg-white p-4 cursor-pointer hover:bg-neutral-50 active:scale-[0.99] transition"
+        >
           <div className="text-xs uppercase tracking-wide text-neutral-500 mb-2">
             SEO
           </div>
@@ -204,8 +218,12 @@ export default function InsightsPanel({
           <p className="mt-1 text-[11px] text-neutral-500">
             Clean & shallow URL structure
           </p>
-        </div>
-        <div className="rounded-2xl border border-neutral-200 bg-white p-4">
+        </button>
+        <button
+          type="button"
+          onClick={onApplyUxFilter}
+          className="text-left rounded-2xl border border-neutral-200 bg-white p-4 cursor-pointer hover:bg-neutral-50 active:scale-[0.99] transition"
+        >
           <div className="text-xs uppercase tracking-wide text-neutral-500 mb-2">
             UX / Structure
           </div>
@@ -216,19 +234,19 @@ export default function InsightsPanel({
           <p className="mt-1 text-[11px] text-neutral-500">
             Depth balance & key pages
           </p>
-        </div>
+        </button>
       </div>
 
       {/* Priority Fix list */}
-      <div className="rounded-2xl border border-neutral-200 bg-white">
-        <div className="px-4 py-3 border-b border-neutral-100">
-          <h3 className="text-sm font-semibold text-neutral-800">
-            Priority Fixes
-          </h3>
-        </div>
-        <div className="divide-y divide-neutral-100">
-          {fixes.length > 0 ? (
-            fixes.map((f, idx) => (
+      {fixes.length > 0 && (
+        <div className="rounded-2xl border border-neutral-200 bg-white">
+          <div className="px-4 py-3 border-b border-neutral-100">
+            <h3 className="text-sm font-semibold text-neutral-800">
+              Priority Fixes
+            </h3>
+          </div>
+          <div className="divide-y divide-neutral-100">
+            {fixes.map((f, idx) => (
               <div
                 key={idx}
                 className="px-4 py-3 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-1"
@@ -260,14 +278,10 @@ export default function InsightsPanel({
                   {f.reason}
                 </span>
               </div>
-            ))
-          ) : (
-            <div className="px-4 py-4 text-sm text-neutral-500">
-              No high-priority fixes identified.
-            </div>
-          )}
+            ))}
+          </div>
         </div>
-      </div>
+      )}
     </section>
   );
 }
