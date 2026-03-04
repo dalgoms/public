@@ -10,7 +10,7 @@ const jakarta = Plus_Jakarta_Sans({
 });
 
 const siteUrl = "https://webscout-six.vercel.app";
-const ogImageUrl = `${siteUrl}/icons/webscoutimg.png`;
+const ogImageUrl = `${siteUrl}/icons/ogimage.png`;
 
 export const metadata: Metadata = {
   title: "WebScout Agent – Website structure analyzer",
@@ -94,3 +94,4 @@ export default function RootLayout({
     </html>
   );
 }
+
