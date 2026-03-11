@@ -8,7 +8,7 @@ URL만 넣으면 사이트맵, 핵심 페이지, SEO·UX 인사이트를 바로 
 
 ### Live demo / 라이브 데모
 
-- **https://webscout-six.vercel.app/**
+- **[https://webscout-six.vercel.app/](https://webscout-next-8veo.vercel.app/)**
 
 ---
 
@@ -68,3 +68,4 @@ npm run dev
 ```
 
 Set `COLLECT_API_URL` to your Express collect endpoint, or use the default `http://localhost:3003/api/collect` in development.
+
